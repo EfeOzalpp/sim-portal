@@ -10,6 +10,9 @@
     "setup": "ts-node ./setup.ts",
     "db:push": "prisma db push",
     "db:seed": "prisma db seed",
+    "db:push:video": "node scripts/run-video.mjs push",
+    "db:seed:video": "node scripts/run-video.mjs seed",
+    "dev:video": "node scripts/run-video.mjs dev",
     "db:studio": "prisma studio",
     "db:generate": "prisma generate"
   },
