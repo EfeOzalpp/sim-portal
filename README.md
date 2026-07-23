@@ -50,6 +50,22 @@ npm run dev
 
 Access the app at [http://localhost:3000](http://localhost:3000).
 
+### Video demo database
+
+The recording dataset uses a separate PostgreSQL database named `sim_video`.
+Its seed has two hard guards: `DATABASE_URL` must end in `/sim_video`, and
+`ALLOW_VIDEO_SEED` must be `true`.
+
+1. Copy `.env.video.example` to `.env.video` and fill in the recording account
+   and OAuth values. The real `.env.video` file is ignored by Git.
+2. Apply the schema with `npm run db:push:video`.
+3. Create or reset the 75 fictional profiles with `npm run db:seed:video`.
+4. Start the isolated recording app with `npm run dev:video`.
+
+The video seed creates 67 students, 5 staff, and 3 admins distributed across
+ten mock semesters from `SP22` through `FA26`. Never use the regular
+`npm run db:seed` command for the recording database.
+
 ---
 
 ## Project Anatomy
