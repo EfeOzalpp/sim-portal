@@ -4,7 +4,7 @@ import { ReactNode, useCallback, useEffect, useId, useState } from "react";
 import clsx from "clsx";
 import { Button as AntButton } from "antd";
 import { createPortal } from "react-dom";
-import styles from "@/components/modals/ModalPopup/ModalPopup.module.css";
+import closeIcon from "@/components/theme/assets/close/close.svg";
 
 interface ModalPopupProps {
 	triggerLabel?: ReactNode;
@@ -83,7 +83,7 @@ export default function ModalPopup({
 
 	const modal = (
 		<div
-			className={styles.overlay}
+			className="fixed inset-0 z-[1000] grid box-border place-items-center overflow-auto bg-[rgba(0,0,0,0.5)] p-[var(--spacing-lg)] overscroll-contain max-[768px]:items-end max-[768px]:p-0"
 			data-modal-popup
 			role="presentation"
 			onWheel={(event) => event.stopPropagation()}
@@ -95,23 +95,38 @@ export default function ModalPopup({
 			}}
 		>
 			<section
-				className={clsx(styles.dialog, dialogClassName)}
+				className={clsx(
+					"box-border flex max-h-[calc(100dvh-(var(--spacing-lg)*2))] flex-col overflow-hidden rounded-[var(--border-lg)] border-solid border-[var(--app-border)] bg-[var(--app-surface)] text-[var(--app-text)] [border-width:var(--app-border-width)] max-[768px]:max-h-dvh max-[768px]:w-full max-[768px]:animate-[modal-slide-up_300ms_cubic-bezier(0.32,0.72,0,1)] max-[768px]:rounded-none max-[768px]:border-x-0 max-[768px]:border-b-0",
+					dialogClassName ?? "w-[min(52rem,100%)]",
+				)}
 				role="dialog"
 				aria-modal="true"
 				aria-labelledby={titleId}
 			>
 				<button
 					type="button"
-					className={styles.header}
+					className="m-0 flex w-full cursor-pointer items-center justify-between gap-[var(--gap-md)] rounded-t-[var(--border-lg)] border-0 border-b-[length:var(--app-border-width)] border-solid border-[var(--app-border)] bg-transparent p-[var(--spacing-md)] text-left text-[var(--app-text)] hover:bg-[var(--nav-button-bg-hover)] max-[768px]:rounded-none"
 					onClick={() => setIsOpen(false)}
 					aria-label="Close modal"
 				>
-					<span id={titleId} className={styles.title}>
+					<span
+						id={titleId}
+						className="min-w-0 font-[family-name:var(--font-family-heading)] text-[length:var(--font-size-h3)] leading-[var(--line-height-tight)] font-[var(--font-weight-bold)]"
+					>
 						{title}
 					</span>
-					<span className={clsx(styles.closeIcon)} aria-hidden="true" />
+					<span
+						className="h-[var(--svg-size-md)] w-[var(--svg-size-md)] flex-none bg-current [mask-position:center] [mask-repeat:no-repeat] [mask-size:contain]"
+						style={{
+							maskImage: `url(${typeof closeIcon === "string" ? closeIcon : closeIcon.src})`,
+							WebkitMaskImage: `url(${typeof closeIcon === "string" ? closeIcon : closeIcon.src})`,
+						}}
+						aria-hidden="true"
+					/>
 				</button>
-				<div className={clsx(styles.body, "input-theme-surface")}>{children}</div>
+				<div className="input-theme-surface min-h-0 overflow-auto p-[var(--spacing-md)] max-[768px]:flex-1">
+					{children}
+				</div>
 			</section>
 		</div>
 	);

@@ -20,3 +20,13 @@
 @theme inline {
 	--spacing-app-md: var(--gap-md);
 }
+
+@keyframes modal-slide-up {
+	from {
+		transform: translateY(100%);
+	}
+
+	to {
+		transform: translateY(0);
+	}
+}
