@@ -39,19 +39,50 @@ export interface ButtonProps extends Omit<AntButtonProps, "type"> {
 	type?: AntButtonProps["type"] | "submit";
 }
 
+// Maps this app's variant classNames (nav-button, action-button, etc.) to
+// antd's real variant/color/shape API. Verified against
+// antd/es/button/style/variant.js: each combo below reads distinct
+// ComponentToken fields (see antdTheme.ts), so they don't collide with each
+// other. The className is still passed through unchanged for the two states
+// that have no antd token equivalent — nav-button's [aria-current="page"]
+// background, and link-button's text color (shares defaultBorderColor with
+// action-button's border, so it can't be set independently via tokens).
+//
+// color must always be paired with variant: antd/es/button/button.js only
+// honors [color, variant] together if BOTH are explicitly passed
+// (`if (color && variant)`); variant alone silently falls through to antd's
+// hardcoded ['default', 'outlined'] fallback and is ignored. Confirmed by
+// reading that resolution logic directly — variant-only entries here would
+// have silently rendered as plain outlined buttons.
+const BUTTON_KIND_PROPS: Record<string, Partial<AntButtonProps>> = {
+	"nav-button": { variant: "text", color: "default" },
+	"action-button": { variant: "outlined", color: "default" },
+	"link-button": { variant: "filled", color: "default", shape: "round" },
+	"accept-button": { variant: "filled", color: "green" },
+	"decline-button": { variant: "filled", color: "danger" },
+};
+
+function resolveButtonKindProps(className?: string): Partial<AntButtonProps> | undefined {
+	if (!className) return undefined;
+	const kind = className.split(" ").find((cls) => cls in BUTTON_KIND_PROPS);
+	return kind ? BUTTON_KIND_PROPS[kind] : undefined;
+}
+
 export function Button({ href, onClick, children, type, htmlType, className, ...props }: ButtonProps) {
 	const finalHtmlType = htmlType || (type === "submit" ? "submit" : undefined);
 	const finalType = type === "submit" ? "primary" : type;
+	const kindProps = resolveButtonKindProps(className);
 
 	return (
-		<Block 
-			as={AntButton} 
-			href={href} 
-			onClick={onClick as any} 
-			htmlType={finalHtmlType} 
-			type={finalType as any} 
+		<Block
+			as={AntButton}
+			href={href}
+			onClick={onClick as any}
+			htmlType={finalHtmlType}
+			type={finalType as any}
 			className={className}
-			{...props} 
+			{...kindProps}
+			{...props}
 			pressable={true}
 		>
 			{children}
