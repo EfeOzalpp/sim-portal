@@ -3,12 +3,12 @@
 import { useState } from "react";
 import { useFieldArray, useWatch } from "react-hook-form";
 import { Empty } from "antd";
-import { Button, Collapse } from "@/components/ui/AntD";
+import { Button, Collapse } from "@/components/primitives/AntD";
 import ProductionForm from "@/components/forms/thursday/ProductionForm";
 import { BasicUser } from "@/components/forms/schemas";
-import ConfirmDelete from "@/components/ui/ConfirmDelete";
-import ModalPopup from "@/components/ui/ModalPopup";
-import confirmDeleteStyles from "@/components/ui/ConfirmDelete/ConfirmDelete.module.css";
+import ConfirmDelete from "@/components/modals/ConfirmDelete";
+import ModalPopup from "@/components/modals/ModalPopup";
+import confirmDeleteStyles from "@/components/modals/ConfirmDelete/ConfirmDelete.module.css";
 import {
   collapseBodyClassName,
   collapseHeaderClassName,

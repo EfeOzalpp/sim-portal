@@ -1,12 +1,12 @@
 "use client";
 
 import { usePathname, useSearchParams } from "next/navigation";
-import { Button } from "@/components/ui/AntD";
+import { Button } from "@/components/primitives/AntD";
 import styles from "@/components/layout/NavBar/NavBar.module.css";
 import {
 	LEGACY_SEMESTER_FILTER_KEY,
 	SEMESTER_FILTER_KEY,
-} from "@/components/ui/semester-filter";
+} from "@/components/domain/semesters/semester-filter";
 
 interface NavButtonLinkProps {
 	href: string;

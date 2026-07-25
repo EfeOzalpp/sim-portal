@@ -1,7 +1,7 @@
 "use client";
 
 import { Controller } from "react-hook-form";
-import { Input, DatePicker, Select } from "@/components/ui/AntD";
+import { Input, DatePicker, Select } from "@/components/primitives/AntD";
 import dayjs from "dayjs";
 import { fieldStackClassName } from "@/components/forms/thursday/thursdayFormClasses";
 

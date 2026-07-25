@@ -4,7 +4,7 @@ import { ReactNode, useCallback, useEffect, useId, useState } from "react";
 import clsx from "clsx";
 import { Button as AntButton } from "antd";
 import { createPortal } from "react-dom";
-import styles from "@/components/ui/ModalPopup/ModalPopup.module.css";
+import styles from "@/components/modals/ModalPopup/ModalPopup.module.css";
 
 interface ModalPopupProps {
 	triggerLabel?: ReactNode;

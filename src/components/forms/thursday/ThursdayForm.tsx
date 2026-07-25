@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Button, Alert } from "@/components/ui/AntD";
+import { Button, Alert } from "@/components/primitives/AntD";
 import {
   transformThursdayFromAPI,
   transformThursdayPayload,

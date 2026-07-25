@@ -2,10 +2,10 @@ export const SEMESTER_FILTER_KEY = "semesterId";
 export const LEGACY_SEMESTER_FILTER_KEY = "semester";
 export const ALL_SEMESTERS_VALUE = "All";
 
-export interface SemesterFilterOption {
+export type SemesterFilterOption = {
 	id: string;
 	name: string;
-}
+};
 
 export type SearchParamValue = string | string[] | undefined;
 export type SearchParamsLike = Record<string, SearchParamValue>;

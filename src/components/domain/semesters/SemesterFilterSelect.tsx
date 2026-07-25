@@ -1,11 +1,11 @@
 "use client";
 
-import { FilterSelect } from "@/components/ui/Filters";
+import { FilterSelect } from "@/components/primitives/Filters";
 import {
 	ALL_SEMESTERS_VALUE,
 	SEMESTER_FILTER_KEY,
 	SemesterFilterOption,
-} from "@/components/ui/semester-filter";
+} from "@/components/domain/semesters/semester-filter";
 import { SelectProps } from "antd";
 
 interface SemesterFilterSelectProps extends Omit<SelectProps, "value" | "onChange" | "options" | "loading"> {

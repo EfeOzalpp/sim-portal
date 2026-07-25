@@ -10,11 +10,11 @@ import {
   Card,
   Button,
   Alert,
-} from "@/components/ui/AntD";
+} from "@/components/primitives/AntD";
 import { transformUserFromAPI } from "@/components/forms/user/user.transformers";
-import ImageUpload from "@/components/ui/ImageUpload";
-import DeleteButton from "@/components/ui/DeleteButton";
-import RepeatableInput from "@/components/ui/RepeatableInput";
+import ImageUpload from "@/components/primitives/ImageUpload";
+import DeleteButton from "@/components/modals/DeleteButton";
+import RepeatableInput from "@/components/primitives/RepeatableInput";
 import { handleFormAction } from "@/helpers";
 import { UserInput } from "@/components/forms/schemas";
 import styles from "@/components/forms/user/UserForm.module.css";

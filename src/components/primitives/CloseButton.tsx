@@ -1,6 +1,6 @@
 import clsx from "clsx";
-import Block from "@/components/ui/Block";
-import styles from "@/components/ui/CloseButton.module.css";
+import Block from "@/components/primitives/Block";
+import styles from "@/components/primitives/CloseButton.module.css";
 
 interface CloseButtonProps {
   href: string;

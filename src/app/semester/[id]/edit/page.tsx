@@ -1,7 +1,7 @@
 import { getSemester } from "@/actions/semesters";
 import { notFound } from "next/navigation";
 import NavContent from "@/components/layout/NavContent";
-import CloseButton from "@/components/ui/CloseButton";
+import CloseButton from "@/components/primitives/CloseButton";
 import EditSemesterFormContent from "@/app/semester/[id]/edit/EditSemesterFormContent";
 import styles from "@/app/semester/[id]/edit/page.module.css";
 

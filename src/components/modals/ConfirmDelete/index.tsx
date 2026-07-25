@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import type { FormEvent, ReactNode } from "react";
-import { Button } from "@/components/ui/AntD";
-import styles from "@/components/ui/ConfirmDelete/ConfirmDelete.module.css";
+import { Button } from "@/components/primitives/AntD";
+import styles from "@/components/modals/ConfirmDelete/ConfirmDelete.module.css";
 
 interface ConfirmDeleteProps {
 	itemName: string;

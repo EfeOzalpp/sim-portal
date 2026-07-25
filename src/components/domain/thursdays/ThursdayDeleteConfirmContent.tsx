@@ -1,7 +1,7 @@
 import { notFound, redirect } from "next/navigation";
 import { getAuthSession } from "@/actions/auth";
 import { getThursday, removeThursday } from "@/actions/thursdays";
-import ConfirmDelete from "@/components/ui/ConfirmDelete";
+import ConfirmDelete from "@/components/modals/ConfirmDelete";
 import { normalizeThursdayName } from "@/helpers";
 
 interface ThursdayDeleteConfirmContentProps {

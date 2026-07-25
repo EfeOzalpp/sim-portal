@@ -3,7 +3,7 @@
 import { MouseEvent } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import type { User } from "@prisma/client";
-import { useActionMode } from "@/components/ui/ActionMode";
+import { useActionMode } from "@/components/layout/ActionMode";
 import styles from "@/components/domain/users/Users.module.css";
 import UserCard from "@/components/domain/users/UserCard";
 

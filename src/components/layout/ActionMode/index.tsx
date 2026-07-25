@@ -2,8 +2,8 @@
 
 import clsx from "clsx";
 import { createContext, ReactNode, useContext, useMemo, useState } from "react";
-import { Button, ButtonProps } from "@/components/ui/AntD";
-import styles from "@/components/ui/ActionMode/ActionMode.module.css";
+import { Button, ButtonProps } from "@/components/primitives/AntD";
+import styles from "@/components/layout/ActionMode/ActionMode.module.css";
 
 interface ActionModeContextValue {
 	activeMode: string | null;

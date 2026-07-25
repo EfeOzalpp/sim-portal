@@ -1,10 +1,10 @@
 "use client";
 
-import { Button } from "@/components/ui/AntD";
-import ConfirmDelete from "@/components/ui/ConfirmDelete";
-import ModalPopup from "@/components/ui/ModalPopup";
+import { Button } from "@/components/primitives/AntD";
+import ConfirmDelete from "@/components/modals/ConfirmDelete";
+import ModalPopup from "@/components/modals/ModalPopup";
 import { useState } from "react";
-import styles from "@/components/ui/ConfirmDelete/ConfirmDelete.module.css";
+import styles from "@/components/modals/ConfirmDelete/ConfirmDelete.module.css";
 
 interface DeleteButtonProps {
   onConfirm: () => void;

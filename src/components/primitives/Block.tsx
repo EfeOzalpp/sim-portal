@@ -1,4 +1,4 @@
-import styles from "@/components/ui/Block.module.css";
+import styles from "@/components/primitives/Block.module.css";
 import React, { forwardRef, ReactNode, ElementType, ComponentPropsWithRef } from "react";
 import clsx from "clsx";
 import Link from "next/link";

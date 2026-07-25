@@ -5,7 +5,7 @@ import { Space } from "antd";
 import {
   Input,
   Select,
-} from "@/components/ui/AntD";
+} from "@/components/primitives/AntD";
 import PresentationsField from "@/components/forms/thursday/PresentationsField";
 import { BasicUser } from "@/components/forms/schemas";
 import {

@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 
 import { getThursday } from "@/actions/thursdays";
 import NavContent from "@/components/layout/NavContent";
-import CloseButton from "@/components/ui/CloseButton";
+import CloseButton from "@/components/primitives/CloseButton";
 import EditThursdayFormContent from "@/app/thursdays/[id]/edit/EditThursdayFormContent";
 
 interface EditThursdayProps {

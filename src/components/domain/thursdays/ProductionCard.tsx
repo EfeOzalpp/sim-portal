@@ -1,4 +1,4 @@
-import PersonLink from "@/components/ui/PersonLink";
+import PersonLink from "@/components/domain/users/PersonLink";
 import PresentationCard from "@/components/domain/thursdays/PresentationCard";
 
 interface ProductionCardProps {

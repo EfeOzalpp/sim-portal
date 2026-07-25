@@ -1,19 +1,19 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/authentication";
-import { FilterInput } from "@/components/ui/Filters";
-import { Button } from "@/components/ui/AntD";
+import { FilterInput } from "@/components/primitives/Filters";
+import { Button } from "@/components/primitives/AntD";
 import NavContent from "@/components/layout/NavContent";
 import PageTitle from "@/components/layout/PageTitle";
 import { getAllSemesters } from "@/actions/semesters";
 import styles from "@/app/semester/page.module.css";
-import { formatSemesterCode, getSearchParamValue } from "@/components/ui/semester-filter";
-import { ActionModeButton, ActionModeSurface } from "@/components/ui/ActionMode";
-import RouteModalPopup from "@/components/ui/ModalPopup/RouteModalPopup";
+import { formatSemesterCode, getSearchParamValue } from "@/components/domain/semesters/semester-filter";
+import { ActionModeButton, ActionModeSurface } from "@/components/layout/ActionMode";
+import RouteModalPopup from "@/components/modals/ModalPopup/RouteModalPopup";
 import AddSemesterFormContent from "@/app/semester/add/AddSemesterFormContent";
 import EditSemesterFormContent from "@/app/semester/[id]/edit/EditSemesterFormContent";
 import SemesterDeleteConfirmContent from "@/components/domain/semesters/SemesterDeleteConfirmContent";
 import SemesterCardGrid from "@/components/domain/semesters/SemesterCardGrid";
-import confirmDeleteStyles from "@/components/ui/ConfirmDelete/ConfirmDelete.module.css";
+import confirmDeleteStyles from "@/components/modals/ConfirmDelete/ConfirmDelete.module.css";
 
 interface SemesterPageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;

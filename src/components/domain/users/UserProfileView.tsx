@@ -2,7 +2,7 @@ import PresentationCard from "@/components/domain/thursdays/PresentationCard";
 import { logOut } from "@/actions/auth";
 import { getDisplayUserLinks, getUserLinkHref } from "@/components/forms/user/user-links";
 import { normalizeFaceImagePath } from "@/helpers";
-import { Button } from "@/components/ui/AntD";
+import { Button } from "@/components/primitives/AntD";
 import styles from "@/components/domain/users/User.module.css";
 
 interface UserProfileViewProps {

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Upload } from "@/components/ui/AntD";
+import { Upload } from "@/components/primitives/AntD";
 import { PlusOutlined, LoadingOutlined } from "@ant-design/icons";
 
 interface ImageUploadProps {

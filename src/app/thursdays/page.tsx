@@ -1,23 +1,22 @@
 import { Suspense } from "react";
-import { Button } from "@/components/ui/AntD";
+import { Button } from "@/components/primitives/AntD";
 import NavContent from "@/components/layout/NavContent";
 import PageTitle from "@/components/layout/PageTitle";
 import { getFilteredThursdays } from "@/actions/thursdays";
 import { getAllSemesters } from "@/actions/semesters";
 import { auth } from "@/authentication";
-import { FilterInput } from "@/components/ui/Filters";
-import SemesterFilterSelect from "@/components/ui/SemesterFilterSelect";
-import ResultsContainer from "@/components/ui/ResultsContainer";
+import { FilterInput } from "@/components/primitives/Filters";
+import SemesterFilterSelect from "@/components/domain/semesters/SemesterFilterSelect";
 import ThursdayCard from "@/components/domain/thursdays/ThursdayCard";
-import { ActionModeButton, ActionModeSurface } from "@/components/ui/ActionMode";
-import { formatSemesterCode, getSelectedSemester, getSelectedSemesterId, isAllSemestersValue } from "@/components/ui/semester-filter";
-import RouteModalPopup from "@/components/ui/ModalPopup/RouteModalPopup";
+import { ActionModeButton, ActionModeSurface } from "@/components/layout/ActionMode";
+import { formatSemesterCode, getSelectedSemester, getSelectedSemesterId, isAllSemestersValue } from "@/components/domain/semesters/semester-filter";
+import RouteModalPopup from "@/components/modals/ModalPopup/RouteModalPopup";
 import ThursdayDetailContent, { thursdayDetailDialogClassName } from "@/components/domain/thursdays/ThursdayDetailContent";
 import PersonProfileModal from "@/components/domain/users/PersonProfileModal";
 import AddThursdayFormContent from "@/app/thursdays/add/AddThursdayFormContent";
 import EditThursdayFormContent from "@/app/thursdays/[id]/edit/EditThursdayFormContent";
 import ThursdayDeleteConfirmContent from "@/components/domain/thursdays/ThursdayDeleteConfirmContent";
-import confirmDeleteStyles from "@/components/ui/ConfirmDelete/ConfirmDelete.module.css";
+import confirmDeleteStyles from "@/components/modals/ConfirmDelete/ConfirmDelete.module.css";
 
 interface ThursdaysProps {
 	searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -161,13 +160,11 @@ export default async function Thursdays({ searchParams }: ThursdaysProps) {
             ) : null
           }
         />
-        <ResultsContainer>
-          <Suspense
-            fallback={<div style={{ opacity: 0.5, padding: "var(--spacing-md)", background: "transparent" }}>Loading days...</div>}
-          >
-            <ThursdaysList filters={filters} isAdmin={isAdmin} semesters={semesters} />
-          </Suspense>
-        </ResultsContainer>
+        <Suspense
+          fallback={<div style={{ opacity: 0.5, padding: "var(--spacing-md)", background: "transparent" }}>Loading days...</div>}
+        >
+          <ThursdaysList filters={filters} isAdmin={isAdmin} semesters={semesters} />
+        </Suspense>
         {profileUserId && (
           <PersonProfileModal key={profileUserId} profileUserId={profileUserId} />
         )}

@@ -1,4 +1,4 @@
-import Block from "@/components/ui/Block";
+import Block from "@/components/primitives/Block";
 import Image from "next/image";
 import type { MouseEventHandler } from "react";
 import styles from "@/components/domain/users/UserCard.module.css";

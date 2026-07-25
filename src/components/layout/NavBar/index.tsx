@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "@/components/layout/NavBar/NavBar.module.css";
-import { Button } from "@/components/ui/AntD";
+import { Button } from "@/components/primitives/AntD";
 import NavButtonLink from "@/components/layout/NavBar/NavButtonLink";
 import { auth } from "@/authentication";
 import { Session } from "next-auth";

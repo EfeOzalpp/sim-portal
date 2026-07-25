@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import ModalPopup from "@/components/ui/ModalPopup";
-import { Alert, Button } from "@/components/ui/AntD";
+import ModalPopup from "@/components/modals/ModalPopup";
+import { Alert, Button } from "@/components/primitives/AntD";
 import styles from "@/components/domain/individual/GradeEditorModal.module.css";
 
 export type GradeValue = "P" | "NC" | "INC" | "W";

@@ -1,5 +1,5 @@
 import { auth } from "@/authentication";
-import RouteModalPopup from "@/components/ui/ModalPopup/RouteModalPopup";
+import RouteModalPopup from "@/components/modals/ModalPopup/RouteModalPopup";
 import UserProfileContent from "@/components/domain/users/UserProfileContent";
 import profileStyles from "@/components/domain/users/User.module.css";
 

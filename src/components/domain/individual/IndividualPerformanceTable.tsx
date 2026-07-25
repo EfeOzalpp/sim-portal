@@ -2,12 +2,12 @@
 
 import type { ReactNode } from "react";
 import { useRef, useEffect, useMemo, useState } from "react";
-import PersonLink from "@/components/ui/PersonLink";
-import ThursdayLink from "@/components/ui/ThursdayLink";
-import { Table } from "@/components/ui/AntD";
+import PersonLink from "@/components/domain/users/PersonLink";
+import ThursdayLink from "@/components/domain/thursdays/ThursdayLink";
+import { Table } from "@/components/primitives/AntD";
 import { Prisma } from "@prisma/client";
 import GradeEditorModal, { GradeMap } from "@/components/domain/individual/GradeEditorModal";
-import { useActionMode } from "@/components/ui/ActionMode";
+import { useActionMode } from "@/components/layout/ActionMode";
 import { updateUserSemesterGrades } from "@/actions/semesters";
 import styles from "@/components/domain/individual/IndividualPerformanceTable.module.css";
 

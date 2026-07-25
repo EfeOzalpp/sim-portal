@@ -1,8 +1,8 @@
 "use client";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useActionMode } from "@/components/ui/ActionMode";
-import { formatSemesterCode } from "@/components/ui/semester-filter";
+import { useActionMode } from "@/components/layout/ActionMode";
+import { formatSemesterCode } from "@/components/domain/semesters/semester-filter";
 import styles from "@/app/semester/page.module.css";
 
 const dateFormat: Intl.DateTimeFormatOptions = { month: "short", day: "numeric", year: "numeric" };

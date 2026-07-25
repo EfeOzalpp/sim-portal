@@ -4,19 +4,19 @@ import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import type { ReactNode } from "react";
 
-interface ThursdayLinkProps {
-	thursdayId: string;
+type PersonLinkProps = {
+	userId: string;
 	children: ReactNode;
 	className?: string;
-}
+};
 
-export default function ThursdayLink({ thursdayId, children, className }: ThursdayLinkProps) {
+export default function PersonLink({ userId, children, className }: PersonLinkProps) {
 	const pathname = usePathname();
 	const searchParams = useSearchParams();
 
 	const params = new URLSearchParams(searchParams.toString());
-	params.delete("thursdayId");
-	params.set("thursdayId", thursdayId);
+	["profileUserId", "accountProfile", "accountEdit"].forEach((p) => params.delete(p));
+	params.set("profileUserId", userId);
 
 	return (
 		<Link href={`${pathname}?${params.toString()}`} className={className}>

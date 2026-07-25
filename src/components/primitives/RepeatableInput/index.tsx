@@ -1,8 +1,8 @@
 "use client";
 
-import { Input } from "@/components/ui/AntD";
+import { Input } from "@/components/primitives/AntD";
 import type { InputProps } from "antd";
-import styles from "@/components/ui/RepeatableInput/RepeatableInput.module.css";
+import styles from "@/components/primitives/RepeatableInput/RepeatableInput.module.css";
 
 interface RepeatableInputProps extends Omit<InputProps, "value" | "onChange"> {
 	value?: string[];

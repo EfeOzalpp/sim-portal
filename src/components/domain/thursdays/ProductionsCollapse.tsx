@@ -3,8 +3,8 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { Collapse } from "@/components/ui/AntD";
-import { useActionMode } from "@/components/ui/ActionMode";
+import { Collapse } from "@/components/primitives/AntD";
+import { useActionMode } from "@/components/layout/ActionMode";
 
 interface ProductionItem {
   id: string;

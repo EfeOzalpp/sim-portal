@@ -7,7 +7,7 @@ import {
   Select,
   Button,
   Alert,
-} from "@/components/ui/AntD";
+} from "@/components/primitives/AntD";
 import {
   transformSemesterFromAPI,
   transformSemesterPayload,

@@ -32,7 +32,7 @@ import {
 } from "antd";
 import { RangePickerProps } from "antd/es/date-picker";
 import { forwardRef } from "react";
-import Block from "@/components/ui/Block";
+import Block from "@/components/primitives/Block";
 
 export interface ButtonProps extends Omit<AntButtonProps, "type"> {
 	href?: string;

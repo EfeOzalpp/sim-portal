@@ -1,5 +1,5 @@
 import Link from "next/link";
-import PersonLink from "@/components/ui/PersonLink";
+import PersonLink from "@/components/domain/users/PersonLink";
 import { formatNiceListFromArray } from "@/helpers";
 import { Prisma } from "@prisma/client";
 
