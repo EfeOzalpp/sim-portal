@@ -49,8 +49,8 @@ html[data-theme="dark"] .nav-button-visual {
 }
 
 .link-button-download-icon {
-  mask-image: url("../../../app/assets/download/download.svg");
-  -webkit-mask-image: url("../../../app/assets/download/download.svg");
+  mask-image: url("../assets/download/download.svg");
+  -webkit-mask-image: url("../assets/download/download.svg");
 }
 
 /* [aria-current="page"] isn't an antd concept, and the "text" variant has no

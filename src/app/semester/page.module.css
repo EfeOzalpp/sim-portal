@@ -53,7 +53,7 @@
 }
 
 .semesterActionOverlay {
-	--semester-card-action-icon: url("../../app/assets/edit/edit.svg");
+	--semester-card-action-icon: url("../../components/theme/assets/edit/edit.svg");
 
 	position: absolute;
 	inset: 0;

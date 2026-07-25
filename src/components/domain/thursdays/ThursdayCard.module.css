@@ -3,7 +3,7 @@
 }
 
 .ThursdayActionOverlay {
-  --thursday-card-action-icon: url("../../../app/assets/edit/edit.svg");
+  --thursday-card-action-icon: url("../../theme/assets/edit/edit.svg");
 
   position: absolute;
   inset: 0;

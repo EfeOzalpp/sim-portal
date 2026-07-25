@@ -54,11 +54,11 @@
 }
 
 .addIcon {
-	mask-image: url("../../../app/assets/add/add.svg");
-	-webkit-mask-image: url("../../../app/assets/add/add.svg");
+	mask-image: url("../../theme/assets/add/add.svg");
+	-webkit-mask-image: url("../../theme/assets/add/add.svg");
 }
 
 .deleteIcon {
-	mask-image: url("../../../app/assets/delete/delete.svg");
-	-webkit-mask-image: url("../../../app/assets/delete/delete.svg");
+	mask-image: url("../../theme/assets/delete/delete.svg");
+	-webkit-mask-image: url("../../theme/assets/delete/delete.svg");
 }

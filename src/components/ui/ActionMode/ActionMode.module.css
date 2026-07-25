@@ -83,13 +83,13 @@
 }
 
 .editIcon {
-	mask-image: url("../../../app/assets/edit/edit.svg");
-	-webkit-mask-image: url("../../../app/assets/edit/edit.svg");
+	mask-image: url("../../theme/assets/edit/edit.svg");
+	-webkit-mask-image: url("../../theme/assets/edit/edit.svg");
 }
 
 .deleteIcon {
-	mask-image: url("../../../app/assets/delete/delete.svg");
-	-webkit-mask-image: url("../../../app/assets/delete/delete.svg");
+	mask-image: url("../../theme/assets/delete/delete.svg");
+	-webkit-mask-image: url("../../theme/assets/delete/delete.svg");
 }
 
 .actionButtonText {
@@ -141,15 +141,15 @@
 }
 
 .surface[data-action-mode="delete-users"] :global([data-user-action-overlay]) {
-	--user-card-action-icon: url("../../../app/assets/delete/delete.svg");
+	--user-card-action-icon: url("../../theme/assets/delete/delete.svg");
 }
 
 .surface[data-action-mode="delete-thursdays"] :global([data-thursday-action-overlay]) {
-	--thursday-card-action-icon: url("../../../app/assets/delete/delete.svg");
+	--thursday-card-action-icon: url("../../theme/assets/delete/delete.svg");
 }
 
 .surface[data-action-mode="delete-semesters"] :global([data-semester-action-overlay]) {
-	--semester-card-action-icon: url("../../../app/assets/delete/delete.svg");
+	--semester-card-action-icon: url("../../theme/assets/delete/delete.svg");
 }
 
 .surface[data-action-mode="edit-users"] :global([data-action-mode-target="user-card"]:hover [data-user-action-overlay] > span),

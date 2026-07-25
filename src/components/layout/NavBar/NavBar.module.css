@@ -154,43 +154,43 @@
 }
 
 .peopleIcon {
-	mask-image: url("../../../app/assets/people/groups.svg");
-	-webkit-mask-image: url("../../../app/assets/people/groups.svg");
+	mask-image: url("../../theme/assets/people/groups.svg");
+	-webkit-mask-image: url("../../theme/assets/people/groups.svg");
 }
 
 .thursdayIcon {
-	mask-image: url("../../../app/assets/thursday/today.svg");
-	-webkit-mask-image: url("../../../app/assets/thursday/today.svg");
+	mask-image: url("../../theme/assets/thursday/today.svg");
+	-webkit-mask-image: url("../../theme/assets/thursday/today.svg");
 }
 
 .listIcon {
-	mask-image: url("../../../app/assets/list/list.svg");
-	-webkit-mask-image: url("../../../app/assets/list/list.svg");
+	mask-image: url("../../theme/assets/list/list.svg");
+	-webkit-mask-image: url("../../theme/assets/list/list.svg");
 }
 
 .individualIcon {
-	mask-image: url("../../../app/assets/individual/person.svg");
-	-webkit-mask-image: url("../../../app/assets/individual/person.svg");
+	mask-image: url("../../theme/assets/individual/person.svg");
+	-webkit-mask-image: url("../../theme/assets/individual/person.svg");
 }
 
 .linkIcon {
-	mask-image: url("../../../app/assets/link/link.svg");
-	-webkit-mask-image: url("../../../app/assets/link/link.svg");
+	mask-image: url("../../theme/assets/link/link.svg");
+	-webkit-mask-image: url("../../theme/assets/link/link.svg");
 }
 
 .moreVerticalIcon {
-	mask-image: url("../../../app/assets/more-vertical/more_vert.svg");
-	-webkit-mask-image: url("../../../app/assets/more-vertical/more_vert.svg");
+	mask-image: url("../../theme/assets/more-vertical/more_vert.svg");
+	-webkit-mask-image: url("../../theme/assets/more-vertical/more_vert.svg");
 }
 
 .darkModeIcon {
-	mask-image: url("../../../app/assets/theme-switch/dark_mode.svg");
-	-webkit-mask-image: url("../../../app/assets/theme-switch/dark_mode.svg");
+	mask-image: url("../../theme/assets/theme-switch/dark_mode.svg");
+	-webkit-mask-image: url("../../theme/assets/theme-switch/dark_mode.svg");
 }
 
 .lightModeIcon {
-	mask-image: url("../../../app/assets/theme-switch/light_mode.svg");
-	-webkit-mask-image: url("../../../app/assets/theme-switch/light_mode.svg");
+	mask-image: url("../../theme/assets/theme-switch/light_mode.svg");
+	-webkit-mask-image: url("../../theme/assets/theme-switch/light_mode.svg");
 }
 
 .navLabel {

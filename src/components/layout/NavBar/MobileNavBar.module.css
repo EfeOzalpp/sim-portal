@@ -40,11 +40,11 @@
 		width: var(--svg-size-md);
 		height: var(--svg-size-md);
 		background: currentColor;
-		mask-image: url("../../../app/assets/menu/menu.svg");
+		mask-image: url("../../theme/assets/menu/menu.svg");
 		mask-position: center;
 		mask-repeat: no-repeat;
 		mask-size: var(--svg-size-md) var(--svg-size-md);
-		-webkit-mask-image: url("../../../app/assets/menu/menu.svg");
+		-webkit-mask-image: url("../../theme/assets/menu/menu.svg");
 		-webkit-mask-position: center;
 		-webkit-mask-repeat: no-repeat;
 		-webkit-mask-size: var(--svg-size-md) var(--svg-size-md);
@@ -148,11 +148,11 @@
 		width: var(--svg-size-md);
 		height: var(--svg-size-md);
 		background: currentColor;
-		mask-image: url("../../../app/assets/arrow/left.svg");
+		mask-image: url("../../theme/assets/arrow/left.svg");
 		mask-position: center;
 		mask-repeat: no-repeat;
 		mask-size: var(--svg-size-md) var(--svg-size-md);
-		-webkit-mask-image: url("../../../app/assets/arrow/left.svg");
+		-webkit-mask-image: url("../../theme/assets/arrow/left.svg");
 		-webkit-mask-position: center;
 		-webkit-mask-repeat: no-repeat;
 		-webkit-mask-size: var(--svg-size-md) var(--svg-size-md);

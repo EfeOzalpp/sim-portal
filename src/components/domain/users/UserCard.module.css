@@ -43,7 +43,7 @@
 }
 
 .actionOverlay {
-  --user-card-action-icon: url("../../../app/assets/edit/edit.svg");
+  --user-card-action-icon: url("../../theme/assets/edit/edit.svg");
 
   position: absolute;
   inset: 0;
