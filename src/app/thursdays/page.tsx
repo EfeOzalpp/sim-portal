@@ -1,5 +1,4 @@
 import { Suspense } from "react";
-import thursdayPageStyles from "@/components/domain/thursdays/ThursdayPage.module.css";
 import { Button } from "@/components/ui/AntD";
 import NavContent from "@/components/layout/NavContent";
 import PageTitle from "@/components/layout/PageTitle";
@@ -13,7 +12,7 @@ import ThursdayCard from "@/components/domain/thursdays/ThursdayCard";
 import { ActionModeButton, ActionModeSurface } from "@/components/ui/ActionMode";
 import { formatSemesterCode, getSelectedSemester, getSelectedSemesterId, isAllSemestersValue } from "@/components/ui/semester-filter";
 import RouteModalPopup from "@/components/ui/ModalPopup/RouteModalPopup";
-import ThursdayDetailContent from "@/components/domain/thursdays/ThursdayDetailContent";
+import ThursdayDetailContent, { thursdayDetailDialogClassName } from "@/components/domain/thursdays/ThursdayDetailContent";
 import PersonProfileModal from "@/components/domain/users/PersonProfileModal";
 import AddThursdayFormContent from "@/app/thursdays/add/AddThursdayFormContent";
 import EditThursdayFormContent from "@/app/thursdays/[id]/edit/EditThursdayFormContent";
@@ -177,7 +176,7 @@ export default async function Thursdays({ searchParams }: ThursdaysProps) {
             key="add-thursday"
             paramName="addThursday"
             title="Add Thursday"
-            dialogClassName={thursdayPageStyles.thursdayDetailDialog}
+            dialogClassName={thursdayDetailDialogClassName}
           >
             <AddThursdayFormContent />
           </RouteModalPopup>
@@ -187,7 +186,7 @@ export default async function Thursdays({ searchParams }: ThursdaysProps) {
             key={editThursdayId}
             paramName="editThursdayId"
             title="Edit Thursday"
-            dialogClassName={thursdayPageStyles.thursdayDetailDialog}
+            dialogClassName={thursdayDetailDialogClassName}
           >
             <EditThursdayFormContent thursdayId={editThursdayId} />
           </RouteModalPopup>
@@ -210,7 +209,7 @@ export default async function Thursdays({ searchParams }: ThursdaysProps) {
             key={thursdayId}
             paramName="thursdayId"
             title="Thursday"
-            dialogClassName={thursdayPageStyles.thursdayDetailDialog}
+            dialogClassName={thursdayDetailDialogClassName}
           >
             <ThursdayDetailContent thursdayId={thursdayId} />
           </RouteModalPopup>

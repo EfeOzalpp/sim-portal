@@ -4,7 +4,6 @@ import { getThursday } from "@/actions/thursdays";
 import NavContent from "@/components/layout/NavContent";
 import CloseButton from "@/components/ui/CloseButton";
 import EditThursdayFormContent from "@/app/thursdays/[id]/edit/EditThursdayFormContent";
-import styles from "@/app/thursdays/[id]/edit/page.module.css";
 
 interface EditThursdayProps {
 	params: Promise<{ id: string }>;
@@ -22,11 +21,11 @@ export default async function EditThursday({ params }: EditThursdayProps) {
 	return (
 		<>
 			<NavContent
-				className={styles.pageNav}
+				className="mx-auto max-w-[50%] border-b border-[var(--app-border)]"
 				start={<h2>Edit Day</h2>}
 				end={<CloseButton href={`/thursdays?thursdayId=${id}`} />}
 			/>
-			<div className={styles.pageWrapper}>
+			<div className="mx-auto max-w-[50%] pb-4">
 				<div className="content-card">
 					<EditThursdayFormContent thursdayId={id} />
 				</div>

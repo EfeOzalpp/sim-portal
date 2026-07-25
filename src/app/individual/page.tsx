@@ -12,8 +12,7 @@ import { ActionModeButton, ActionModeSurface } from "@/components/ui/ActionMode"
 import { formatSemesterCode, getSelectedSemesterId, isAllSemestersValue } from "@/components/ui/semester-filter";
 import PersonProfileModal from "@/components/domain/users/PersonProfileModal";
 import RouteModalPopup from "@/components/ui/ModalPopup/RouteModalPopup";
-import ThursdayDetailContent from "@/components/domain/thursdays/ThursdayDetailContent";
-import thursdayPageStyles from "@/components/domain/thursdays/ThursdayPage.module.css";
+import ThursdayDetailContent, { thursdayDetailDialogClassName } from "@/components/domain/thursdays/ThursdayDetailContent";
 
 interface IndividualPageProps {
 	searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -82,7 +81,7 @@ export default async function IndividualPage({ searchParams }: IndividualPagePro
 						key={thursdayId}
 						paramName="thursdayId"
 						title="Thursday"
-						dialogClassName={thursdayPageStyles.thursdayDetailDialog}
+						dialogClassName={thursdayDetailDialogClassName}
 					>
 						<ThursdayDetailContent thursdayId={thursdayId} />
 					</RouteModalPopup>
