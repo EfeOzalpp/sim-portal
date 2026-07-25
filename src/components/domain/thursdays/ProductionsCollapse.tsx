@@ -95,7 +95,7 @@ export default function ProductionsCollapse({ productions }: ProductionsCollapse
               <h3 className="m-0 font-[family-name:var(--font-family-heading)] text-[length:var(--font-size-h3)] font-bold leading-[var(--line-height-tight)] text-[var(--app-text)]">
                 {p.href ? (
                   <Link
-                    className="text-inherit no-underline hover:text-[var(--brand-color)] hover:underline hover:underline-offset-[0.14em]"
+                    className="text-inherit! no-underline hover:text-[var(--brand-color)]! hover:underline hover:underline-offset-[0.14em]"
                     href={p.href}
                     onClick={(event) => {
                       if (handleActionModeClick(p.id)) {

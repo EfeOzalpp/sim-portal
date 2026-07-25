@@ -73,7 +73,7 @@ export default async function ProductionCard({
                   <PersonLink
                     key={producer.id}
                     userId={producer.id}
-                    className="text-inherit no-underline underline-offset-[0.14em] hover:text-[var(--brand-color)] hover:underline"
+                    className="text-inherit! no-underline underline-offset-[0.14em] hover:text-[var(--brand-color)]! hover:underline"
                   >
                     {producer.name}
                   </PersonLink>
@@ -91,7 +91,7 @@ export default async function ProductionCard({
                   <PersonLink
                     key={facultyMember.id}
                     userId={facultyMember.id}
-                    className="text-inherit no-underline underline-offset-[0.14em] hover:text-[var(--brand-color)] hover:underline"
+                    className="text-inherit! no-underline underline-offset-[0.14em] hover:text-[var(--brand-color)]! hover:underline"
                   >
                     {facultyMember.name}
                   </PersonLink>

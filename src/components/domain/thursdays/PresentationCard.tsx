@@ -36,7 +36,7 @@ export default function PresentationCard({
       <PersonLink
         key={`author.id:${author.id}`}
         userId={author.id}
-        className="text-inherit no-underline underline-offset-[0.14em] hover:text-[var(--brand-color)] hover:underline"
+        className="text-inherit! no-underline underline-offset-[0.14em] hover:text-[var(--brand-color)]! hover:underline"
       >
         {author.name}
       </PersonLink>
@@ -86,7 +86,7 @@ export default function PresentationCard({
   return (
     <Link
       href={thursdayId ? `/thursdays/${thursdayId}` : "#"}
-      className="my-3 flex w-full text-inherit no-underline hover:text-[var(--brand-color)]"
+      className="my-3 flex w-full text-inherit! no-underline hover:text-[var(--brand-color)]!"
     >
       {content}
     </Link>
