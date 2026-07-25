@@ -1,4 +1,3 @@
-import styles from "@/components/primitives/Block.module.css";
 import React, { forwardRef, ReactNode, ElementType, ComponentPropsWithRef } from "react";
 import clsx from "clsx";
 import Link from "next/link";
@@ -61,7 +60,13 @@ const Block = forwardRef(function Block<T extends ElementType = "button">(
 	);
 
 	return (
-		<div className={clsx(styles.wrapper, pressable && styles.pressable, disabled && styles.disabled)}>
+		<div
+			className={clsx(
+				"relative inline-flex box-border align-top",
+				pressable && "cursor-pointer",
+				disabled && "cursor-not-allowed opacity-60",
+			)}
+		>
 			{shouldWrap ? (
 				<Link href={href!}>
 					{element}

@@ -14,7 +14,7 @@ import { formatSemesterCode, getSelectedSemester, getSelectedSemesterId, isAllSe
 
 import styles from "@/components/domain/users/Users.module.css";
 import profileStyles from "@/components/domain/users/User.module.css";
-import confirmDeleteStyles from "@/components/modals/ConfirmDelete/ConfirmDelete.module.css";
+import { confirmDeleteDialogClassName } from "@/components/modals/ConfirmDelete/styles";
 import UserCardGrid from "@/components/domain/users/UserCardGrid";
 import EditUserFormContent from "@/app/users/[id]/edit/EditUserFormContent";
 import UserDeleteConfirmContent from "@/components/domain/users/UserDeleteConfirmContent";
@@ -178,7 +178,7 @@ export default async function UsersPage({ searchParams }: UsersProps) {
 						key={deleteUserId}
 						paramName="deleteUserId"
 						title="Delete User"
-						dialogClassName={confirmDeleteStyles.dialog}
+						dialogClassName={confirmDeleteDialogClassName}
 					>
 						<UserDeleteConfirmContent
 							userId={deleteUserId}

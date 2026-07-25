@@ -12,7 +12,7 @@ import AddSemesterFormContent from "@/app/semester/add/AddSemesterFormContent";
 import EditSemesterFormContent from "@/app/semester/[id]/edit/EditSemesterFormContent";
 import SemesterDeleteConfirmContent from "@/components/domain/semesters/SemesterDeleteConfirmContent";
 import SemesterCardGrid from "@/components/domain/semesters/SemesterCardGrid";
-import confirmDeleteStyles from "@/components/modals/ConfirmDelete/ConfirmDelete.module.css";
+import { confirmDeleteDialogClassName } from "@/components/modals/ConfirmDelete/styles";
 
 interface SemesterPageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -147,7 +147,7 @@ export default async function SemesterPage({ searchParams }: SemesterPageProps) 
             key={deleteSemesterId}
             paramName="deleteSemesterId"
             title="Delete Semester"
-            dialogClassName={confirmDeleteStyles.dialog}
+            dialogClassName={confirmDeleteDialogClassName}
           >
             <SemesterDeleteConfirmContent
               semesterId={deleteSemesterId}

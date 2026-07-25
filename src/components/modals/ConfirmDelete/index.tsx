@@ -3,7 +3,6 @@
 import { useState } from "react";
 import type { FormEvent, ReactNode } from "react";
 import { Button } from "@/components/primitives/AntD";
-import styles from "@/components/modals/ConfirmDelete/ConfirmDelete.module.css";
 
 interface ConfirmDeleteProps {
 	itemName: string;
@@ -71,7 +70,7 @@ export default function ConfirmDelete({
 	}
 
 	return (
-		<form className={styles.content} onSubmit={handleSubmit}>
+		<form className="flex flex-col gap-[var(--gap-md)] [&_p]:m-0" onSubmit={handleSubmit}>
 			<p>
 				<strong>
 					Are you sure you want to delete {itemName || `this ${itemType}`}?
@@ -79,8 +78,8 @@ export default function ConfirmDelete({
 			</p>
 			{warningText && <p>{warningText}</p>}
 			<p className="ui-note">This action cannot be undone.</p>
-			{error && <p className={styles.error}>{error}</p>}
-			<div className={styles.actions}>
+			{error && <p className="text-[#cf1322]">{error}</p>}
+			<div className="grid grid-cols-[repeat(auto-fit,minmax(0,1fr))] gap-[var(--gap-sm)] max-[480px]:grid-cols-1">
 				<Button
 					type="submit"
 					className="decline-button"

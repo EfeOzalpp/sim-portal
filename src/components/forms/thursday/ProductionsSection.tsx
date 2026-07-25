@@ -8,7 +8,7 @@ import ProductionForm from "@/components/forms/thursday/ProductionForm";
 import { BasicUser } from "@/components/forms/schemas";
 import ConfirmDelete from "@/components/modals/ConfirmDelete";
 import ModalPopup from "@/components/modals/ModalPopup";
-import confirmDeleteStyles from "@/components/modals/ConfirmDelete/ConfirmDelete.module.css";
+import { confirmDeleteDialogClassName } from "@/components/modals/ConfirmDelete/styles";
 import {
   collapseBodyClassName,
   collapseHeaderClassName,
@@ -151,7 +151,7 @@ export default function ProductionsSection({
           if (!open) setPendingRemoveIndex(null);
         }}
         title="Remove Production"
-        dialogClassName={confirmDeleteStyles.dialog}
+        dialogClassName={confirmDeleteDialogClassName}
       >
         <ConfirmDelete
           itemName="this production"

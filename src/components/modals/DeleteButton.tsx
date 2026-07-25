@@ -3,8 +3,8 @@
 import { Button } from "@/components/primitives/AntD";
 import ConfirmDelete from "@/components/modals/ConfirmDelete";
 import ModalPopup from "@/components/modals/ModalPopup";
+import { confirmDeleteDialogClassName } from "@/components/modals/ConfirmDelete/styles";
 import { useState } from "react";
-import styles from "@/components/modals/ConfirmDelete/ConfirmDelete.module.css";
 
 interface DeleteButtonProps {
   onConfirm: () => void;
@@ -24,7 +24,7 @@ export default function DeleteButton({
   const showModal = () => setIsModalOpen(true);
 
   return (
-    <div className={styles.triggerRoot}>
+    <div className="mt-[var(--spacing-md)]">
       <Button onClick={showModal} className="decline-button">
         {buttonText} {itemName}
       </Button>
@@ -33,7 +33,7 @@ export default function DeleteButton({
         open={isModalOpen}
         onOpenChange={setIsModalOpen}
         title={`Remove ${itemName}`}
-        dialogClassName={styles.dialog}
+        dialogClassName={confirmDeleteDialogClassName}
       >
         <ConfirmDelete
           itemName={itemName.replace(/\?$/, "")}

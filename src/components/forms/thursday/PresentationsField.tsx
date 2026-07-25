@@ -12,7 +12,7 @@ import {
 import { BasicUser } from "@/components/forms/schemas";
 import ConfirmDelete from "@/components/modals/ConfirmDelete";
 import ModalPopup from "@/components/modals/ModalPopup";
-import confirmDeleteStyles from "@/components/modals/ConfirmDelete/ConfirmDelete.module.css";
+import { confirmDeleteDialogClassName } from "@/components/modals/ConfirmDelete/styles";
 import {
   collapseBodyClassName,
   collapseHeaderClassName,
@@ -232,7 +232,7 @@ export default function PresentationsField({
           if (!open) setPendingRemoveIndex(null);
         }}
         title="Remove Presentation"
-        dialogClassName={confirmDeleteStyles.dialog}
+        dialogClassName={confirmDeleteDialogClassName}
       >
         <ConfirmDelete
           itemName="this presentation"

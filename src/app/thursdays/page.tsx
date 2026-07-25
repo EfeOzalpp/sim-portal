@@ -16,7 +16,7 @@ import PersonProfileModal from "@/components/domain/users/PersonProfileModal";
 import AddThursdayFormContent from "@/app/thursdays/add/AddThursdayFormContent";
 import EditThursdayFormContent from "@/app/thursdays/[id]/edit/EditThursdayFormContent";
 import ThursdayDeleteConfirmContent from "@/components/domain/thursdays/ThursdayDeleteConfirmContent";
-import confirmDeleteStyles from "@/components/modals/ConfirmDelete/ConfirmDelete.module.css";
+import { confirmDeleteDialogClassName } from "@/components/modals/ConfirmDelete/styles";
 
 interface ThursdaysProps {
 	searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -193,7 +193,7 @@ export default async function Thursdays({ searchParams }: ThursdaysProps) {
             key={deleteThursdayId}
             paramName="deleteThursdayId"
             title="Delete Thursday"
-            dialogClassName={confirmDeleteStyles.dialog}
+            dialogClassName={confirmDeleteDialogClassName}
           >
             <ThursdayDeleteConfirmContent
               thursdayId={deleteThursdayId}
