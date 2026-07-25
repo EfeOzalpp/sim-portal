@@ -247,8 +247,8 @@ html[data-theme] .input-theme-icon {
 }
 
 html[data-theme] .input-search-icon {
-  mask-image: url("../assets/search/search.svg");
-  -webkit-mask-image: url("../assets/search/search.svg");
+  mask-image: url("../../../app/assets/search/search.svg");
+  -webkit-mask-image: url("../../../app/assets/search/search.svg");
 }
 
 html[data-theme] .input-select-arrow {
@@ -265,14 +265,14 @@ html[data-theme] .input-select-arrow-up {
 }
 
 html[data-theme] .input-select-arrow-down {
-  mask-image: url("../assets/arrow/down.svg");
-  -webkit-mask-image: url("../assets/arrow/down.svg");
+  mask-image: url("../../../app/assets/arrow/down.svg");
+  -webkit-mask-image: url("../../../app/assets/arrow/down.svg");
 }
 
 html[data-theme] .input-select-arrow-up {
   display: none;
-  mask-image: url("../assets/arrow/up.svg");
-  -webkit-mask-image: url("../assets/arrow/up.svg");
+  mask-image: url("../../../app/assets/arrow/up.svg");
+  -webkit-mask-image: url("../../../app/assets/arrow/up.svg");
 }
 
 html[data-theme] .ant-select-open .input-select-arrow-down {
@@ -298,6 +298,6 @@ html[data-theme] .ant-select-clear:hover {
 html[data-theme] .input-select-clear-icon {
   width: calc(var(--svg-size-sm) * 0.85);
   height: calc(var(--svg-size-sm) * 0.85);
-  mask-image: url("../assets/close/close.svg");
-  -webkit-mask-image: url("../assets/close/close.svg");
+  mask-image: url("../../../app/assets/close/close.svg");
+  -webkit-mask-image: url("../../../app/assets/close/close.svg");
 }

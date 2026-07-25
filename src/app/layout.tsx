@@ -5,11 +5,11 @@ import Script from "next/script";
 import { auth } from "@/authentication";
 
 import "./fonts/sour-gummy/sour-gummy.css";
-import "./global-styles/app-theme/styling-theme.css";
-import "./global-styles/app-theme/font-theme.css";
-import "./global-styles/app-theme/layout-theme.css";
-import "./global-styles/button-theme.css";
-import "./global-styles/input-theme.css";
+import "@/components/theme/global-styles/app-theme/styling-theme.css";
+import "@/components/theme/global-styles/app-theme/font-theme.css";
+import "@/components/theme/global-styles/app-theme/layout-theme.css";
+import "@/components/theme/global-styles/button-theme.css";
+import "@/components/theme/global-styles/input-theme.css";
 
 import AccountModals from "@/components/layout/AccountModals";
 import AntdThemeProvider from "@/components/theme/AntdThemeProvider";
