@@ -9,6 +9,9 @@
 @import "tailwindcss/theme.css" layer(theme);
 @import "tailwindcss/utilities.css" layer(utilities) source("../../..");
 
+/* Match Tailwind's dark: variant to the app's existing theme attribute. */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
 /*
  * Bridge existing app tokens into Tailwind's spacing namespace. This creates
  * utilities such as gap-app-md and mb-app-md while the actual responsive value
