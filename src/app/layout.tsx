@@ -10,6 +10,7 @@ import "@/components/theme/global-styles/app-theme/font-theme.css";
 import "@/components/theme/global-styles/app-theme/layout-theme.css";
 import "@/components/theme/global-styles/button-theme.css";
 import "@/components/theme/global-styles/input-theme.css";
+import "@/components/theme/global-styles/tailwind.css";
 
 import AccountModals from "@/components/layout/AccountModals";
 import AntdThemeProvider from "@/components/theme/AntdThemeProvider";

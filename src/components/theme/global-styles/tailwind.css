@@ -1,0 +1,19 @@
+/*
+ * Tailwind is introduced without Preflight because Antd's reset and the
+ * existing app-wide element styles already own that responsibility.
+ *
+ * source("../../..") points Tailwind at src/ from this file's directory.
+ */
+@layer theme, base, components, utilities;
+
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities) source("../../..");
+
+/*
+ * Bridge existing app tokens into Tailwind's spacing namespace. This creates
+ * utilities such as gap-app-md and mb-app-md while the actual responsive value
+ * continues to come from --gap-md in layout-theme.css.
+ */
+@theme inline {
+	--spacing-app-md: var(--gap-md);
+}
