@@ -11,6 +11,7 @@ import ModalPopup from "@/components/modals/ModalPopup";
 import { confirmDeleteDialogClassName } from "@/components/modals/ConfirmDelete/styles";
 import {
   collapseBodyClassName,
+  collapseArrowVariants,
   collapseHeaderClassName,
   collapseIconClassName,
   collapseItemClassName,
@@ -88,7 +89,7 @@ export default function ProductionsSection({
           defaultActiveKey={fields.map((f: any) => f.id)}
           expandIcon={({ isActive }) => (
             <span
-              className={`inline-flex h-[var(--svg-size-md)] w-[var(--svg-size-md)] items-center justify-center text-[var(--app-text)] ${isActive ? "rotate-180" : "rotate-0"}`}
+              className={collapseArrowVariants({ expanded: isActive })}
               aria-hidden="true"
             >
               <svg className="h-full w-full" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

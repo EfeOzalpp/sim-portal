@@ -15,6 +15,7 @@ import ModalPopup from "@/components/modals/ModalPopup";
 import { confirmDeleteDialogClassName } from "@/components/modals/ConfirmDelete/styles";
 import {
   collapseBodyClassName,
+  collapseArrowVariants,
   collapseHeaderClassName,
   collapseIconClassName,
   collapseItemClassName,
@@ -22,16 +23,14 @@ import {
   collapseRootClassName,
   collapseTitleClassName,
   collapseTitleTextClassName,
-  dangerSelectionButtonClassName,
   fieldStackClassName,
   iconButtonClassName,
   inlineActionsClassName,
-  optionBadgeClassName,
+  optionBadgeVariants,
   optionNameClassName,
   optionRowClassName,
-  selectedOptionBadgeClassName,
   sectionHeaderClassName,
-  selectionButtonClassName,
+  selectionButtonVariants,
 } from "@/components/forms/thursday/thursdayFormClasses";
 
 interface PresentationsFieldProps {
@@ -91,7 +90,7 @@ export default function PresentationsField({
           }}
           expandIcon={({ isActive }) => (
             <span
-              className={`inline-flex h-[var(--svg-size-md)] w-[var(--svg-size-md)] items-center justify-center text-[var(--app-text)] ${isActive ? "rotate-180" : "rotate-0"}`}
+              className={collapseArrowVariants({ expanded: isActive })}
               aria-hidden="true"
             >
               <svg className="h-full w-full" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -171,14 +170,14 @@ export default function PresentationsField({
                               <button
                                 type="button"
                                 onClick={() => field.onChange(studentUsers.map((u) => u.id))}
-                                className={selectionButtonClassName}
+                                className={selectionButtonVariants()}
                               >
                                 Select all
                               </button>
                               <button
                                 type="button"
                                 onClick={() => field.onChange([])}
-                                className={dangerSelectionButtonClassName}
+                                className={selectionButtonVariants({ intent: "danger" })}
                               >
                                 Unselect all
                               </button>
@@ -207,7 +206,7 @@ export default function PresentationsField({
                               const isSelected = (field.value ?? []).includes(option.value as string);
                               return (
                                 <div className={optionRowClassName}>
-                                  <span className={`${optionBadgeClassName} ${isSelected ? selectedOptionBadgeClassName : ""}`}>
+                                  <span className={optionBadgeVariants({ selected: isSelected })}>
                                     {isSelected ? "Selected" : "Unselected"}
                                   </span>
                                   <span className={optionNameClassName}>{option.label}</span>

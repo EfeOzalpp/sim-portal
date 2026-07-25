@@ -9,15 +9,13 @@ import {
 import PresentationsField from "@/components/forms/thursday/PresentationsField";
 import { BasicUser } from "@/components/forms/schemas";
 import {
-  dangerSelectionButtonClassName,
   fieldStackClassName,
   inlineActionsClassName,
-  optionBadgeClassName,
+  optionBadgeVariants,
   optionNameClassName,
   optionRowClassName,
-  selectedOptionBadgeClassName,
   sectionHeaderClassName,
-  selectionButtonClassName,
+  selectionButtonVariants,
 } from "@/components/forms/thursday/thursdayFormClasses";
 
 const LOCATIONS = [
@@ -101,14 +99,14 @@ export default function ProductionForm({
                   <button
                     type="button"
                     onClick={() => field.onChange(producerUsers.map((u) => u.id))}
-                    className={selectionButtonClassName}
+                    className={selectionButtonVariants()}
                   >
                     Select all
                   </button>
                   <button
                     type="button"
                     onClick={() => field.onChange([])}
-                    className={dangerSelectionButtonClassName}
+                    className={selectionButtonVariants({ intent: "danger" })}
                   >
                     Unselect all
                   </button>
@@ -137,7 +135,7 @@ export default function ProductionForm({
                   const isSelected = (field.value ?? []).includes(option.value as string);
                   return (
                     <div className={optionRowClassName}>
-                      <span className={`${optionBadgeClassName} ${isSelected ? selectedOptionBadgeClassName : ""}`}>
+                      <span className={optionBadgeVariants({ selected: isSelected })}>
                         {isSelected ? "Selected" : "Unselected"}
                       </span>
                       <span className={optionNameClassName}>{option.label}</span>
