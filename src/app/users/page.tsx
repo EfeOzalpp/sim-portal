@@ -12,8 +12,6 @@ import RouteModalPopup from "@/components/modals/ModalPopup/RouteModalPopup";
 import AddUserFormContent from "@/app/users/add/AddUserFormContent";
 import { formatSemesterCode, getSelectedSemester, getSelectedSemesterId, isAllSemestersValue } from "@/components/domain/semesters/semester-filter";
 
-import styles from "@/components/domain/users/Users.module.css";
-import profileStyles from "@/components/domain/users/User.module.css";
 import { confirmDeleteDialogClassName } from "@/components/modals/ConfirmDelete/styles";
 import UserCardGrid from "@/components/domain/users/UserCardGrid";
 import EditUserFormContent from "@/app/users/[id]/edit/EditUserFormContent";
@@ -111,7 +109,7 @@ export default async function UsersPage({ searchParams }: UsersProps) {
 			<PageTitle title="People" filter={currentFilterLabel} />
 			<ActionModeSurface>
 				<NavContent
-					className={styles.screenToolbar}
+					className="print:hidden!"
 					filterContent={
 						<>
 							<FilterInput query={"user"} placeholder="Search user" />
@@ -153,7 +151,7 @@ export default async function UsersPage({ searchParams }: UsersProps) {
 					printContent={<PrintLink />}
 				/>
 				<div>
-					<div className={styles.printHeader}>
+					<div className="mb-[0.15in] hidden font-sans text-[9pt] font-bold tracking-[0.06em] text-black uppercase print:block">
 						{currentFilterLabel !== "All" ? currentFilterLabel : "All Semesters"}
 					</div>
 					<Suspense fallback={<div style={{ opacity: 0.5, padding: "var(--spacing-md)", background: "transparent" }}>Loading users...</div>}>

@@ -1,7 +1,7 @@
 import { auth } from "@/authentication";
 import RouteModalPopup from "@/components/modals/ModalPopup/RouteModalPopup";
 import UserProfileContent from "@/components/domain/users/UserProfileContent";
-import profileStyles from "@/components/domain/users/User.module.css";
+import { userProfileDialogClassName } from "@/components/domain/users/styles";
 
 interface PersonProfileModalProps {
 	profileUserId: string;
@@ -15,7 +15,7 @@ export default async function PersonProfileModal({ profileUserId }: PersonProfil
 		<RouteModalPopup
 			paramName="profileUserId"
 			title={isCurrentUser ? "Your Profile" : "Profile"}
-			dialogClassName={profileStyles.ProfileDialog}
+			dialogClassName={userProfileDialogClassName}
 		>
 			<UserProfileContent
 				userId={profileUserId}

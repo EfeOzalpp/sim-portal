@@ -18,8 +18,8 @@ import EditUserFormContent from "@/app/users/[id]/edit/EditUserFormContent";
 import NavBar from "@/components/layout/NavBar";
 import ThemeSessionSync from "@/components/theme/ThemeSessionSync";
 import UserProfileContent from "@/components/domain/users/UserProfileContent";
+import { userProfileDialogClassName } from "@/components/domain/users/styles";
 import styles from "@/app/layout.module.css";
-import profileStyles from "@/components/domain/users/User.module.css";
 
 const appShellClassName =
 	"flex h-dvh min-h-0 flex-col overflow-hidden bg-[var(--app-bg)] text-[var(--app-text)] print:block! print:h-auto! print:overflow-visible!";
@@ -93,7 +93,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 					</div>
 					{session?.user?.id && (
 						<AccountModals
-							profileDialogClassName={profileStyles.ProfileDialog}
+							profileDialogClassName={userProfileDialogClassName}
 							profile={
 								<UserProfileContent
 									userId={session.user.id}

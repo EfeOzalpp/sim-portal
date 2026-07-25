@@ -4,7 +4,6 @@ import { MouseEvent } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import type { User } from "@prisma/client";
 import { useActionMode } from "@/components/layout/ActionMode";
-import styles from "@/components/domain/users/Users.module.css";
 import UserCard from "@/components/domain/users/UserCard";
 
 interface UserCardGridProps {
@@ -27,7 +26,7 @@ export default function UserCardGrid({ users }: UserCardGridProps) {
 	}
 
 	return (
-		<div className={styles.UsersGrid}>
+		<div className="grid grid-cols-[repeat(auto-fill,minmax(10rem,1fr))] justify-center gap-[var(--spacing-sm)] bg-[var(--app-surface)] px-[var(--spacing-sm)] pb-[var(--spacing-lg)] [&>*]:min-w-0 [&>*]:w-full [&>*]:rounded-[var(--border-md)] [&>*]:border-solid [&>*]:border-[var(--app-border)] [&>*]:bg-[var(--app-card-bg)] [&>*]:[border-width:var(--app-border-width)] print:grid-cols-[repeat(10,minmax(0,1fr))] print:justify-stretch print:gap-[0.06in] print:bg-white print:p-0 print:text-black print:[&>*]:break-inside-avoid print:[&>*]:border-[#ccc]! print:[&>*]:bg-white! print:[&>*]:[page-break-inside:avoid] print:[&_a]:text-inherit print:[&_a]:no-underline">
 			{users.map((user) => (
 				<UserCard
 					key={user.id}
