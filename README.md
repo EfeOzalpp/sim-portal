@@ -20,8 +20,8 @@ Ensure you have the following installed:
 
 ```bash
 # Clone the repository
-git clone https://github.com/aefader00/sim-next-app.git
-cd sim-next-app
+git clone https://github.com/EfeOzalpp/sim-portal.git
+cd sim-portal
 
 # Install dependencies
 npm install
