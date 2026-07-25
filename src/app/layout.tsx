@@ -10,9 +10,9 @@ import "./global-styles/app-theme/font-theme.css";
 import "./global-styles/app-theme/layout-theme.css";
 import "./global-styles/button-theme.css";
 import "./global-styles/input-theme.css";
-import { ConfigProvider } from "antd";
 
 import AccountModals from "@/components/layout/AccountModals";
+import AntdThemeProvider from "@/components/theme/AntdThemeProvider";
 import EditUserFormContent from "@/app/users/[id]/edit/EditUserFormContent";
 import NavBar from "@/components/layout/NavBar";
 import ThemeSessionSync from "@/components/theme/ThemeSessionSync";
@@ -56,9 +56,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 					dangerouslySetInnerHTML={{ __html: themeInitScript }}
 				/>
 				<ThemeSessionSync />
-				<ConfigProvider
-					wave={{ disabled: true }}
-				>
+				<AntdThemeProvider>
 					<div className={styles.appShell}>
 						<div className={styles.appDivider}>
 							{session && (
@@ -89,7 +87,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 							}
 						/>
 					)}
-				</ConfigProvider>
+				</AntdThemeProvider>
 			</body>
 		</html>
 	);
