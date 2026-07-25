@@ -82,7 +82,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 								<EditUserFormContent
 									userId={session.user.id}
 									showDangerZone={false}
-									redirectHref="?accountProfile=1"
+									redirectHref="/users?accountProfile=1"
 								/>
 							}
 						/>
