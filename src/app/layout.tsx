@@ -21,6 +21,27 @@ import UserProfileContent from "@/components/domain/users/UserProfileContent";
 import styles from "@/app/layout.module.css";
 import profileStyles from "@/components/domain/users/User.module.css";
 
+const appShellClassName =
+	"flex h-dvh min-h-0 flex-col overflow-hidden bg-[var(--app-bg)] text-[var(--app-text)] print:block! print:h-auto! print:overflow-visible!";
+
+const appDividerClassName =
+	"flex min-h-0 flex-[1_1_auto] flex-col items-stretch overflow-hidden min-[769px]:flex-row print:block! print:h-auto! print:overflow-visible!";
+
+const navDividerClassName = [
+	"relative z-50 min-h-0 min-w-0 flex-none overflow-visible bg-[var(--app-surface)] overscroll-contain",
+	"w-full border-r-0 border-b-0 before:content-none print:hidden!",
+	"min-[769px]:z-20 min-[769px]:w-auto",
+	"min-[769px]:before:invisible min-[769px]:before:block min-[769px]:before:box-border",
+	"min-[769px]:before:min-w-[calc(var(--nav-rail-content-width)+(var(--spacing-sm)*2)+var(--app-border-width))]",
+	"min-[769px]:before:whitespace-nowrap min-[769px]:before:border-r-[length:var(--app-border-width)] min-[769px]:before:border-transparent",
+	"min-[769px]:before:p-[var(--spacing-sm)] min-[769px]:before:font-[family-name:var(--font-family-heading)]",
+	"min-[769px]:before:text-[length:var(--font-size-h1)] min-[769px]:before:font-bold min-[769px]:before:leading-[var(--line-height-tight)]",
+	"min-[769px]:before:content-['SIM']",
+].join(" ");
+
+const contentDividerClassName =
+	"grid h-full min-h-0 min-w-0 flex-[1_1_auto] grid-cols-[minmax(0,1fr)] grid-rows-[auto] content-start items-stretch overflow-auto overscroll-contain bg-[var(--app-surface)] min-[769px]:grid-rows-[auto_minmax(0,1fr)] min-[769px]:overflow-x-hidden min-[769px]:overflow-y-auto print:block! print:h-auto! print:overflow-visible!";
+
 // Global metadata for the application
 export const metadata: Metadata = {
 	title: "SIM App",
@@ -58,14 +79,14 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 				/>
 				<ThemeSessionSync />
 				<AntdThemeProvider>
-					<div className={styles.appShell}>
-						<div className={styles.appDivider}>
+					<div className={appShellClassName}>
+						<div className={appDividerClassName}>
 							{session && (
-								<div className={styles.navDivider}>
+								<div className={navDividerClassName}>
 									<NavBar session={session} />
 								</div>
 							)}
-							<main className={styles.contentDivider}>
+							<main className={`${styles.contentDivider} ${contentDividerClassName}`}>
 								{children}
 							</main>
 						</div>

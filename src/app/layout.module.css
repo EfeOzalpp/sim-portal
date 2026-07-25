@@ -1,62 +1,8 @@
-.appShell {
-	display: flex;
-	flex-direction: column;
-	height: 100dvh;
-	min-height: 0;
-	overflow: hidden;
-	background: var(--app-bg);
-	color: var(--app-text);
-}
-
-.appDivider {
-	display: flex;
-	align-items: stretch;
-	flex: 1 1 auto;
-	min-height: 0;
-	overflow: hidden;
-}
-
-.navDivider {
-	position: relative;
-	z-index: 20;
-	flex: 0 0 auto;
-	min-width: 0;
-	min-height: 0;
-	overflow: visible;
-	background: var(--app-surface);
-	overscroll-behavior: contain;
-}
-
-.navDivider::before {
-	display: block;
-	visibility: hidden;
-	box-sizing: border-box;
-	min-inline-size: calc(var(--nav-rail-content-width) + (var(--spacing-sm) * 2) + var(--app-border-width));
-	padding: var(--spacing-sm);
-	border-right: var(--app-border-width) solid transparent;
-	font-family: var(--font-family-heading);
-	font-size: var(--font-size-h1);
-	font-weight: var(--font-weight-bold);
-	line-height: var(--line-height-tight);
-	white-space: nowrap;
-	content: "SIM";
-}
-
-.contentDivider {
-	flex: 1 1 auto;
-	display: grid;
-	grid-template-columns: minmax(0, 1fr);
-	grid-template-rows: auto minmax(0, 1fr);
-	align-content: start;
-	align-items: stretch;
-	min-width: 0;
-	min-height: 0;
-	height: 100%;
-	overflow-x: hidden;
-	overflow-y: auto;
-	overscroll-behavior: contain;
-	background: var(--app-surface);
-}
+/*
+ * These rules place route-owned children relative to one another. Keeping
+ * them here is clearer than encoding multi-level :has()/:not() selectors as
+ * Tailwind arbitrary variants on the root layout element.
+ */
 
 .contentDivider > * {
 	grid-column: 1 / -1;
@@ -70,14 +16,6 @@
 
 .contentDivider > [data-page-content] {
 	display: contents;
-}
-
-.contentDivider:has(> [data-page-content] > [data-content-nav]) {
-	grid-template-columns: minmax(12rem, 16rem) minmax(0, 1fr);
-}
-
-.contentDivider:has(> [data-page-content] > [data-content-nav]) > [data-page-title] {
-	grid-column: 2;
 }
 
 .contentDivider > [data-page-content] > [data-content-nav] {
@@ -107,8 +45,6 @@
 }
 
 .contentDivider > [data-page-content] > :not([data-content-nav]):not([data-action-mode-backdrop]) {
-	grid-column: 2;
-	grid-row: 2;
 	min-width: 0;
 	min-height: 0;
 	padding-top: var(--spacing-sm);
@@ -126,56 +62,22 @@
 	overflow: auto;
 }
 
-@media print {
-	.appShell,
-	.appDivider {
-		display: block;
-		height: auto;
-		overflow: visible;
+@media (min-width: 769px) {
+	.contentDivider:has(> [data-page-content] > [data-content-nav]) {
+		grid-template-columns: minmax(12rem, 16rem) minmax(0, 1fr);
 	}
 
-	.navDivider {
-		display: none;
+	.contentDivider:has(> [data-page-content] > [data-content-nav]) > [data-page-title] {
+		grid-column: 2;
 	}
 
-	.contentDivider {
-		display: block;
-		overflow: visible;
-		height: auto;
+	.contentDivider > [data-page-content] > :not([data-content-nav]):not([data-action-mode-backdrop]) {
+		grid-column: 2;
+		grid-row: 2;
 	}
 }
 
 @media (max-width: 768px) {
-	.appDivider {
-		flex-direction: column;
-	}
-
-	.navDivider {
-		flex: 0 0 auto;
-		width: 100%;
-		z-index: 50;
-		border-right: 0;
-		border-bottom: none;
-	}
-
-	.navDivider::before {
-		content: none;
-	}
-
-	.contentDivider {
-		overflow: auto;
-		grid-template-rows: auto;
-	}
-
-	/* Collapse the two-column sidebar+content layout to single column */
-	.contentDivider:has(> [data-page-content] > [data-content-nav]) {
-		grid-template-columns: minmax(0, 1fr);
-	}
-
-	.contentDivider:has(> [data-page-content] > [data-content-nav]) > [data-page-title] {
-		grid-column: 1;
-	}
-
 	/* Reset explicit grid placement from desktop rules */
 	.contentDivider > [data-page-content] > :not([data-content-nav]):not([data-action-mode-backdrop]) {
 		grid-column: 1;
