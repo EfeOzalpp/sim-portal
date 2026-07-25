@@ -1,9 +1,0 @@
-.ThursdaysContent {
-}
-
-.ThursdaysGrid {
-	display: grid;
-	gap: var(--gap-md);
-	padding-inline: var(--spacing-sm);
-	padding-bottom: var(--spacing-lg);
-}

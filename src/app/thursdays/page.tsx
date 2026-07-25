@@ -1,5 +1,4 @@
 import { Suspense } from "react";
-import styles from "@/components/domain/thursdays/Thursdays.module.css";
 import thursdayPageStyles from "@/components/domain/thursdays/ThursdayPage.module.css";
 import { Button } from "@/components/ui/AntD";
 import NavContent from "@/components/layout/NavContent";
@@ -97,7 +96,7 @@ async function ThursdaysList({
   }
 
   return (
-    <div className={styles.ThursdaysGrid}>
+    <div className="grid gap-[var(--gap-md)] px-[var(--spacing-sm)] pb-[var(--spacing-lg)]">
       {thursdays.map((thursday: any) => (
         <ThursdayCard key={thursday.id} thursday={thursday} isAdmin={isAdmin} />
       ))}
@@ -163,15 +162,13 @@ export default async function Thursdays({ searchParams }: ThursdaysProps) {
             ) : null
           }
         />
-        <div className={styles.ThursdaysContent}>
-          <ResultsContainer>
-            <Suspense
-              fallback={<div style={{ opacity: 0.5, padding: "var(--spacing-md)", background: "transparent" }}>Loading days...</div>}
-            >
-              <ThursdaysList filters={filters} isAdmin={isAdmin} semesters={semesters} />
-            </Suspense>
-          </ResultsContainer>
-        </div>
+        <ResultsContainer>
+          <Suspense
+            fallback={<div style={{ opacity: 0.5, padding: "var(--spacing-md)", background: "transparent" }}>Loading days...</div>}
+          >
+            <ThursdaysList filters={filters} isAdmin={isAdmin} semesters={semesters} />
+          </Suspense>
+        </ResultsContainer>
         {profileUserId && (
           <PersonProfileModal key={profileUserId} profileUserId={profileUserId} />
         )}
