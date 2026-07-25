@@ -144,6 +144,10 @@
 	--user-card-action-icon: url("../../theme/assets/delete/delete.svg");
 }
 
+.surface[data-action-mode="edit-semesters"] :global([data-semester-action-overlay]) {
+	--semester-card-action-icon: url("../../theme/assets/edit/edit.svg");
+}
+
 .surface[data-action-mode="delete-thursdays"] :global([data-thursday-action-overlay]) {
 	--thursday-card-action-icon: url("../../theme/assets/delete/delete.svg");
 }

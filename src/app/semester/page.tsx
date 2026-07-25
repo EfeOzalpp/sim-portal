@@ -5,7 +5,6 @@ import { Button } from "@/components/primitives/AntD";
 import NavContent from "@/components/layout/NavContent";
 import PageTitle from "@/components/layout/PageTitle";
 import { getAllSemesters } from "@/actions/semesters";
-import styles from "@/app/semester/page.module.css";
 import { formatSemesterCode, getSearchParamValue } from "@/components/domain/semesters/semester-filter";
 import { ActionModeButton, ActionModeSurface } from "@/components/layout/ActionMode";
 import RouteModalPopup from "@/components/modals/ModalPopup/RouteModalPopup";
@@ -116,11 +115,11 @@ export default async function SemesterPage({ searchParams }: SemesterPageProps) 
             </>
           }
         />
-        <div className={styles.semesterPage}>
+        <div className="px-[var(--spacing-sm)] pb-[var(--spacing-lg)]">
           {visibleSemesters.length > 0 ? (
             <SemesterCardGrid semesters={visibleSemesters} />
           ) : (
-            <p className={styles.emptyState}>No semesters found.</p>
+            <p className="m-0 text-[var(--app-muted)]">No semesters found.</p>
           )}
         </div>
         {addSemester && !editSemesterId && !deleteSemesterId && (
@@ -128,7 +127,7 @@ export default async function SemesterPage({ searchParams }: SemesterPageProps) 
             key="add-semester"
             paramName="addSemester"
             title="Add Semester"
-            dialogClassName={styles.semesterDialog}
+            dialogClassName="w-[min(52rem,100%)] max-[768px]:h-dvh"
           >
             <AddSemesterFormContent />
           </RouteModalPopup>
@@ -138,7 +137,7 @@ export default async function SemesterPage({ searchParams }: SemesterPageProps) 
             key={editSemesterId}
             paramName="editSemesterId"
             title="Edit Semester"
-            dialogClassName={styles.semesterDialog}
+            dialogClassName="w-[min(52rem,100%)] max-[768px]:h-dvh"
           >
             <EditSemesterFormContent semesterId={editSemesterId} />
           </RouteModalPopup>
