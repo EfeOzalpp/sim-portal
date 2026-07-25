@@ -15,7 +15,13 @@ import {
 import { handleFormAction } from "@/helpers";
 import { BasicUser, SemesterInput } from "@/components/forms/schemas";
 import { ActionResult } from "@/actions/utilities";
-import styles from "@/components/forms/semester/SemesterForm.module.css";
+import clsx from "clsx";
+
+const textButtonClassName =
+  "inline-flex min-h-[1.875rem] cursor-pointer items-center justify-center rounded-[var(--border-sm)] border-solid px-[var(--spacing-sm)] text-[length:var(--font-size-sm)] font-[var(--font-weight-semibold)] [background:var(--button-bg,var(--app-surface))] [border-color:var(--button-border,var(--app-border))] [border-width:var(--app-border-width)] [color:var(--button-text,var(--app-text))] [font:inherit] hover:[background:var(--button-bg-hover,var(--app-subtle))] hover:[border-color:var(--button-border-hover,var(--app-border))] hover:[color:var(--button-text-hover,var(--app-text))]";
+
+const dangerTextButtonClassName =
+  "[--button-bg:#f7dddd] [--button-bg-hover:#efcccc] [--button-border:#e4baba] [--button-border-hover:#d9a8a8] [--button-text:#421717] [--button-text-hover:#421717] dark:[--button-bg:#462d2d] dark:[--button-bg-hover:#553535] dark:[--button-border:#6f4747] dark:[--button-border-hover:#805252] dark:[--button-text:#fff0f0] dark:[--button-text-hover:#fff]";
 
 function getSemesterNameOptions(currentValue?: string) {
   const options = Array.from({ length: 100 }, (_, year) => {
@@ -115,7 +121,7 @@ export default function SemesterForm({
   };
 
   return (
-    <form onSubmit={handleSubmit(handleFormSubmit)} className={styles.form}>
+    <form onSubmit={handleSubmit(handleFormSubmit)} className="flex h-full flex-col">
         {error && (
           <Alert
             description={error}
@@ -124,10 +130,10 @@ export default function SemesterForm({
             closable
           />
         )}
-        <div className={styles.formStack}>
-          <div className={styles.formGrid}>
-            <div className={styles.fieldStack}>
-              <span className={`${styles.fieldLabel} ui-label`}>Semester Name</span>
+        <div className="flex flex-1 flex-col gap-[var(--gap-md)]">
+          <div className="grid w-full grid-cols-[max-content_minmax(0,1fr)] gap-4 max-[600px]:grid-cols-1">
+            <div className="flex min-w-0 flex-col gap-[var(--gap-sm)]">
+              <span className="ui-label m-0 block">Semester Name</span>
               <Controller
                 control={control}
                 name="name"
@@ -165,8 +171,8 @@ export default function SemesterForm({
               />
             </div>
 
-            <div className={styles.fieldStack}>
-              <span className={`${styles.fieldLabel} ui-label`}>Select Date Range</span>
+            <div className="flex min-w-0 flex-col gap-[var(--gap-sm)]">
+              <span className="ui-label m-0 block">Select Date Range</span>
               <Controller
                 control={control}
                 name="dates"
@@ -193,20 +199,20 @@ export default function SemesterForm({
               name="users"
               render={({ field }) => (
                 <>
-                  <div className={styles.sectionHeader}>
-                    <span className={`${styles.sectionLabel} ui-label`}>Select Users</span>
-                    <div className={styles.inlineActions}>
+                  <div className="mb-[var(--gap-sm)] flex items-end justify-between gap-[var(--gap-md)] max-[600px]:flex-col max-[600px]:items-stretch">
+                    <span className="ui-label m-0 block">Select Users</span>
+                    <div className="flex items-center gap-[var(--gap-sm)]">
                       <button
                         type="button"
                         onClick={() => field.onChange(selectableUsers.map((u) => u.id))}
-                        className={styles.textButton}
+                        className={textButtonClassName}
                       >
                         Select all
                       </button>
                       <button
                         type="button"
                         onClick={() => field.onChange([])}
-                        className={`${styles.textButton} ${styles.textButtonDanger}`}
+                        className={clsx(textButtonClassName, dangerTextButtonClassName)}
                       >
                         Unselect all
                       </button>
@@ -228,11 +234,14 @@ export default function SemesterForm({
                   optionRender={(option) => {
                     const isSelected = (field.value ?? []).includes(option.value as string);
                     return (
-                      <div className={styles.optionRow}>
-                        <span className={`${styles.optionBadge} ${isSelected ? styles.optionBadgeSelected : ""}`}>
+                      <div className="flex items-center gap-[var(--gap-sm)]">
+                        <span
+                          className="flex-none rounded-[var(--border-sm)] bg-[#f7dddd] px-[var(--spacing-sm)] py-[calc(var(--spacing-sm)/4)] font-[family-name:var(--font-family-label)] text-[length:var(--font-size-label)] leading-[var(--line-height-label)] font-[var(--font-weight-label)] text-[#421717] uppercase data-[selected=true]:bg-[#dcefe3] data-[selected=true]:text-[#1f6334] dark:bg-[#462d2d] dark:text-[#fff0f0] dark:data-[selected=true]:bg-[#294434] dark:data-[selected=true]:text-[#bfe8c9]"
+                          data-selected={isSelected ? "true" : undefined}
+                        >
                           {isSelected ? "Selected" : "Unselected"}
                         </span>
-                        <span className={styles.optionName}>{option.label}</span>
+                        <span className="font-[var(--font-weight-semibold)]">{option.label}</span>
                       </div>
                     );
                   }}
@@ -243,7 +252,7 @@ export default function SemesterForm({
           </div>
         </div>
 
-        <div className={styles.submitRow}>
+        <div className="mt-[var(--spacing-md)] flex justify-start border-t-[length:var(--app-border-width)] border-solid border-[var(--app-border)] pt-[var(--spacing-md)]">
         <Button type="submit" disabled={isSubmitting} className="accept-button">
           {isSubmitting
             ? "Saving..."
