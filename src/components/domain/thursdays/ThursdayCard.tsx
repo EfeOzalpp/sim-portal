@@ -1,4 +1,3 @@
-import styles from "@/components/domain/thursdays/ThursdayCard.module.css";
 import ProductionsCollapse from "@/components/domain/thursdays/ProductionsCollapse";
 import ProductionCard from "@/components/domain/thursdays/ProductionCard";
 import { auth } from "@/authentication";
@@ -63,7 +62,7 @@ export default async function ThursdayCard({
                 />
               ))
             ) : (
-              <span className={styles.EmptyLabel}>No current productions</span>
+              <span className="text-[0.82rem] text-[var(--app-muted)] italic">No current productions</span>
             )}
           </>
         ),

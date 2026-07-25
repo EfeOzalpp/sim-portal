@@ -1,4 +1,3 @@
-import styles from "@/components/domain/thursdays/ThursdayCard.module.css";
 import PersonLink from "@/components/ui/PersonLink";
 import PresentationCard from "@/components/domain/thursdays/PresentationCard";
 
@@ -48,30 +47,34 @@ export default async function ProductionCard({
     productionCount > 1 ? `${formatOrdinal(productionIndex + 1)} Production` : "Production";
 
   return (
-    <div className={styles.ProductionCardBody}>
-      <div className={styles.ProductionSection}>
-        <h3 className={styles.SectionTitle}>{productionTitle}</h3>
-        <div className={styles.People}>
-          <div className={styles.ProductionMeta}>
-            <div className={styles.MetaItem}>
+    <div className={productionIndex > 0 ? "-mx-4 mt-7 border-t border-[var(--app-border)] px-4 pt-6" : undefined}>
+      <div className="flex flex-col gap-2">
+        <h3 className="m-0 text-[1.15rem] font-bold leading-[1.25]">{productionTitle}</h3>
+        <div className="flex flex-col gap-4 min-[768px]:flex-row">
+          <div className="flex flex-1 flex-col gap-3">
+            <div className="flex flex-col gap-1">
               <b>Name</b>
-              <div className={styles.MetaValue}>{production.name}</div>
+              <div className="leading-[1.4]">{production.name}</div>
             </div>
-            <div className={styles.MetaItem}>
+            <div className="flex flex-col gap-1">
               <b>Location</b>
-              <div className={styles.MetaValue}>{production.location}</div>
+              <div className="leading-[1.4]">{production.location}</div>
             </div>
-            <div className={styles.MetaItem}>
+            <div className="flex flex-col gap-1">
               <b>Date</b>
-              <div className={styles.MetaValue}>{formattedDate}</div>
+              <div className="leading-[1.4]">{formattedDate}</div>
             </div>
           </div>
-          <div>
+          <div className="flex flex-1 flex-col gap-[0.4rem] border-t-[length:var(--app-border-width)] border-solid border-[var(--app-border)] pt-3 min-[768px]:border-t-0 min-[768px]:pt-0">
             <b>Producers</b>
-            <div className={styles.Names}>
+            <div className="mt-1 flex flex-row flex-wrap gap-x-2 gap-y-[0.15rem] min-[768px]:flex-col min-[768px]:gap-[0.2rem]">
               {producers.length > 0 ? (
                 producers.map((producer: any) => (
-                  <PersonLink key={producer.id} userId={producer.id} className={styles.PersonLink}>
+                  <PersonLink
+                    key={producer.id}
+                    userId={producer.id}
+                    className="text-inherit no-underline underline-offset-[0.14em] hover:text-[var(--brand-color)] hover:underline"
+                  >
                     {producer.name}
                   </PersonLink>
                 ))
@@ -80,12 +83,16 @@ export default async function ProductionCard({
               )}
             </div>
           </div>
-          <div>
+          <div className="flex flex-1 flex-col gap-[0.4rem] border-t-[length:var(--app-border-width)] border-solid border-[var(--app-border)] pt-3 min-[768px]:border-t-0 min-[768px]:pt-0">
             <b>Faculty</b>
-            <div className={styles.Names}>
+            <div className="mt-1 flex flex-row flex-wrap gap-x-2 gap-y-[0.15rem] min-[768px]:flex-col min-[768px]:gap-[0.2rem]">
               {faculty.length > 0 ? (
                 faculty.map((facultyMember: any) => (
-                  <PersonLink key={facultyMember.id} userId={facultyMember.id} className={styles.PersonLink}>
+                  <PersonLink
+                    key={facultyMember.id}
+                    userId={facultyMember.id}
+                    className="text-inherit no-underline underline-offset-[0.14em] hover:text-[var(--brand-color)] hover:underline"
+                  >
                     {facultyMember.name}
                   </PersonLink>
                 ))
@@ -97,11 +104,11 @@ export default async function ProductionCard({
         </div>
       </div>
 
-      <div className={styles.ProductionDivider} />
+      <div className="my-3 border-t border-[var(--app-border)]" />
 
       <div>
-        <span className={`ui-label ${styles.PresentationsLabel}`}>Presentations</span>
-        <div style={{ marginTop: "0.5rem" }}>
+        <span className="ui-label block">Presentations</span>
+        <div className="mt-2">
           {production.presentations.length > 0 ? (
             production.presentations.map((presentation: any) => (
               <PresentationCard
