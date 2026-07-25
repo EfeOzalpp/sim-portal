@@ -45,7 +45,7 @@ const contentDividerClassName =
 // Global metadata for the application
 export const metadata: Metadata = {
 	title: "SIM App",
-	description: "System for Information Management",
+	description: "Studio for Interrelated Media",
 };
 
 const themeInitScript = `
