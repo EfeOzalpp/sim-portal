@@ -1,19 +1,17 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/authentication";
-import { FilterInput } from "@/components/ui/Filters";
-import SemesterFilterSelect from "@/components/ui/SemesterFilterSelect";
+import { FilterInput } from "@/components/primitives/Filters";
+import SemesterFilterSelect from "@/components/domain/semesters/SemesterFilterSelect";
 import NavContent from "@/components/layout/NavContent";
 import PageTitle from "@/components/layout/PageTitle";
-import PrintLink from "@/components/ui/PrintLink";
+import PrintLink from "@/components/primitives/PrintLink";
 import { getAllSemesters, getIndividualSemesterData } from "@/actions/semesters";
 import IndividualPerformanceTable from "@/components/domain/individual/IndividualPerformanceTable";
-import ResultsContainer from "@/components/ui/ResultsContainer";
-import { ActionModeButton, ActionModeSurface } from "@/components/ui/ActionMode";
-import { formatSemesterCode, getSelectedSemesterId, isAllSemestersValue } from "@/components/ui/semester-filter";
+import { ActionModeButton, ActionModeSurface } from "@/components/layout/ActionMode";
+import { formatSemesterCode, getSelectedSemesterId, isAllSemestersValue } from "@/components/domain/semesters/semester-filter";
 import PersonProfileModal from "@/components/domain/users/PersonProfileModal";
-import RouteModalPopup from "@/components/ui/ModalPopup/RouteModalPopup";
-import ThursdayDetailContent from "@/components/domain/thursdays/ThursdayDetailContent";
-import thursdayPageStyles from "@/components/domain/thursdays/ThursdayPage.module.css";
+import RouteModalPopup from "@/components/modals/ModalPopup/RouteModalPopup";
+import ThursdayDetailContent, { thursdayDetailDialogClassName } from "@/components/domain/thursdays/ThursdayDetailContent";
 
 interface IndividualPageProps {
 	searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -68,11 +66,9 @@ export default async function IndividualPage({ searchParams }: IndividualPagePro
 					printContent={<PrintLink />}
 				/>
 				<div data-full-bleed-content>
-					<ResultsContainer>
-						<IndividualPerformanceTable
-							users={semesterData?.users || []}
-						/>
-					</ResultsContainer>
+					<IndividualPerformanceTable
+						users={semesterData?.users || []}
+					/>
 				</div>
 				{profileUserId && (
 					<PersonProfileModal key={profileUserId} profileUserId={profileUserId} />
@@ -82,7 +78,7 @@ export default async function IndividualPage({ searchParams }: IndividualPagePro
 						key={thursdayId}
 						paramName="thursdayId"
 						title="Thursday"
-						dialogClassName={thursdayPageStyles.thursdayDetailDialog}
+						dialogClassName={thursdayDetailDialogClassName}
 					>
 						<ThursdayDetailContent thursdayId={thursdayId} />
 					</RouteModalPopup>

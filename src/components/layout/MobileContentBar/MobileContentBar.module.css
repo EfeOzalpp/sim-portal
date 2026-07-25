@@ -79,13 +79,13 @@
 	}
 
 	.searchIcon {
-		mask-image: url("../../../app/assets/search/search.svg");
-		-webkit-mask-image: url("../../../app/assets/search/search.svg");
+		mask-image: url("../../theme/assets/search/search.svg");
+		-webkit-mask-image: url("../../theme/assets/search/search.svg");
 	}
 
 	.manageIcon {
-		mask-image: url("../../../app/assets/edit/edit.svg");
-		-webkit-mask-image: url("../../../app/assets/edit/edit.svg");
+		mask-image: url("../../theme/assets/edit/edit.svg");
+		-webkit-mask-image: url("../../theme/assets/edit/edit.svg");
 	}
 
 	/* Manage popup: fixed, drops below the toggle bar (same pattern as filter popup) */
@@ -155,11 +155,11 @@
 		width: var(--svg-size-md);
 		height: var(--svg-size-md);
 		background: currentColor;
-		mask-image: url("../../../app/assets/arrow/up.svg");
+		mask-image: url("../../theme/assets/arrow/up.svg");
 		mask-position: center;
 		mask-repeat: no-repeat;
 		mask-size: var(--svg-size-md) var(--svg-size-md);
-		-webkit-mask-image: url("../../../app/assets/arrow/up.svg");
+		-webkit-mask-image: url("../../theme/assets/arrow/up.svg");
 		-webkit-mask-position: center;
 		-webkit-mask-repeat: no-repeat;
 		-webkit-mask-size: var(--svg-size-md) var(--svg-size-md);

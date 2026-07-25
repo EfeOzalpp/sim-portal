@@ -1,9 +1,7 @@
 import Link from "next/link";
-import styles from "@/components/domain/thursdays/PresentationCard.module.css";
-import PersonLink from "@/components/ui/PersonLink";
+import PersonLink from "@/components/domain/users/PersonLink";
 import { formatNiceListFromArray } from "@/helpers";
 import { Prisma } from "@prisma/client";
-import clsx from "clsx";
 
 type PresentationWithPresenters = Prisma.PresentationGetPayload<{
   include: {
@@ -35,7 +33,11 @@ export default function PresentationCard({
     isUserProfile ? (
       <span key={`author.id:${author.id}`}>{author.name}</span>
     ) : (
-      <PersonLink key={`author.id:${author.id}`} userId={author.id} className={styles.PersonLink}>
+      <PersonLink
+        key={`author.id:${author.id}`}
+        userId={author.id}
+        className="text-inherit! no-underline underline-offset-[0.14em] hover:text-[var(--brand-color)]! hover:underline"
+      >
         {author.name}
       </PersonLink>
     )
@@ -45,19 +47,19 @@ export default function PresentationCard({
 
   if (!isUserProfile) {
     return (
-      <div className={clsx(styles.Presentation, styles.PresentationRow)}>
-        <div className={styles.PresentationName}>
+      <div className="my-3 grid w-full grid-cols-1 items-baseline gap-1 text-inherit no-underline min-[768px]:grid-cols-[minmax(10rem,14rem)_minmax(0,1fr)] min-[768px]:gap-4">
+        <div className="flex min-w-0 flex-col gap-1 leading-[1.4]">
           <b>Name</b>
           <div>{presentation.name}</div>
         </div>
-        <div className={styles.PresentationDetails}>
+        <div className="flex min-w-0 flex-col gap-[0.35rem]">
           {presentation.about !== "" ? (
             <div><i>{presentation.about}</i></div>
           ) : null}
-          <div className={styles.PresenterGroup}>
+          <div className="flex flex-col gap-1">
             <b>Presenters</b>
             {authors.length > 0 ? (
-              <div className={styles.Authors}>{formatNiceListFromArray(authors)}</div>
+              <div className="flex flex-wrap gap-x-1 gap-y-0">{formatNiceListFromArray(authors)}</div>
             ) : (
               <div>No one is credited yet.</div>
             )}
@@ -68,13 +70,13 @@ export default function PresentationCard({
   }
 
   const content = (
-    <div className={styles.PresentationInner}>
+    <div className="flex w-full flex-row flex-wrap items-baseline gap-x-3 gap-y-1 [&_div]:m-0">
       <div><b>{presentation.name}</b></div>
       {presentation.about !== "" ? (
         <div><i>{presentation.about}</i></div>
       ) : null}
       {authors.length > 0 ? (
-        <div className={styles.Authors}>{formatNiceListFromArray(authors)}</div>
+        <div className="flex flex-wrap gap-x-1 gap-y-0">{formatNiceListFromArray(authors)}</div>
       ) : (
         <div>No one is credited as an author of this presentation yet.</div>
       )}
@@ -84,7 +86,7 @@ export default function PresentationCard({
   return (
     <Link
       href={thursdayId ? `/thursdays/${thursdayId}` : "#"}
-      className={clsx(styles.Presentation, styles.ProfilePresentation)}
+      className="my-3 flex w-full text-inherit! no-underline hover:text-[var(--brand-color)]!"
     >
       {content}
     </Link>

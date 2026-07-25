@@ -2,7 +2,7 @@
 
 import type { ReactNode } from "react";
 import { useSearchParams } from "next/navigation";
-import RouteModalPopup from "@/components/ui/ModalPopup/RouteModalPopup";
+import RouteModalPopup from "@/components/modals/ModalPopup/RouteModalPopup";
 
 interface AccountModalsProps {
 	profile: ReactNode;

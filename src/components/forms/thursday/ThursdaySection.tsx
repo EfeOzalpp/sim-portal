@@ -1,10 +1,9 @@
 "use client";
 
 import { Controller } from "react-hook-form";
-import { Input, DatePicker, Select } from "@/components/ui/AntD";
+import { Input, DatePicker, Select } from "@/components/primitives/AntD";
 import dayjs from "dayjs";
-import styles from "@/components/forms/thursday/ThursdaySection.module.css";
-import formStyles from "@/components/forms/thursday/ThursdayForm.module.css";
+import { fieldStackClassName } from "@/components/forms/thursday/thursdayFormClasses";
 
 interface ThursdaySectionProps {
   control: any;
@@ -16,11 +15,11 @@ export default function ThursdaySection({
   semesters,
 }: ThursdaySectionProps) {
   return (
-    <div className={formStyles.formStack}>
-      <div className={semesters ? styles.formGrid : undefined}>
+    <div className="flex flex-1 flex-col gap-[calc(var(--gap-lg)*1.15)]">
+      <div className={semesters ? "grid grid-cols-1 gap-[var(--gap-lg)] min-[601px]:grid-cols-2" : undefined}>
         {semesters && (
-          <div className={formStyles.fieldStack}>
-            <span className={`${formStyles.fieldLabel} ui-label`}>Semester</span>
+          <div className={fieldStackClassName}>
+            <span className="ui-label m-0 block">Semester</span>
             <Controller
               control={control}
               name="semesterId"
@@ -35,8 +34,8 @@ export default function ThursdaySection({
             />
           </div>
         )}
-        <div className={formStyles.fieldStack}>
-          <span className={`${formStyles.fieldLabel} ui-label`}>Day Name</span>
+        <div className={fieldStackClassName}>
+          <span className="ui-label m-0 block">Day Name</span>
           <Controller
             control={control}
             name="name"
@@ -58,8 +57,8 @@ export default function ThursdaySection({
         </div>
       </div>
 
-      <div className={formStyles.fieldStack}>
-        <span className={`${formStyles.fieldLabel} ui-label`}>Date</span>
+      <div className={fieldStackClassName}>
+        <span className="ui-label m-0 block">Date</span>
         <Controller
           control={control}
           name="date"

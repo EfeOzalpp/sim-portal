@@ -10,14 +10,13 @@ import {
   Card,
   Button,
   Alert,
-} from "@/components/ui/AntD";
+} from "@/components/primitives/AntD";
 import { transformUserFromAPI } from "@/components/forms/user/user.transformers";
-import ImageUpload from "@/components/ui/ImageUpload";
-import DeleteButton from "@/components/ui/DeleteButton";
-import RepeatableInput from "@/components/ui/RepeatableInput";
+import ImageUpload from "@/components/primitives/ImageUpload";
+import DeleteButton from "@/components/modals/DeleteButton";
+import RepeatableInput from "@/components/primitives/RepeatableInput";
 import { handleFormAction } from "@/helpers";
 import { UserInput } from "@/components/forms/schemas";
-import styles from "@/components/forms/user/UserForm.module.css";
 
 const { Text, Title } = Typography;
 
@@ -161,7 +160,7 @@ export default function UserForm({
 
         <Space orientation="vertical" size="middle" style={{ width: "100%" }}>
           <div>
-            <span className={`${styles.fieldLabel} ui-label`}>
+            <span className="ui-label mb-[var(--spacing-sm)] block">
               Photo
             </span>
             <Controller
@@ -174,7 +173,7 @@ export default function UserForm({
                 />
               )}
             />
-            <span className={`${styles.fieldNote} ui-note`}>
+            <span className="ui-note mt-[calc(var(--spacing-sm)/2)] block">
               {isCurrentUserAdmin
                 ? <>You can upload high resolution photos up to 8MB.<br />They will be automatically downsized.</>
                 : "Contact SIM faculty to change your photo."}
@@ -182,9 +181,9 @@ export default function UserForm({
           </div>
 
           {isCurrentUserAdmin && (
-            <div className={styles.adminFields}>
-              <div className={styles.fieldGroup}>
-                <span className={`${styles.fieldLabel} ui-label`}>
+            <div className="grid w-full grid-cols-[minmax(0,1fr)_minmax(0,1fr)] gap-4 max-[600px]:grid-cols-1">
+              <div className="min-w-0 [&_.ant-select]:min-w-0 [&_.ant-select]:w-full">
+                <span className="ui-label mb-[var(--spacing-sm)] block">
                   Semesters Enrolled
                 </span>
                 <Controller
@@ -194,7 +193,7 @@ export default function UserForm({
                     const { startCode, endCode } = getRangeEndpoints(field.value);
 
                     return (
-                      <div className={styles.semesterRange}>
+                      <div className="grid w-full grid-cols-[minmax(0,1fr)_min-content_minmax(0,1fr)] items-center gap-x-4 [&_.ant-select]:min-w-0 [&_.ant-select]:w-full">
                         <Select
                           value={startCode}
                           placeholder="From"
@@ -209,7 +208,7 @@ export default function UserForm({
                             );
                           }}
                         />
-                        <span className={styles.semesterRangeSeparator}>to</span>
+                        <span className="justify-self-center whitespace-nowrap text-[0.9rem] leading-none font-bold text-[var(--app-muted)]">to</span>
                         <Select
                           value={endCode}
                           placeholder="To"
@@ -230,8 +229,8 @@ export default function UserForm({
                 />
               </div>
 
-              <div className={styles.fieldGroup}>
-                <span className={`${styles.fieldLabel} ui-label`}>Role</span>
+              <div className="min-w-0 [&_.ant-select]:min-w-0 [&_.ant-select]:w-full">
+                <span className="ui-label mb-[var(--spacing-sm)] block">Role</span>
                 <Controller
                   control={control}
                   name="role"
@@ -252,9 +251,9 @@ export default function UserForm({
           )}
         </Space>
 
-        <div className={styles.formGrid}>
+        <div className="grid grid-cols-2 gap-4 max-[600px]:w-full max-[600px]:grid-cols-1">
           <div>
-            <span className={`${styles.fieldLabel} ui-label`}>
+            <span className="ui-label mb-[var(--spacing-sm)] block">
               Full Name
             </span>
             <Controller
@@ -277,7 +276,7 @@ export default function UserForm({
           </div>
 
           <div>
-            <span className={`${styles.fieldLabel} ui-label`}>
+            <span className="ui-label mb-[var(--spacing-sm)] block">
               Pronouns
             </span>
             <Controller
@@ -290,7 +289,7 @@ export default function UserForm({
           </div>
 
           <div>
-            <span className={`${styles.fieldLabel} ui-label`}>
+            <span className="ui-label mb-[var(--spacing-sm)] block">
               Email Address
             </span>
             <Controller
@@ -312,7 +311,7 @@ export default function UserForm({
                     status={fieldState.error ? "error" : ""}
                   />
                   {!isCurrentUserAdmin && user && (
-                    <span className={`${styles.fieldNote} ui-note`}>
+                    <span className="ui-note mt-[calc(var(--spacing-sm)/2)] block">
                       Contact SIM faculty to change your email.
                     </span>
                   )}
@@ -325,7 +324,7 @@ export default function UserForm({
           </div>
 
           <div>
-            <span className={`${styles.fieldLabel} ui-label`}>
+            <span className="ui-label mb-[var(--spacing-sm)] block">
               Contact & Links
             </span>
             <Controller
@@ -340,14 +339,14 @@ export default function UserForm({
                 />
               )}
             />
-            <span className={`${styles.fieldNote} ui-note`}>
+            <span className="ui-note mt-[calc(var(--spacing-sm)/2)] block">
               Phone number, social media, gallery of your presentations, handles, etc.
             </span>
           </div>
         </div>
 
-        <div className={styles.aboutField}>
-          <span className={`${styles.fieldLabel} ui-label`}>
+        <div className="w-full">
+          <span className="ui-label mb-[var(--spacing-sm)] block">
             About
           </span>
           <Controller

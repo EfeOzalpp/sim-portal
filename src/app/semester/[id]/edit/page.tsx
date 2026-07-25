@@ -1,9 +1,8 @@
 import { getSemester } from "@/actions/semesters";
 import { notFound } from "next/navigation";
 import NavContent from "@/components/layout/NavContent";
-import CloseButton from "@/components/ui/CloseButton";
+import CloseButton from "@/components/primitives/CloseButton";
 import EditSemesterFormContent from "@/app/semester/[id]/edit/EditSemesterFormContent";
-import styles from "@/app/semester/[id]/edit/page.module.css";
 
 interface EditSemesterProps {
 	params: Promise<{ id: string }>;
@@ -19,11 +18,11 @@ export default async function EditSemester({ params }: EditSemesterProps) {
 	return (
 		<>
 			<NavContent
-				className={styles.pageNav}
+				className="mx-auto max-w-[50%] border-b border-solid border-[var(--app-border)]"
 				start={<h2>Edit Semester</h2>}
 				end={<CloseButton href="/semester" />}
 			/>
-			<div className={styles.pageWrapper}>
+			<div className="mx-auto max-w-[50%] pb-4">
 				<div className="content-card">
 					<EditSemesterFormContent semesterId={id} />
 				</div>

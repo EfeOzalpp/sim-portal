@@ -214,12 +214,12 @@
 	width: var(--svg-size-lg);
 	height: var(--svg-size-lg);
 	background: var(--app-text);
-	mask-image: url("../../../app/assets/edit/edit.svg");
+	mask-image: url("../../theme/assets/edit/edit.svg");
 	mask-position: center;
 	mask-repeat: no-repeat;
 	mask-size: contain;
 	transition: transform 120ms ease;
-	-webkit-mask-image: url("../../../app/assets/edit/edit.svg");
+	-webkit-mask-image: url("../../theme/assets/edit/edit.svg");
 	-webkit-mask-position: center;
 	-webkit-mask-repeat: no-repeat;
 	-webkit-mask-size: contain;

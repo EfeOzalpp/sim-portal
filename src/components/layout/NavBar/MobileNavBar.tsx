@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import type { Session } from "next-auth";
-import { Button } from "@/components/ui/AntD";
+import { Button } from "@/components/primitives/AntD";
 import NavButtonLink from "@/components/layout/NavBar/NavButtonLink";
 import UserAccountLink from "@/components/layout/NavBar/UserAccountLink";
 import ThemeSwitch from "@/components/layout/NavBar/ThemeSwitch";

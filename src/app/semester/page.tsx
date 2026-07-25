@@ -1,19 +1,18 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/authentication";
-import { FilterInput } from "@/components/ui/Filters";
-import { Button } from "@/components/ui/AntD";
+import { FilterInput } from "@/components/primitives/Filters";
+import { Button } from "@/components/primitives/AntD";
 import NavContent from "@/components/layout/NavContent";
 import PageTitle from "@/components/layout/PageTitle";
 import { getAllSemesters } from "@/actions/semesters";
-import styles from "@/app/semester/page.module.css";
-import { formatSemesterCode, getSearchParamValue } from "@/components/ui/semester-filter";
-import { ActionModeButton, ActionModeSurface } from "@/components/ui/ActionMode";
-import RouteModalPopup from "@/components/ui/ModalPopup/RouteModalPopup";
+import { formatSemesterCode, getSearchParamValue } from "@/components/domain/semesters/semester-filter";
+import { ActionModeButton, ActionModeSurface } from "@/components/layout/ActionMode";
+import RouteModalPopup from "@/components/modals/ModalPopup/RouteModalPopup";
 import AddSemesterFormContent from "@/app/semester/add/AddSemesterFormContent";
 import EditSemesterFormContent from "@/app/semester/[id]/edit/EditSemesterFormContent";
 import SemesterDeleteConfirmContent from "@/components/domain/semesters/SemesterDeleteConfirmContent";
 import SemesterCardGrid from "@/components/domain/semesters/SemesterCardGrid";
-import confirmDeleteStyles from "@/components/ui/ConfirmDelete/ConfirmDelete.module.css";
+import { confirmDeleteDialogClassName } from "@/components/modals/ConfirmDelete/styles";
 
 interface SemesterPageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -116,11 +115,11 @@ export default async function SemesterPage({ searchParams }: SemesterPageProps) 
             </>
           }
         />
-        <div className={styles.semesterPage}>
+        <div className="px-[var(--spacing-sm)] pb-[var(--spacing-lg)]">
           {visibleSemesters.length > 0 ? (
             <SemesterCardGrid semesters={visibleSemesters} />
           ) : (
-            <p className={styles.emptyState}>No semesters found.</p>
+            <p className="m-0 text-[var(--app-muted)]">No semesters found.</p>
           )}
         </div>
         {addSemester && !editSemesterId && !deleteSemesterId && (
@@ -128,7 +127,7 @@ export default async function SemesterPage({ searchParams }: SemesterPageProps) 
             key="add-semester"
             paramName="addSemester"
             title="Add Semester"
-            dialogClassName={styles.semesterDialog}
+            dialogClassName="w-[min(52rem,100%)] max-[768px]:h-dvh"
           >
             <AddSemesterFormContent />
           </RouteModalPopup>
@@ -138,7 +137,7 @@ export default async function SemesterPage({ searchParams }: SemesterPageProps) 
             key={editSemesterId}
             paramName="editSemesterId"
             title="Edit Semester"
-            dialogClassName={styles.semesterDialog}
+            dialogClassName="w-[min(52rem,100%)] max-[768px]:h-dvh"
           >
             <EditSemesterFormContent semesterId={editSemesterId} />
           </RouteModalPopup>
@@ -148,7 +147,7 @@ export default async function SemesterPage({ searchParams }: SemesterPageProps) 
             key={deleteSemesterId}
             paramName="deleteSemesterId"
             title="Delete Semester"
-            dialogClassName={confirmDeleteStyles.dialog}
+            dialogClassName={confirmDeleteDialogClassName}
           >
             <SemesterDeleteConfirmContent
               semesterId={deleteSemesterId}

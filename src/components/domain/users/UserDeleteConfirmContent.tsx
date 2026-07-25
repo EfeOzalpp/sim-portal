@@ -1,7 +1,7 @@
 import { notFound, redirect } from "next/navigation";
 import { getAuthSession } from "@/actions/auth";
 import { getUser, removeUser } from "@/actions/users";
-import ConfirmDelete from "@/components/ui/ConfirmDelete";
+import ConfirmDelete from "@/components/modals/ConfirmDelete";
 
 interface UserDeleteConfirmContentProps {
 	userId: string;

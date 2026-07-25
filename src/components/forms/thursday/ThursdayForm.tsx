@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Button, Alert } from "@/components/ui/AntD";
+import { Button, Alert } from "@/components/primitives/AntD";
 import {
   transformThursdayFromAPI,
   transformThursdayPayload,
@@ -16,7 +16,6 @@ import {
   ThursdayInput,
 } from "@/components/forms/schemas";
 import { ActionResult } from "@/actions/utilities";
-import styles from "@/components/forms/thursday/ThursdayForm.module.css";
 
 interface ThursdayFormValues extends Omit<ThursdayInput, "date"> {
   productions: ProductionInput[];
@@ -69,8 +68,8 @@ export default function ThursdayForm({
   };
 
   return (
-    <form onSubmit={handleSubmit(handleFormSubmit)} className={styles.form}>
-      <div className={styles.formStack}>
+    <form onSubmit={handleSubmit(handleFormSubmit)} className="flex h-full flex-col">
+      <div className="flex flex-1 flex-col gap-[calc(var(--gap-lg)*1.15)]">
         {error && (
           <Alert
             description={error}
@@ -84,7 +83,7 @@ export default function ThursdayForm({
         <ProductionsSection control={control} users={users} />
       </div>
 
-      <div className={styles.submitRow}>
+      <div className="mt-[var(--spacing-md)] flex justify-start pt-[var(--spacing-md)]">
         <Button type="submit" disabled={isSubmitting} className="accept-button">
           {isSubmitting
             ? "Saving..."

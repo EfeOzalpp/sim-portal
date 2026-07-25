@@ -4,26 +4,48 @@ import Script from "next/script";
 
 import { auth } from "@/authentication";
 
-import "./fonts/sour-gummy/sour-gummy.css";
-import "./global-styles/app-theme/styling-theme.css";
-import "./global-styles/app-theme/font-theme.css";
-import "./global-styles/app-theme/layout-theme.css";
-import "./global-styles/button-theme.css";
-import "./global-styles/input-theme.css";
-import { ConfigProvider } from "antd";
+import "@/components/theme/fonts/sour-gummy/sour-gummy.css";
+import "@/components/theme/global-styles/app-theme/styling-theme.css";
+import "@/components/theme/global-styles/app-theme/font-theme.css";
+import "@/components/theme/global-styles/app-theme/layout-theme.css";
+import "@/components/theme/global-styles/button-theme.css";
+import "@/components/theme/global-styles/input-theme.css";
+import "@/components/theme/global-styles/tailwind.css";
 
 import AccountModals from "@/components/layout/AccountModals";
+import AntdThemeProvider from "@/components/theme/AntdThemeProvider";
 import EditUserFormContent from "@/app/users/[id]/edit/EditUserFormContent";
 import NavBar from "@/components/layout/NavBar";
 import ThemeSessionSync from "@/components/theme/ThemeSessionSync";
 import UserProfileContent from "@/components/domain/users/UserProfileContent";
+import { userProfileDialogClassName } from "@/components/domain/users/styles";
 import styles from "@/app/layout.module.css";
-import profileStyles from "@/components/domain/users/User.module.css";
+
+const appShellClassName =
+	"flex h-dvh min-h-0 flex-col overflow-hidden bg-[var(--app-bg)] text-[var(--app-text)] print:block! print:h-auto! print:overflow-visible!";
+
+const appDividerClassName =
+	"flex min-h-0 flex-[1_1_auto] flex-col items-stretch overflow-hidden min-[769px]:flex-row print:block! print:h-auto! print:overflow-visible!";
+
+const navDividerClassName = [
+	"relative z-50 min-h-0 min-w-0 flex-none overflow-visible bg-[var(--app-surface)] overscroll-contain",
+	"w-full border-r-0 border-b-0 before:content-none print:hidden!",
+	"min-[769px]:z-20 min-[769px]:w-auto",
+	"min-[769px]:before:invisible min-[769px]:before:block min-[769px]:before:box-border",
+	"min-[769px]:before:min-w-[calc(var(--nav-rail-content-width)+(var(--spacing-sm)*2)+var(--app-border-width))]",
+	"min-[769px]:before:whitespace-nowrap min-[769px]:before:border-r-[length:var(--app-border-width)] min-[769px]:before:border-transparent",
+	"min-[769px]:before:p-[var(--spacing-sm)] min-[769px]:before:font-[family-name:var(--font-family-heading)]",
+	"min-[769px]:before:text-[length:var(--font-size-h1)] min-[769px]:before:font-bold min-[769px]:before:leading-[var(--line-height-tight)]",
+	"min-[769px]:before:content-['SIM']",
+].join(" ");
+
+const contentDividerClassName =
+	"grid h-full min-h-0 min-w-0 flex-[1_1_auto] grid-cols-[minmax(0,1fr)] grid-rows-[auto] content-start items-stretch overflow-auto overscroll-contain bg-[var(--app-surface)] min-[769px]:grid-rows-[auto_minmax(0,1fr)] min-[769px]:overflow-x-hidden min-[769px]:overflow-y-auto print:block! print:h-auto! print:overflow-visible!";
 
 // Global metadata for the application
 export const metadata: Metadata = {
 	title: "SIM App",
-	description: "System for Information Management",
+	description: "Studio for Interrelated Media",
 };
 
 const themeInitScript = `
@@ -56,24 +78,22 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 					dangerouslySetInnerHTML={{ __html: themeInitScript }}
 				/>
 				<ThemeSessionSync />
-				<ConfigProvider
-					wave={{ disabled: true }}
-				>
-					<div className={styles.appShell}>
-						<div className={styles.appDivider}>
+				<AntdThemeProvider>
+					<div className={appShellClassName}>
+						<div className={appDividerClassName}>
 							{session && (
-								<div className={styles.navDivider}>
+								<div className={navDividerClassName}>
 									<NavBar session={session} />
 								</div>
 							)}
-							<main className={styles.contentDivider}>
+							<main className={`${styles.contentDivider} ${contentDividerClassName}`}>
 								{children}
 							</main>
 						</div>
 					</div>
 					{session?.user?.id && (
 						<AccountModals
-							profileDialogClassName={profileStyles.ProfileDialog}
+							profileDialogClassName={userProfileDialogClassName}
 							profile={
 								<UserProfileContent
 									userId={session.user.id}
@@ -84,12 +104,12 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 								<EditUserFormContent
 									userId={session.user.id}
 									showDangerZone={false}
-									redirectHref="?accountProfile=1"
+									redirectHref="/users?accountProfile=1"
 								/>
 							}
 						/>
 					)}
-				</ConfigProvider>
+				</AntdThemeProvider>
 			</body>
 		</html>
 	);

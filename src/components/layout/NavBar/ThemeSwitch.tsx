@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/AntD";
+import { Button } from "@/components/primitives/AntD";
 import styles from "@/components/layout/NavBar/NavBar.module.css";
 
 type Theme = "light" | "dark";

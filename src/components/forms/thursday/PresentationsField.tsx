@@ -8,12 +8,30 @@ import {
   Select,
   Collapse,
   Button,
-} from "@/components/ui/AntD";
+} from "@/components/primitives/AntD";
 import { BasicUser } from "@/components/forms/schemas";
-import ConfirmDelete from "@/components/ui/ConfirmDelete";
-import ModalPopup from "@/components/ui/ModalPopup";
-import confirmDeleteStyles from "@/components/ui/ConfirmDelete/ConfirmDelete.module.css";
-import formStyles from "@/components/forms/thursday/ThursdayForm.module.css";
+import ConfirmDelete from "@/components/modals/ConfirmDelete";
+import ModalPopup from "@/components/modals/ModalPopup";
+import { confirmDeleteDialogClassName } from "@/components/modals/ConfirmDelete/styles";
+import {
+  collapseBodyClassName,
+  collapseArrowVariants,
+  collapseHeaderClassName,
+  collapseIconClassName,
+  collapseItemClassName,
+  collapseLabelClassName,
+  collapseRootClassName,
+  collapseTitleClassName,
+  collapseTitleTextClassName,
+  fieldStackClassName,
+  iconButtonClassName,
+  inlineActionsClassName,
+  optionBadgeVariants,
+  optionNameClassName,
+  optionRowClassName,
+  sectionHeaderClassName,
+  selectionButtonVariants,
+} from "@/components/forms/thursday/thursdayFormClasses";
 
 interface PresentationsFieldProps {
   productionIndex: number;
@@ -41,8 +59,8 @@ export default function PresentationsField({
 
   return (
     <div>
-      <div className={formStyles.sectionHeader}>
-        <span className={`${formStyles.sectionLabel} ui-label`}>Presentations</span>
+      <div className={sectionHeaderClassName}>
+        <span className="ui-label m-0 block">Presentations</span>
         <Button
           htmlType="button"
           className="action-button"
@@ -58,21 +76,33 @@ export default function PresentationsField({
       </div>
 
       {fields.length === 0 ? (
-        <p className={formStyles.emptyText}>No presentations yet.</p>
+        <p className="my-[var(--spacing-lg)] text-center text-[length:var(--font-size-sm)] leading-[var(--line-height-base)] text-[var(--app-muted)] italic">
+          No presentations yet.
+        </p>
       ) : (
         <Collapse
-          className={formStyles.collapse}
+          className={collapseRootClassName}
+          classNames={{
+            header: collapseHeaderClassName,
+            title: collapseTitleClassName,
+            body: collapseBodyClassName,
+            icon: collapseIconClassName,
+          }}
           expandIcon={({ isActive }) => (
             <span
-              className={`${formStyles.expandIcon} ${isActive ? formStyles.expandIconOpen : formStyles.expandIconClosed}`}
+              className={collapseArrowVariants({ expanded: isActive })}
               aria-hidden="true"
-            />
+            >
+              <svg className="h-full w-full" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 15.4L6 9.4L7.4 8L12 12.6L16.6 8L18 9.4L12 15.4Z" fill="currentColor" />
+              </svg>
+            </span>
           )}
           items={fields.map((field: any, pIndex) => {
             const name = watchPresentations?.[pIndex]?.name;
             const label = (
-              <span className={formStyles.collapseLabel}>
-                <span className={formStyles.collapseTitle}>
+              <span className={collapseLabelClassName}>
+                <span className={collapseTitleTextClassName}>
                   {name ? `Presentation ${pIndex + 1}: ${name}` : `Unnamed Presentation ${pIndex + 1}`}
                 </span>
               </span>
@@ -80,6 +110,7 @@ export default function PresentationsField({
 
             return {
               key: field.id,
+              className: `${collapseItemClassName}${pIndex > 0 ? " mt-[var(--spacing-sm)]" : ""}`,
               style: { background: "var(--app-surface)", borderColor: "var(--app-border)" },
               styles: {
                 header: { background: "var(--app-surface)", color: "var(--app-text)" },
@@ -89,20 +120,25 @@ export default function PresentationsField({
               extra: (
                 <button
                   type="button"
-                  className={formStyles.iconButton}
+                  className={iconButtonClassName}
                   aria-label="Remove presentation"
                   onClick={(e) => {
                     e.stopPropagation();
                     setPendingRemoveIndex(pIndex);
                   }}
                 >
-                  <span className={`${formStyles.icon} ${formStyles.deleteIcon}`} aria-hidden="true" />
+                  <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path
+                      d="M7 21C6.45 21 5.97917 20.8042 5.5875 20.4125C5.19583 20.0208 5 19.55 5 19V6H4V4H9V3H15V4H20V6H19V19C19 19.55 18.8042 20.0208 18.4125 20.4125C18.0208 20.8042 17.55 21 17 21H7ZM17 6H7V19H17V6ZM9 17H11V8H9V17ZM13 17H15V8H13V17Z"
+                      fill="currentColor"
+                    />
+                  </svg>
                 </button>
               ),
               children: (
                 <Space orientation="vertical" style={{ width: "100%" }} size="middle">
-                  <div className={formStyles.fieldStack}>
-                    <span className={`${formStyles.fieldLabel} ui-label`}>Presentation Name</span>
+                  <div className={fieldStackClassName}>
+                    <span className="ui-label m-0 block">Presentation Name</span>
                     <Controller
                       control={control}
                       name={`productions.${productionIndex}.presentations.${pIndex}.name`}
@@ -128,20 +164,20 @@ export default function PresentationsField({
                       name={`productions.${productionIndex}.presentations.${pIndex}.presenters`}
                       render={({ field }) => (
                         <>
-                          <div className={formStyles.sectionHeader}>
-                            <span className={`${formStyles.sectionLabel} ui-label`}>Presenters</span>
-                            <div className={formStyles.inlineActions}>
+                          <div className={sectionHeaderClassName}>
+                            <span className="ui-label m-0 block">Presenters</span>
+                            <div className={inlineActionsClassName}>
                               <button
                                 type="button"
                                 onClick={() => field.onChange(studentUsers.map((u) => u.id))}
-                                className={formStyles.textButton}
+                                className={selectionButtonVariants()}
                               >
                                 Select all
                               </button>
                               <button
                                 type="button"
                                 onClick={() => field.onChange([])}
-                                className={`${formStyles.textButton} ${formStyles.textButtonDanger}`}
+                                className={selectionButtonVariants({ intent: "danger" })}
                               >
                                 Unselect all
                               </button>
@@ -169,11 +205,11 @@ export default function PresentationsField({
                             optionRender={(option) => {
                               const isSelected = (field.value ?? []).includes(option.value as string);
                               return (
-                                <div className={formStyles.optionRow}>
-                                  <span className={`${formStyles.optionBadge} ${isSelected ? formStyles.optionBadgeSelected : ""}`}>
+                                <div className={optionRowClassName}>
+                                  <span className={optionBadgeVariants({ selected: isSelected })}>
                                     {isSelected ? "Selected" : "Unselected"}
                                   </span>
-                                  <span className={formStyles.optionName}>{option.label}</span>
+                                  <span className={optionNameClassName}>{option.label}</span>
                                 </div>
                               );
                             }}
@@ -195,7 +231,7 @@ export default function PresentationsField({
           if (!open) setPendingRemoveIndex(null);
         }}
         title="Remove Presentation"
-        dialogClassName={confirmDeleteStyles.dialog}
+        dialogClassName={confirmDeleteDialogClassName}
       >
         <ConfirmDelete
           itemName="this presentation"

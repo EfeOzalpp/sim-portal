@@ -5,11 +5,18 @@ import { Space } from "antd";
 import {
   Input,
   Select,
-} from "@/components/ui/AntD";
+} from "@/components/primitives/AntD";
 import PresentationsField from "@/components/forms/thursday/PresentationsField";
 import { BasicUser } from "@/components/forms/schemas";
-import styles from "@/components/forms/thursday/ProductionForm.module.css";
-import formStyles from "@/components/forms/thursday/ThursdayForm.module.css";
+import {
+  fieldStackClassName,
+  inlineActionsClassName,
+  optionBadgeVariants,
+  optionNameClassName,
+  optionRowClassName,
+  sectionHeaderClassName,
+  selectionButtonVariants,
+} from "@/components/forms/thursday/thursdayFormClasses";
 
 const LOCATIONS = [
   { label: "Pozen Center", value: "Pozen Center" },
@@ -33,9 +40,9 @@ export default function ProductionForm({
 
   return (
     <Space orientation="vertical" style={{ width: "100%" }} size="large">
-      <div className={styles.formGrid}>
-        <div className={formStyles.fieldStack}>
-          <span className={`${formStyles.fieldLabel} ui-label`}>Production Name</span>
+      <div className="grid grid-cols-1 gap-[var(--gap-lg)] min-[601px]:grid-cols-2">
+        <div className={fieldStackClassName}>
+          <span className="ui-label m-0 block">Production Name</span>
           <Controller
             control={control}
             name={`productions.${productionIndex}.name`}
@@ -55,8 +62,8 @@ export default function ProductionForm({
           />
         </div>
 
-        <div className={formStyles.fieldStack}>
-          <span className={`${formStyles.fieldLabel} ui-label`}>Location</span>
+        <div className={fieldStackClassName}>
+          <span className="ui-label m-0 block">Location</span>
           <Controller
             control={control}
             name={`productions.${productionIndex}.location`}
@@ -86,20 +93,20 @@ export default function ProductionForm({
           name={`productions.${productionIndex}.producers`}
           render={({ field }) => (
             <>
-              <div className={formStyles.sectionHeader}>
-                <span className={`${formStyles.sectionLabel} ui-label`}>Producers & Faculty</span>
-                <div className={formStyles.inlineActions}>
+              <div className={sectionHeaderClassName}>
+                <span className="ui-label m-0 block">Producers & Faculty</span>
+                <div className={inlineActionsClassName}>
                   <button
                     type="button"
                     onClick={() => field.onChange(producerUsers.map((u) => u.id))}
-                    className={formStyles.textButton}
+                    className={selectionButtonVariants()}
                   >
                     Select all
                   </button>
                   <button
                     type="button"
                     onClick={() => field.onChange([])}
-                    className={`${formStyles.textButton} ${formStyles.textButtonDanger}`}
+                    className={selectionButtonVariants({ intent: "danger" })}
                   >
                     Unselect all
                   </button>
@@ -127,11 +134,11 @@ export default function ProductionForm({
                 optionRender={(option) => {
                   const isSelected = (field.value ?? []).includes(option.value as string);
                   return (
-                    <div className={formStyles.optionRow}>
-                      <span className={`${formStyles.optionBadge} ${isSelected ? formStyles.optionBadgeSelected : ""}`}>
+                    <div className={optionRowClassName}>
+                      <span className={optionBadgeVariants({ selected: isSelected })}>
                         {isSelected ? "Selected" : "Unselected"}
                       </span>
-                      <span className={formStyles.optionName}>{option.label}</span>
+                      <span className={optionNameClassName}>{option.label}</span>
                     </div>
                   );
                 }}
