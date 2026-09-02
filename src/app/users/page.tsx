@@ -6,18 +6,23 @@ import SemesterFilterSelect from "@/components/domain/semesters/SemesterFilterSe
 import NavContent from "@/components/layout/NavContent";
 import PageTitle from "@/components/layout/PageTitle";
 import PrintLink from "@/components/primitives/PrintLink";
-import { Button } from "@/components/primitives/AntD";
+import { Button } from "@/components/primitives/AntD/Button";
 import { ActionModeButton, ActionModeSurface } from "@/components/layout/ActionMode";
 import RouteModalPopup from "@/components/modals/ModalPopup/RouteModalPopup";
-import AddUserFormContent from "@/app/users/add/AddUserFormContent";
 import { formatSemesterCode, getSelectedSemester, getSelectedSemesterId, isAllSemestersValue } from "@/components/domain/semesters/semester-filter";
 
 import { confirmDeleteDialogClassName } from "@/components/modals/ConfirmDelete/styles";
 import UserCardGrid from "@/components/domain/users/UserCardGrid";
-import EditUserFormContent from "@/app/users/[id]/edit/EditUserFormContent";
-import UserDeleteConfirmContent from "@/components/domain/users/UserDeleteConfirmContent";
 import { auth } from "@/authentication";
-import PersonProfileModal from "@/components/domain/users/PersonProfileModal";
+
+// These modals are loaded with a conditional `await import()` inside the page
+// body below, instead of a static top-level import. Each one drags in
+// react-hook-form + zod + antd Upload/Form, and they define inline
+// "use server" actions, so they must stay plain Server Components — next/dynamic
+// (built on React.lazy, meant for Client Components) is not usable here. A
+// conditional import() still gets its own chunk, only evaluated when the
+// matching URL param is actually present, so a plain /users visit doesn't
+// compile all four just to render the grid.
 
 interface UsersProps {
 	searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -104,6 +109,25 @@ export default async function UsersPage({ searchParams }: UsersProps) {
 	const deleteUserId = getSingleParam(filters.deleteUserId);
 	const addUser = getSingleParam(filters.addUser);
 	const usersReturnHref = getUsersReturnHref(filters);
+
+	const showEditModal = !!editUserId;
+	const showAddModal = !!addUser && !editUserId && !profileUserId && !deleteUserId;
+	const showProfileModal = !!profileUserId && !editUserId;
+	const showDeleteModal = !!deleteUserId && !editUserId && !profileUserId;
+
+	const EditUserFormContent = showEditModal
+		? (await import("@/app/users/[id]/edit/EditUserFormContent")).default
+		: null;
+	const AddUserFormContent = showAddModal
+		? (await import("@/app/users/add/AddUserFormContent")).default
+		: null;
+	const PersonProfileModal = showProfileModal
+		? (await import("@/components/domain/users/PersonProfileModal")).default
+		: null;
+	const UserDeleteConfirmContent = showDeleteModal
+		? (await import("@/components/domain/users/UserDeleteConfirmContent")).default
+		: null;
+
 	return (
 		<>
 			<PageTitle title="People" filter={currentFilterLabel} />
@@ -158,20 +182,20 @@ export default async function UsersPage({ searchParams }: UsersProps) {
 						<UsersList filters={filters} />
 					</Suspense>
 				</div>
-				{editUserId && (
+				{showEditModal && EditUserFormContent && (
 					<RouteModalPopup key={editUserId} paramName="editUserId" title="Edit User">
-						<EditUserFormContent userId={editUserId} showDangerZone={false} />
+						<EditUserFormContent userId={editUserId!} showDangerZone={false} />
 					</RouteModalPopup>
 				)}
-				{addUser && !editUserId && !profileUserId && !deleteUserId && (
+				{showAddModal && AddUserFormContent && (
 					<RouteModalPopup key="add-user" paramName="addUser" title="Add User">
 						<AddUserFormContent />
 					</RouteModalPopup>
 				)}
-				{profileUserId && !editUserId && (
-					<PersonProfileModal key={profileUserId} profileUserId={profileUserId} />
+				{showProfileModal && PersonProfileModal && (
+					<PersonProfileModal key={profileUserId} profileUserId={profileUserId!} />
 				)}
-				{deleteUserId && !editUserId && !profileUserId && (
+				{showDeleteModal && UserDeleteConfirmContent && (
 					<RouteModalPopup
 						key={deleteUserId}
 						paramName="deleteUserId"
@@ -179,7 +203,7 @@ export default async function UsersPage({ searchParams }: UsersProps) {
 						dialogClassName={confirmDeleteDialogClassName}
 					>
 						<UserDeleteConfirmContent
-							userId={deleteUserId}
+							userId={deleteUserId!}
 							returnHref={usersReturnHref}
 						/>
 					</RouteModalPopup>

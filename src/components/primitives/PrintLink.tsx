@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/primitives/AntD";
+import { Button } from "@/components/primitives/AntD/Button";
 
 interface PrintLinkProps {
 	label?: string;

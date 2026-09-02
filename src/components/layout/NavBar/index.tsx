@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "@/components/layout/NavBar/NavBar.module.css";
-import { Button } from "@/components/primitives/AntD";
+import Button from "@/components/button/button-component";
 import NavButtonLink from "@/components/layout/NavBar/NavButtonLink";
 import { auth } from "@/authentication";
 import { Session } from "next-auth";
@@ -59,7 +59,7 @@ export default async function NavBar({ session: initialSession }: NavBarProps) {
 								href={link.href}
 								target="_blank"
 								rel="noreferrer"
-								className="nav-button"
+								variant="nav"
 							>
 								<span className={styles.navItemContent}>
 									<span className={`${styles.navIcon} ${styles.assetIcon} ${styles.linkIcon}`} aria-hidden="true" />

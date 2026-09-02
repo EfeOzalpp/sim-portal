@@ -1,7 +1,8 @@
 "use client";
 
 import { useURLFilter } from "@/hooks/useURLFilter";
-import { Input, Select } from "@/components/primitives/AntD";
+import { Input } from "@/components/primitives/AntD/Input";
+import { Select } from "@/components/primitives/AntD/Select";
 import { LoadingOutlined } from "@ant-design/icons";
 import { InputProps, SelectProps } from "antd";
 import clsx from "clsx";
