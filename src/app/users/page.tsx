@@ -6,7 +6,7 @@ import SemesterFilterSelect from "@/components/domain/semesters/SemesterFilterSe
 import NavContent from "@/components/layout/NavContent";
 import PageTitle from "@/components/layout/PageTitle";
 import PrintLink from "@/components/primitives/PrintLink";
-import { Button } from "@/components/primitives/AntD/Button";
+import { Button } from "@/components/button/button-component";
 import { ActionModeButton, ActionModeSurface } from "@/components/layout/ActionMode";
 import RouteModalPopup from "@/components/modals/ModalPopup/RouteModalPopup";
 import { formatSemesterCode, getSelectedSemester, getSelectedSemesterId, isAllSemestersValue } from "@/components/domain/semesters/semester-filter";
@@ -144,13 +144,13 @@ export default async function UsersPage({ searchParams }: UsersProps) {
 					manageContent={
 						isAdmin ? (
 							<>
-								<Button href={getUsersModalHref(filters, "addUser", "1")} className="action-button">
+								<Button href={getUsersModalHref(filters, "addUser", "1")} variant="action">
 									Add User
 								</Button>
-								<ActionModeButton htmlType="button" className="action-button" mode="edit-users" >
+								<ActionModeButton type="button" variant="action" mode="edit-users" >
 									Edit Users
 								</ActionModeButton>
-								<ActionModeButton htmlType="button" className="action-button" mode="delete-users" >
+								<ActionModeButton type="button" variant="action" mode="delete-users" >
 									Delete Users
 								</ActionModeButton>
 							</>
@@ -160,13 +160,13 @@ export default async function UsersPage({ searchParams }: UsersProps) {
 					mobileManageContent={
 						isAdmin ? (
 							<>
-								<Button href={getUsersModalHref(filters, "addUser", "1")} className="action-button">
+								<Button href={getUsersModalHref(filters, "addUser", "1")} variant="action">
 									Add
 								</Button>
-								<ActionModeButton htmlType="button" className="action-button" mode="edit-users" >
+								<ActionModeButton type="button" variant="action" mode="edit-users" >
 									Edit
 								</ActionModeButton>
-								<ActionModeButton htmlType="button" className="action-button" mode="delete-users" >
+								<ActionModeButton type="button" variant="action" mode="delete-users" >
 									Del
 								</ActionModeButton>
 							</>

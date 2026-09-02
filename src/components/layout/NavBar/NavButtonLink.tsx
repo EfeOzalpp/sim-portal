@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname, useSearchParams } from "next/navigation";
-import { Button } from "@/components/primitives/AntD";
+import { Button } from "@/components/button/button-component";
 import styles from "@/components/layout/NavBar/NavBar.module.css";
 import {
 	LEGACY_SEMESTER_FILTER_KEY,
@@ -30,7 +30,7 @@ export default function NavButtonLink({ href, label, iconClassName }: NavButtonL
 	return (
 		<Button
 			href={hrefWithSemester}
-			className="nav-button"
+			variant="nav"
 			aria-current={isActive ? "page" : undefined}
 		>
 			<span className={styles.navItemContent}>

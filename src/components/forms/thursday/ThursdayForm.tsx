@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Button, Alert } from "@/components/primitives/AntD";
+import { Alert } from "@/components/primitives/AntD";
+import { Button } from "@/components/button/button-component";
 import {
   transformThursdayFromAPI,
   transformThursdayPayload,
@@ -84,7 +85,7 @@ export default function ThursdayForm({
       </div>
 
       <div className="mt-[var(--spacing-md)] flex justify-start pt-[var(--spacing-md)]">
-        <Button type="submit" disabled={isSubmitting} className="accept-button">
+        <Button type="submit" disabled={isSubmitting} tone="success">
           {isSubmitting
             ? "Saving..."
             : thursdayId

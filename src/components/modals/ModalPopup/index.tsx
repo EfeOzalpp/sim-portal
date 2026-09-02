@@ -2,7 +2,7 @@
 
 import { ReactNode, useCallback, useEffect, useId, useState } from "react";
 import clsx from "clsx";
-import { Button as AntButton } from "antd";
+import { Button } from "@/components/button/button-component";
 import { createPortal } from "react-dom";
 import closeIcon from "@/components/theme/assets/close/close.svg";
 
@@ -134,9 +134,9 @@ export default function ModalPopup({
 	return (
 		<>
 			{triggerLabel !== undefined && (
-				<AntButton htmlType="button" className={triggerClassName} onClick={() => setIsOpen(true)}>
+				<Button type="button" className={triggerClassName} onClick={() => setIsOpen(true)}>
 					{triggerLabel}
-				</AntButton>
+				</Button>
 			)}
 			{isOpen && isMounted ? createPortal(modal, document.body) : null}
 		</>

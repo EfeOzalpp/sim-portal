@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import type { FormEvent, ReactNode } from "react";
-import { Button } from "@/components/primitives/AntD";
+import { Button } from "@/components/button/button-component";
 
 interface ConfirmDeleteProps {
 	itemName: string;
@@ -82,7 +82,7 @@ export default function ConfirmDelete({
 			<div className="grid grid-cols-[repeat(auto-fit,minmax(0,1fr))] gap-[var(--gap-sm)] max-[480px]:grid-cols-1">
 				<Button
 					type="submit"
-					className="decline-button"
+					tone="danger"
 					disabled={isSubmitting}
 				>
 					{isSubmitting ? pendingLabel : confirmLabel}

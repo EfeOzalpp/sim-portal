@@ -51,7 +51,7 @@
 .end > div[class*="wrapper"] > a,
 .end :global(.ant-select),
 .end :global(.ant-input-affix-wrapper),
-.end :global(.ant-btn) {
+.end :global(.btn) {
 	width: 100%;
 }
 
@@ -126,7 +126,7 @@
 .navSectionControls > div[class*="wrapper"] > a,
 .navSectionControls :global(.ant-select),
 .navSectionControls :global(.ant-input-affix-wrapper),
-.navSectionControls :global(.ant-btn) {
+.navSectionControls :global(.btn) {
 	width: 100%;
 	min-width: 0;
 }

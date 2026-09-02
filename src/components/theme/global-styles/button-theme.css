@@ -1,12 +1,10 @@
 :root {
+  /* Still read by input-theme.css's dropdown hover state. */
   --nav-button-bg-active: #dfdfdf;
-  --nav-button-text-active: #000000;
-  --nav-button-font-weight-active: var(--font-weight-semibold);
 }
 
 html[data-theme="dark"] {
   --nav-button-bg-active: #3b3b3b;
-  --nav-button-text-active: #ffffff;
 }
 
 .nav-button-visual {
@@ -17,14 +15,6 @@ html[data-theme="dark"] {
 
 html[data-theme="dark"] .nav-button-visual {
   color: #adadad;
-}
-
-/* link-button's text color reads antd's defaultBorderColor field, which
-   action-button's border also uses for a different purpose — they can't be
-   set independently through tokens (see antdTheme.ts comment on Button). */
-.ant-btn.link-button {
-  color: var(--app-text);
-  justify-content: center;
 }
 
 .link-button-content {
@@ -52,17 +42,3 @@ html[data-theme="dark"] .nav-button-visual {
   mask-image: url("../assets/download/download.svg");
   -webkit-mask-image: url("../assets/download/download.svg");
 }
-
-/* [aria-current="page"] isn't an antd concept, and the "text" variant has no
-   active-background token (only hover) — the current-page nav state has no
-   token equivalent and stays hand-written. */
-.ant-btn.nav-button[aria-current="page"] {
-  background: var(--nav-button-bg-active);
-  color: var(--nav-button-text-active);
-  font-weight: var(--nav-button-font-weight-active);
-}
-
-/* Disabled state is fully token-driven now (colorTextDisabled,
-   colorBorderDisabled, colorBgContainerDisabled, defaultBgDisabled in
-   antdTheme.ts). Antd's own disabled rule already sets cursor: not-allowed
-   itself (antd/es/button/style/variant.js) — nothing left to override here. */

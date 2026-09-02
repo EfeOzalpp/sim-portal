@@ -2,7 +2,7 @@
 
 import clsx from "clsx";
 import { createContext, ReactNode, useContext, useMemo, useState } from "react";
-import { Button, ButtonProps } from "@/components/primitives/AntD/Button";
+import { Button, NativeButtonProps } from "@/components/button/button-component";
 import styles from "@/components/layout/ActionMode/ActionMode.module.css";
 
 interface ActionModeContextValue {
@@ -86,9 +86,12 @@ export function ActionModeSurface({ children }: ActionModeSurfaceProps) {
 	);
 }
 
-interface ActionModeButtonProps extends Omit<ButtonProps, "onClick"> {
+// Narrowed to the native (non-anchor) branch of ButtonProps: every current
+// call site is a plain type="button", never an href link, and that union
+// otherwise doesn't play well with spreading unknown rest props onto <Button>.
+interface ActionModeButtonProps extends Omit<NativeButtonProps, "onClick"> {
 	mode: string;
-	onClick?: ButtonProps["onClick"];
+	onClick?: NativeButtonProps["onClick"];
 }
 
 export function ActionModeButton({

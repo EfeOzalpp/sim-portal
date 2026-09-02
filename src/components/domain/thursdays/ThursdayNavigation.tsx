@@ -1,4 +1,4 @@
-import { Button } from "@/components/primitives/AntD";
+import { Button } from "@/components/button/button-component";
 
 interface ThursdayNavigationProps {
 	previous: { id: string; name: string; date: Date } | null;

@@ -26,13 +26,13 @@ import {
 } from "antd";
 import { RangePickerProps } from "antd/es/date-picker";
 
-// Button/Input/Select live in ./AntD/*.tsx now, not here — see Button.tsx for
-// why. Re-exported below so existing "@/components/primitives/AntD" imports
-// keep working; import the split files directly wherever a route needs
-// compile-time isolation from the rest of this barrel (Table/Transfer/
-// DatePicker/Upload/Modal/etc).
-export { Button } from "@/components/primitives/AntD/Button";
-export type { ButtonProps } from "@/components/primitives/AntD/Button";
+// Button is gone — every consumer now uses the dependency-free
+// src/components/button/button-component.tsx instead of antd's Button.
+// Input/Select still live in ./AntD/*.tsx (see Input.tsx/Select.tsx),
+// re-exported below so existing "@/components/primitives/AntD" imports
+// keep working; import them directly wherever a route needs compile-time
+// isolation from the rest of this barrel (Table/Transfer/DatePicker/
+// Upload/Modal/etc).
 export { Input, TextArea } from "@/components/primitives/AntD/Input";
 export { Select } from "@/components/primitives/AntD/Select";
 

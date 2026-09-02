@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import type { Session } from "next-auth";
-import { Button } from "@/components/primitives/AntD";
+import { Button } from "@/components/button/button-component";
 import NavButtonLink from "@/components/layout/NavBar/NavButtonLink";
 import UserAccountLink from "@/components/layout/NavBar/UserAccountLink";
 import ThemeSwitch from "@/components/layout/NavBar/ThemeSwitch";
@@ -90,7 +90,7 @@ export default function MobileNavBar({ isAdmin, user }: MobileNavBarProps) {
 									href={link.href}
 									target="_blank"
 									rel="noreferrer"
-									className="nav-button"
+									variant="nav"
 								>
 									<span className={navStyles.navItemContent}>
 										<span className={`${navStyles.navIcon} ${navStyles.assetIcon} ${navStyles.linkIcon}`} aria-hidden="true" />

@@ -8,9 +8,9 @@ import {
   TextArea,
   Select,
   Card,
-  Button,
   Alert,
 } from "@/components/primitives/AntD";
+import { Button } from "@/components/button/button-component";
 import { transformUserFromAPI } from "@/components/forms/user/user.transformers";
 import ImageUpload from "@/components/primitives/ImageUpload";
 import DeleteButton from "@/components/modals/DeleteButton";
@@ -363,7 +363,7 @@ export default function UserForm({
           />
         </div>
 
-        <Button type="submit" disabled={isSubmitting} className="accept-button" style={{ width: "100%" }}>
+        <Button type="submit" disabled={isSubmitting} tone="success" style={{ width: "100%" }}>
           {isSubmitting ? "Saving..." : user ? "Save Changes" : "Create User"}
         </Button>
 

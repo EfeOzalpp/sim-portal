@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import ModalPopup from "@/components/modals/ModalPopup";
-import { Alert, Button } from "@/components/primitives/AntD";
+import { Alert } from "@/components/primitives/AntD";
+import { Button } from "@/components/button/button-component";
 
 export type GradeValue = "P" | "NC" | "INC" | "W";
 export type GradeMap = Record<string, GradeValue | null | undefined>;
@@ -136,8 +137,8 @@ export default function GradeEditorModal({
 				</p>
 
 				<Button
-					htmlType="button"
-					className="accept-button"
+					type="button"
+					tone="success"
 					disabled={isSaving}
 					onClick={async () => {
 						setError(null);

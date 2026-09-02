@@ -2,7 +2,7 @@
 
 import React from "react";
 import { logIn, logOut } from "@/actions/auth";
-import { Button } from "@/components/primitives/AntD";
+import { Button } from "@/components/button/button-component";
 
 export function LoginButton() {
 	return <Button onClick={() => logIn()}>Login</Button>;

@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { useFieldArray, useWatch } from "react-hook-form";
 import { Empty } from "antd";
-import { Button, Collapse } from "@/components/primitives/AntD";
+import { Collapse } from "@/components/primitives/AntD";
+import { Button } from "@/components/button/button-component";
 import ProductionForm from "@/components/forms/thursday/ProductionForm";
 import { BasicUser } from "@/components/forms/schemas";
 import ConfirmDelete from "@/components/modals/ConfirmDelete";
@@ -52,8 +53,8 @@ export default function ProductionsSection({
       <div className={sectionHeaderClassName}>
         <span className="ui-label m-0 block">Productions</span>
         <Button
-          htmlType="button"
-          className="action-button"
+          type="button"
+          variant="action"
           onClick={() =>
             append({
               name: "",

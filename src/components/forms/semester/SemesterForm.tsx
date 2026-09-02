@@ -5,9 +5,9 @@ import { useForm, Controller } from "react-hook-form";
 import {
   RangePicker,
   Select,
-  Button,
   Alert,
 } from "@/components/primitives/AntD";
+import { Button } from "@/components/button/button-component";
 import {
   transformSemesterFromAPI,
   transformSemesterPayload,
@@ -253,7 +253,7 @@ export default function SemesterForm({
         </div>
 
         <div className="mt-[var(--spacing-md)] flex justify-start border-t-[length:var(--app-border-width)] border-solid border-[var(--app-border)] pt-[var(--spacing-md)]">
-        <Button type="submit" disabled={isSubmitting} className="accept-button">
+        <Button type="submit" disabled={isSubmitting} tone="success">
           {isSubmitting
             ? "Saving..."
             : semester

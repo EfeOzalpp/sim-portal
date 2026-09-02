@@ -108,7 +108,7 @@
 	}
 
 	/* Override full-width forcing from ActionMode and NavContent for manage bar buttons */
-	.manageActions :global(.ant-btn) {
+	.manageActions :global(.btn) {
 		width: auto !important;
 		min-width: 0;
 	}
@@ -118,7 +118,7 @@
 		min-width: 0;
 	}
 
-	.manageActions [data-action-mode-button] :global(.ant-btn) {
+	.manageActions [data-action-mode-button] :global(.btn) {
 		width: auto !important;
 	}
 
@@ -127,7 +127,7 @@
 		margin-left: auto;
 	}
 
-	.printSlot :global(.ant-btn) {
+	.printSlot :global(.btn) {
 		width: auto !important;
 	}
 

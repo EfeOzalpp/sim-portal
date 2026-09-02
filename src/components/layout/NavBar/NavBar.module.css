@@ -78,9 +78,9 @@
 .navButtonList > div[class*="wrapper"] > *,
 .themeNav > div[class*="wrapper"] > *,
 .externalLinkList > div[class*="wrapper"] > *,
-.navButtonList :global(.ant-btn),
-.themeNav :global(.ant-btn),
-.externalLinkList :global(.ant-btn) {
+.navButtonList :global(.btn),
+.themeNav :global(.btn),
+.externalLinkList :global(.btn) {
 	width: 100%;
 	min-width: 0;
 }
@@ -98,15 +98,15 @@
 	text-decoration: none;
 }
 
-.navButtonList :global(.ant-btn),
-.themeNav :global(.ant-btn),
-.footerNav :global(.ant-btn) {
+.navButtonList :global(.btn),
+.themeNav :global(.btn),
+.footerNav :global(.btn) {
 	justify-content: flex-start;
 	padding-inline: 0;
 	text-decoration: none;
 }
 
-.externalLinkList :global(.ant-btn) {
+.externalLinkList :global(.btn) {
 	justify-content: flex-start;
 	padding-inline: 0;
 	text-decoration-line: underline;

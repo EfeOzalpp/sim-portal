@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/authentication";
 import { FilterInput } from "@/components/primitives/Filters";
-import { Button } from "@/components/primitives/AntD";
+import { Button } from "@/components/button/button-component";
 import NavContent from "@/components/layout/NavContent";
 import PageTitle from "@/components/layout/PageTitle";
 import { getAllSemesters } from "@/actions/semesters";
@@ -101,17 +101,17 @@ export default async function SemesterPage({ searchParams }: SemesterPageProps) 
           filterLabel="Search"
           manageContent={
             <>
-              <Button href={getSemesterModalHref(filters, "addSemester", "1")} className="action-button">New Semester</Button>
-              <ActionModeButton htmlType="button" className="action-button" mode="edit-semesters">Edit Semesters</ActionModeButton>
-              <ActionModeButton htmlType="button" className="action-button" mode="delete-semesters">Delete Semesters</ActionModeButton>
+              <Button href={getSemesterModalHref(filters, "addSemester", "1")} variant="action">New Semester</Button>
+              <ActionModeButton type="button" variant="action" mode="edit-semesters">Edit Semesters</ActionModeButton>
+              <ActionModeButton type="button" variant="action" mode="delete-semesters">Delete Semesters</ActionModeButton>
             </>
           }
           manageLabel="Manage Semesters"
           mobileManageContent={
             <>
-              <Button href={getSemesterModalHref(filters, "addSemester", "1")} className="action-button">Add</Button>
-              <ActionModeButton htmlType="button" className="action-button" mode="edit-semesters">Edit</ActionModeButton>
-              <ActionModeButton htmlType="button" className="action-button" mode="delete-semesters">Del</ActionModeButton>
+              <Button href={getSemesterModalHref(filters, "addSemester", "1")} variant="action">Add</Button>
+              <ActionModeButton type="button" variant="action" mode="edit-semesters">Edit</ActionModeButton>
+              <ActionModeButton type="button" variant="action" mode="delete-semesters">Del</ActionModeButton>
             </>
           }
         />

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Button } from "@/components/primitives/AntD";
+import { Button } from "@/components/button/button-component";
 import styles from "@/components/layout/NavBar/NavBar.module.css";
 
 type Theme = "light" | "dark";
@@ -38,7 +38,7 @@ export default function ThemeSwitch() {
 
 	return (
 		<Button
-			className="nav-button"
+			variant="nav"
 			onClick={handleToggle}
 			aria-label={`Switch to ${nextTheme} mode`}
 			aria-pressed={theme === "dark"}

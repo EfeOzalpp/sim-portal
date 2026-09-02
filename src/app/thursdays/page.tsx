@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { Button } from "@/components/primitives/AntD";
+import { Button } from "@/components/button/button-component";
 import NavContent from "@/components/layout/NavContent";
 import PageTitle from "@/components/layout/PageTitle";
 import { getFilteredThursdays } from "@/actions/thursdays";
@@ -135,11 +135,11 @@ export default async function Thursdays({ searchParams }: ThursdaysProps) {
           manageContent={
             isAdmin ? (
               <>
-                <Button href={getThursdaysModalHref(filters, "addThursday", "1")} className="action-button">Add Thursday</Button>
-                <ActionModeButton htmlType="button" className="action-button" mode="edit-thursdays">
+                <Button href={getThursdaysModalHref(filters, "addThursday", "1")} variant="action">Add Thursday</Button>
+                <ActionModeButton type="button" variant="action" mode="edit-thursdays">
                   Edit Thursdays
                 </ActionModeButton>
-                <ActionModeButton htmlType="button" className="action-button" mode="delete-thursdays">
+                <ActionModeButton type="button" variant="action" mode="delete-thursdays">
                   Delete Thursdays
                 </ActionModeButton>
               </>
@@ -149,11 +149,11 @@ export default async function Thursdays({ searchParams }: ThursdaysProps) {
           mobileManageContent={
             isAdmin ? (
               <>
-                <Button href={getThursdaysModalHref(filters, "addThursday", "1")} className="action-button">Add</Button>
-                <ActionModeButton htmlType="button" className="action-button" mode="edit-thursdays">
+                <Button href={getThursdaysModalHref(filters, "addThursday", "1")} variant="action">Add</Button>
+                <ActionModeButton type="button" variant="action" mode="edit-thursdays">
                   Edit
                 </ActionModeButton>
-                <ActionModeButton htmlType="button" className="action-button" mode="delete-thursdays">
+                <ActionModeButton type="button" variant="action" mode="delete-thursdays">
                   Del
                 </ActionModeButton>
               </>

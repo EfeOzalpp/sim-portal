@@ -53,13 +53,13 @@ export default async function IndividualPage({ searchParams }: IndividualPagePro
 					}
 					filterLabel="Search & Filter"
 					manageContent={
-						<ActionModeButton htmlType="button" className="action-button" mode="edit-grades">
+						<ActionModeButton type="button" variant="action" mode="edit-grades">
 							Edit Grades
 						</ActionModeButton>
 					}
 					manageLabel="Manage Grades"
 					mobileManageContent={
-						<ActionModeButton htmlType="button" className="action-button" mode="edit-grades">
+						<ActionModeButton type="button" variant="action" mode="edit-grades">
 							Edit Grades
 						</ActionModeButton>
 					}

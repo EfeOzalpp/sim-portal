@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/primitives/AntD/Button";
+import { Button } from "@/components/button/button-component";
 
 interface PrintLinkProps {
 	label?: string;
@@ -9,8 +9,8 @@ interface PrintLinkProps {
 export default function PrintLink({ label = "Print" }: PrintLinkProps) {
 	return (
 		<Button
-			htmlType="button"
-			className="link-button"
+			type="button"
+			variant="link"
 			onClick={() => window.print()}
 		>
 			<span className="link-button-content">

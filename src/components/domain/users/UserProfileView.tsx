@@ -3,7 +3,7 @@ import Image from "next/image";
 import { logOut } from "@/actions/auth";
 import { getDisplayUserLinks, getUserLinkHref } from "@/components/forms/user/user-links";
 import { normalizeFaceImagePath } from "@/helpers";
-import { Button } from "@/components/primitives/AntD";
+import { Button } from "@/components/button/button-component";
 
 interface UserProfileViewProps {
 	user: any;
@@ -128,12 +128,12 @@ export default function UserProfileView({
 			{isCurrentUser && (
 				<div className="col-[1/-1] flex flex-row items-center gap-[var(--gap-sm)] border-t-[length:var(--app-border-width)] border-solid border-[var(--app-border)] pt-[var(--spacing-md)] [&_form]:m-0">
 					<form action={logOut}>
-						<Button htmlType="submit" className="decline-button">
+						<Button type="submit" tone="danger">
 							Log Out
 						</Button>
 					</form>
 					{editHref && (
-						<Button href={editHref} className="action-button">
+						<Button href={editHref} variant="action">
 							Edit Profile
 						</Button>
 					)}

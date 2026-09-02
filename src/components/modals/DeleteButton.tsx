@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/primitives/AntD";
+import { Button } from "@/components/button/button-component";
 import ConfirmDelete from "@/components/modals/ConfirmDelete";
 import ModalPopup from "@/components/modals/ModalPopup";
 import { confirmDeleteDialogClassName } from "@/components/modals/ConfirmDelete/styles";
@@ -25,7 +25,7 @@ export default function DeleteButton({
 
   return (
     <div className="mt-[var(--spacing-md)]">
-      <Button onClick={showModal} className="decline-button">
+      <Button onClick={showModal} tone="danger">
         {buttonText} {itemName}
       </Button>
 

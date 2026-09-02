@@ -7,8 +7,8 @@ import {
   Input,
   Select,
   Collapse,
-  Button,
 } from "@/components/primitives/AntD";
+import { Button } from "@/components/button/button-component";
 import { BasicUser } from "@/components/forms/schemas";
 import ConfirmDelete from "@/components/modals/ConfirmDelete";
 import ModalPopup from "@/components/modals/ModalPopup";
@@ -62,8 +62,8 @@ export default function PresentationsField({
       <div className={sectionHeaderClassName}>
         <span className="ui-label m-0 block">Presentations</span>
         <Button
-          htmlType="button"
-          className="action-button"
+          type="button"
+          variant="action"
           onClick={() =>
             append({
               name: "",
