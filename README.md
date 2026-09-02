@@ -129,9 +129,8 @@ pg_dump -U sim sim > backup_$(date +%Y%m%d).sql
 
 ### Persistent User Images
 
-User images are stored as immutable, content-addressed files rather than
-Base64 database values. Production images must live outside the application
-checkout so a deployment cannot replace them.
+Production images must live outside the application checkout so a
+deployment cannot replace them.
 
 On the IONOS host, create a persistent directory owned by the account running
 the PM2 application and readable by nginx:
@@ -158,19 +157,6 @@ location ^~ /media/user-images/ {
     add_header X-Content-Type-Options "nosniff" always;
 }
 ```
-
-Back up and migrate legacy Base64 records only after the directory, environment,
-and nginx location are configured:
-
-```bash
-node scripts/backup-user-images.mjs
-node scripts/migrate-base64-user-images.mjs
-node scripts/verify-user-images.mjs
-```
-
-The migration verifies every written file before changing the database and
-updates all matching user rows in one transaction. Keep the generated backup
-archive off the server as a recovery copy.
 
 ---
 
