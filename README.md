@@ -127,6 +127,51 @@ Always back up the database before manual edits or migrations:
 pg_dump -U sim sim > backup_$(date +%Y%m%d).sql
 ```
 
+### Persistent User Images
+
+User images are stored as immutable, content-addressed files rather than
+Base64 database values. Production images must live outside the application
+checkout so a deployment cannot replace them.
+
+On the IONOS host, create a persistent directory owned by the account running
+the PM2 application and readable by nginx:
+
+```bash
+sudo install -d -m 0755 -o <pm2-user> -g www-data /var/lib/sim/user-images
+```
+
+Set these values in the production environment before building and restarting:
+
+```bash
+IMAGE_STORAGE_DIR=/var/lib/sim/user-images
+NEXT_PUBLIC_IMAGE_ORIGIN=https://massartsim.fun
+```
+
+Serve the persistent directory directly from nginx:
+
+```nginx
+location ^~ /media/user-images/ {
+    alias /var/lib/sim/user-images/;
+    access_log off;
+    expires 1y;
+    add_header Cache-Control "public, immutable";
+    add_header X-Content-Type-Options "nosniff" always;
+}
+```
+
+Back up and migrate legacy Base64 records only after the directory, environment,
+and nginx location are configured:
+
+```bash
+node scripts/backup-user-images.mjs
+node scripts/migrate-base64-user-images.mjs
+node scripts/verify-user-images.mjs
+```
+
+The migration verifies every written file before changing the database and
+updates all matching user rows in one transaction. Keep the generated backup
+archive off the server as a recovery copy.
+
 ---
 
 ## Faculty Guide

@@ -1,4 +1,5 @@
 import PresentationCard from "@/components/domain/thursdays/PresentationCard";
+import Image from "next/image";
 import { logOut } from "@/actions/auth";
 import { getDisplayUserLinks, getUserLinkHref } from "@/components/forms/user/user-links";
 import { normalizeFaceImagePath } from "@/helpers";
@@ -23,10 +24,13 @@ export default function UserProfileView({
 	return (
 		<div className="grid w-full min-w-0 grid-cols-[minmax(10rem,13rem)_minmax(0,1fr)] gap-[var(--gap-md)] max-[767px]:grid-cols-1">
 			<aside className="flex min-w-0 flex-col gap-[var(--gap-md)]">
-				<div className="[&_img]:block [&_img]:aspect-square [&_img]:w-full [&_img]:rounded-[var(--border-md)] [&_img]:border-solid [&_img]:border-[var(--app-border)] [&_img]:object-cover [&_img]:object-top [&_img]:[border-width:var(--app-border-width)]">
-					<img
+				<div className="relative aspect-square w-full overflow-hidden rounded-[var(--border-md)] border-solid border-[var(--app-border)] [border-width:var(--app-border-width)]">
+					<Image
 						src={normalizeFaceImagePath(user.image || "")}
 						alt={`${user.name}'s image`}
+						fill
+						sizes="(max-width: 767px) calc(100vw - 2rem), 13rem"
+						className="object-cover object-top"
 					/>
 				</div>
 				<div className="self-start rounded-[var(--border-lg)] border-solid border-[var(--app-border)] bg-[var(--app-card-label-bg)] px-[var(--spacing-sm)] py-[calc(var(--spacing-sm)/2)] font-[family-name:var(--font-family-label)] text-[length:var(--font-size-label)] leading-[var(--line-height-label)] font-[var(--font-weight-label)] text-[var(--app-muted)] uppercase [border-width:var(--app-border-width)]">

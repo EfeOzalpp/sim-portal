@@ -14,6 +14,7 @@ import {
 } from "@/actions/utilities";
 import { UserSchema, UserInput, FilterSchema, FilterInputValues } from "@/components/forms/schemas";
 import { serializeUserLinks } from "@/components/forms/user/user-links";
+import { deleteStoredUserImage, storeUserImage } from "@/actions/user-image-storage";
 import { Prisma } from "@prisma/client";
 
 function normalizeSemesterCode(value?: string | null) {
@@ -229,6 +230,11 @@ export async function editUser(formData: UserInput) {
 		}
 
 		try {
+			const previousUser = await prisma.user.findUnique({
+				where: { id: id! },
+				select: { image: true },
+			});
+
 			const updatedUser = await prisma.$transaction(async (tx) => {
 				// Only admins can change admin status or semesters
 				const data: Prisma.UserUpdateInput = { name, about, image, link: serializedLinks, pronouns, email };
@@ -250,6 +256,21 @@ export async function editUser(formData: UserInput) {
 					data,
 				});
 			});
+
+			// Now that the new image path is safely committed, clean up the
+			// old file — but only if no other user row still points at it.
+			// Storage is content-addressed (filename = hash of the bytes), so
+			// two users can legitimately share one file if they uploaded the
+			// same image.
+			if (previousUser?.image && previousUser.image !== updatedUser.image) {
+				const stillReferenced = await prisma.user.count({ where: { image: previousUser.image } });
+				if (stillReferenced === 0) {
+					await deleteStoredUserImage(previousUser.image).catch((error) => {
+						console.error(`Failed to delete orphaned user image "${previousUser.image}":`, error);
+					});
+				}
+			}
+
 			revalidatePath("/users");
 			revalidatePath("/individual");
 			revalidatePath("/semester");
@@ -313,9 +334,21 @@ export async function removeUser(user: any) {
 	return await action(async () => {
 		await ensureAdmin();
 
-		await prisma.user.delete({
+		const deletedUser = await prisma.user.delete({
 			where: { id: user.id },
 		});
+
+		// Same orphan risk as a re-upload: clean up the departing user's
+		// image, but only if no other row still points at that same
+		// content-addressed file.
+		if (deletedUser.image) {
+			const stillReferenced = await prisma.user.count({ where: { image: deletedUser.image } });
+			if (stillReferenced === 0) {
+				await deleteStoredUserImage(deletedUser.image).catch((error: unknown) => {
+					console.error(`Failed to delete orphaned user image "${deletedUser.image}":`, error);
+				});
+			}
+		}
 
 		revalidatePath("/individual");
 		revalidatePath("/users");
@@ -324,8 +357,7 @@ export async function removeUser(user: any) {
 }
 
 export async function handleImageUpload(file: File) {
-	const arrayBuffer = await file.arrayBuffer();
-	const buffer = Buffer.from(arrayBuffer);
-	const base64 = buffer.toString("base64");
-	return `data:${file.type};base64,${base64}`;
+	await ensureAdmin();
+	const { publicPath } = await storeUserImage(file);
+	return publicPath;
 }

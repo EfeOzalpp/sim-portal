@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Upload } from "@/components/primitives/AntD";
-import { PlusOutlined, LoadingOutlined } from "@ant-design/icons";
+import { PlusOutlined } from "@ant-design/icons";
 
 interface ImageUploadProps {
 	onChange: (file: File) => void;
@@ -11,10 +11,9 @@ interface ImageUploadProps {
 
 export default function ImageUpload({ onChange, currentImagePath = "/face.jpg" }: ImageUploadProps) {
 	const [preview, setPreview] = useState<string | null>(null);
-	const [loading, setLoading] = useState(false);
+	const [objectUrl, setObjectUrl] = useState<string | null>(null);
 
 	const MAX_SIZE_MB = 8;
-	const TARGET_WIDTH = 400;
 
 	useEffect(() => {
 		if (currentImagePath && typeof currentImagePath === "string") {
@@ -22,9 +21,15 @@ export default function ImageUpload({ onChange, currentImagePath = "/face.jpg" }
 		}
 	}, [currentImagePath]);
 
+	useEffect(() => {
+		return () => {
+			if (objectUrl) URL.revokeObjectURL(objectUrl);
+		};
+	}, [objectUrl]);
+
 	const beforeUpload = (file: File) => {
-		const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
-		if (!isJpgOrPng) {
+		const isSupportedImage = ["image/jpeg", "image/png", "image/webp"].includes(file.type);
+		if (!isSupportedImage) {
 			return false;
 		}
 		const isLt8M = file.size / 1024 / 1024 < MAX_SIZE_MB;
@@ -32,46 +37,18 @@ export default function ImageUpload({ onChange, currentImagePath = "/face.jpg" }
 			return false;
 		}
 
-		setLoading(true);
-		const reader = new FileReader();
-		reader.onload = (event: any) => {
-			const img = new Image();
-			img.onload = () => {
-				const canvas = document.createElement("canvas");
-				const scale = TARGET_WIDTH / img.width;
-				canvas.width = TARGET_WIDTH;
-				canvas.height = img.height * scale;
-
-				const ctx = canvas.getContext("2d");
-				if (ctx) {
-					ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-					canvas.toBlob(
-						(blob) => {
-							if (blob) {
-								const resizedFile = new File([blob], file.name, {
-									type: "image/jpeg",
-									lastModified: Date.now(),
-								});
-								setPreview(URL.createObjectURL(resizedFile));
-								onChange(resizedFile);
-							}
-							setLoading(false);
-						},
-						"image/jpeg",
-						0.8
-					);
-				}
-			};
-			img.src = event.target.result;
-		};
-		reader.readAsDataURL(file);
+		if (objectUrl) URL.revokeObjectURL(objectUrl);
+		const nextObjectUrl = URL.createObjectURL(file);
+		setObjectUrl(nextObjectUrl);
+		setPreview(nextObjectUrl);
+		onChange(file);
 
 		return false; // Prevent auto upload
 	};
 
 	const uploadButton = (
 		<div style={{ padding: "20px" }}>
-			{loading ? <LoadingOutlined /> : <PlusOutlined />}
+			<PlusOutlined />
 			<div style={{ marginTop: 8 }}>Upload Photo</div>
 		</div>
 	);
@@ -81,6 +58,7 @@ export default function ImageUpload({ onChange, currentImagePath = "/face.jpg" }
 			listType="picture-card"
 			showUploadList={false}
 			beforeUpload={beforeUpload as any}
+			accept="image/jpeg,image/png,image/webp"
 			style={{ width: 120, height: 120, overflow: "hidden" }}
 		>
 			{preview ? (

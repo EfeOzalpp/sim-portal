@@ -39,6 +39,11 @@ export function normalizeFaceImagePath(imagePath?: string | null): string {
 		return "/face.jpg";
 	}
 
+	const imageOrigin = process.env.NEXT_PUBLIC_IMAGE_ORIGIN?.replace(/\/$/, "");
+	if (imageOrigin && imagePath.startsWith("/media/user-images/")) {
+		return `${imageOrigin}${imagePath}`;
+	}
+
 	return imagePath;
 }
 

@@ -25,6 +25,7 @@ export default function UserCard({ user, onClick }: UserCardProps) {
             src={normalizeFaceImagePath(user.image)}
             alt={`${user.name}'s face`}
             fill
+            sizes="(max-width: 600px) calc(50vw - 1rem), (max-width: 1000px) calc(33vw - 1rem), 12rem"
             style={{ objectFit: "cover" }}
           />
         </div>

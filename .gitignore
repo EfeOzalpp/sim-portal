@@ -5,6 +5,8 @@
 
 .vscode
 /database/backups/*.sql
+/database/backups/user-images/
+/database/uploads/
 
 # testing
 /coverage
@@ -42,3 +44,4 @@ npm-debug.log*
 
 # uploads
 /public/faces/
+/public/media/user-images/
