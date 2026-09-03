@@ -42,7 +42,7 @@ export default function ImageUpload({ onChange, currentImagePath = "/face.jpg" }
 	}
 
 	return (
-		<label className="relative flex h-[7.5rem] w-[7.5rem] cursor-pointer items-center justify-center overflow-hidden rounded-[var(--border-md)] border-solid border-[var(--app-border)] bg-[var(--app-subtle)] [border-width:var(--app-border-width)] hover:border-[var(--input-border-hover)]">
+		<label className="relative flex h-[7.5rem] w-[7.5rem] cursor-pointer items-center justify-center overflow-hidden rounded-xl border-solid border-[var(--app-border)] bg-[var(--app-subtle)] border hover:border-[var(--input-border-hover)]">
 			<input
 				type="file"
 				accept="image/jpeg,image/png,image/webp"
@@ -52,11 +52,11 @@ export default function ImageUpload({ onChange, currentImagePath = "/face.jpg" }
 			{preview ? (
 				<img src={preview} alt="avatar" className="h-full w-full object-cover" />
 			) : (
-				<span className="flex flex-col items-center gap-[calc(var(--gap-sm)/2)] text-[var(--app-muted)]">
-					<svg viewBox="0 0 24 24" fill="none" aria-hidden="true" className="h-[var(--svg-size-md)] w-[var(--svg-size-md)]">
+				<span className="flex flex-col items-center gap-1 text-[var(--app-muted)]">
+					<svg viewBox="0 0 24 24" fill="none" aria-hidden="true" className="h-[1.375rem] w-[1.375rem]">
 						<path d="M12 5V19M5 12H19" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
 					</svg>
-					<span className="text-[length:var(--font-size-sm)]">Upload Photo</span>
+					<span className="text-sm">Upload Photo</span>
 				</span>
 			)}
 		</label>

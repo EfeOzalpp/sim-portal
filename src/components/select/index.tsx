@@ -320,7 +320,7 @@ function MultiSelectImpl({
 										<span className={selectOptionBadgeVariants({ selected: isSelected })}>
 											{isSelected ? "Selected" : "Unselected"}
 										</span>
-										<span className="min-w-0 flex-1 truncate font-[var(--font-weight-semibold)]">{option.label}</span>
+										<span className="min-w-0 flex-1 truncate font-semibold">{option.label}</span>
 									</div>
 								);
 							})

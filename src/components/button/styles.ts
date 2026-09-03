@@ -2,10 +2,10 @@ import { cva, type VariantProps } from "class-variance-authority";
 
 export const buttonVariants = cva(
 	[
-		"btn inline-flex min-h-9 cursor-pointer items-center justify-center gap-[var(--gap-sm)]",
-		"rounded-[var(--border-sm)] border-[length:var(--app-border-width)] border-solid",
-		"px-[var(--spacing-md)] py-[var(--spacing-sm)]",
-		"font-[family-name:var(--font-family-base)] font-semibold no-underline",
+		"btn inline-flex min-h-9 cursor-pointer items-center justify-center gap-2",
+		"rounded-md border border-solid",
+		"px-4 py-2",
+		"font-sans font-semibold no-underline",
 		"transition hover:brightness-95 active:brightness-90",
 		"focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--app-theme)]",
 		"disabled:cursor-not-allowed disabled:opacity-60 aria-disabled:cursor-not-allowed aria-disabled:opacity-60",
@@ -51,10 +51,10 @@ export type ButtonVariant = NonNullable<VariantProps<typeof buttonVariants>["var
 export type ButtonTone = NonNullable<VariantProps<typeof buttonVariants>["tone"]>;
 
 const iconSizeByVariant: Record<ButtonVariant, string> = {
-	default: "h-[var(--svg-size-sm)] w-[var(--svg-size-sm)]",
-	nav: "h-[var(--svg-size-md)] w-[var(--svg-size-md)]",
-	action: "h-[var(--svg-size-sm)] w-[var(--svg-size-sm)]",
-	link: "h-[var(--svg-size-sm)] w-[var(--svg-size-sm)]",
+	default: "h-4 w-4",
+	nav: "h-[1.375rem] w-[1.375rem]",
+	action: "h-4 w-4",
+	link: "h-4 w-4",
 };
 
 export function buttonIconClassName(variant: ButtonVariant) {

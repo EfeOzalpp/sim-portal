@@ -144,7 +144,7 @@ export default function UserForm({
 
   return (
     <form onSubmit={handleSubmit(handleFormSubmit)}>
-      <div className="flex w-full flex-col gap-[var(--gap-lg)]">
+      <div className="flex w-full flex-col gap-6">
         {error && (
           <Alert
             description={error}
@@ -155,9 +155,9 @@ export default function UserForm({
           />
         )}
 
-        <div className="flex w-full flex-col gap-[var(--gap-md)]">
+        <div className="flex w-full flex-col gap-4">
           <div>
-            <span className="ui-label mb-[var(--spacing-sm)] block">
+            <span className="ui-label mb-2 block">
               Photo
             </span>
             <Controller
@@ -170,7 +170,7 @@ export default function UserForm({
                 />
               )}
             />
-            <span className="ui-note mt-[calc(var(--spacing-sm)/2)] block">
+            <span className="ui-note mt-1 block">
               {isCurrentUserAdmin
                 ? <>You can upload high resolution photos up to 8MB.<br />They will be automatically downsized.</>
                 : "Contact SIM faculty to change your photo."}
@@ -180,7 +180,7 @@ export default function UserForm({
           {isCurrentUserAdmin && (
             <div className="grid w-full grid-cols-[minmax(0,1fr)_minmax(0,1fr)] gap-4 max-[600px]:grid-cols-1">
               <div className="min-w-0">
-                <span className="ui-label mb-[var(--spacing-sm)] block">
+                <span className="ui-label mb-2 block">
                   Semesters Enrolled
                 </span>
                 <Controller
@@ -217,7 +217,7 @@ export default function UserForm({
               </div>
 
               <div className="min-w-0">
-                <span className="ui-label mb-[var(--spacing-sm)] block">Role</span>
+                <span className="ui-label mb-2 block">Role</span>
                 <Controller
                   control={control}
                   name="role"
@@ -239,7 +239,7 @@ export default function UserForm({
 
         <div className="grid grid-cols-2 gap-4 max-[600px]:w-full max-[600px]:grid-cols-1">
           <div>
-            <span className="ui-label mb-[var(--spacing-sm)] block">
+            <span className="ui-label mb-2 block">
               Full Name
             </span>
             <Controller
@@ -262,7 +262,7 @@ export default function UserForm({
           </div>
 
           <div>
-            <span className="ui-label mb-[var(--spacing-sm)] block">
+            <span className="ui-label mb-2 block">
               Pronouns
             </span>
             <Controller
@@ -275,7 +275,7 @@ export default function UserForm({
           </div>
 
           <div>
-            <span className="ui-label mb-[var(--spacing-sm)] block">
+            <span className="ui-label mb-2 block">
               Email Address
             </span>
             <Controller
@@ -297,7 +297,7 @@ export default function UserForm({
                     status={fieldState.error ? "error" : ""}
                   />
                   {!isCurrentUserAdmin && user && (
-                    <span className="ui-note mt-[calc(var(--spacing-sm)/2)] block">
+                    <span className="ui-note mt-1 block">
                       Contact SIM faculty to change your email.
                     </span>
                   )}
@@ -310,7 +310,7 @@ export default function UserForm({
           </div>
 
           <div>
-            <span className="ui-label mb-[var(--spacing-sm)] block">
+            <span className="ui-label mb-2 block">
               Contact & Links
             </span>
             <Controller
@@ -325,14 +325,14 @@ export default function UserForm({
                 />
               )}
             />
-            <span className="ui-note mt-[calc(var(--spacing-sm)/2)] block">
+            <span className="ui-note mt-1 block">
               Phone number, social media, gallery of your presentations, handles, etc.
             </span>
           </div>
         </div>
 
         <div className="w-full">
-          <span className="ui-label mb-[var(--spacing-sm)] block">
+          <span className="ui-label mb-2 block">
             About
           </span>
           <Controller
@@ -355,18 +355,18 @@ export default function UserForm({
 
         {user && isCurrentUserAdmin && onRemove && (
           <div
-            className="overflow-hidden rounded-[var(--border-md)] border-solid [border-width:var(--app-border-width)]"
+            className="overflow-hidden rounded-xl border-solid border"
             style={{ borderColor: "var(--tone-danger-border)", backgroundColor: "var(--tone-danger-bg)" }}
           >
             <div
-              className="[border-bottom-width:var(--app-border-width)] border-solid px-[var(--spacing-md)] py-[var(--spacing-sm)]"
+              className="border-b border-solid px-4 py-2"
               style={{ borderBottomColor: "var(--tone-danger-border)" }}
             >
               <h4 className="m-0 text-[var(--tone-danger-text)]">
                 Danger Zone
               </h4>
             </div>
-            <div className="flex w-full flex-col gap-[var(--gap-sm)] p-[var(--spacing-md)]">
+            <div className="flex w-full flex-col gap-2 p-4">
               <p className="m-0">
                 This permanently removes the data of this user from the database
                 altogether. If you want to unlist this user from a semester but

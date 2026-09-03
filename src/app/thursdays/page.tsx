@@ -94,7 +94,7 @@ async function ThursdaysList({
   }
 
   return (
-    <div className="grid gap-[var(--gap-md)] px-[var(--spacing-sm)] pb-[var(--spacing-lg)]">
+    <div className="grid gap-4 px-2 pb-6">
       {thursdays.map((thursday: any) => (
         <ThursdayCard key={thursday.id} thursday={thursday} isAdmin={isAdmin} />
       ))}
@@ -161,7 +161,7 @@ export default async function Thursdays({ searchParams }: ThursdaysProps) {
           }
         />
         <Suspense
-          fallback={<div style={{ opacity: 0.5, padding: "var(--spacing-md)", background: "transparent" }}>Loading days...</div>}
+          fallback={<div style={{ opacity: 0.5, padding: "1rem", background: "transparent" }}>Loading days...</div>}
         >
           <ThursdaysList filters={filters} isAdmin={isAdmin} semesters={semesters} />
         </Suspense>

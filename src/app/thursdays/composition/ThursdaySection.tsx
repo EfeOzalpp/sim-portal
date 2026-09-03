@@ -17,8 +17,8 @@ export default function ThursdaySection({
   semesters,
 }: ThursdaySectionProps) {
   return (
-    <div className="flex flex-1 flex-col gap-[calc(var(--gap-lg)*1.15)]">
-      <div className={semesters ? "grid grid-cols-1 gap-[var(--gap-lg)] min-[601px]:grid-cols-2" : undefined}>
+    <div className="flex flex-1 flex-col gap-[1.725rem]">
+      <div className={semesters ? "grid grid-cols-1 gap-6 min-[601px]:grid-cols-2" : undefined}>
         {semesters && (
           <div className={fieldStackClassName}>
             <span className="ui-label m-0 block">Semester</span>

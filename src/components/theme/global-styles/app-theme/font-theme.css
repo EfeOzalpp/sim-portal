@@ -1,53 +1,31 @@
-:root {
-  --font-family-base: system-ui, sans-serif;
-  --font-family-heading: "Sour Gummy", var(--font-family-base);
-  --font-family-label: var(--font-family-base);
-
-  --font-size-sm: 0.875rem;
-  --font-size-md: 1rem;
-  --font-size-lg: 1.25rem;
-  --font-size-h1: 2rem;
-  --font-size-h2: 2rem;
-  --font-size-h3: 1.25rem;
-  --font-size-h4: 1rem;
-  --font-size-body: 1rem;
-  --font-size-label: 0.6875rem;
-
-  --font-weight-regular: 400;
-  --font-weight-semibold: 600;
-  --font-weight-bold: 700;
-  --font-weight-label: var(--font-weight-semibold);
-
-  --line-height-tight: 1.2;
-  --line-height-base: 1.5;
-  --line-height-label: var(--line-height-tight);
-
-  --svg-size-sm: 1rem;
-  --svg-size-md: 1.375rem;
-  --svg-size-lg: 1.75rem;
-}
+/*
+ * Font-family/size/weight/line-height/svg-size are no longer app tokens —
+ * Tailwind's own scale covers them (font-sans/font-heading, text-sm/base/xl,
+ * font-semibold, leading-tight/normal, w-4/h-7 etc), so the values below
+ * are plain CSS. Only color stays tokenized (see styling-theme.css).
+ */
 
 .is-body {
-  font-family: var(--font-family-base);
-  font-size: var(--font-size-body);
-  font-weight: var(--font-weight-regular);
-  line-height: var(--line-height-base);
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
 }
 
 .ui-label {
   color: var(--app-muted);
-  font-family: var(--font-family-label);
-  font-size: var(--font-size-label);
-  font-weight: var(--font-weight-label);
-  line-height: var(--line-height-label);
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  line-height: 1.2;
   text-transform: uppercase;
 }
 
 .ui-note {
   color: var(--app-muted);
-  font-size: var(--font-size-sm);
+  font-size: 0.875rem;
   font-style: italic;
-  line-height: var(--line-height-base);
+  line-height: 1.5;
 }
 
 h1,
@@ -56,28 +34,28 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: var(--font-family-heading);
-  line-height: var(--line-height-tight);
+  font-family: var(--font-heading);
+  line-height: 1.2;
 }
 
 h1 {
-  font-size: var(--font-size-h1);
-  font-weight: var(--font-weight-bold);
+  font-size: 2rem;
+  font-weight: 700;
 }
 
 h2 {
-  font-size: var(--font-size-h2);
-  font-weight: var(--font-weight-bold);
+  font-size: 2rem;
+  font-weight: 700;
 }
 
 h3 {
-  font-size: var(--font-size-h3);
-  font-weight: var(--font-weight-semibold);
+  font-size: 1.25rem;
+  font-weight: 600;
 }
 
 h4,
 h5,
 h6 {
-  font-size: var(--font-size-h4);
-  font-weight: var(--font-weight-semibold);
+  font-size: 1rem;
+  font-weight: 600;
 }

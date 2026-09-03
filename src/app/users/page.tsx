@@ -166,7 +166,7 @@ export default async function UsersPage({ searchParams }: UsersProps) {
 					<div className="mb-[0.15in] hidden font-sans text-[9pt] font-bold tracking-[0.06em] text-black uppercase print:block">
 						{currentFilterLabel !== "All" ? currentFilterLabel : "All Semesters"}
 					</div>
-					<Suspense fallback={<div style={{ opacity: 0.5, padding: "var(--spacing-md)", background: "transparent" }}>Loading users...</div>}>
+					<Suspense fallback={<div style={{ opacity: 0.5, padding: "1rem", background: "transparent" }}>Loading users...</div>}>
 						<UsersList filters={filters} />
 					</Suspense>
 				</div>

@@ -22,9 +22,9 @@ export default function UserProfileView({
 	const about = user.about?.trim();
 
 	return (
-		<div className="grid w-full min-w-0 grid-cols-[minmax(10rem,13rem)_minmax(0,1fr)] gap-[var(--gap-md)] max-[767px]:grid-cols-1">
-			<aside className="flex min-w-0 flex-col gap-[var(--gap-md)]">
-				<div className="relative aspect-square w-full overflow-hidden rounded-[var(--border-md)] border-solid border-[var(--app-border)] [border-width:var(--app-border-width)]">
+		<div className="grid w-full min-w-0 grid-cols-[minmax(10rem,13rem)_minmax(0,1fr)] gap-4 max-[767px]:grid-cols-1">
+			<aside className="flex min-w-0 flex-col gap-4">
+				<div className="relative aspect-square w-full overflow-hidden rounded-xl border-solid border-[var(--app-border)] border">
 					<Image
 						src={normalizeFaceImagePath(user.image || "")}
 						alt={`${user.name}'s image`}
@@ -33,10 +33,10 @@ export default function UserProfileView({
 						className="object-cover object-top"
 					/>
 				</div>
-				<div className="self-start rounded-[var(--border-lg)] border-solid border-[var(--app-border)] bg-[var(--app-card-label-bg)] px-[var(--spacing-sm)] py-[calc(var(--spacing-sm)/2)] font-[family-name:var(--font-family-label)] text-[length:var(--font-size-label)] leading-[var(--line-height-label)] font-[var(--font-weight-label)] text-[var(--app-muted)] uppercase [border-width:var(--app-border-width)]">
+				<div className="self-start rounded-2xl border-solid border-[var(--app-border)] bg-[var(--app-card-label-bg)] px-2 py-1 font-sans text-[0.6875rem] leading-tight font-semibold text-[var(--app-muted)] uppercase border">
 					{roleLabel}
 				</div>
-				<div className="flex min-w-0 flex-col gap-[calc(var(--gap-sm)/2)]">
+				<div className="flex min-w-0 flex-col gap-1">
 					<span className="ui-label block">Email</span>
 					<a
 						href={`mailto:${user.email}`}
@@ -45,9 +45,9 @@ export default function UserProfileView({
 						{user.email}
 					</a>
 				</div>
-				<div className="flex min-w-0 flex-col gap-[calc(var(--gap-sm)/2)]">
+				<div className="flex min-w-0 flex-col gap-1">
 					<span className="ui-label block">Contact & Links</span>
-					<div className="flex min-w-0 flex-col gap-[calc(var(--gap-sm)/2)] leading-[var(--line-height-base)] text-[var(--app-text)]">
+					<div className="flex min-w-0 flex-col gap-1 leading-normal text-[var(--app-text)]">
 						{links.length > 0 ? (
 							links.map((link, index) => {
 								const href = getUserLinkHref(link);
@@ -79,20 +79,20 @@ export default function UserProfileView({
 					</div>
 				</div>
 			</aside>
-			<section className="flex min-w-0 flex-col gap-[var(--gap-md)]">
-				<div className="flex flex-col gap-[calc(var(--gap-sm)/2)] border-b-[length:var(--app-border-width)] border-solid border-[var(--app-border)] pb-[var(--spacing-md)] [&_h2]:m-0">
-					<div className="flex min-w-0 items-center justify-between gap-[var(--gap-sm)] max-[767px]:flex-col max-[767px]:items-start">
+			<section className="flex min-w-0 flex-col gap-4">
+				<div className="flex flex-col gap-1 border-b border-solid border-[var(--app-border)] pb-4 [&_h2]:m-0">
+					<div className="flex min-w-0 items-center justify-between gap-2 max-[767px]:flex-col max-[767px]:items-start">
 						<h2 className="min-w-0">{user.name}</h2>
 					</div>
 					{pronouns && (
-						<div className="text-[length:var(--font-size-lg)] leading-[var(--line-height-base)] text-[var(--app-muted)]">
+						<div className="text-xl leading-normal text-[var(--app-muted)]">
 							{pronouns}
 						</div>
 					)}
 				</div>
-				<div className="flex min-w-0 flex-col gap-[calc(var(--gap-sm)/2)]">
-					<h3 className="m-0 text-[length:var(--font-size-h3)]">About</h3>
-					<div className="flex min-w-0 flex-col gap-[calc(var(--gap-sm)/2)] leading-[var(--line-height-base)] text-[var(--app-text)]">
+				<div className="flex min-w-0 flex-col gap-1">
+					<h3 className="m-0 text-xl">About</h3>
+					<div className="flex min-w-0 flex-col gap-1 leading-normal text-[var(--app-text)]">
 						{about ? (
 							about
 						) : (
@@ -104,9 +104,9 @@ export default function UserProfileView({
 						)}
 					</div>
 				</div>
-				<div className="flex min-w-0 flex-col gap-[calc(var(--gap-sm)/2)]">
-					<h3 className="m-0 text-[length:var(--font-size-h3)]">Presentations</h3>
-					<div className="flex flex-col gap-[var(--gap-sm)] [&>*]:m-0">
+				<div className="flex min-w-0 flex-col gap-1">
+					<h3 className="m-0 text-xl">Presentations</h3>
+					<div className="flex flex-col gap-2 [&>*]:m-0">
 						{(user.presentations?.length ?? 0) > 0 ? (
 							user.presentations?.map((presentation: any) => (
 								<PresentationCard
@@ -126,7 +126,7 @@ export default function UserProfileView({
 				</div>
 			</section>
 			{isCurrentUser && (
-				<div className="col-[1/-1] flex flex-row items-center gap-[var(--gap-sm)] border-t-[length:var(--app-border-width)] border-solid border-[var(--app-border)] pt-[var(--spacing-md)] [&_form]:m-0">
+				<div className="col-[1/-1] flex flex-row items-center gap-2 border-t border-solid border-[var(--app-border)] pt-4 [&_form]:m-0">
 					<form action={logOut}>
 						<Button type="submit" tone="danger">
 							Log Out

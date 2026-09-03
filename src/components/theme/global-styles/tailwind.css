@@ -13,12 +13,14 @@
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
 /*
- * Bridge existing app tokens into Tailwind's spacing namespace. This creates
- * utilities such as gap-app-md and mb-app-md while the actual responsive value
- * continues to come from --gap-md in layout-theme.css.
+ * The app's design tokens are just colors now (see styling-theme.css) —
+ * spacing, radius, border-width, and type all use Tailwind's own scale
+ * directly. The one exception is the heading font: "Sour Gummy" has no
+ * Tailwind default equivalent, so it's registered here to get a real,
+ * readable `font-heading` utility instead of an arbitrary-value bracket.
  */
-@theme inline {
-	--spacing-app-md: var(--gap-md);
+@theme {
+	--font-heading: "Sour Gummy", var(--font-sans);
 }
 
 @keyframes modal-slide-up {

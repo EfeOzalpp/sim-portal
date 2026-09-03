@@ -65,10 +65,10 @@ export default function ProductionsCollapse({ productions }: ProductionsCollapse
       }}
     >
       <Collapse
-        className="overflow-hidden rounded-[var(--border-md)] border-[length:var(--app-border-width)] border-solid border-[var(--app-border)] bg-[var(--app-card-bg)] text-[var(--app-text)]"
+        className="overflow-hidden rounded-xl border border-solid border-[var(--app-border)] bg-[var(--app-card-bg)] text-[var(--app-text)]"
         items={productions.map((p, pIndex) => ({
           value: p.id,
-          itemClassName: pIndex > 0 ? "border-t-[length:var(--app-border-width)] border-solid border-[var(--app-border)]" : "",
+          itemClassName: pIndex > 0 ? "border-t border-solid border-[var(--app-border)]" : "",
           headerClassName: "items-center bg-[var(--app-card-bg)] text-[var(--app-text)] transition-[background] duration-150 hover:bg-[var(--app-card-bg-hover)]",
           contentClassName: "bg-[var(--app-card-bg)] text-[var(--app-text)]",
           // The title used to double as both the toggle trigger and a
@@ -80,7 +80,7 @@ export default function ProductionsCollapse({ productions }: ProductionsCollapse
           // antd version, not just a technical swap.
           trigger: (
             <span className="inline-flex items-center gap-[0.85rem]">
-              <h3 className="m-0 font-[family-name:var(--font-family-heading)] text-[length:var(--font-size-h3)] font-bold leading-[var(--line-height-tight)] text-[var(--app-text)]">
+              <h3 className="m-0 font-heading text-xl font-bold leading-tight text-[var(--app-text)]">
                 {p.name}
               </h3>
               {p.location && (
@@ -90,7 +90,7 @@ export default function ProductionsCollapse({ productions }: ProductionsCollapse
                 </>
               )}
               <span
-                className="flex items-center text-[var(--app-text)] transition-transform duration-250 [&_svg]:h-[var(--svg-size-sm)] [&_svg]:w-[var(--svg-size-sm)] [[data-state=open]_&]:rotate-180"
+                className="flex items-center text-[var(--app-text)] transition-transform duration-250 [&_svg]:h-4 [&_svg]:w-4 [[data-state=open]_&]:rotate-180"
                 aria-hidden="true"
               >
                 <svg viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -100,7 +100,7 @@ export default function ProductionsCollapse({ productions }: ProductionsCollapse
             </span>
           ),
           extra: (p.date || p.href) ? (
-            <span className="flex items-center gap-[0.6rem] pr-[var(--spacing-md)]">
+            <span className="flex items-center gap-[0.6rem] pr-4">
               {p.date && (
                 <span className="inline-block whitespace-nowrap rounded-sm bg-[var(--app-border)] px-[0.8rem] py-[0.3rem] text-[0.8rem] font-bold text-[var(--app-text)]">
                   {p.date}
@@ -130,7 +130,7 @@ export default function ProductionsCollapse({ productions }: ProductionsCollapse
         data-thursday-action-overlay
         aria-hidden="true"
       >
-        <span className="h-[var(--svg-size-lg)] w-[var(--svg-size-lg)] origin-center scale-100">
+        <span className="h-7 w-7 origin-center scale-100">
           <svg className="h-full w-full" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
               d={

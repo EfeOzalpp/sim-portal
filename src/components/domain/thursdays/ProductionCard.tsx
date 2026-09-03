@@ -65,7 +65,7 @@ export default async function ProductionCard({
               <div className="leading-[1.4]">{formattedDate}</div>
             </div>
           </div>
-          <div className="flex flex-1 flex-col gap-[0.4rem] border-t-[length:var(--app-border-width)] border-solid border-[var(--app-border)] pt-3 min-[768px]:border-t-0 min-[768px]:pt-0">
+          <div className="flex flex-1 flex-col gap-[0.4rem] border-t border-solid border-[var(--app-border)] pt-3 min-[768px]:border-t-0 min-[768px]:pt-0">
             <b>Producers</b>
             <div className="mt-1 flex flex-row flex-wrap gap-x-2 gap-y-[0.15rem] min-[768px]:flex-col min-[768px]:gap-[0.2rem]">
               {producers.length > 0 ? (
@@ -83,7 +83,7 @@ export default async function ProductionCard({
               )}
             </div>
           </div>
-          <div className="flex flex-1 flex-col gap-[0.4rem] border-t-[length:var(--app-border-width)] border-solid border-[var(--app-border)] pt-3 min-[768px]:border-t-0 min-[768px]:pt-0">
+          <div className="flex flex-1 flex-col gap-[0.4rem] border-t border-solid border-[var(--app-border)] pt-3 min-[768px]:border-t-0 min-[768px]:pt-0">
             <b>Faculty</b>
             <div className="mt-1 flex flex-row flex-wrap gap-x-2 gap-y-[0.15rem] min-[768px]:flex-col min-[768px]:gap-[0.2rem]">
               {faculty.length > 0 ? (

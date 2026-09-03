@@ -33,8 +33,8 @@ export default function ProductionForm({
   const producerUsers = users.filter((u) => (u as any).role !== "STAFF");
 
   return (
-    <div className="flex w-full flex-col gap-[var(--gap-lg)]">
-      <div className="grid grid-cols-1 gap-[var(--gap-lg)] min-[601px]:grid-cols-2">
+    <div className="flex w-full flex-col gap-6">
+      <div className="grid grid-cols-1 gap-6 min-[601px]:grid-cols-2">
         <div className={fieldStackClassName}>
           <span className="ui-label m-0 block">Production Name</span>
           <Controller

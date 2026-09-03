@@ -115,7 +115,7 @@ export default async function SemesterPage({ searchParams }: SemesterPageProps) 
             </>
           }
         />
-        <div className="px-[var(--spacing-sm)] pb-[var(--spacing-lg)]">
+        <div className="px-2 pb-6">
           {visibleSemesters.length > 0 ? (
             <SemesterCardGrid semesters={visibleSemesters} />
           ) : (

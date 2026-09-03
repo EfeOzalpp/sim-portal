@@ -42,7 +42,7 @@ export default function RepeatableInput({
 	}
 
 	return (
-		<div className="flex w-full min-w-0 flex-col gap-[var(--gap-sm)]">
+		<div className="flex w-full min-w-0 flex-col gap-2">
 			{rows.map((rowValue, index) => {
 				const isFirst = index === 0;
 				const icon = isFirst ? addIcon : deleteIcon;
@@ -51,7 +51,7 @@ export default function RepeatableInput({
 				return (
 					<div
 						className={clsx(
-							"grid w-full min-w-0 grid-cols-[minmax(0,1fr)_auto] items-center gap-[var(--gap-sm)]",
+							"grid w-full min-w-0 grid-cols-[minmax(0,1fr)_auto] items-center gap-2",
 							index > 0 && "pr-5",
 						)}
 						key={index}
@@ -64,7 +64,7 @@ export default function RepeatableInput({
 						/>
 						<button
 							type="button"
-							className="m-0 inline-grid h-9 w-9 cursor-pointer place-items-center self-center rounded-[var(--border-md)] border-solid border-[var(--input-border)] bg-transparent p-0 text-[var(--input-icon)] [border-width:var(--app-border-width)] hover:border-[var(--input-border-hover)] hover:bg-[var(--input-bg-hover)] hover:text-[var(--input-text)] hover:shadow-[var(--input-hover-shadow)]"
+							className="m-0 inline-grid h-9 w-9 cursor-pointer place-items-center self-center rounded-xl border-solid border-[var(--input-border)] bg-transparent p-0 text-[var(--input-icon)] border hover:border-[var(--input-border-hover)] hover:bg-[var(--input-bg-hover)] hover:text-[var(--input-text)] hover:shadow-[var(--input-hover-shadow)]"
 							aria-label={isFirst ? addLabel : deleteLabel}
 							onClick={isFirst ? addRow : () => deleteRow(index)}
 						>

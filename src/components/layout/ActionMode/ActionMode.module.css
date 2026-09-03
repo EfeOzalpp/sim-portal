@@ -64,8 +64,8 @@
 .actionButtonIcon {
 	position: absolute;
 	left: 0;
-	width: var(--svg-size-sm);
-	height: var(--svg-size-sm);
+	width: 1rem;
+	height: 1rem;
 	opacity: 0;
 	background: currentColor;
 	mask-position: center;
@@ -99,7 +99,7 @@
 
 @media (max-width: 768px) {
 	:global([data-mobile-content-bar]) .actionButtonShell[data-action-mode-active="true"] .actionButtonContent {
-		gap: var(--gap-sm);
+		gap: 0.5rem;
 		justify-content: flex-start;
 	}
 

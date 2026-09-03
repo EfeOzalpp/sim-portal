@@ -40,8 +40,8 @@ html[data-theme] .input-theme-surface .ant-picker.ant-picker-range .ant-picker-s
 
 html[data-theme] .ant-picker-panel-container {
 	background: var(--input-dropdown-bg);
-	border: var(--app-border-width) solid var(--input-border);
-	border-radius: var(--border-md);
+	border: 1px solid var(--input-border);
+	border-radius: 12px;
 }
 
 html[data-theme] .ant-picker-panel,
@@ -63,7 +63,7 @@ html[data-theme] .ant-picker-cell-in-view.ant-picker-cell-today .ant-picker-cell
 }
 
 html[data-theme] .ant-picker-now-btn {
-	font-weight: var(--font-weight-semibold);
+	font-weight: 600;
 }
 
 html[data-theme] .ant-picker-now-btn:hover {

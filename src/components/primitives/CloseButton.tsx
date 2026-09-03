@@ -15,12 +15,12 @@ export default function CloseButton({ href, className }: CloseButtonProps) {
       pressable
       aria-label="Close"
       className={clsx(
-        "inline-flex h-10 w-10 items-center justify-center rounded-[var(--border-lg)] text-[var(--app-icon)] hover:bg-[var(--nav-button-bg-hover)] hover:text-[var(--app-text)]",
+        "inline-flex h-10 w-10 items-center justify-center rounded-2xl text-[var(--app-icon)] hover:bg-[var(--nav-button-bg-hover)] hover:text-[var(--app-text)]",
         className,
       )}
     >
       <span
-        className="h-[var(--svg-size-sm)] w-[var(--svg-size-sm)] bg-current [mask-position:center] [mask-repeat:no-repeat] [mask-size:contain]"
+        className="h-4 w-4 bg-current [mask-position:center] [mask-repeat:no-repeat] [mask-size:contain]"
         style={{
           maskImage: `url(${typeof closeIcon === "string" ? closeIcon : closeIcon.src})`,
           WebkitMaskImage: `url(${typeof closeIcon === "string" ? closeIcon : closeIcon.src})`,

@@ -1,6 +1,6 @@
 .root {
-	--nav-icon-size: var(--svg-size-md);
-	--nav-icon-slot-size: var(--svg-size-lg);
+	--nav-icon-size: 1.375rem;
+	--nav-icon-slot-size: 1.75rem;
 
 	position: absolute;
 	inset: 0 auto 0 0;
@@ -8,14 +8,14 @@
 	display: flex;
 	flex-direction: column;
 	align-items: stretch;
-	gap: var(--gap-md);
+	gap: 1rem;
 	width: 100%;
 	min-height: 100%;
 	overflow-x: hidden;
 	overflow-y: auto;
-	padding: var(--spacing-sm);
+	padding: 0.5rem;
 	background: var(--app-surface);
-	border-right: var(--app-border-width) solid var(--app-border);
+	border-right: 1px solid var(--app-border);
 	box-sizing: border-box;
 	overscroll-behavior: contain;
 	transition: width 160ms ease;
@@ -27,7 +27,7 @@
 }
 
 .root:not(:hover):not(:has(:focus-visible)) {
-	--nav-icon-size: var(--svg-size-lg);
+	--nav-icon-size: 1.75rem;
 }
 
 .brand {
@@ -38,10 +38,10 @@
 	min-height: var(--nav-brand-block-size);
 	margin: 0;
 	color: var(--brand-color);
-	font-family: var(--font-family-heading);
-	font-size: var(--font-size-lg);
+	font-family: var(--font-heading);
+	font-size: 1.25rem;
 	font-weight: 700;
-	line-height: var(--line-height-tight);
+	line-height: 1.2;
 	white-space: nowrap;
 }
 
@@ -51,16 +51,16 @@
 }
 
 .navButtonGroup {
-	margin-top: var(--spacing-md);
-	padding-top: var(--spacing-md);
-	border-top: var(--app-border-width) solid var(--app-border);
+	margin-top: 1rem;
+	padding-top: 1rem;
+	border-top: 1px solid var(--app-border);
 }
 
 .navButtonList {
 	display: flex;
 	flex-direction: column;
 	align-items: stretch;
-	gap: var(--gap-sm);
+	gap: 0.5rem;
 	width: 100%;
 	min-width: 0;
 }
@@ -193,7 +193,7 @@
 	max-width: 12rem;
 	opacity: 1;
 	padding-block: 0.125em;
-	line-height: var(--line-height-base);
+	line-height: 1.5;
 	text-align: start;
 	text-overflow: ellipsis;
 	white-space: nowrap;
@@ -207,18 +207,18 @@
 .externalNav {
 	display: flex;
 	flex-direction: column;
-	gap: var(--gap-sm);
+	gap: 0.5rem;
 	width: 100%;
 	min-width: 0;
-	padding-top: var(--spacing-md);
-	border-top: var(--app-border-width) solid var(--app-border);
+	padding-top: 1rem;
+	border-top: 1px solid var(--app-border);
 }
 
 .externalMarker {
 	display: inline-flex;
 	flex-direction: column;
 	align-items: stretch;
-	gap: var(--gap-sm);
+	gap: 0.5rem;
 	width: 100%;
 	min-width: 0;
 	color: var(--app-muted);
@@ -237,7 +237,7 @@
 }
 
 .externalMoreIcon {
-	--nav-icon-size: var(--svg-size-sm);
+	--nav-icon-size: 1rem;
 
 	align-self: center;
 	margin-inline-start: 0;
@@ -251,7 +251,7 @@
 .externalLinkList {
 	display: flex;
 	flex-direction: column;
-	gap: var(--gap-sm);
+	gap: 0.5rem;
 	width: 100%;
 	min-width: 0;
 }
@@ -271,13 +271,13 @@
 .themeNav {
 	width: 100%;
 	min-width: 0;
-	padding-block: var(--spacing-md);
-	border-top: var(--app-border-width) solid var(--app-border);
-	border-bottom: var(--app-border-width) solid var(--app-border);
+	padding-block: 1rem;
+	border-top: 1px solid var(--app-border);
+	border-bottom: 1px solid var(--app-border);
 }
 
 .accountNav {
-	padding-top: var(--spacing-md);
+	padding-top: 1rem;
 }
 
 @media (max-width: 768px) {

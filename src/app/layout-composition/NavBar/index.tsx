@@ -47,7 +47,7 @@ export default async function NavBar({ session: initialSession }: NavBarProps) {
 				</div>
 				<div className={styles.externalNav}>
 					<div className={styles.externalMarker} aria-label="External links">
-						<span className={`${styles.externalMarkerButton} rounded-[var(--border-sm)] bg-transparent text-[#717171] dark:text-[#adadad]`} aria-hidden="true">
+						<span className={`${styles.externalMarkerButton} rounded-md bg-transparent text-[#717171] dark:text-[#adadad]`} aria-hidden="true">
 							<span className={`${styles.navIcon} ${styles.assetIcon} ${styles.linkIcon}`} />
 						</span>
 						<span className={`${styles.navIcon} ${styles.assetIcon} ${styles.moreVerticalIcon} ${styles.externalMoreIcon}`} aria-hidden="true" />

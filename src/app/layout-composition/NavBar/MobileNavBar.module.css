@@ -10,8 +10,8 @@
 	.topBar {
 		display: flex;
 		align-items: center;
-		gap: var(--gap-sm);
-		padding: var(--spacing-sm);
+		gap: 0.5rem;
+		padding: 0.5rem;
 		width: 100%;
 		box-sizing: border-box;
 	}
@@ -25,7 +25,7 @@
 		height: 2.25rem;
 		padding: 0;
 		border: none;
-		border-radius: var(--border-md);
+		border-radius: 12px;
 		background: transparent;
 		cursor: pointer;
 		color: var(--app-text);
@@ -37,25 +37,25 @@
 
 	.menuIconAsset {
 		display: block;
-		width: var(--svg-size-md);
-		height: var(--svg-size-md);
+		width: 1.375rem;
+		height: 1.375rem;
 		background: currentColor;
 		mask-image: url("../../../components/theme/assets/menu/menu.svg");
 		mask-position: center;
 		mask-repeat: no-repeat;
-		mask-size: var(--svg-size-md) var(--svg-size-md);
+		mask-size: 1.375rem 1.375rem;
 		-webkit-mask-image: url("../../../components/theme/assets/menu/menu.svg");
 		-webkit-mask-position: center;
 		-webkit-mask-repeat: no-repeat;
-		-webkit-mask-size: var(--svg-size-md) var(--svg-size-md);
+		-webkit-mask-size: 1.375rem 1.375rem;
 	}
 
 	.brandText {
 		color: var(--brand-color);
-		font-family: var(--font-family-heading);
-		font-size: var(--font-size-lg);
+		font-family: var(--font-heading);
+		font-size: 1.25rem;
 		font-weight: 700;
-		line-height: var(--line-height-tight);
+		line-height: 1.2;
 	}
 
 	/* Backdrop: dims content area behind open panel */
@@ -77,7 +77,7 @@
 		width: 80vw;
 		z-index: 60;
 		background: var(--app-surface);
-		border-right: var(--app-border-width) solid var(--app-border);
+		border-right: 1px solid var(--app-border);
 		transform: translateX(-100%);
 		transition: transform 220ms ease;
 		box-sizing: border-box;
@@ -89,14 +89,14 @@
 
 	/* Panel content area (scrollable) */
 	.panelInner {
-		--nav-icon-size: var(--svg-size-md);
-		--nav-icon-slot-size: var(--svg-size-lg);
+		--nav-icon-size: 1.375rem;
+		--nav-icon-slot-size: 1.75rem;
 
 		flex: 1 1 auto;
 		display: flex;
 		flex-direction: column;
-		gap: var(--gap-md);
-		padding: var(--spacing-sm);
+		gap: 1rem;
+		padding: 0.5rem;
 		overflow-y: auto;
 		overflow-x: hidden;
 		min-width: 0;
@@ -108,19 +108,19 @@
 		display: grid;
 		grid-template-columns: 2.5rem 1fr 2.5rem;
 		align-items: center;
-		padding-block: var(--spacing-sm);
-		border-bottom: var(--app-border-width) solid var(--app-border);
-		margin-bottom: var(--gap-sm);
+		padding-block: 0.5rem;
+		border-bottom: 1px solid var(--app-border);
+		margin-bottom: 0.5rem;
 	}
 
 	.panelBrand {
 		grid-column: 2;
 		text-align: center;
 		color: var(--brand-color);
-		font-family: var(--font-family-heading);
-		font-size: var(--font-size-lg);
+		font-family: var(--font-heading);
+		font-size: 1.25rem;
 		font-weight: 700;
-		line-height: var(--line-height-tight);
+		line-height: 1.2;
 	}
 
 	/* Close button: sits in the third column of the header row, same size as menu button */
@@ -133,7 +133,7 @@
 		height: 2.25rem;
 		padding: 0;
 		border: none;
-		border-radius: var(--border-md);
+		border-radius: 12px;
 		background: transparent;
 		cursor: pointer;
 		color: var(--app-text);
@@ -145,17 +145,17 @@
 
 	.closeIconAsset {
 		display: block;
-		width: var(--svg-size-md);
-		height: var(--svg-size-md);
+		width: 1.375rem;
+		height: 1.375rem;
 		background: currentColor;
 		mask-image: url("../../../components/theme/assets/arrow/left.svg");
 		mask-position: center;
 		mask-repeat: no-repeat;
-		mask-size: var(--svg-size-md) var(--svg-size-md);
+		mask-size: 1.375rem 1.375rem;
 		-webkit-mask-image: url("../../../components/theme/assets/arrow/left.svg");
 		-webkit-mask-position: center;
 		-webkit-mask-repeat: no-repeat;
-		-webkit-mask-size: var(--svg-size-md) var(--svg-size-md);
+		-webkit-mask-size: 1.375rem 1.375rem;
 	}
 
 	/* Ensure nav labels are always visible inside the panel (no collapsed state) */

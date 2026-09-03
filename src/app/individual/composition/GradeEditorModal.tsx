@@ -40,7 +40,7 @@ function GradeOptionButton({
 	return (
 		<button
 			type="button"
-			className="inline-flex min-h-9 min-w-[3.25rem] cursor-pointer items-center justify-center rounded-[var(--border-sm)] border-solid border-[var(--app-border)] bg-[var(--app-surface)] px-[var(--spacing-sm)] [border-width:var(--app-border-width)] [font:inherit] hover:bg-[var(--nav-button-bg-hover)] data-[selected=true]:bg-[var(--tone-success-bg)] data-[selected=true]:border-[var(--tone-success-border)] data-[selected=true]:text-[var(--tone-success-text)] data-[selected=true]:font-[var(--font-weight-semibold)]"
+			className="inline-flex min-h-9 min-w-[3.25rem] cursor-pointer items-center justify-center rounded-md border-solid border-[var(--app-border)] bg-[var(--app-surface)] px-2 border [font:inherit] hover:bg-[var(--nav-button-bg-hover)] data-[selected=true]:bg-[var(--tone-success-bg)] data-[selected=true]:border-[var(--tone-success-border)] data-[selected=true]:text-[var(--tone-success-text)] data-[selected=true]:font-semibold"
 			data-selected={selected ? "true" : undefined}
 			onClick={onClick}
 		>
@@ -88,7 +88,7 @@ export default function GradeEditorModal({
 			title={`Edit Grades: ${user.name || "Student"}`}
 			dialogClassName="w-[min(38rem,100%)]"
 		>
-			<div className="flex flex-col gap-[var(--gap-lg)]">
+			<div className="flex flex-col gap-6">
 				{error && (
 					<Alert
 						description={error}
@@ -99,22 +99,22 @@ export default function GradeEditorModal({
 					/>
 				)}
 
-				<div className="flex flex-col gap-[var(--gap-md)]">
+				<div className="flex flex-col gap-4">
 					{semesters.length > 0 ? (
 						semesters.map((semester) => (
 							<div
 								key={semester.id}
-								className="grid grid-cols-[minmax(8rem,0.8fr)_minmax(0,1.2fr)] items-center gap-[var(--gap-lg)] rounded-[var(--border-md)] border-solid border-[var(--app-border)] bg-[var(--app-subtle)] p-[var(--spacing-md)] [border-width:var(--app-border-width)] max-[768px]:grid-cols-1"
+								className="grid grid-cols-[minmax(8rem,0.8fr)_minmax(0,1.2fr)] items-center gap-6 rounded-xl border-solid border-[var(--app-border)] bg-[var(--app-subtle)] p-4 border max-[768px]:grid-cols-1"
 							>
 								<div>
 									<span className="ui-label">Semester of Grade</span>
-									<div className="mt-[calc(var(--spacing-sm)/2)] font-[family-name:var(--font-family-heading)] text-[length:var(--font-size-h3)] leading-[var(--line-height-tight)] font-[var(--font-weight-semibold)]">
+									<div className="mt-1 font-heading text-xl leading-tight font-semibold">
 										{semester.name}
 									</div>
 								</div>
-								<div className="flex min-w-0 flex-col gap-[calc(var(--gap-sm)/2)]">
+								<div className="flex min-w-0 flex-col gap-1">
 									<span className="ui-label">Grade</span>
-									<div className="flex min-w-0 flex-wrap gap-[var(--gap-sm)]">
+									<div className="flex min-w-0 flex-wrap gap-2">
 										{gradeOptions.map((grade) => (
 											<GradeOptionButton
 												key={grade}

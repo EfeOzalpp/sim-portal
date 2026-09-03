@@ -107,9 +107,9 @@ export default function SemesterForm({
             onClose={() => setError(null)}
           />
         )}
-        <div className="flex flex-1 flex-col gap-[var(--gap-md)]">
+        <div className="flex flex-1 flex-col gap-4">
           <div className="grid w-full grid-cols-[max-content_minmax(0,1fr)] gap-4 max-[600px]:grid-cols-1">
-            <div className="flex min-w-0 flex-col gap-[var(--gap-sm)]">
+            <div className="flex min-w-0 flex-col gap-2">
               <span className="ui-label m-0 block">Semester Name</span>
               <Controller
                 control={control}
@@ -133,7 +133,7 @@ export default function SemesterForm({
               />
             </div>
 
-            <div className="flex min-w-0 flex-col gap-[var(--gap-sm)]">
+            <div className="flex min-w-0 flex-col gap-2">
               <span className="ui-label m-0 block">Select Date Range</span>
               <Controller
                 control={control}
@@ -161,9 +161,9 @@ export default function SemesterForm({
               name="users"
               render={({ field }) => (
                 <>
-                  <div className="mb-[var(--gap-sm)] flex items-end justify-between gap-[var(--gap-md)] max-[600px]:flex-col max-[600px]:items-stretch">
+                  <div className="mb-2 flex items-end justify-between gap-4 max-[600px]:flex-col max-[600px]:items-stretch">
                     <span className="ui-label m-0 block">Select Users</span>
-                    <div className="flex items-center gap-[var(--gap-sm)]">
+                    <div className="flex items-center gap-2">
                       <Button
                         type="button"
                         onClick={() => field.onChange(selectableUsers.map((u) => u.id))}
@@ -193,7 +193,7 @@ export default function SemesterForm({
           </div>
         </div>
 
-        <div className="mt-[var(--spacing-md)] flex justify-start border-t-[length:var(--app-border-width)] border-solid border-[var(--app-border)] pt-[var(--spacing-md)]">
+        <div className="mt-4 flex justify-start border-t border-solid border-[var(--app-border)] pt-4">
         <Button type="submit" disabled={isSubmitting} tone="success">
           {isSubmitting
             ? "Saving..."

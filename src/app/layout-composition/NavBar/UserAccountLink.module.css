@@ -2,15 +2,15 @@
 	display: grid;
 	grid-template-columns: var(--nav-rail-content-width) minmax(0, 1fr);
 	align-items: center;
-	column-gap: var(--gap-sm);
+	column-gap: 0.5rem;
 	width: 100%;
 	min-width: 0;
-	padding-block: var(--spacing-sm);
+	padding-block: 0.5rem;
 	padding-inline: 0;
 	overflow: hidden;
 	color: inherit;
 	text-decoration: none;
-	border-radius: var(--border-md);
+	border-radius: 12px;
 	box-sizing: border-box;
 }
 

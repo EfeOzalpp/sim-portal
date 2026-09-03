@@ -30,10 +30,10 @@ const navDividerClassName = [
 	"w-full border-r-0 border-b-0 before:content-none print:hidden!",
 	"min-[769px]:z-20 min-[769px]:w-auto",
 	"min-[769px]:before:invisible min-[769px]:before:block min-[769px]:before:box-border",
-	"min-[769px]:before:min-w-[calc(var(--nav-rail-content-width)+(var(--spacing-sm)*2)+var(--app-border-width))]",
-	"min-[769px]:before:whitespace-nowrap min-[769px]:before:border-r-[length:var(--app-border-width)] min-[769px]:before:border-transparent",
-	"min-[769px]:before:p-[var(--spacing-sm)] min-[769px]:before:font-[family-name:var(--font-family-heading)]",
-	"min-[769px]:before:text-[length:var(--font-size-h1)] min-[769px]:before:font-bold min-[769px]:before:leading-[var(--line-height-tight)]",
+	"min-[769px]:before:min-w-[calc(var(--nav-rail-content-width)+1rem+1px)]",
+	"min-[769px]:before:whitespace-nowrap min-[769px]:before:border-r min-[769px]:before:border-transparent",
+	"min-[769px]:before:p-2 min-[769px]:before:font-heading",
+	"min-[769px]:before:text-[2rem] min-[769px]:before:font-bold min-[769px]:before:leading-tight",
 	"min-[769px]:before:content-['SIM']",
 ].join(" ");
 

@@ -7,7 +7,7 @@
 	overflow-x: hidden;
 	overflow-y: auto;
 	background: var(--app-surface);
-	border-right: var(--app-border-width-strong) solid var(--app-border);
+	border-right: 2px solid var(--app-border);
 	overscroll-behavior: contain;
 }
 
@@ -15,9 +15,9 @@
 	display: flex;
 	flex-direction: column;
 	align-items: stretch;
-	gap: var(--gap-md);
+	gap: 1rem;
 	min-height: 100%;
-	padding: var(--nav-content-padding-y, var(--spacing-md)) var(--nav-content-padding-x, var(--spacing-md));
+	padding: var(--nav-content-padding-y, 1rem) var(--nav-content-padding-x, 1rem);
 }
 
 .start {
@@ -39,7 +39,7 @@
 }
 
 .end:has(.navSection) {
-	margin-block-start: calc(var(--nav-content-padding-y, var(--spacing-md)) * -1);
+	margin-block-start: calc(var(--nav-content-padding-y, 1rem) * -1);
 }
 
 .end > * {
@@ -58,15 +58,15 @@
 	display: flex;
 	flex-direction: column;
 	align-items: stretch;
-	gap: var(--gap-md);
-	inline-size: calc(100% + (var(--nav-content-padding-x, var(--spacing-md)) * 2));
-	margin-inline: calc(var(--nav-content-padding-x, var(--spacing-md)) * -1);
-	padding: var(--spacing-md) var(--nav-content-padding-x, var(--spacing-md));
+	gap: 1rem;
+	inline-size: calc(100% + (var(--nav-content-padding-x, 1rem) * 2));
+	margin-inline: calc(var(--nav-content-padding-x, 1rem) * -1);
+	padding: 1rem var(--nav-content-padding-x, 1rem);
 	box-sizing: border-box;
 }
 
 .navSection:first-child {
-	padding-block-start: calc(var(--spacing-lg) * 2);
+	padding-block-start: calc(1.5rem * 2);
 }
 
 .navSection::before,
@@ -75,7 +75,7 @@
 	position: absolute;
 	left: 0;
 	right: 0;
-	border-top: var(--app-border-width-strong) solid var(--app-border);
+	border-top: 2px solid var(--app-border);
 }
 
 .navSection::before {
@@ -99,15 +99,15 @@
 }
 
 .navSection:not(:last-child) {
-	margin-bottom: var(--spacing-md);
+	margin-bottom: 1rem;
 }
 
 .navSectionLabel {
 	color: var(--app-muted);
-	font-family: var(--font-family-label);
-	font-size: var(--font-size-label);
-	font-weight: var(--font-weight-label);
-	line-height: var(--line-height-label);
+	font-family: var(--font-sans);
+	font-size: 0.6875rem;
+	font-weight: 600;
+	line-height: 1.2;
 	text-transform: uppercase;
 }
 
@@ -115,7 +115,7 @@
 	display: flex;
 	flex-direction: column;
 	align-items: stretch;
-	gap: var(--gap-md);
+	gap: 1rem;
 	min-width: 0;
 }
 
@@ -133,7 +133,7 @@
 		height: auto;
 		max-height: 40dvh;
 		border-right: 0;
-		border-bottom: var(--app-border-width-strong) solid var(--app-border);
+		border-bottom: 2px solid var(--app-border);
 	}
 
 	.root:not(.hasMobileBar) .stack {

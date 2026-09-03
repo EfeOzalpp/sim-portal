@@ -1,7 +1,4 @@
 :root {
-  --app-border-width: 1px;
-  --app-border-width-strong: 2px;
-
   /* Theme-invariant — scrims stay dark regardless of light/dark mode. */
   --scrim: rgba(0, 0, 0, 0.5);
 }

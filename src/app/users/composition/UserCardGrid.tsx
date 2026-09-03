@@ -75,7 +75,7 @@ export default function UserCardGrid({ users }: UserCardGridProps) {
 
 	return (
 		<>
-			<div className="grid grid-cols-[repeat(auto-fill,minmax(10rem,1fr))] justify-center gap-[var(--spacing-sm)] bg-[var(--app-surface)] px-[var(--spacing-sm)] pb-[var(--spacing-lg)] [&>*]:min-w-0 [&>*]:w-full [&>*]:rounded-[var(--border-md)] [&>*]:border-solid [&>*]:border-[var(--app-border)] [&>*]:bg-[var(--app-card-bg)] [&>*]:[border-width:var(--app-border-width)] print:grid-cols-[repeat(10,minmax(0,1fr))] print:justify-stretch print:gap-[0.06in] print:bg-white print:p-0 print:text-black print:[&>*]:break-inside-avoid print:[&>*]:border-[#ccc]! print:[&>*]:bg-white! print:[&>*]:[page-break-inside:avoid] print:[&_a]:text-inherit print:[&_a]:no-underline">
+			<div className="grid grid-cols-[repeat(auto-fill,minmax(10rem,1fr))] justify-center gap-2 bg-[var(--app-surface)] px-2 pb-6 [&>*]:min-w-0 [&>*]:w-full [&>*]:rounded-xl [&>*]:border-solid [&>*]:border-[var(--app-border)] [&>*]:bg-[var(--app-card-bg)] [&>*]:border print:grid-cols-[repeat(10,minmax(0,1fr))] print:justify-stretch print:gap-[0.06in] print:bg-white print:p-0 print:text-black print:[&>*]:break-inside-avoid print:[&>*]:border-[#ccc]! print:[&>*]:bg-white! print:[&>*]:[page-break-inside:avoid] print:[&_a]:text-inherit print:[&_a]:no-underline">
 				{visibleUsers.map((user) => (
 					<UserCard
 						key={user.id}

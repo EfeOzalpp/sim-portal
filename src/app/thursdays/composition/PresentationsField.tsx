@@ -66,7 +66,7 @@ export default function PresentationsField({
       </div>
 
       {fields.length === 0 ? (
-        <p className="my-[var(--spacing-lg)] text-center text-[length:var(--font-size-sm)] leading-[var(--line-height-base)] text-[var(--app-muted)] italic">
+        <p className="my-6 text-center text-sm leading-normal text-[var(--app-muted)] italic">
           No presentations yet.
         </p>
       ) : (
@@ -82,7 +82,7 @@ export default function PresentationsField({
                     data-state="open"/"closed" on it directly, no isActive
                     render-prop needed. */}
                 <span
-                  className={`${collapseIconClassName} ml-auto inline-flex h-[var(--svg-size-md)] w-[var(--svg-size-md)] items-center justify-center text-[var(--app-text)] transition-transform duration-200 [[data-state=open]_&]:rotate-180`}
+                  className={`${collapseIconClassName} ml-auto inline-flex h-[1.375rem] w-[1.375rem] items-center justify-center text-[var(--app-text)] transition-transform duration-200 [[data-state=open]_&]:rotate-180`}
                   aria-hidden="true"
                 >
                   <svg className="h-full w-full" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -94,7 +94,7 @@ export default function PresentationsField({
 
             return {
               value: field.id,
-              itemClassName: `${collapseItemClassName}${pIndex > 0 ? " mt-[var(--spacing-sm)]" : ""}`,
+              itemClassName: `${collapseItemClassName}${pIndex > 0 ? " mt-2" : ""}`,
               headerClassName: collapseHeaderClassName,
               contentClassName: collapseBodyClassName,
               trigger,
@@ -117,7 +117,7 @@ export default function PresentationsField({
                 </button>
               ),
               content: (
-                <div className="flex w-full flex-col gap-[var(--gap-md)]">
+                <div className="flex w-full flex-col gap-4">
                   <div className={fieldStackClassName}>
                     <span className="ui-label m-0 block">Presentation Name</span>
                     <Controller

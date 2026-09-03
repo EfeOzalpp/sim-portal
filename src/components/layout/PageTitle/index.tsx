@@ -24,12 +24,12 @@ interface PageTitleProps {
 export default function PageTitle({ title, filter }: PageTitleProps) {
 	return (
 		<div
-			className="relative isolate flex min-h-[5.25rem] items-center justify-center overflow-hidden border-b-[length:var(--app-border-width)] border-solid border-[var(--app-border)] text-[var(--app-text)] leading-[var(--line-height-tight)] max-[768px]:border-b-0 print:hidden"
+			className="relative isolate flex min-h-[5.25rem] items-center justify-center overflow-hidden border-b border-solid border-[var(--app-border)] text-[var(--app-text)] leading-tight max-[768px]:border-b-0 print:hidden"
 			style={{ background: titleBackground, backgroundSize: "17rem 5.25rem" }}
 			data-page-title
 		>
 			<h2
-				className={`${titleTextClassName} gap-[0.18em] p-[var(--spacing-md)] max-[768px]:flex-col max-[768px]:gap-0`}
+				className={`${titleTextClassName} gap-[0.18em] p-4 max-[768px]:flex-col max-[768px]:gap-0`}
 				style={{ textShadow: titleTextShadow }}
 			>
 				<span>{filter ? `${title},` : title}</span>

@@ -70,7 +70,7 @@ export default function ConfirmDelete({
 	}
 
 	return (
-		<form className="flex flex-col gap-[var(--gap-md)] [&_p]:m-0" onSubmit={handleSubmit}>
+		<form className="flex flex-col gap-4 [&_p]:m-0" onSubmit={handleSubmit}>
 			<p>
 				<strong>
 					Are you sure you want to delete {itemName || `this ${itemType}`}?
@@ -79,7 +79,7 @@ export default function ConfirmDelete({
 			{warningText && <p>{warningText}</p>}
 			<p className="ui-note">This action cannot be undone.</p>
 			{error && <p className="text-[var(--tone-danger-text)]">{error}</p>}
-			<div className="grid grid-cols-[repeat(auto-fit,minmax(0,1fr))] gap-[var(--gap-sm)] max-[480px]:grid-cols-1">
+			<div className="grid grid-cols-[repeat(auto-fit,minmax(0,1fr))] gap-2 max-[480px]:grid-cols-1">
 				<Button
 					type="submit"
 					tone="danger"

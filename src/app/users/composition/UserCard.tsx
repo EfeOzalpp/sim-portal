@@ -15,11 +15,11 @@ export default function UserCard({ user, onClick }: UserCardProps) {
     <Block
       as="a"
       href={`/users?profileUserId=${user.id}`}
-      className="group block h-full w-full overflow-hidden rounded-[var(--border-md)] bg-[var(--app-card-bg)] p-0 text-[var(--app-text)] no-underline print:h-auto print:border! print:border-[#222]! print:text-[#111] print:shadow-none! print:[transform:none]!"
+      className="group block h-full w-full overflow-hidden rounded-xl bg-[var(--app-card-bg)] p-0 text-[var(--app-text)] no-underline print:h-auto print:border! print:border-[#222]! print:text-[#111] print:shadow-none! print:[transform:none]!"
       onClick={onClick}
       data-action-mode-target="user-card"
     >
-      <div className="relative flex h-full w-full flex-col overflow-hidden rounded-[var(--border-md)] bg-[var(--app-card-bg)] group-hover:bg-[var(--app-card-bg-hover)] group-focus-visible:bg-[var(--app-card-bg-hover)] print:rounded-none">
+      <div className="relative flex h-full w-full flex-col overflow-hidden rounded-xl bg-[var(--app-card-bg)] group-hover:bg-[var(--app-card-bg-hover)] group-focus-visible:bg-[var(--app-card-bg-hover)] print:rounded-none">
         <div className="relative h-[12.6rem] w-full overflow-hidden print:h-auto print:aspect-square">
           <Image
             src={normalizeFaceImagePath(user.image)}
@@ -39,7 +39,7 @@ export default function UserCard({ user, onClick }: UserCardProps) {
           data-user-action-overlay
           aria-hidden="true"
         >
-          <span className="h-[var(--svg-size-lg)] w-[var(--svg-size-lg)] origin-center scale-100 bg-current [mask-image:var(--user-card-action-icon)] [mask-position:center] [mask-repeat:no-repeat] [mask-size:contain]" />
+          <span className="h-7 w-7 origin-center scale-100 bg-current [mask-image:var(--user-card-action-icon)] [mask-position:center] [mask-repeat:no-repeat] [mask-size:contain]" />
         </span>
       </div>
     </Block>

@@ -70,7 +70,7 @@ export default function ThursdayForm({
 
   return (
     <form onSubmit={handleSubmit(handleFormSubmit)} className="flex h-full flex-col">
-      <div className="flex flex-1 flex-col gap-[calc(var(--gap-lg)*1.15)]">
+      <div className="flex flex-1 flex-col gap-[1.725rem]">
         {error && (
           <Alert
             description={error}
@@ -85,7 +85,7 @@ export default function ThursdayForm({
         <ProductionsSection control={control} users={users} />
       </div>
 
-      <div className="mt-[var(--spacing-md)] flex justify-start pt-[var(--spacing-md)]">
+      <div className="mt-4 flex justify-start pt-4">
         <Button type="submit" disabled={isSubmitting} tone="success">
           {isSubmitting
             ? "Saving..."

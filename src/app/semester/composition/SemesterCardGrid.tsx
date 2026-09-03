@@ -26,12 +26,12 @@ function SemesterCard({ semester }: { semester: any }) {
 	const showSemesterName = semester.name && semester.name !== semesterCode;
 
 	return (
-		<article className="relative box-border flex min-h-36 flex-col gap-[var(--gap-lg)] overflow-hidden rounded-[var(--border-md)] border-solid border-[var(--app-border)] bg-[var(--app-card-bg)] p-[var(--spacing-lg)] [border-width:var(--app-border-width)] hover:bg-[var(--app-card-bg-hover)]">
-			<div className="flex flex-col gap-[var(--gap-sm)]">
+		<article className="relative box-border flex min-h-36 flex-col gap-6 overflow-hidden rounded-xl border-solid border-[var(--app-border)] bg-[var(--app-card-bg)] p-6 border hover:bg-[var(--app-card-bg-hover)]">
+			<div className="flex flex-col gap-2">
 				<h3 className="m-0 text-[var(--app-text)]">{semesterCode}</h3>
 				{showSemesterName && <p className="m-0 text-[var(--app-muted)]">{semester.name}</p>}
 			</div>
-			<p className="m-0 mt-auto text-[length:var(--font-size-sm)] font-[var(--font-weight-semibold)] text-[var(--app-muted)]">
+			<p className="m-0 mt-auto text-sm font-semibold text-[var(--app-muted)]">
 				{getSemesterDateRange(semester)}
 			</p>
 			<span
@@ -39,7 +39,7 @@ function SemesterCard({ semester }: { semester: any }) {
 				data-semester-action-overlay
 				aria-hidden="true"
 			>
-				<span className="h-[var(--svg-size-lg)] w-[var(--svg-size-lg)] origin-center scale-100 bg-current [mask-image:var(--semester-card-action-icon)] [mask-position:center] [mask-repeat:no-repeat] [mask-size:contain]" />
+				<span className="h-7 w-7 origin-center scale-100 bg-current [mask-image:var(--semester-card-action-icon)] [mask-position:center] [mask-repeat:no-repeat] [mask-size:contain]" />
 			</span>
 		</article>
 	);
@@ -65,7 +65,7 @@ export default function SemesterCardGrid({ semesters }: SemesterCardGridProps) {
 	}
 
 	return (
-		<div className="grid grid-cols-[repeat(auto-fill,minmax(14rem,1fr))] items-stretch gap-[var(--gap-md)]">
+		<div className="grid grid-cols-[repeat(auto-fill,minmax(14rem,1fr))] items-stretch gap-4">
 			{semesters.map((semester: any) => (
 				<div
 					key={semester.id}

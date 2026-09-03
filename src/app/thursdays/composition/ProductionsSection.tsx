@@ -65,7 +65,7 @@ export default function ProductionsSection({
       </div>
 
       {fields.length === 0 ? (
-        <p className="my-[var(--spacing-lg)] text-center text-[length:var(--font-size-sm)] leading-[var(--line-height-base)] text-[var(--app-muted)] italic">
+        <p className="my-6 text-center text-sm leading-normal text-[var(--app-muted)] italic">
           No productions yet.
         </p>
       ) : (
@@ -81,7 +81,7 @@ export default function ProductionsSection({
                 {/* Rotation reads the trigger's own data-state — Radix sets
                     data-state="open"/"closed" on it directly. */}
                 <span
-                  className={`${collapseIconClassName} ml-auto inline-flex h-[var(--svg-size-md)] w-[var(--svg-size-md)] items-center justify-center text-[var(--app-text)] transition-transform duration-200 [[data-state=open]_&]:rotate-180`}
+                  className={`${collapseIconClassName} ml-auto inline-flex h-[1.375rem] w-[1.375rem] items-center justify-center text-[var(--app-text)] transition-transform duration-200 [[data-state=open]_&]:rotate-180`}
                   aria-hidden="true"
                 >
                   <svg className="h-full w-full" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -93,7 +93,7 @@ export default function ProductionsSection({
 
             return {
               value: field.id,
-              itemClassName: `${collapseItemClassName}${pIndex > 0 ? " mt-[var(--spacing-sm)]" : ""}`,
+              itemClassName: `${collapseItemClassName}${pIndex > 0 ? " mt-2" : ""}`,
               headerClassName: collapseHeaderClassName,
               contentClassName: collapseBodyClassName,
               trigger,

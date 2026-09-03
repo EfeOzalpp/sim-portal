@@ -13,7 +13,7 @@
 		z-index: 40;
 		align-self: start;
 		background: var(--app-surface);
-		border-bottom: var(--app-border-width) solid var(--app-border);
+		border-bottom: 1px solid var(--app-border);
 		box-sizing: border-box;
 		width: 100%;
 	}
@@ -34,16 +34,16 @@
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
-		gap: var(--gap-sm);
-		padding: var(--spacing-sm) var(--spacing-md);
+		gap: 0.5rem;
+		padding: 0.5rem 1rem;
 		border: none;
-		border-right: var(--app-border-width) solid var(--app-border);
+		border-right: 1px solid var(--app-border);
 		background: transparent;
 		cursor: pointer;
 		color: var(--app-muted);
-		font-family: var(--font-family-label);
-		font-size: var(--font-size-label);
-		font-weight: var(--font-weight-label);
+		font-family: var(--font-sans);
+		font-size: 0.6875rem;
+		font-weight: 600;
 		text-transform: uppercase;
 		letter-spacing: 0.04em;
 		white-space: nowrap;
@@ -67,8 +67,8 @@
 	.toggleBtnIcon {
 		flex: 0 0 auto;
 		display: block;
-		width: var(--svg-size-sm);
-		height: var(--svg-size-sm);
+		width: 1rem;
+		height: 1rem;
 		background: currentColor;
 		mask-position: center;
 		mask-repeat: no-repeat;
@@ -93,8 +93,8 @@
 		display: flex;
 		flex-direction: column;
 		background: var(--app-surface);
-		border-top: var(--app-border-width) solid var(--app-border);
-		border-bottom: var(--app-border-width-strong) solid var(--app-border);
+		border-top: 1px solid var(--app-border);
+		border-bottom: 2px solid var(--app-border);
 		box-sizing: border-box;
 	}
 
@@ -103,8 +103,8 @@
 		flex-direction: row;
 		align-items: center;
 		flex-wrap: wrap;
-		gap: var(--gap-sm);
-		padding: var(--spacing-sm) var(--spacing-md);
+		gap: 0.5rem;
+		padding: 0.5rem 1rem;
 	}
 
 	/* Override full-width forcing from ActionMode and NavContent for manage bar buttons */
@@ -137,9 +137,9 @@
 		align-items: center;
 		justify-content: center;
 		width: 100%;
-		padding: var(--spacing-sm);
+		padding: 0.5rem;
 		border: none;
-		border-top: var(--app-border-width) solid var(--app-border);
+		border-top: 1px solid var(--app-border);
 		background: transparent;
 		cursor: pointer;
 		color: var(--app-muted);
@@ -152,32 +152,32 @@
 
 	.upArrowIcon {
 		display: block;
-		width: var(--svg-size-md);
-		height: var(--svg-size-md);
+		width: 1.375rem;
+		height: 1.375rem;
 		background: currentColor;
 		mask-image: url("../../theme/assets/arrow/up.svg");
 		mask-position: center;
 		mask-repeat: no-repeat;
-		mask-size: var(--svg-size-md) var(--svg-size-md);
+		mask-size: 1.375rem 1.375rem;
 		-webkit-mask-image: url("../../theme/assets/arrow/up.svg");
 		-webkit-mask-position: center;
 		-webkit-mask-repeat: no-repeat;
-		-webkit-mask-size: var(--svg-size-md) var(--svg-size-md);
+		-webkit-mask-size: 1.375rem 1.375rem;
 	}
 
 	.filterPopup {
 		display: flex;
 		flex-direction: column;
 		background: var(--app-surface);
-		border-top: var(--app-border-width) solid var(--app-border);
-		border-bottom: var(--app-border-width-strong) solid var(--app-border);
+		border-top: 1px solid var(--app-border);
+		border-bottom: 2px solid var(--app-border);
 		box-sizing: border-box;
 	}
 
 	.filterFields {
 		display: flex;
 		flex-direction: column;
-		gap: var(--gap-md);
-		padding: var(--spacing-md);
+		gap: 1rem;
+		padding: 1rem;
 	}
 }
