@@ -23,7 +23,7 @@ export default async function ThursdayDetailContent({ thursdayId }: ThursdayDeta
 
   return (
     <div className="flex flex-col">
-      <div className="mb-4 flex items-baseline gap-4 border-b border-solid border-[var(--app-border)] pb-4">
+      <div className="mb-4 flex items-baseline gap-4 pb-4">
         <h3 className="m-0 font-heading text-xl font-bold leading-tight">
           {thursdayName}
         </h3>
