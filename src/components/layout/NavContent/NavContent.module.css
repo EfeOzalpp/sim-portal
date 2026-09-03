@@ -102,15 +102,6 @@
 	margin-bottom: 1rem;
 }
 
-.navSectionLabel {
-	color: var(--app-muted);
-	font-family: var(--font-sans);
-	font-size: 0.6875rem;
-	font-weight: 600;
-	line-height: 1.2;
-	text-transform: uppercase;
-}
-
 .navSectionControls {
 	display: flex;
 	flex-direction: column;

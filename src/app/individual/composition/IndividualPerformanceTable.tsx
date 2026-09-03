@@ -196,10 +196,10 @@ export default function IndividualPerformanceTable({ users = [] }: IndividualPer
 									</td>
 									<td>
 										{productions.length === 0 ? (
-											<span className={styles.emptyLabel}>No current productions</span>
+											<span className="ui-note">No current productions</span>
 										) : (
 											<div className={styles.section}>
-												<span className={styles.countLabel}>
+												<span className={clsx("ui-label", styles.countLabel)}>
 													<span className={styles.countValue}>{productions.length}</span>
 												</span>
 												<ItemList>
@@ -217,12 +217,12 @@ export default function IndividualPerformanceTable({ users = [] }: IndividualPer
 									</td>
 									<td>
 										{!hasPreMid && !hasPostMid ? (
-											<span className={styles.emptyLabel}>No current presentations</span>
+											<span className="ui-note">No current presentations</span>
 										) : (
 											<>
 												{hasPreMid && (
 													<div className={styles.section}>
-														<span className={styles.countLabel}>
+														<span className={clsx("ui-label", styles.countLabel)}>
 															<span className={styles.countValue}>{user.presentationsBeforeMid.length}</span>
 															<span className={styles.countText}>Pre-Mid</span>
 														</span>
@@ -240,7 +240,7 @@ export default function IndividualPerformanceTable({ users = [] }: IndividualPer
 												)}
 												{hasPostMid && (
 													<div className={styles.section}>
-														<span className={styles.countLabel}>
+														<span className={clsx("ui-label", styles.countLabel)}>
 															<span className={styles.countValue}>{user.presentationsAfterMid.length}</span>
 															<span className={styles.countText}>Post-Mid</span>
 														</span>
@@ -278,7 +278,7 @@ export default function IndividualPerformanceTable({ users = [] }: IndividualPer
 													))}
 												</div>
 											) : (
-												<span className={styles.emptyLabel}>No grades yet</span>
+												<span className="ui-note">No grades yet</span>
 											)}
 											<span className={styles.gradeEditOverlay} data-grade-action-overlay aria-hidden="true">
 												<span className={styles.gradeEditIcon} />

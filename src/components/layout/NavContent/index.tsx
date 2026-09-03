@@ -45,13 +45,13 @@ export default function NavContent({
 		<>
 			{filterContent && (
 				<div className={styles.navSection}>
-					<span className={styles.navSectionLabel}>{filterLabel}</span>
+					<span className="ui-label">{filterLabel}</span>
 					<div className={styles.navSectionControls}>{filterContent}</div>
 				</div>
 			)}
 			{manageContent && (
 				<div className={styles.navSection}>
-					<span className={styles.navSectionLabel}>{manageLabel}</span>
+					<span className="ui-label">{manageLabel}</span>
 					<div className={styles.navSectionControls}>{manageContent}</div>
 				</div>
 			)}

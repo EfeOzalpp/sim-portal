@@ -40,11 +40,6 @@
 		border-right: 1px solid var(--app-border);
 		background: transparent;
 		cursor: pointer;
-		color: var(--app-muted);
-		font-family: var(--font-sans);
-		font-size: 0.6875rem;
-		font-weight: 600;
-		text-transform: uppercase;
 		letter-spacing: 0.04em;
 		white-space: nowrap;
 	}

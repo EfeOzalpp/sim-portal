@@ -92,23 +92,11 @@
 	margin-top: 1rem;
 }
 
-.emptyLabel {
-	color: var(--app-muted);
-	font-size: 0.875rem;
-	font-style: italic;
-}
-
 .countLabel {
 	align-self: flex-start;
 	display: inline-flex;
 	align-items: center;
 	gap: 0.5rem;
-	color: var(--app-muted);
-	font-family: var(--font-sans);
-	font-size: 0.6875rem;
-	font-weight: 600;
-	line-height: 1.2;
-	text-transform: uppercase;
 }
 
 .countValue {

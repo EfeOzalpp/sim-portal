@@ -31,7 +31,7 @@ export default function MobileNavContent({
 			<div className={styles.toggleBar}>
 				{hasFilter && (
 					<button
-						className={`${styles.toggleBtn} ${activePanel === "filter" ? styles.toggleBtnActive : ""}`}
+						className={`ui-label ${styles.toggleBtn} ${activePanel === "filter" ? styles.toggleBtnActive : ""}`}
 						onClick={() => togglePanel("filter")}
 						aria-expanded={activePanel === "filter"}
 					>
@@ -41,7 +41,7 @@ export default function MobileNavContent({
 				)}
 				{hasManage && (
 					<button
-						className={`${styles.toggleBtn} ${activePanel === "manage" ? styles.toggleBtnActive : ""}`}
+						className={`ui-label ${styles.toggleBtn} ${activePanel === "manage" ? styles.toggleBtnActive : ""}`}
 						onClick={() => togglePanel("manage")}
 						aria-expanded={activePanel === "manage"}
 					>
