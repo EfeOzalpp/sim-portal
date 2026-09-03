@@ -15,18 +15,18 @@ export const buttonVariants = cva(
 			variant: {
 				default: ["border-[var(--app-border)] bg-[var(--app-surface)] text-[var(--app-text)]"],
 				nav: [
-					"btn-nav justify-start border-transparent bg-transparent px-0 font-normal",
+					"btn-nav justify-start border-transparent bg-transparent px-0! font-normal",
 					"text-[var(--app-icon)] hover:bg-[var(--nav-button-bg-hover)]",
-					"aria-[current=page]:bg-[#dfdfdf] aria-[current=page]:font-semibold aria-[current=page]:text-black",
-					"dark:aria-[current=page]:bg-[#3b3b3b] dark:aria-[current=page]:text-white",
+					"aria-[current=page]:bg-[var(--input-dropdown-bg-active)] aria-[current=page]:font-semibold aria-[current=page]:text-black",
+					"dark:aria-[current=page]:text-white",
 				],
 				action: [
 					"btn-action border-[var(--app-border)] bg-[var(--app-surface)] text-[#000000]",
 					"dark:bg-[var(--app-subtle)] dark:text-[#ffffff]",
 				],
 				link: [
-					"btn-link rounded-full border-transparent bg-[var(--app-surface)] text-[var(--app-text)]",
-					"dark:bg-[var(--app-secondary)]",
+					"btn-link rounded-full! border-[var(--app-border)] bg-[var(--app-surface)] text-[#000000]",
+					"dark:bg-[var(--app-subtle)] dark:text-[#ffffff]",
 				],
 			},
 			tone: {
