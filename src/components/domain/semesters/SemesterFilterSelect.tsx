@@ -6,9 +6,9 @@ import {
 	SEMESTER_FILTER_KEY,
 	SemesterFilterOption,
 } from "@/components/domain/semesters/semester-filter";
-import { SelectProps } from "antd";
+import { SingleSelectProps } from "@/components/select";
 
-interface SemesterFilterSelectProps extends Omit<SelectProps, "value" | "onChange" | "options" | "loading"> {
+interface SemesterFilterSelectProps extends Omit<SingleSelectProps, "value" | "onChange" | "options" | "loading" | "mode"> {
 	semesters: SemesterFilterOption[];
 	defaultValue?: string | null;
 }

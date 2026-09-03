@@ -1,0 +1,339 @@
+.tableScroll {
+	overflow-x: auto;
+}
+
+.table {
+	width: 100%;
+	min-width: 720px;
+	border-collapse: collapse;
+	padding: 0;
+	color: var(--app-text);
+}
+
+.table thead > tr > th {
+	position: sticky;
+	top: 0;
+	z-index: 10;
+	padding: var(--spacing-sm) var(--spacing-md);
+	background: var(--app-subtle);
+	border-bottom: var(--app-border-width) solid var(--app-border);
+	color: var(--app-text);
+	font-family: var(--font-family-heading);
+	font-size: var(--font-size-h4);
+	font-weight: var(--font-weight-semibold);
+	text-align: left;
+}
+
+.table thead > tr > th:last-child,
+.table tbody > tr > td:last-child {
+	padding-left: var(--spacing-lg);
+}
+
+.table tbody > tr > td {
+	padding: var(--spacing-sm) var(--spacing-md);
+	background: var(--app-subtle);
+	border-bottom: var(--app-border-width) solid var(--app-border);
+	color: var(--app-text);
+	vertical-align: top;
+}
+
+.table tbody > tr:hover > td {
+	background: var(--app-card-bg-hover);
+}
+
+.table tbody > tr:last-child > td {
+	border-bottom: 0;
+}
+
+.sortableHeader {
+	display: inline-flex;
+	align-items: center;
+	gap: calc(var(--gap-sm) / 2);
+	cursor: pointer;
+	border: 0;
+	background: transparent;
+	padding: 0;
+	color: inherit;
+	font: inherit;
+}
+
+.sortIcon {
+	flex: none;
+	width: var(--svg-size-sm);
+	height: var(--svg-size-sm);
+	background: currentColor;
+	opacity: 0.35;
+	mask-image: url("../../../components/theme/assets/arrow/down.svg");
+	mask-position: center;
+	mask-repeat: no-repeat;
+	mask-size: contain;
+	transition: transform 120ms ease, opacity 120ms ease;
+	-webkit-mask-image: url("../../../components/theme/assets/arrow/down.svg");
+	-webkit-mask-position: center;
+	-webkit-mask-repeat: no-repeat;
+	-webkit-mask-size: contain;
+}
+
+.sortIconActive {
+	opacity: 1;
+}
+
+.sortIconDesc {
+	transform: rotate(180deg);
+}
+
+.section {
+	display: flex;
+	flex-direction: column;
+	gap: var(--gap-sm);
+}
+
+.section + .section {
+	margin-top: var(--spacing-md);
+}
+
+.emptyLabel {
+	color: var(--app-muted);
+	font-size: var(--font-size-sm);
+	font-style: italic;
+}
+
+.countLabel {
+	align-self: flex-start;
+	display: inline-flex;
+	align-items: center;
+	gap: var(--gap-sm);
+	color: var(--app-muted);
+	font-family: var(--font-family-label);
+	font-size: var(--font-size-label);
+	font-weight: var(--font-weight-label);
+	line-height: var(--line-height-label);
+	text-transform: uppercase;
+}
+
+.countValue {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 2.5rem;
+	padding: calc(var(--spacing-sm) / 2) var(--spacing-sm);
+	background: var(--app-card-label-bg);
+	border: var(--app-border-width) solid var(--app-border);
+	border-radius: var(--border-lg);
+	color: var(--app-text);
+	font-family: var(--font-family-label);
+	font-size: var(--font-size-sm);
+	font-weight: var(--font-weight-semibold);
+	line-height: var(--line-height-label);
+	text-transform: uppercase;
+}
+
+.countText {
+	color: var(--app-muted);
+	font: inherit;
+}
+
+.itemList {
+	display: flex;
+	flex-direction: column;
+	gap: calc(var(--gap-sm) / 2);
+}
+
+.nameLink,
+.itemLink {
+	color: var(--app-text);
+	text-decoration: none;
+}
+
+.nameLink:hover,
+.itemLink:hover {
+	color: var(--app-text);
+	text-decoration: underline;
+	text-decoration-color: currentColor;
+	text-underline-offset: 0.18em;
+}
+
+.itemLink {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) auto;
+	align-items: baseline;
+	gap: var(--gap-md);
+}
+
+.itemName {
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.itemDate {
+	color: var(--app-muted);
+	font-size: var(--font-size-sm);
+	font-weight: var(--font-weight-semibold);
+	white-space: nowrap;
+}
+
+.gradeCell {
+	position: relative;
+	display: flex;
+	align-items: center;
+	min-height: 100%;
+}
+
+.gradeList {
+	display: flex;
+	flex-direction: column;
+	gap: calc(var(--gap-sm) / 2);
+}
+
+.gradeValue {
+	display: inline-flex;
+	align-items: baseline;
+	gap: var(--gap-sm);
+	color: var(--app-text);
+	font-size: var(--font-size-sm);
+}
+
+.gradeValue strong {
+	font-family: var(--font-family-heading);
+	font-size: var(--font-size-h4);
+	font-weight: var(--font-weight-semibold);
+}
+
+.gradeEditOverlay {
+	position: absolute;
+	inset: calc(var(--spacing-sm) * -1);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: rgba(255, 255, 255, 0.5);
+	opacity: 0;
+	pointer-events: none;
+	transition: opacity 120ms ease;
+}
+
+:global(html[data-theme="dark"]) .gradeEditOverlay {
+	background: rgba(0, 0, 0, 0.3);
+}
+
+.gradeEditIcon {
+	width: var(--svg-size-lg);
+	height: var(--svg-size-lg);
+	background: var(--app-text);
+	mask-image: url("../../../components/theme/assets/edit/edit.svg");
+	mask-position: center;
+	mask-repeat: no-repeat;
+	mask-size: contain;
+	transition: transform 120ms ease;
+	-webkit-mask-image: url("../../../components/theme/assets/edit/edit.svg");
+	-webkit-mask-position: center;
+	-webkit-mask-repeat: no-repeat;
+	-webkit-mask-size: contain;
+}
+
+.topScrollbar {
+	display: none;
+}
+
+@media print {
+	@page {
+		size: landscape;
+		margin: 0.25in 0.3in 0;
+	}
+
+	:global([data-content-nav]),
+	:global([data-mobile-content-bar]),
+	:global([data-page-title]),
+	:global([data-action-mode-backdrop]),
+	.topScrollbar {
+		display: none !important;
+	}
+
+	.table {
+		background: white !important;
+		color: #000 !important;
+	}
+
+	.table thead > tr > th {
+		background: #f0f0f0 !important;
+		color: #000 !important;
+		border-bottom: 1px solid #aaa !important;
+		position: static !important;
+	}
+
+	.table tbody > tr > td {
+		background: white !important;
+		color: #000 !important;
+		border-bottom: 1px solid #ccc !important;
+	}
+
+	.emptyLabel,
+	.countLabel,
+	.itemDate {
+		color: #555 !important;
+	}
+
+	.nameLink,
+	.itemLink {
+		color: #000 !important;
+		text-decoration: none !important;
+	}
+
+	.gradeValue {
+		color: #000 !important;
+	}
+
+	.gradeEditOverlay {
+		display: none !important;
+	}
+
+	.sortIcon {
+		display: none !important;
+	}
+}
+
+@media (max-width: 768px) {
+	.table {
+		margin-inline: 0;
+	}
+
+	/* Offset below MobileNavContent (toggle bar ~2rem + 1px border) */
+	.table thead > tr > th {
+		top: 2rem;
+	}
+
+	/* Mirror scrollbar sits above the table header, always visible */
+	.topScrollbar {
+		display: block;
+		overflow-x: scroll;
+		overflow-y: hidden;
+		border-bottom: var(--app-border-width) solid var(--app-border);
+	}
+
+	.topScrollbar::-webkit-scrollbar {
+		height: 6px;
+	}
+
+	.topScrollbar::-webkit-scrollbar-track {
+		background: var(--app-subtle);
+	}
+
+	.topScrollbar::-webkit-scrollbar-thumb {
+		background: var(--app-muted);
+		border-radius: 3px;
+	}
+
+	.tableScroll::-webkit-scrollbar {
+		height: 6px;
+	}
+
+	.tableScroll::-webkit-scrollbar-track {
+		background: var(--app-subtle);
+	}
+
+	.tableScroll::-webkit-scrollbar-thumb {
+		background: var(--app-muted);
+		border-radius: 3px;
+	}
+}

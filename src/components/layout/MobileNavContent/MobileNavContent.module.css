@@ -1,0 +1,183 @@
+/* Hidden on desktop */
+.root,
+.filterPopup {
+	display: none;
+}
+
+@media (max-width: 768px) {
+	/* Root: secondary nav bar — fixed intrinsic height, sticks under topBar when scrolled */
+	.root {
+		display: block;
+		position: sticky;
+		top: -3px;
+		z-index: 40;
+		align-self: start;
+		background: var(--app-surface);
+		border-bottom: var(--app-border-width) solid var(--app-border);
+		box-sizing: border-box;
+		width: 100%;
+	}
+
+	/* Toggle bar */
+	.toggleBar {
+		position: relative;
+		z-index: 45;
+		display: flex;
+		flex-direction: row;
+		align-items: stretch;
+		width: 100%;
+		background: var(--app-surface);
+	}
+
+	.toggleBtn {
+		flex: 1 1 0;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: var(--gap-sm);
+		padding: var(--spacing-sm) var(--spacing-md);
+		border: none;
+		border-right: var(--app-border-width) solid var(--app-border);
+		background: transparent;
+		cursor: pointer;
+		color: var(--app-muted);
+		font-family: var(--font-family-label);
+		font-size: var(--font-size-label);
+		font-weight: var(--font-weight-label);
+		text-transform: uppercase;
+		letter-spacing: 0.04em;
+		white-space: nowrap;
+	}
+
+	.toggleBtn:last-child {
+		border-right: none;
+	}
+
+	.toggleBtn:hover {
+		background: var(--app-subtle);
+		color: var(--app-text);
+	}
+
+	.toggleBtnActive {
+		background: var(--app-subtle);
+		color: var(--app-text);
+		box-shadow: inset 0 -2px 0 0 var(--brand-color);
+	}
+
+	.toggleBtnIcon {
+		flex: 0 0 auto;
+		display: block;
+		width: var(--svg-size-sm);
+		height: var(--svg-size-sm);
+		background: currentColor;
+		mask-position: center;
+		mask-repeat: no-repeat;
+		mask-size: contain;
+		-webkit-mask-position: center;
+		-webkit-mask-repeat: no-repeat;
+		-webkit-mask-size: contain;
+	}
+
+	.searchIcon {
+		mask-image: url("../../theme/assets/search/search.svg");
+		-webkit-mask-image: url("../../theme/assets/search/search.svg");
+	}
+
+	.manageIcon {
+		mask-image: url("../../theme/assets/edit/edit.svg");
+		-webkit-mask-image: url("../../theme/assets/edit/edit.svg");
+	}
+
+	/* Manage popup: fixed, drops below the toggle bar (same pattern as filter popup) */
+	.manageBar {
+		display: flex;
+		flex-direction: column;
+		background: var(--app-surface);
+		border-top: var(--app-border-width) solid var(--app-border);
+		border-bottom: var(--app-border-width-strong) solid var(--app-border);
+		box-sizing: border-box;
+	}
+
+	.manageActions {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		flex-wrap: wrap;
+		gap: var(--gap-sm);
+		padding: var(--spacing-sm) var(--spacing-md);
+	}
+
+	/* Override full-width forcing from ActionMode and NavContent for manage bar buttons */
+	.manageActions :global(.btn) {
+		width: auto !important;
+		min-width: 0;
+	}
+
+	.manageActions [data-action-mode-button] {
+		width: auto;
+		min-width: 0;
+	}
+
+	.manageActions [data-action-mode-button] :global(.btn) {
+		width: auto !important;
+	}
+
+	/* Print button slot: pushed to the right with auto margin */
+	.printSlot {
+		margin-left: auto;
+	}
+
+	.printSlot :global(.btn) {
+		width: auto !important;
+	}
+
+	/* Shared full-width close button */
+	.closeBarBtn {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 100%;
+		padding: var(--spacing-sm);
+		border: none;
+		border-top: var(--app-border-width) solid var(--app-border);
+		background: transparent;
+		cursor: pointer;
+		color: var(--app-muted);
+	}
+
+	.closeBarBtn:hover {
+		background: var(--app-subtle);
+		color: var(--app-text);
+	}
+
+	.upArrowIcon {
+		display: block;
+		width: var(--svg-size-md);
+		height: var(--svg-size-md);
+		background: currentColor;
+		mask-image: url("../../theme/assets/arrow/up.svg");
+		mask-position: center;
+		mask-repeat: no-repeat;
+		mask-size: var(--svg-size-md) var(--svg-size-md);
+		-webkit-mask-image: url("../../theme/assets/arrow/up.svg");
+		-webkit-mask-position: center;
+		-webkit-mask-repeat: no-repeat;
+		-webkit-mask-size: var(--svg-size-md) var(--svg-size-md);
+	}
+
+	.filterPopup {
+		display: flex;
+		flex-direction: column;
+		background: var(--app-surface);
+		border-top: var(--app-border-width) solid var(--app-border);
+		border-bottom: var(--app-border-width-strong) solid var(--app-border);
+		box-sizing: border-box;
+	}
+
+	.filterFields {
+		display: flex;
+		flex-direction: column;
+		gap: var(--gap-md);
+		padding: var(--spacing-md);
+	}
+}

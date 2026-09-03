@@ -1,18 +1,17 @@
 import { Suspense } from "react";
-import { getFilteredUsers } from "@/actions/users";
 import { getAllSemesters } from "@/actions/semesters";
 import { FilterInput } from "@/components/primitives/Filters";
 import SemesterFilterSelect from "@/components/domain/semesters/SemesterFilterSelect";
 import NavContent from "@/components/layout/NavContent";
 import PageTitle from "@/components/layout/PageTitle";
 import PrintLink from "@/components/primitives/PrintLink";
-import { Button } from "@/components/button/button-component";
+import { Button } from "@/components/button";
 import { ActionModeButton, ActionModeSurface } from "@/components/layout/ActionMode";
-import RouteModalPopup from "@/components/modals/ModalPopup/RouteModalPopup";
+import RouteModalPopup from "@/components/modal/RouteModalPopup";
 import { formatSemesterCode, getSelectedSemester, getSelectedSemesterId, isAllSemestersValue } from "@/components/domain/semesters/semester-filter";
 
-import { confirmDeleteDialogClassName } from "@/components/modals/ConfirmDelete/styles";
-import UserCardGrid from "@/components/domain/users/UserCardGrid";
+import { confirmDeleteDialogClassName } from "@/components/confirm-delete/styles";
+import UsersList from "@/app/users/composition/UsersList";
 import { auth } from "@/authentication";
 
 // These modals are loaded with a conditional `await import()` inside the page
@@ -82,17 +81,6 @@ function getUsersModalHref(
 	return `/users?${params.toString()}`;
 }
 
-async function UsersList({ filters }: { filters: any }) {
-	const result = await getFilteredUsers(filters);
-	const users = result.success ? result.data : [];
-
-	if (users.length < 1) {
-		return <div>There are no results for User {filters?.user}</div>;
-	}
-
-	return <UserCardGrid users={users} />;
-}
-
 export default async function UsersPage({ searchParams }: UsersProps) {
 	const filters = await searchParams;
 	const semestersResult = await getAllSemesters();
@@ -125,7 +113,7 @@ export default async function UsersPage({ searchParams }: UsersProps) {
 		? (await import("@/components/domain/users/PersonProfileModal")).default
 		: null;
 	const UserDeleteConfirmContent = showDeleteModal
-		? (await import("@/components/domain/users/UserDeleteConfirmContent")).default
+		? (await import("@/app/users/composition/UserDeleteConfirmContent")).default
 		: null;
 
 	return (

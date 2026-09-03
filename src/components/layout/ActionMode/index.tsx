@@ -2,7 +2,7 @@
 
 import clsx from "clsx";
 import { createContext, ReactNode, useContext, useMemo, useState } from "react";
-import { Button, NativeButtonProps } from "@/components/button/button-component";
+import { Button, NativeButtonProps } from "@/components/button";
 import styles from "@/components/layout/ActionMode/ActionMode.module.css";
 
 interface ActionModeContextValue {

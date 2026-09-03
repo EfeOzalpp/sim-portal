@@ -6,11 +6,11 @@ import NavContent from "@/components/layout/NavContent";
 import PageTitle from "@/components/layout/PageTitle";
 import PrintLink from "@/components/primitives/PrintLink";
 import { getAllSemesters, getIndividualSemesterData } from "@/actions/semesters";
-import IndividualPerformanceTable from "@/components/domain/individual/IndividualPerformanceTable";
+import IndividualPerformanceTable from "@/app/individual/composition/IndividualPerformanceTable";
 import { ActionModeButton, ActionModeSurface } from "@/components/layout/ActionMode";
 import { formatSemesterCode, getSelectedSemesterId, isAllSemestersValue } from "@/components/domain/semesters/semester-filter";
 import PersonProfileModal from "@/components/domain/users/PersonProfileModal";
-import RouteModalPopup from "@/components/modals/ModalPopup/RouteModalPopup";
+import RouteModalPopup from "@/components/modal/RouteModalPopup";
 import ThursdayDetailContent, { thursdayDetailDialogClassName } from "@/components/domain/thursdays/ThursdayDetailContent";
 
 interface IndividualPageProps {

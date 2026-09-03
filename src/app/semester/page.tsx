@@ -1,18 +1,18 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/authentication";
 import { FilterInput } from "@/components/primitives/Filters";
-import { Button } from "@/components/button/button-component";
+import { Button } from "@/components/button";
 import NavContent from "@/components/layout/NavContent";
 import PageTitle from "@/components/layout/PageTitle";
 import { getAllSemesters } from "@/actions/semesters";
 import { formatSemesterCode, getSearchParamValue } from "@/components/domain/semesters/semester-filter";
 import { ActionModeButton, ActionModeSurface } from "@/components/layout/ActionMode";
-import RouteModalPopup from "@/components/modals/ModalPopup/RouteModalPopup";
+import RouteModalPopup from "@/components/modal/RouteModalPopup";
 import AddSemesterFormContent from "@/app/semester/add/AddSemesterFormContent";
 import EditSemesterFormContent from "@/app/semester/[id]/edit/EditSemesterFormContent";
-import SemesterDeleteConfirmContent from "@/components/domain/semesters/SemesterDeleteConfirmContent";
-import SemesterCardGrid from "@/components/domain/semesters/SemesterCardGrid";
-import { confirmDeleteDialogClassName } from "@/components/modals/ConfirmDelete/styles";
+import SemesterDeleteConfirmContent from "@/app/semester/composition/SemesterDeleteConfirmContent";
+import SemesterCardGrid from "@/app/semester/composition/SemesterCardGrid";
+import { confirmDeleteDialogClassName } from "@/components/confirm-delete/styles";
 
 interface SemesterPageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;

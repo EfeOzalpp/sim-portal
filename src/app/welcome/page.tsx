@@ -1,4 +1,4 @@
-import Welcome from "@/components/layout/Welcome";
+import Welcome from "@/app/welcome/composition/Welcome";
 import { Suspense } from "react";
 
 export default function WelcomePage() {

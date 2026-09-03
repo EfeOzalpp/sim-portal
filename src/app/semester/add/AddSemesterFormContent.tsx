@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { addSemester, getAllSemesters } from "@/actions/semesters";
 import { getAllUsers } from "@/actions/users";
-import SemesterForm from "@/components/forms/semester/SemesterForm";
+import SemesterForm from "@/app/semester/composition/SemesterForm";
 
 export default async function AddSemesterFormContent() {
 	const semestersResult = await getAllSemesters();

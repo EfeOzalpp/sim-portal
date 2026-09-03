@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { Button } from "@/components/button/button-component";
+import { Button } from "@/components/button";
 import NavContent from "@/components/layout/NavContent";
 import PageTitle from "@/components/layout/PageTitle";
 import { getFilteredThursdays } from "@/actions/thursdays";
@@ -7,16 +7,16 @@ import { getAllSemesters } from "@/actions/semesters";
 import { auth } from "@/authentication";
 import { FilterInput } from "@/components/primitives/Filters";
 import SemesterFilterSelect from "@/components/domain/semesters/SemesterFilterSelect";
-import ThursdayCard from "@/components/domain/thursdays/ThursdayCard";
+import ThursdayCard from "@/app/thursdays/composition/ThursdayCard";
 import { ActionModeButton, ActionModeSurface } from "@/components/layout/ActionMode";
 import { formatSemesterCode, getSelectedSemester, getSelectedSemesterId, isAllSemestersValue } from "@/components/domain/semesters/semester-filter";
-import RouteModalPopup from "@/components/modals/ModalPopup/RouteModalPopup";
+import RouteModalPopup from "@/components/modal/RouteModalPopup";
 import ThursdayDetailContent, { thursdayDetailDialogClassName } from "@/components/domain/thursdays/ThursdayDetailContent";
 import PersonProfileModal from "@/components/domain/users/PersonProfileModal";
 import AddThursdayFormContent from "@/app/thursdays/add/AddThursdayFormContent";
 import EditThursdayFormContent from "@/app/thursdays/[id]/edit/EditThursdayFormContent";
-import ThursdayDeleteConfirmContent from "@/components/domain/thursdays/ThursdayDeleteConfirmContent";
-import { confirmDeleteDialogClassName } from "@/components/modals/ConfirmDelete/styles";
+import ThursdayDeleteConfirmContent from "@/app/thursdays/composition/ThursdayDeleteConfirmContent";
+import { confirmDeleteDialogClassName } from "@/components/confirm-delete/styles";
 
 interface ThursdaysProps {
 	searchParams: Promise<{ [key: string]: string | string[] | undefined }>;

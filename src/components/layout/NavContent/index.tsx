@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import type { CSSProperties, ReactNode } from "react";
 import styles from "@/components/layout/NavContent/NavContent.module.css";
-import MobileContentBar from "@/components/layout/MobileContentBar";
+import MobileNavContent from "@/components/layout/MobileNavContent";
 
 export interface NavContentProps {
 	start?: ReactNode;
@@ -80,7 +80,7 @@ export default function NavContent({
 			</nav>
 
 			{hasMobile && (
-				<MobileContentBar
+				<MobileNavContent
 					filterContent={filterContent}
 					mobileManageContent={mobileManageContent}
 					printContent={printContent}

@@ -2,7 +2,7 @@ import { notFound, redirect } from "next/navigation";
 import { getAllSemesters } from "@/actions/semesters";
 import { getThursday, updateThursdayWithProductions } from "@/actions/thursdays";
 import { getAllUsers } from "@/actions/users";
-import ThursdayForm from "@/components/forms/thursday/ThursdayForm";
+import ThursdayForm from "@/app/thursdays/composition/ThursdayForm";
 
 interface EditThursdayFormContentProps {
 	thursdayId: string;

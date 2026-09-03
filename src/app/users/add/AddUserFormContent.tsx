@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/authentication";
 import { addUser, getAllSemesters, handleImageUpload } from "@/actions/users";
-import UserForm from "@/components/forms/user/UserForm";
+import UserForm from "@/app/users/composition/UserForm";
 
 export default async function AddUserFormContent() {
 	const session = await auth();

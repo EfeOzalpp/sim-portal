@@ -8,15 +8,13 @@ import "@/components/theme/fonts/sour-gummy/sour-gummy.css";
 import "@/components/theme/global-styles/app-theme/styling-theme.css";
 import "@/components/theme/global-styles/app-theme/font-theme.css";
 import "@/components/theme/global-styles/app-theme/layout-theme.css";
-import "@/components/theme/global-styles/button-theme.css";
 import "@/components/theme/global-styles/input-theme.css";
 import "@/components/theme/global-styles/tailwind.css";
 
-import AccountModals from "@/components/layout/AccountModals";
-import AntdThemeProvider from "@/components/theme/AntdThemeProvider";
+import AccountModals from "@/app/layout-composition/AccountModals";
 import EditUserFormContent from "@/app/users/[id]/edit/EditUserFormContent";
-import NavBar from "@/components/layout/NavBar";
-import ThemeSessionSync from "@/components/theme/ThemeSessionSync";
+import NavBar from "@/app/layout-composition/NavBar";
+import ThemeSessionSync from "@/app/layout-composition/ThemeSessionSync";
 import UserProfileContent from "@/components/domain/users/UserProfileContent";
 import { userProfileDialogClassName } from "@/components/domain/users/styles";
 import styles from "@/app/layout.module.css";
@@ -78,38 +76,36 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 					dangerouslySetInnerHTML={{ __html: themeInitScript }}
 				/>
 				<ThemeSessionSync />
-				<AntdThemeProvider>
-					<div className={appShellClassName}>
-						<div className={appDividerClassName}>
-							{session && (
-								<div className={navDividerClassName}>
-									<NavBar session={session} />
-								</div>
-							)}
-							<main className={`${styles.contentDivider} ${contentDividerClassName}`}>
-								{children}
-							</main>
-						</div>
+				<div className={appShellClassName}>
+					<div className={appDividerClassName}>
+						{session && (
+							<div className={navDividerClassName}>
+								<NavBar session={session} />
+							</div>
+						)}
+						<main className={`${styles.contentDivider} ${contentDividerClassName}`}>
+							{children}
+						</main>
 					</div>
-					{session?.user?.id && (
-						<AccountModals
-							profileDialogClassName={userProfileDialogClassName}
-							profile={
-								<UserProfileContent
-									userId={session.user.id}
-									editHref="?accountEdit=1"
-								/>
-							}
-							edit={
-								<EditUserFormContent
-									userId={session.user.id}
-									showDangerZone={false}
-									redirectHref="/users?accountProfile=1"
-								/>
-							}
-						/>
-					)}
-				</AntdThemeProvider>
+				</div>
+				{session?.user?.id && (
+					<AccountModals
+						profileDialogClassName={userProfileDialogClassName}
+						profile={
+							<UserProfileContent
+								userId={session.user.id}
+								editHref="?accountEdit=1"
+							/>
+						}
+						edit={
+							<EditUserFormContent
+								userId={session.user.id}
+								showDangerZone={false}
+								redirectHref="/users?accountProfile=1"
+							/>
+						}
+					/>
+				)}
 			</body>
 		</html>
 	);

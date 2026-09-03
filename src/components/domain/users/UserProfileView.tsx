@@ -1,9 +1,9 @@
 import PresentationCard from "@/components/domain/thursdays/PresentationCard";
 import Image from "next/image";
 import { logOut } from "@/actions/auth";
-import { getDisplayUserLinks, getUserLinkHref } from "@/components/forms/user/user-links";
+import { getDisplayUserLinks, getUserLinkHref } from "@/actions/user-links";
 import { normalizeFaceImagePath } from "@/helpers";
-import { Button } from "@/components/button/button-component";
+import { Button } from "@/components/button";
 
 interface UserProfileViewProps {
 	user: any;

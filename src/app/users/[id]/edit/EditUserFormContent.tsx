@@ -9,7 +9,7 @@ import {
 	removeUser,
 } from "@/actions/users";
 import { getCurrentUser } from "@/actions/auth";
-import UserForm from "@/components/forms/user/UserForm";
+import UserForm from "@/app/users/composition/UserForm";
 
 interface EditUserFormContentProps {
 	userId: string;
