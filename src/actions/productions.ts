@@ -6,7 +6,7 @@ import { prisma } from "@/database";
 
 import { ensureAdmin } from "@/actions/auth";
 import { action } from "@/actions/utilities";
-import { ProductionSchema, ProductionInput } from "@/components/forms/schemas";
+import { ProductionSchema, ProductionInput } from "@/actions/schemas";
 
 // Fetch a single production with its producers and presentations
 export async function getProduction(id: string) {

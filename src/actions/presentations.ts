@@ -6,7 +6,7 @@ import { prisma } from "@/database";
 
 import { ensureAdmin } from "@/actions/auth";
 import { getAllSemesters as getAllSemestersUtil, action } from "@/actions/utilities";
-import { PresentationSchema, PresentationInput } from "@/components/forms/schemas";
+import { PresentationSchema, PresentationInput } from "@/actions/schemas";
 
 export async function getAllSemesters() {
 	return await getAllSemestersUtil();

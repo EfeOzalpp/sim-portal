@@ -12,8 +12,8 @@ import {
 	getSemesterThursdayName,
 	action,
 } from "@/actions/utilities";
-import { UserSchema, UserInput, FilterSchema, FilterInputValues } from "@/components/forms/schemas";
-import { serializeUserLinks } from "@/components/forms/user/user-links";
+import { UserSchema, UserInput, FilterSchema, FilterInputValues } from "@/actions/schemas";
+import { serializeUserLinks } from "@/actions/user-links";
 import { deleteStoredUserImage, storeUserImage } from "@/actions/user-image-storage";
 import { Prisma } from "@prisma/client";
 

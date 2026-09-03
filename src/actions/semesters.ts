@@ -15,7 +15,7 @@ import {
 	getMidSemesterTimestamp,
 	action,
 } from "@/actions/utilities";
-import { SemesterSchema, SemesterInput, FilterSchema } from "@/components/forms/schemas";
+import { SemesterSchema, SemesterInput, FilterSchema } from "@/actions/schemas";
 
 const gradeValues = new Set(["P", "NC", "INC", "W"]);
 
