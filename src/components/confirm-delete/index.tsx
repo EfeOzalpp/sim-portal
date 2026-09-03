@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import type { FormEvent, ReactNode } from "react";
-import { Button } from "@/components/button/button-component";
+import { Button } from "@/components/button";
 
 interface ConfirmDeleteProps {
 	itemName: string;
@@ -78,7 +78,7 @@ export default function ConfirmDelete({
 			</p>
 			{warningText && <p>{warningText}</p>}
 			<p className="ui-note">This action cannot be undone.</p>
-			{error && <p className="text-[#cf1322]">{error}</p>}
+			{error && <p className="text-[var(--tone-danger-text)]">{error}</p>}
 			<div className="grid grid-cols-[repeat(auto-fit,minmax(0,1fr))] gap-[var(--gap-sm)] max-[480px]:grid-cols-1">
 				<Button
 					type="submit"

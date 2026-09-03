@@ -2,7 +2,7 @@
 
 import { ReactNode, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import ModalPopup from "@/components/modals/ModalPopup";
+import ModalPopup from "@/components/modal";
 
 interface RouteModalPopupProps {
 	paramName: string;
