@@ -1,0 +1,92 @@
+/*
+ * Raw overrides reaching past antd's ConfigProvider token API into
+ * DatePicker/RangePicker's internal DOM classes — ConfigProvider's token set
+ * doesn't expose everything needed here (hover box-shadow shape, the range
+ * separator's icon opacity, the "now" button's tone). Fragile by nature:
+ * coupled to antd's own internal markup, would need re-checking on an antd
+ * version bump.
+ */
+
+html[data-theme] .input-theme-surface .ant-picker {
+  width: 100%;
+}
+
+html[data-theme] .ant-picker {
+	width: 100%;
+}
+
+html[data-theme] .ant-picker:not(.ant-picker-disabled):hover,
+html[data-theme] .input-theme-surface .ant-picker:hover {
+	box-shadow: var(--input-hover-shadow);
+}
+
+html[data-theme] .ant-picker-range .ant-picker-active-bar {
+	background: var(--brand-color);
+}
+
+html[data-theme] .ant-picker.ant-picker-range .ant-picker-separator,
+html[data-theme] .ant-picker.ant-picker-range .ant-picker-separator :where(.anticon, svg) {
+	color: var(--input-text) !important;
+	fill: currentColor !important;
+	opacity: 0.75;
+}
+
+html[data-theme] .input-theme-surface .ant-picker.ant-picker-range .ant-picker-separator,
+html[data-theme] .input-theme-surface .ant-picker.ant-picker-range .ant-picker-separator :where(.anticon, svg) {
+	color: var(--input-text) !important;
+	fill: currentColor !important;
+	opacity: 0.75;
+}
+
+html[data-theme] .ant-picker-panel-container {
+	background: var(--input-dropdown-bg);
+	border: var(--app-border-width) solid var(--input-border);
+	border-radius: var(--border-md);
+}
+
+html[data-theme] .ant-picker-panel,
+html[data-theme] .ant-picker-header {
+	background: var(--input-dropdown-bg);
+	border-color: var(--input-border);
+	color: var(--input-text);
+}
+
+html[data-theme] .ant-picker-header button,
+html[data-theme] .ant-picker-content th,
+html[data-theme] .ant-picker-cell {
+	color: var(--app-muted);
+}
+
+html[data-theme] .ant-picker-cell-in-view .ant-picker-cell-inner:hover,
+html[data-theme] .ant-picker-cell-in-view.ant-picker-cell-today .ant-picker-cell-inner::before {
+	border-color: var(--input-border-hover);
+}
+
+html[data-theme] .ant-picker-now-btn {
+	font-weight: var(--font-weight-semibold);
+}
+
+html[data-theme] .ant-picker-now-btn:hover {
+	text-decoration: underline;
+	text-decoration-color: currentColor;
+	text-underline-offset: 0.18em;
+}
+
+html[data-theme] .ant-picker-ok .ant-btn-primary {
+	background: var(--tone-success-bg);
+	border-color: var(--tone-success-border);
+	color: var(--tone-success-text);
+	box-shadow: none;
+}
+
+html[data-theme] .ant-picker-ok .ant-btn-primary:not(:disabled):hover {
+	background: #ccebd8;
+	border-color: #a8d3ba;
+	color: var(--tone-success-text);
+}
+
+html[data-theme="dark"] .ant-picker-ok .ant-btn-primary:not(:disabled):hover {
+	background: #59855e;
+	border-color: #659872;
+	color: var(--tone-success-text);
+}
