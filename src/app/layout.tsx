@@ -1,10 +1,10 @@
-import "antd/dist/reset.css";
 import { Metadata } from "next";
 import Script from "next/script";
 
 import { auth } from "@/authentication";
 
 import "@/components/theme/fonts/sour-gummy/sour-gummy.css";
+import "@/components/theme/global-styles/antd-reset.css";
 import "@/components/theme/global-styles/app-theme/styling-theme.css";
 import "@/components/theme/global-styles/app-theme/font-theme.css";
 import "@/components/theme/global-styles/app-theme/layout-theme.css";

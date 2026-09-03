@@ -6,21 +6,23 @@
   --nav-rail-content-width: calc(var(--nav-account-avatar-size) + (var(--nav-rail-inline-space) * 2));
 }
 
-html,
-body {
-  height: 100%;
-  overflow: hidden;
-}
-
-body {
-  margin: 0;
-}
-
-@media print {
+/* Base element defaults — see antd-reset.css for why these live in `base`. */
+@layer base {
   html,
   body {
-    height: auto;
-    overflow: visible;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  body {
+    margin: 0;
+  }
+
+  @media print {
+    html,
+    body {
+      height: auto;
+      overflow: visible;
+    }
   }
 }
-

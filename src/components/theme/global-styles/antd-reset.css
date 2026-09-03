@@ -1,0 +1,14 @@
+/*
+ * Wraps antd's reset in the `base` layer (declared in tailwind.css's
+ * `@layer theme, base, components, utilities;`) instead of loading it
+ * unlayered. Unlayered CSS always wins over ANY layered CSS regardless of
+ * specificity or import order — so as a plain `import "antd/dist/reset.css"`
+ * this was silently defeating every Tailwind utility class applied to an
+ * element it also touches (h1-h6, body, buttons, ...), and racing our own
+ * font-theme.css/layout-theme.css for who wins on chunk load order, which a
+ * bundler doesn't reliably preserve. Layering it makes both relationships
+ * explicit: our theme CSS (also in `base`, imported after this) wins
+ * deterministically over antd's generic reset, and Tailwind utilities
+ * (`layer(utilities)`, ordered after `base`) win over both when applied.
+ */
+@import "antd/dist/reset.css" layer(base);

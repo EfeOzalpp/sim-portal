@@ -3,59 +3,67 @@
  * Tailwind's own scale covers them (font-sans/font-heading, text-sm/base/xl,
  * font-semibold, leading-tight/normal, w-4/h-7 etc), so the values below
  * are plain CSS. Only color stays tokenized (see styling-theme.css).
+ *
+ * These are base element defaults, so they belong in the `base` layer
+ * (see tailwind.css's `@layer theme, base, components, utilities;` and
+ * antd-reset.css) — that's what lets a Tailwind class applied directly to
+ * a heading (e.g. `<h2 className="m-0">`) actually win instead of losing
+ * to this file's plain, unlayered element selectors.
  */
 
-.is-body {
-  font-family: var(--font-sans);
-  font-size: 1rem;
-  font-weight: 400;
-  line-height: 1.5;
-}
+@layer base {
+  .is-body {
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+  }
 
-.ui-label {
-  color: var(--app-muted);
-  font-family: var(--font-sans);
-  font-size: 0.6875rem;
-  font-weight: 600;
-  line-height: 1.2;
-  text-transform: uppercase;
-}
+  .ui-label {
+    color: var(--app-muted);
+    font-family: var(--font-sans);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    line-height: 1.2;
+    text-transform: uppercase;
+  }
 
-.ui-note {
-  color: var(--app-muted);
-  font-size: 0.875rem;
-  font-style: italic;
-  line-height: 1.5;
-}
+  .ui-note {
+    color: var(--app-muted);
+    font-size: 0.875rem;
+    font-style: italic;
+    line-height: 1.5;
+  }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: var(--font-heading);
-  line-height: 1.2;
-}
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-heading);
+    line-height: 1.2;
+  }
 
-h1 {
-  font-size: 2rem;
-  font-weight: 700;
-}
+  h1 {
+    font-size: 2rem;
+    font-weight: 700;
+  }
 
-h2 {
-  font-size: 2rem;
-  font-weight: 700;
-}
+  h2 {
+    font-size: 2rem;
+    font-weight: 700;
+  }
 
-h3 {
-  font-size: 1.25rem;
-  font-weight: 600;
-}
+  h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
 
-h4,
-h5,
-h6 {
-  font-size: 1rem;
-  font-weight: 600;
+  h4,
+  h5,
+  h6 {
+    font-size: 1rem;
+    font-weight: 600;
+  }
 }
