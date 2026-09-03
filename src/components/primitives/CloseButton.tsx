@@ -15,7 +15,7 @@ export default function CloseButton({ href, className }: CloseButtonProps) {
       pressable
       aria-label="Close"
       className={clsx(
-        "inline-flex h-10 w-10 items-center justify-center rounded-[var(--border-lg)] text-[var(--app-icon)] hover:bg-[var(--nav-button-bg-hover)] hover:text-[var(--nav-button-text-hover)]",
+        "inline-flex h-10 w-10 items-center justify-center rounded-[var(--border-lg)] text-[var(--app-icon)] hover:bg-[var(--nav-button-bg-hover)] hover:text-[var(--app-text)]",
         className,
       )}
     >

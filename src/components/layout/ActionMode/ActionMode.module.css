@@ -8,7 +8,7 @@
 	z-index: 25;
 	margin: 0;
 	padding: 0;
-	background: rgba(0, 0, 0, 0.5);
+	background: var(--scrim);
 	border: 0;
 	cursor: default;
 	pointer-events: none;
@@ -33,25 +33,23 @@
 }
 
 .actionButtonShell[data-action-mode-active="true"] :global(.btn.btn-action) {
-	background: var(--button-bg-active);
-	border-color: var(--button-border-active, var(--button-border));
-	color: var(--button-text-active, var(--button-text));
+	background: #f7f7f7;
+	border-color: var(--app-border);
+	color: #000000;
+}
+
+:global(html[data-theme="dark"]) .actionButtonShell[data-action-mode-active="true"] :global(.btn.btn-action) {
+	background: #383838;
+	border-color: var(--app-border);
+	color: #ffffff;
 }
 
 .actionButtonShell[data-action-mode-button="delete-users"][data-action-mode-active="true"] :global(.btn.btn-action),
 .actionButtonShell[data-action-mode-button="delete-thursdays"][data-action-mode-active="true"] :global(.btn.btn-action),
 .actionButtonShell[data-action-mode-button="delete-semesters"][data-action-mode-active="true"] :global(.btn.btn-action) {
-	background: #e7bbbb;
-	border-color: #cc9696;
-	color: #421717;
-}
-
-:global(html[data-theme="dark"]) .actionButtonShell[data-action-mode-button="delete-users"][data-action-mode-active="true"] :global(.btn.btn-action),
-:global(html[data-theme="dark"]) .actionButtonShell[data-action-mode-button="delete-thursdays"][data-action-mode-active="true"] :global(.btn.btn-action),
-:global(html[data-theme="dark"]) .actionButtonShell[data-action-mode-button="delete-semesters"][data-action-mode-active="true"] :global(.btn.btn-action) {
-	background: #633e3e;
-	border-color: #925f5f;
-	color: #ffffff;
+	background: var(--tone-danger-bg);
+	border-color: var(--tone-danger-border);
+	color: var(--tone-danger-text);
 }
 
 .actionButtonContent {

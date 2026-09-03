@@ -1,11 +1,11 @@
 "use client";
 
 import { useURLFilter } from "@/hooks/useURLFilter";
-import { Input } from "@/components/primitives/AntD/Input";
-import { Select } from "@/components/primitives/AntD/Select";
+import { Input, InputProps } from "@/components/input";
+import { Select, SingleSelectProps } from "@/components/select";
+import { inputIconClassName } from "@/components/input/styles";
+import { MaskIcon } from "@/components/theme/MaskIcon";
 import { LoadingOutlined } from "@ant-design/icons";
-import { InputProps, SelectProps } from "antd";
-import clsx from "clsx";
 
 interface FilterInputProps extends Omit<InputProps, "value" | "onChange"> {
 	query?: string;
@@ -17,12 +17,12 @@ export function FilterInput({ query = "search", placeholder = "Search", classNam
 	return (
 		<Input
 			{...props}
-			className={clsx("input-search-field", className)}
+			className={className}
 			value={value || ""}
 			placeholder={placeholder}
 			onChange={(e) => handleChange(e.target.value)}
 			allowClear
-			prefix={<span className="input-theme-icon input-search-icon" aria-hidden="true" />}
+			prefix={<MaskIcon icon="search/search.svg" className={inputIconClassName} />}
 			suffix={isPending ? <LoadingOutlined spin /> : null}
 		/>
 	);
@@ -30,7 +30,7 @@ export function FilterInput({ query = "search", placeholder = "Search", classNam
 
 const ALL_SENTINEL = "All";
 
-interface FilterSelectProps extends Omit<SelectProps, "value" | "onChange" | "options" | "loading"> {
+interface FilterSelectProps extends Omit<SingleSelectProps, "value" | "onChange" | "options" | "loading" | "mode"> {
 	filter: string;
 	options?: Array<Record<string, any>>;
 	defaultValue?: string | number | null;
@@ -50,7 +50,6 @@ export function FilterSelect({
 	allLabel,
 	allValue = ALL_SENTINEL,
 	className,
-	suffixIcon,
 	...props
 }: FilterSelectProps) {
 	const { value, isPending, handleChange } = useURLFilter(filter, 300);
@@ -60,19 +59,12 @@ export function FilterSelect({
 	return (
 		<Select
 			{...props}
-			className={clsx("input-select-field", className)}
-			size="large"
-			showSearch
+			className={className}
+			searchable
 			placeholder={placeholder}
-			value={value !== null ? value : defaultValue}
-			onChange={(val) => handleChange(val as string)}
+			value={value !== null ? value : defaultValue != null ? String(defaultValue) : undefined}
+			onChange={(val) => handleChange(val ?? null)}
 			loading={isPending}
-			suffixIcon={suffixIcon ?? (
-				<span className="input-select-arrow" aria-hidden="true">
-					<span className="input-theme-icon input-select-arrow-down" />
-					<span className="input-theme-icon input-select-arrow-up" />
-				</span>
-			)}
 			options={[
 				...allOption,
 				...options.map((option) => ({
@@ -80,7 +72,6 @@ export function FilterSelect({
 					label: option[labelKey],
 				})),
 			]}
-			style={{ ...props.style }}
 		/>
 	);
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/button/button-component";
+import { Button } from "@/components/button";
 
 interface PrintLinkProps {
 	label?: string;
@@ -11,12 +11,10 @@ export default function PrintLink({ label = "Print" }: PrintLinkProps) {
 		<Button
 			type="button"
 			variant="link"
+			icon="download/download.svg"
 			onClick={() => window.print()}
 		>
-			<span className="link-button-content">
-				<span className="link-button-icon link-button-download-icon" aria-hidden="true" />
-				<span>{label}</span>
-			</span>
+			{label}
 		</Button>
 	);
 }

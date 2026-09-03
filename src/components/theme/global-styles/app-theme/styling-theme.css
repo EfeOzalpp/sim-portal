@@ -2,11 +2,8 @@
   --app-border-width: 1px;
   --app-border-width-strong: 2px;
 
-  --app-color-gray-50: #f7f8fa;
-  --app-color-gray-100: #eef0f3;
-  --app-color-gray-300: #d9dce1;
-  --app-color-gray-600: #6b7280;
-  --app-color-gray-900: #1f2933;
+  /* Theme-invariant — scrims stay dark regardless of light/dark mode. */
+  --scrim: rgba(0, 0, 0, 0.5);
 }
 
 html[data-theme="light"] {
@@ -17,8 +14,7 @@ html[data-theme="light"] {
   --app-card-bg: #ffffff;
   --app-card-bg-hover: #f7f8fa;
   --app-card-label-bg: #ffffff;
-  --app-title-cell-bg: #ffffff;
-  --app-secondary: #ffffff;
+  --app-secondary: var(--app-card-bg);
   --app-subtle: #f7f7f7;
   --app-text: #1f2933;
   --app-muted: #6b7280;
@@ -30,6 +26,24 @@ html[data-theme="light"] {
   --app-theme: #8abb7a;
   --brand-color: #7dbb7a;
   --brand-accent: #dff2df;
+
+  --nav-button-bg-hover: #efefef;
+
+  --tone-success-border: #98c9ad;
+  --tone-success-bg: #b9e2c9;
+  --tone-success-text: #143821;
+
+  --tone-danger-border: #e4baba;
+  --tone-danger-bg: #f7dddd;
+  --tone-danger-text: #421717;
+
+  --tone-warning-border: #e3c98a;
+  --tone-warning-bg: #f7e8c4;
+  --tone-warning-text: #4a3810;
+
+  --tone-info-border: #a8c8e8;
+  --tone-info-bg: #d9ebfa;
+  --tone-info-text: #163a5c;
 }
 
 html[data-theme="dark"] {
@@ -40,8 +54,7 @@ html[data-theme="dark"] {
   --app-card-bg: #1f1f1f;
   --app-card-bg-hover: #292929;
   --app-card-label-bg: #2a2a2a;
-  --app-title-cell-bg: #1f1f1f;
-  --app-secondary: #1f1f1f;
+  --app-secondary: var(--app-card-bg);
   --app-subtle: #242424;
   --app-text: #f5f5f5;
   --app-muted: #a3a3a3;
@@ -53,4 +66,22 @@ html[data-theme="dark"] {
   --app-theme: #9cbc91;
   --brand-color: #acd1aa;
   --brand-accent: #2e4233;
+
+  --nav-button-bg-hover: #2d2d2d;
+
+  --tone-success-border: #548a69;
+  --tone-success-bg: #4c7154;
+  --tone-success-text: #eefcf2;
+
+  --tone-danger-border: #6f4747;
+  --tone-danger-bg: #462d2d;
+  --tone-danger-text: #fff0f0;
+
+  --tone-warning-border: #a08a4a;
+  --tone-warning-bg: #564a29;
+  --tone-warning-text: #fff8ea;
+
+  --tone-info-border: #4a7ba0;
+  --tone-info-bg: #294256;
+  --tone-info-text: #eaf4ff;
 }
