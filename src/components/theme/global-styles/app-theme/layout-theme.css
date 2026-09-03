@@ -1,28 +1,14 @@
+/*
+ * Not colors, so not in styling-theme.css — but these are genuinely shared,
+ * computed values (avatar size feeds a calc()), each read from 2-3 separate
+ * files that all need to agree on the same number. That's different from a
+ * plain single-value token: there's no one Tailwind class to inline it into.
+ * A value used in exactly one place doesn't belong here — inline it at its
+ * call site instead (see NavBar.module.css's width/min-height for the two
+ * that used to live here).
+ */
 :root {
-  --nav-width-expanded: 15rem;
-  --nav-brand-block-size: 1.25rem;
   --nav-account-avatar-size: 2.25rem;
   --nav-rail-inline-space: calc(0.5rem / 2);
   --nav-rail-content-width: calc(var(--nav-account-avatar-size) + (var(--nav-rail-inline-space) * 2));
-}
-
-/* Base element defaults — see antd-reset.css for why these live in `base`. */
-@layer base {
-  html,
-  body {
-    height: 100%;
-    overflow: hidden;
-  }
-
-  body {
-    margin: 0;
-  }
-
-  @media print {
-    html,
-    body {
-      height: auto;
-      overflow: visible;
-    }
-  }
 }

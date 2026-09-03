@@ -68,8 +68,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 	const session = await auth();
 
 	return (
-		<html lang="en" data-theme="light" suppressHydrationWarning>
-			<body>
+		<html lang="en" data-theme="light" className="h-full overflow-hidden print:h-auto print:overflow-visible" suppressHydrationWarning>
+			<body className="m-0 h-full overflow-hidden print:h-auto print:overflow-visible">
 				<Script
 					id="theme-init"
 					strategy="beforeInteractive"

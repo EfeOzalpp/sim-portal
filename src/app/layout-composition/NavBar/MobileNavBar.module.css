@@ -50,14 +50,6 @@
 		-webkit-mask-size: 1.375rem 1.375rem;
 	}
 
-	.brandText {
-		color: var(--brand-color);
-		font-family: var(--font-heading);
-		font-size: 1.25rem;
-		font-weight: 700;
-		line-height: 1.2;
-	}
-
 	/* Backdrop: dims content area behind open panel */
 	.backdrop {
 		display: block;
@@ -111,16 +103,6 @@
 		padding-block: 0.5rem;
 		border-bottom: 1px solid var(--app-border);
 		margin-bottom: 0.5rem;
-	}
-
-	.panelBrand {
-		grid-column: 2;
-		text-align: center;
-		color: var(--brand-color);
-		font-family: var(--font-heading);
-		font-size: 1.25rem;
-		font-weight: 700;
-		line-height: 1.2;
 	}
 
 	/* Close button: sits in the third column of the header row, same size as menu button */

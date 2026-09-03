@@ -1,61 +1,12 @@
-.root {
-	display: grid;
-	grid-template-columns: var(--nav-rail-content-width) minmax(0, 1fr);
-	align-items: center;
-	column-gap: 0.5rem;
-	width: 100%;
-	min-width: 0;
-	padding-block: 0.5rem;
-	padding-inline: 0;
-	overflow: hidden;
-	color: inherit;
-	text-decoration: none;
-	border-radius: 12px;
-	box-sizing: border-box;
-}
-
-.root:hover {
-	background: var(--app-subtle);
-}
-
-.avatar {
-	flex: 0 0 var(--nav-account-avatar-size);
-	display: grid;
-	place-items: center;
-	justify-self: center;
-	width: var(--nav-account-avatar-size);
-	height: var(--nav-account-avatar-size);
-	border-radius: 999px;
-	background: var(--app-theme);
-	color: #ffffff;
-	line-height: 1;
-}
-
-.identity {
-	display: flex;
-	flex-direction: column;
-	min-width: 0;
-	max-width: 12rem;
-	opacity: 1;
-	overflow: hidden;
-}
-
+/*
+ * .identity only exists here as a selector hook for the two rules below —
+ * its own box/typography styling now lives as Tailwind classes on the JSX
+ * element directly (see UserAccountLink.tsx). Both rules reach in from
+ * outside this component: the collapsed-rail state lives on NavBar's root,
+ * and the mobile slide-in panel override lives in MobileNavBar.module.css
+ * (:global([class*="identity"]), matching this class by name).
+ */
 :global([data-collapsible-nav]:not(:hover):not(:has(:focus-visible))) .identity {
 	max-width: 0;
 	opacity: 0;
 }
-
-.name {
-	overflow: hidden;
-	color: var(--app-text);
-	text-overflow: ellipsis;
-	white-space: nowrap;
-}
-
-.status {
-	overflow: hidden;
-	color: var(--app-muted);
-	text-overflow: ellipsis;
-	white-space: nowrap;
-}
-

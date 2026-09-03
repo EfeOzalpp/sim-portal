@@ -33,13 +33,12 @@
 }
 
 .actionButtonShell[data-action-mode-active="true"] :global(.btn.btn-action) {
-	background: #f7f7f7;
+	background: var(--app-subtle);
 	border-color: var(--app-border);
 	color: #000000;
 }
 
 :global(html[data-theme="dark"]) .actionButtonShell[data-action-mode-active="true"] :global(.btn.btn-action) {
-	background: #383838;
 	border-color: var(--app-border);
 	color: #ffffff;
 }

@@ -1,10 +1,15 @@
-import React from "react";
+import clsx from "clsx";
 import styles from "@/app/layout-composition/NavBar/NavBar.module.css";
-import Button from "@/components/button";
-import NavButtonLink from "@/app/layout-composition/NavBar/NavButtonLink";
+
 import { auth } from "@/authentication";
 import { Session } from "next-auth";
+
+// primitive
+import Button from "@/components/button";
+
+// layout specific 
 import AdminOnly from "@/app/layout-composition/NavBar/AdminOnly";
+import NavButtonLink from "@/app/layout-composition/NavBar/NavButtonLink";
 import UserAccountLink from "@/app/layout-composition/NavBar/UserAccountLink";
 import ThemeSwitch from "@/app/layout-composition/NavBar/ThemeSwitch";
 import MobileNavBar from "@/app/layout-composition/NavBar/MobileNavBar";
@@ -30,24 +35,24 @@ export default async function NavBar({ session: initialSession }: NavBarProps) {
 		<>
 			{/* Desktop nav: collapsible rail, hidden on mobile */}
 			<nav className={styles.root} aria-label="Primary navigation" data-collapsible-nav>
-				<div className={styles.brand}>SIM</div>
-				<div className={styles.navItemsDivider}>
+				<div className="m-0 flex min-h-5 items-center justify-center overflow-hidden font-heading text-2xl font-bold whitespace-nowrap leading-tight text-[var(--brand-color)]">SIM</div>
+				<div className="w-full min-w-0">
 					<div className={styles.navButtonList}>
 						<NavButtonLink href="/users" label="People" iconClassName={styles.peopleIcon} />
 						<AdminOnly>
 							<NavButtonLink href="/individual" label="Individual" iconClassName={styles.individualIcon} />
 						</AdminOnly>
 					</div>
-					<div className={`${styles.navButtonList} ${styles.navButtonGroup}`}>
+					<div className={clsx(styles.navButtonList, "mt-4 border-t border-t-[var(--app-border)] pt-4")}>
 						<NavButtonLink href="/thursdays" label="Thursdays" iconClassName={styles.thursdayIcon} />
 						<AdminOnly>
 							<NavButtonLink href="/semester" label="Semesters" iconClassName={styles.listIcon} />
 						</AdminOnly>
 					</div>
 				</div>
-				<div className={styles.externalNav}>
+				<div className="flex w-full min-w-0 flex-col gap-2 border-t border-t-[var(--app-border)] pt-4">
 					<div className={styles.externalMarker} aria-label="External links">
-						<span className={`${styles.externalMarkerButton} rounded-md bg-transparent text-[#717171] dark:text-[#adadad]`} aria-hidden="true">
+						<span className={`${styles.externalMarkerButton} rounded-md bg-transparent text-[var(--app-icon)]`} aria-hidden="true">
 							<span className={`${styles.navIcon} ${styles.assetIcon} ${styles.linkIcon}`} />
 						</span>
 						<span className={`${styles.navIcon} ${styles.assetIcon} ${styles.moreVerticalIcon} ${styles.externalMoreIcon}`} aria-hidden="true" />
@@ -69,11 +74,11 @@ export default async function NavBar({ session: initialSession }: NavBarProps) {
 						))}
 					</div>
 				</div>
-				<div className={styles.footerNav}>
+				<div className="mt-auto flex w-full min-w-0 flex-col">
 					<div className={styles.themeNav}>
 						<ThemeSwitch />
 					</div>
-					<div className={styles.accountNav}>
+					<div className={clsx(styles.accountNav, "pt-4")}>
 						<UserAccountLink user={session.user} />
 					</div>
 				</div>

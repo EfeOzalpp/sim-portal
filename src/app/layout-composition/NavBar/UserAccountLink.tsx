@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import clsx from "clsx";
 import { usePathname, useSearchParams } from "next/navigation";
 import type { Session } from "next-auth";
 import styles from "@/app/layout-composition/NavBar/UserAccountLink.module.css";
@@ -56,15 +57,18 @@ export default function UserAccountLink({ user }: UserAccountLinkProps) {
 	return (
 		<Link
 			href={href}
-			className={styles.root}
+			className="box-border grid w-full min-w-0 grid-cols-[var(--nav-rail-content-width)_minmax(0,1fr)] items-center gap-2 overflow-hidden rounded-xl py-2 text-inherit no-underline hover:bg-[var(--app-subtle)]"
 			aria-label={`Open profile for ${displayName}`}
 		>
-			<span className={`${styles.avatar} is-body`} aria-hidden="true">
+			<span
+				className="is-body grid h-[var(--nav-account-avatar-size)] w-[var(--nav-account-avatar-size)] place-items-center justify-self-center rounded-full bg-[var(--app-theme)] leading-none text-white"
+				aria-hidden="true"
+			>
 				{getInitials(displayName)}
 			</span>
-			<span className={styles.identity}>
-				<span className={`${styles.name} is-body`}>{displayName}</span>
-				<span className={`${styles.status} is-body`}>{formatRole(user.role)}</span>
+			<span className={clsx(styles.identity, "flex max-w-[12rem] min-w-0 flex-col overflow-hidden opacity-100")}>
+				<span className="is-body overflow-hidden text-ellipsis whitespace-nowrap text-[var(--app-text)]">{displayName}</span>
+				<span className="is-body overflow-hidden text-ellipsis whitespace-nowrap text-[var(--app-muted)]">{formatRole(user.role)}</span>
 			</span>
 		</Link>
 	);

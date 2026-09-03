@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import clsx from "clsx";
 import { usePathname } from "next/navigation";
 import type { Session } from "next-auth";
 import { Button } from "@/components/button";
@@ -39,7 +40,7 @@ export default function MobileNavBar({ isAdmin, user }: MobileNavBarProps) {
 				>
 					<span className={styles.menuIconAsset} aria-hidden="true" />
 				</button>
-				<span className={styles.brandText}>SIM</span>
+				<span className="text-2xl leading-tight font-bold font-heading text-[var(--brand-color)]">SIM</span>
 			</div>
 
 			{isOpen && (
@@ -57,7 +58,7 @@ export default function MobileNavBar({ isAdmin, user }: MobileNavBarProps) {
 			>
 				<div className={styles.panelInner}>
 					<div className={styles.panelHeader}>
-						<span className={styles.panelBrand}>SIM</span>
+						<span className="col-start-2 text-center text-2xl leading-tight font-bold font-heading text-[var(--brand-color)]">SIM</span>
 						<button
 							className={styles.closeButton}
 							onClick={() => setIsOpen(false)}
@@ -67,14 +68,14 @@ export default function MobileNavBar({ isAdmin, user }: MobileNavBarProps) {
 						</button>
 					</div>
 
-					<div className={navStyles.navItemsDivider}>
+					<div className="w-full min-w-0">
 						<div className={navStyles.navButtonList}>
 							<NavButtonLink href="/users" label="People" iconClassName={navStyles.peopleIcon} />
 							{isAdmin && (
 								<NavButtonLink href="/individual" label="Individual" iconClassName={navStyles.individualIcon} />
 							)}
 						</div>
-						<div className={`${navStyles.navButtonList} ${navStyles.navButtonGroup}`}>
+						<div className={clsx(navStyles.navButtonList, "mt-4 border-t border-t-[var(--app-border)] pt-4")}>
 							<NavButtonLink href="/thursdays" label="Thursdays" iconClassName={navStyles.thursdayIcon} />
 							{isAdmin && (
 								<NavButtonLink href="/semester" label="Semesters" iconClassName={navStyles.listIcon} />
@@ -82,7 +83,7 @@ export default function MobileNavBar({ isAdmin, user }: MobileNavBarProps) {
 						</div>
 					</div>
 
-					<div className={navStyles.externalNav}>
+					<div className="flex w-full min-w-0 flex-col gap-2 border-t border-t-[var(--app-border)] pt-4">
 						<div className={navStyles.externalLinkList}>
 							{externalLinks.map((link) => (
 								<Button
@@ -101,11 +102,11 @@ export default function MobileNavBar({ isAdmin, user }: MobileNavBarProps) {
 						</div>
 					</div>
 
-					<div className={navStyles.footerNav}>
+					<div className="mt-auto flex w-full min-w-0 flex-col">
 						<div className={navStyles.themeNav}>
 							<ThemeSwitch />
 						</div>
-						<div className={navStyles.accountNav}>
+						<div className={clsx(navStyles.accountNav, "pt-4")}>
 							<UserAccountLink user={user} />
 						</div>
 					</div>

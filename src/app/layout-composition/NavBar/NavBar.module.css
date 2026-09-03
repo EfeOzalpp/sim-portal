@@ -23,37 +23,11 @@
 
 .root:hover,
 .root:has(:focus-visible) {
-	width: var(--nav-width-expanded);
+	width: 15rem;
 }
 
 .root:not(:hover):not(:has(:focus-visible)) {
 	--nav-icon-size: 1.75rem;
-}
-
-.brand {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	overflow: hidden;
-	min-height: var(--nav-brand-block-size);
-	margin: 0;
-	color: var(--brand-color);
-	font-family: var(--font-heading);
-	font-size: 1.25rem;
-	font-weight: 700;
-	line-height: 1.2;
-	white-space: nowrap;
-}
-
-.navItemsDivider {
-	width: 100%;
-	min-width: 0;
-}
-
-.navButtonGroup {
-	margin-top: 1rem;
-	padding-top: 1rem;
-	border-top: 1px solid var(--app-border);
 }
 
 .navButtonList {
@@ -204,16 +178,6 @@
 	opacity: 0;
 }
 
-.externalNav {
-	display: flex;
-	flex-direction: column;
-	gap: 0.5rem;
-	width: 100%;
-	min-width: 0;
-	padding-top: 1rem;
-	border-top: 1px solid var(--app-border);
-}
-
 .externalMarker {
 	display: inline-flex;
 	flex-direction: column;
@@ -260,24 +224,12 @@
 	display: none;
 }
 
-.footerNav {
-	margin-top: auto;
-	display: flex;
-	flex-direction: column;
-	width: 100%;
-	min-width: 0;
-}
-
 .themeNav {
 	width: 100%;
 	min-width: 0;
 	padding-block: 1rem;
 	border-top: 1px solid var(--app-border);
 	border-bottom: 1px solid var(--app-border);
-}
-
-.accountNav {
-	padding-top: 1rem;
 }
 
 @media (max-width: 768px) {
