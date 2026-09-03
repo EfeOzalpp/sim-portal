@@ -68,7 +68,7 @@ export default function ProductionsCollapse({ productions }: ProductionsCollapse
         className="overflow-hidden rounded-xl border border-solid border-[var(--app-border)] bg-[var(--app-card-bg)] text-[var(--app-text)]"
         items={productions.map((p, pIndex) => ({
           value: p.id,
-          itemClassName: pIndex > 0 ? "border-t border-solid border-[var(--app-border)]" : "",
+          itemClassName: pIndex > 0 ? "border-t border-t-[var(--app-border)]" : "",
           headerClassName: "items-center bg-[var(--app-card-bg)] text-[var(--app-text)] transition-[background] duration-150 hover:bg-[var(--app-card-bg-hover)]",
           contentClassName: "bg-[var(--app-card-bg)] text-[var(--app-text)]",
           // The title used to double as both the toggle trigger and a

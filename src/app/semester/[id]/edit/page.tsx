@@ -18,7 +18,7 @@ export default async function EditSemester({ params }: EditSemesterProps) {
 	return (
 		<>
 			<NavContent
-				className="mx-auto max-w-[50%] border-b border-solid border-[var(--app-border)]"
+				className="mx-auto max-w-[50%] border-b border-b-[var(--app-border)]"
 				start={<h2>Edit Semester</h2>}
 				end={<CloseButton href="/semester" />}
 			/>

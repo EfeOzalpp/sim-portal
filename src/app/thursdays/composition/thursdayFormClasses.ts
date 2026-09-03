@@ -11,7 +11,7 @@ export const inlineActionsClassName = "flex items-center gap-2";
 // selector. ProductionsCollapse (still antd, a separate file with its own
 // local styling) doesn't use these constants at all.
 export const collapseHeaderClassName =
-	"min-h-[3.75rem] items-center! rounded-xl! bg-[var(--app-surface)]! py-2! text-[var(--app-text)]! transition-[background] duration-150 hover:bg-[var(--app-card-bg-hover)]! [[data-state=open]>&]:rounded-b-none! [[data-state=open]>&]:border-b [[data-state=open]>&]:border-solid [[data-state=open]>&]:border-[var(--app-border)]";
+	"min-h-[3.75rem] items-center! rounded-xl! bg-[var(--app-surface)]! py-2! text-[var(--app-text)]! transition-[background] duration-150 hover:bg-[var(--app-card-bg-hover)]! [[data-state=open]>&]:rounded-b-none! [[data-state=open]>&]:border-b [[data-state=open]>&]:border-b-[var(--app-border)]";
 
 export const collapseBodyClassName = "bg-[var(--app-surface)]! text-[var(--app-text)]!";
 

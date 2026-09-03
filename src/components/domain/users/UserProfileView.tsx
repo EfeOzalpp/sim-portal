@@ -80,7 +80,7 @@ export default function UserProfileView({
 				</div>
 			</aside>
 			<section className="flex min-w-0 flex-col gap-4">
-				<div className="flex flex-col gap-1 border-b border-solid border-[var(--app-border)] pb-4 [&_h2]:m-0">
+				<div className="flex flex-col gap-1 border-b border-b-[var(--app-border)] pb-4 [&_h2]:m-0">
 					<div className="flex min-w-0 items-center justify-between gap-2 max-[767px]:flex-col max-[767px]:items-start">
 						<h2 className="min-w-0">{user.name}</h2>
 					</div>
@@ -126,7 +126,7 @@ export default function UserProfileView({
 				</div>
 			</section>
 			{isCurrentUser && (
-				<div className="col-[1/-1] flex flex-row items-center gap-2 border-t border-solid border-[var(--app-border)] pt-4 [&_form]:m-0">
+				<div className="col-[1/-1] flex flex-row items-center gap-2 border-t border-t-[var(--app-border)] pt-4 [&_form]:m-0">
 					<form action={logOut}>
 						<Button type="submit" tone="danger">
 							Log Out

@@ -11,7 +11,7 @@ export const modalDialogDefaultWidthClassName = "w-[min(52rem,100%)]";
 
 export const modalHeaderButtonClassName = [
 	"m-0 flex w-full cursor-pointer items-center justify-between gap-4 rounded-t-2xl border-0",
-	"border-b border-solid border-[var(--app-border)] bg-transparent p-4",
+	"border-b border-b-[var(--app-border)] bg-transparent p-4",
 	"text-left text-[var(--app-text)] hover:bg-[var(--nav-button-bg-hover)] max-[768px]:rounded-none",
 ].join(" ");
 

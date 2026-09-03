@@ -193,7 +193,7 @@ export default function SemesterForm({
           </div>
         </div>
 
-        <div className="mt-4 flex justify-start border-t border-solid border-[var(--app-border)] pt-4">
+        <div className="mt-4 flex justify-start border-t border-t-[var(--app-border)] pt-4">
         <Button type="submit" disabled={isSubmitting} tone="success">
           {isSubmitting
             ? "Saving..."

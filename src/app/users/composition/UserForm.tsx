@@ -359,7 +359,7 @@ export default function UserForm({
             style={{ borderColor: "var(--tone-danger-border)", backgroundColor: "var(--tone-danger-bg)" }}
           >
             <div
-              className="border-b border-solid px-4 py-2"
+              className="border-b px-4 py-2"
               style={{ borderBottomColor: "var(--tone-danger-border)" }}
             >
               <h4 className="m-0 text-[var(--tone-danger-text)]">

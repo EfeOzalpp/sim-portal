@@ -56,7 +56,7 @@ export const selectContentClassName = [
 	"border border-[var(--input-border)] shadow-lg",
 ].join(" ");
 
-export const selectSearchWrapperClassName = "border-b border-solid border-[var(--input-border)] p-[0.333rem]";
+export const selectSearchWrapperClassName = "border-b border-b-[var(--input-border)] p-[0.333rem]";
 
 export const selectViewportClassName = "max-h-72 overflow-y-auto p-1";
 
