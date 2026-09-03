@@ -1,6 +1,3 @@
-const titleTextClassName =
-	"relative z-[1] m-0 inline-flex box-border items-center justify-center border-0 bg-transparent text-center";
-
 const titleTextShadow = [
 	"0 0 0.65rem var(--brand-accent)",
 	"0 0 1.15rem var(--brand-accent)",
@@ -24,23 +21,12 @@ interface PageTitleProps {
 export default function PageTitle({ title, filter }: PageTitleProps) {
 	return (
 		<div
-			className="relative isolate flex min-h-[5.25rem] items-center justify-center overflow-hidden border-b border-solid border-[var(--app-border)] text-[var(--app-text)] leading-tight max-[768px]:border-b-0 print:hidden"
+			className="flex items-center justify-center p-4 text-center text-[var(--app-text)] print:hidden"
 			style={{ background: titleBackground, backgroundSize: "17rem 5.25rem" }}
 			data-page-title
 		>
-			<h2
-				className={`${titleTextClassName} gap-[0.18em] p-4 max-[768px]:flex-col max-[768px]:gap-0`}
-				style={{ textShadow: titleTextShadow }}
-			>
-				<span>{filter ? `${title},` : title}</span>
-				{filter ? (
-					<span
-						className={`${titleTextClassName} [font:inherit]`}
-						style={{ textShadow: titleTextShadow }}
-					>
-						{filter}
-					</span>
-				) : null}
+			<h2 className="m-0 leading-tight" style={{ textShadow: titleTextShadow }}>
+				{filter ? `${title}, ${filter}` : title}
 			</h2>
 		</div>
 	);
