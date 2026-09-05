@@ -5,12 +5,12 @@ export const selectTriggerVariants = cva(
 		"select-trigger inline-flex w-full min-w-0 items-center justify-between gap-2",
 		"rounded-xl border-solid bg-[var(--input-bg)] text-[var(--input-text)]",
 		"border border-[var(--input-border)]",
-		"px-2 py-[0.325rem]",
+		"px-3 py-2.5",
 		"font-sans text-base text-left",
 		"cursor-pointer transition outline-none",
 		"hover:border-[var(--input-border-hover)] hover:bg-[var(--input-bg-hover)] hover:shadow-[var(--input-hover-shadow)]",
-		"focus-visible:border-[var(--input-border-active)] focus-visible:shadow-[var(--input-hover-shadow)]",
-		"data-[state=open]:border-[var(--input-border-active)] data-[state=open]:shadow-[var(--input-hover-shadow)]",
+		"focus-visible:border-[var(--input-border-hover)] focus-visible:shadow-[var(--input-hover-shadow)]",
+		"data-[state=open]:border-[var(--input-border-hover)] data-[state=open]:shadow-[var(--input-hover-shadow)]",
 		"disabled:cursor-not-allowed disabled:opacity-60",
 	],
 	{
@@ -30,7 +30,7 @@ export const selectPlaceholderClassName = "min-w-0 flex-1 truncate text-[var(--i
 export const selectIndicatorsClassName = "flex flex-none items-center gap-1";
 
 export const selectChevronClassName = [
-	"h-4 w-4 flex-none bg-[var(--input-icon)]",
+	"h-5 w-5 flex-none bg-[var(--input-icon)]",
 	"transition-transform duration-150 group-data-[state=open]:rotate-180",
 	"[mask-image:url(../assets/arrow/down.svg)] [mask-position:center] [mask-repeat:no-repeat] [mask-size:contain]",
 ].join(" ");
@@ -38,7 +38,7 @@ export const selectChevronClassName = [
 export const selectSpinnerClassName = "flex h-4 w-4 flex-none items-center justify-center text-[var(--input-icon)]";
 
 export const selectClearButtonClassName = [
-	"inline-grid h-4 w-4 flex-none cursor-pointer place-items-center",
+	"inline-grid h-5 w-5 flex-none cursor-pointer place-items-center",
 	"border-none bg-transparent p-0 text-[var(--input-icon)] hover:text-[var(--input-text)]",
 ].join(" ");
 
@@ -48,23 +48,23 @@ export const selectClearIconClassName = [
 ].join(" ");
 
 export const selectContentClassName = [
-	// z-[1100]: Select/Popover content and ModalPopup's dialog both portal to
+	// z-[300]: Select/Popover content and ModalPopup's dialog both portal to
 	// document.body, landing as siblings there — so this has to clear
-	// ModalPopup's z-[1000] explicitly, not just out-stack whatever's on the
+	// ModalPopup's z-[290] explicitly, not just out-stack whatever's on the
 	// page itself.
-	"select-content z-[1100] overflow-hidden rounded-xl border-solid bg-[var(--input-dropdown-bg)] text-[var(--input-text)]",
+	"select-content z-[300] overflow-hidden rounded-xl border-solid bg-[var(--input-dropdown-bg)] text-[var(--input-text)]",
 	"border border-[var(--input-border)] shadow-lg",
 ].join(" ");
 
-export const selectSearchWrapperClassName = "border-b border-b-[var(--input-border)] p-[0.333rem]";
+export const selectSearchWrapperClassName = "p-[0.333rem]";
 
-export const selectViewportClassName = "max-h-72 overflow-y-auto p-1";
+export const selectViewportClassName = "max-h-60 overflow-y-auto p-1";
 
 export const selectItemVariants = cva(
 	[
 		"select-item relative flex w-full min-w-0 cursor-pointer items-center gap-2 rounded-md outline-none select-none",
 		"px-2 py-[0.3rem] text-base",
-		"data-[highlighted]:bg-[var(--input-dropdown-bg-hover)]",
+		"hover:bg-[var(--nav-button-bg-hover)]",
 	],
 	{
 		variants: {
@@ -73,7 +73,7 @@ export const selectItemVariants = cva(
 				// it outranks a plain bg-[...] class on specificity alone — without
 				// this, hovering a selected item would show the hover color instead
 				// of the selected one.
-				true: "bg-[var(--input-dropdown-bg-active)]! font-semibold",
+				true: "bg-[var(--nav-button-bg-active)]! font-semibold",
 				false: "",
 			},
 			disabled: {
@@ -89,8 +89,8 @@ export const selectEmptyClassName = "px-2 py-4 text-center text-sm text-[var(--a
 
 export const selectTagClassName = [
 	"inline-flex max-w-full items-center gap-1 rounded-md",
-	"border-solid border border-[var(--input-tag-border)]",
-	"bg-[var(--input-tag-bg)] px-[0.3rem] py-[0.1rem]",
+	"border-solid border border-[var(--input-border-hover)]",
+	"bg-[var(--nav-button-bg-active)] px-[0.3rem] py-[0.1rem]",
 	"text-[0.6875rem] text-[var(--input-tag-text)]",
 ].join(" ");
 

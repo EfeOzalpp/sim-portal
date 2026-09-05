@@ -1,5 +1,5 @@
 export const modalBackdropClassName =
-	"fixed inset-0 z-[1000] grid box-border place-items-center overflow-auto bg-[var(--scrim)] p-6 overscroll-contain max-[768px]:items-end max-[768px]:p-0";
+	"fixed inset-0 z-[290] grid box-border place-items-center overflow-auto bg-[var(--scrim)] p-6 overscroll-contain max-[768px]:items-end max-[768px]:p-0";
 
 export const modalDialogClassName = [
 	"box-border flex max-h-[calc(100dvh-3rem)] flex-col overflow-hidden rounded-2xl border-solid border-[var(--app-border)]",

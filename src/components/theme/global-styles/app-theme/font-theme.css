@@ -22,7 +22,7 @@
   .ui-label {
     color: var(--app-muted);
     font-family: var(--font-sans);
-    font-size: 0.6875rem;
+    font-size: 0.8rem;
     font-weight: 600;
     line-height: 1.2;
     text-transform: uppercase;

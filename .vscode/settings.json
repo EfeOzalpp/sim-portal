@@ -1,3 +1,26 @@
 {
-	"prisma.pinToPrisma6": true
+	"prisma.pinToPrisma6": true,
+
+	// Tailwind v4 uses this project's CSS entry point as its config (no
+	// tailwind.config.js exists) - pointed explicitly since tailwind.css's
+	// split `@import "tailwindcss/theme.css" layer(theme); ...` isn't the
+	// standard single-line `@import "tailwindcss";` the extension's
+	// auto-detection expects.
+	"tailwindCSS.experimental.configFile": "src/components/theme/global-styles/tailwind.css",
+
+	// Widens class detection past plain className="..." strings so
+	// IntelliSense (autocomplete, hover previews, linting) reaches into the
+	// cva() variant definitions in components/{button,input,select,alert}/
+	// styles.ts, and into clsx()/cx() calls used to compose classes
+	// elsewhere. The cva pattern matches from `cva(` up to the line holding
+	// its options object (`, {`), covering the base class array; the second
+	// pattern covers clsx/cx calls generally. Both use a broad outer capture
+	// (values in this codebase often contain their own parens, e.g.
+	// `border-[var(--app-border)]`, which a naive `[^)]*` outer pattern
+	// would truncate at) and a separate inner pattern that pulls quoted
+	// strings out of whatever the outer one captured.
+	"tailwindCSS.experimental.classRegex": [
+		["cva\\(([\\s\\S]*?)\\)\\s*;", "[\"'`]([^\"'`]+)[\"'`]"],
+		["(?:clsx|cx)\\(([^;]*)\\)", "[\"'`]([^\"'`]+)[\"'`]"]
+	]
 }

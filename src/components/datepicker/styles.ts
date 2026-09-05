@@ -33,8 +33,7 @@ const RADIUS = 12;
 // proven safe to reference live below - it's consumed as a plain box-shadow,
 // never parsed as a color. Everything else stays a literal, hand-kept in
 // sync with the matching app token (named alongside each value below) -
-// this file won't notice if styling-theme.css/input-theme.css changes out
-// from under it.
+// this file won't notice if styling-theme.css changes out from under it.
 const lightValues: DatePickerThemeValues = {
 	background: "#ffffff", // = --input-bg
 	elevatedBackground: "#ffffff", // = --input-dropdown-bg

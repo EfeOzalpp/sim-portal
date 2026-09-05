@@ -6,33 +6,29 @@ export const buttonVariants = cva(
 		"rounded-md border border-solid",
 		"px-4 py-2",
 		"font-sans font-semibold no-underline",
-		"transition hover:brightness-95 active:brightness-90",
-		"focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--app-theme)]",
+		"hover:brightness-95 dark:hover:brightness-125 active:brightness-90 dark:active:brightness-150",
+		"focus-visible:outline-2 focus-visible:outline-offset-2",
+		"active:outline-2 active:outline-offset-2",
 		"disabled:cursor-not-allowed disabled:opacity-60 aria-disabled:cursor-not-allowed aria-disabled:opacity-60",
 	],
 	{
 		variants: {
 			variant: {
-				default: ["border-[var(--app-border)] bg-[var(--app-surface)] text-[var(--app-text)]"],
+				default: ["border-[var(--app-border)] bg-[var(--btn-default-bg)] text-[var(--app-text)]"],
 				nav: [
 					"btn-nav justify-start border-transparent bg-transparent px-0! font-normal",
 					"text-[var(--app-icon)] hover:bg-[var(--nav-button-bg-hover)]",
-					"aria-[current=page]:bg-[var(--input-dropdown-bg-active)] aria-[current=page]:font-semibold aria-[current=page]:text-black",
-					"dark:aria-[current=page]:text-white",
+					"aria-[current=page]:bg-[var(--nav-button-bg-active)] aria-[current=page]:font-semibold aria-[current=page]:text-[var(--app-text)]",
 				],
-				action: [
-					"btn-action border-[var(--app-border)] bg-[var(--app-surface)] text-[#000000]",
-					"dark:bg-[var(--app-subtle)] dark:text-[#ffffff]",
-				],
-				link: [
-					"btn-link rounded-full! border-[var(--app-border)] bg-[var(--app-surface)] text-[#000000]",
-					"dark:bg-[var(--app-subtle)] dark:text-[#ffffff]",
-				],
+				action: ["btn-action border-[var(--app-border)] bg-[var(--btn-default-bg)] text-[var(--app-text)]"],
+				link: ["btn-link rounded-full! border-[var(--app-border)] bg-[var(--btn-default-bg)] text-[var(--app-text)]"],
 			},
 			tone: {
-				default: "",
-				success: "tone-success border-[var(--tone-success-border)] bg-[var(--tone-success-bg)] text-[var(--tone-success-text)]",
-				danger: "tone-danger border-[var(--tone-danger-border)] bg-[var(--tone-danger-bg)] text-[var(--tone-danger-text)]",
+				default: "focus-visible:outline-[var(--app-theme)] active:outline-[var(--app-theme)]",
+				success:
+					"tone-success border-[var(--tone-success-border)] bg-[var(--tone-success-bg)] text-[var(--tone-success-text)] focus-visible:outline-[var(--tone-success-border)] active:outline-[var(--tone-success-border)]",
+				danger:
+					"tone-danger border-[var(--tone-danger-border)] bg-[var(--tone-danger-bg)] text-[var(--tone-danger-text)] focus-visible:outline-[var(--tone-danger-border)] active:outline-[var(--tone-danger-border)]",
 			},
 			fullWidth: {
 				true: "w-full",
