@@ -1,23 +1,28 @@
+// React & Next.js
 import { Metadata } from "next";
 import Script from "next/script";
 
-import { auth } from "@/authentication";
-
+// Global styles (side-effect only - order matters for cascade layers)
 import "@/components/theme/fonts/sour-gummy/sour-gummy.css";
 import "@/components/theme/global-styles/antd-reset.css";
 import "@/components/theme/global-styles/app-theme/styling-theme.css";
 import "@/components/theme/global-styles/app-theme/font-theme.css";
 import "@/components/theme/global-styles/app-theme/layout-theme.css";
-import "@/components/theme/global-styles/input-theme.css";
 import "@/components/theme/global-styles/tailwind.css";
 
+// Components
+import UserProfileContent from "@/components/domain/users/UserProfileContent";
+import { userProfileDialogClassName } from "@/components/domain/users/styles";
+
+// Composition
 import AccountModals from "@/app/layout-composition/AccountModals";
 import EditUserFormContent from "@/app/users/[id]/edit/EditUserFormContent";
 import NavBar from "@/app/layout-composition/NavBar";
 import ThemeSessionSync from "@/app/layout-composition/ThemeSessionSync";
-import UserProfileContent from "@/components/domain/users/UserProfileContent";
-import { userProfileDialogClassName } from "@/components/domain/users/styles";
 import styles from "@/app/layout.module.css";
+
+// Helpers
+import { auth } from "@/authentication";
 
 const appShellClassName =
 	"flex h-dvh min-h-0 flex-col overflow-hidden bg-[var(--app-bg)] text-[var(--app-text)] print:block! print:h-auto! print:overflow-visible!";
@@ -26,9 +31,12 @@ const appDividerClassName =
 	"flex min-h-0 flex-[1_1_auto] flex-col items-stretch overflow-hidden min-[769px]:flex-row print:block! print:h-auto! print:overflow-visible!";
 
 const navDividerClassName = [
-	"relative z-50 min-h-0 min-w-0 flex-none overflow-visible bg-[var(--app-surface)] overscroll-contain",
+	// z-[295]: above ModalPopup's scrim (z-[290], components/modal/styles.ts)
+	// so nav stays clickable over an open modal, but below Select's open
+	// dropdown (z-[300], components/select/styles.ts).
+	"relative z-[295] min-h-0 min-w-0 flex-none overflow-visible bg-[var(--app-surface)] overscroll-contain",
 	"w-full border-r-0 border-b-0 before:content-none print:hidden!",
-	"min-[769px]:z-20 min-[769px]:w-auto",
+	"min-[769px]:w-auto",
 	"min-[769px]:before:invisible min-[769px]:before:block min-[769px]:before:box-border",
 	"min-[769px]:before:min-w-[calc(var(--nav-rail-content-width)+1rem+1px)]",
 	"min-[769px]:before:whitespace-nowrap min-[769px]:before:border-r min-[769px]:before:border-transparent",
@@ -42,7 +50,7 @@ const contentDividerClassName =
 
 // Global metadata for the application
 export const metadata: Metadata = {
-	title: "SIM App",
+	title: "Studio for Interrelated Media",
 	description: "Studio for Interrelated Media",
 };
 
@@ -69,6 +77,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
 	return (
 		<html lang="en" data-theme="light" className="h-full overflow-hidden print:h-auto print:overflow-visible" suppressHydrationWarning>
+			{/* icon.tsx supplies the plain, unconditional favicon (light mode and any
+			    browser that doesn't support this at all); this one only kicks in for
+			    browsers/OS combos actually reporting a dark preference. */}
+			<link rel="icon" href="/icon-dark.png" media="(prefers-color-scheme: dark)" />
 			<body className="m-0 h-full overflow-hidden print:h-auto print:overflow-visible">
 				<Script
 					id="theme-init"

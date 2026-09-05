@@ -17,7 +17,7 @@
 	align-items: stretch;
 	gap: 1rem;
 	min-height: 100%;
-	padding: var(--nav-content-padding-y, 1rem) var(--nav-content-padding-x, 1rem);
+	padding: 0.5rem;
 }
 
 .start {
@@ -39,7 +39,7 @@
 }
 
 .end:has(.navSection) {
-	margin-block-start: calc(var(--nav-content-padding-y, 1rem) * -1);
+	margin-block-start: -0.5rem;
 }
 
 .end > * {
@@ -59,9 +59,9 @@
 	flex-direction: column;
 	align-items: stretch;
 	gap: 1rem;
-	inline-size: calc(100% + (var(--nav-content-padding-x, 1rem) * 2));
-	margin-inline: calc(var(--nav-content-padding-x, 1rem) * -1);
-	padding: 1rem var(--nav-content-padding-x, 1rem);
+	inline-size: calc(100% + 1rem);
+	margin-inline: -0.5rem;
+	padding: 0.75rem;
 	box-sizing: border-box;
 }
 
@@ -69,6 +69,9 @@
 	padding-block-start: calc(1.5rem * 2);
 }
 
+.navSection:not(:first-child) {
+   padding-top: 2rem;
+}
 .navSection::before,
 .navSection::after {
 	content: "";
@@ -99,7 +102,7 @@
 }
 
 .navSection:not(:last-child) {
-	margin-bottom: 1rem;
+	padding-bottom: 1rem;
 }
 
 .navSectionControls {
@@ -108,6 +111,11 @@
 	align-items: stretch;
 	gap: 1rem;
 	min-width: 0;
+}
+
+/* Tighter spacing specifically for the manage-buttons list, not filter fields. */
+.navSectionControlsManage {
+	gap: 0.5rem;
 }
 
 .navSectionControls > *,

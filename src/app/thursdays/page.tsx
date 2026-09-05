@@ -1,28 +1,43 @@
+// React & Next.js
 import { Suspense } from "react";
+
+// Actions
+import { getFilteredThursdays } from "@/actions/thursdays";
+import { getAllSemesters } from "@/actions/semesters";
+
+// Components
 import { Button } from "@/components/button";
 import NavContent from "@/components/layout/NavContent";
 import PageTitle from "@/components/layout/PageTitle";
-import { getFilteredThursdays } from "@/actions/thursdays";
-import { getAllSemesters } from "@/actions/semesters";
-import { auth } from "@/authentication";
 import { FilterInput } from "@/components/primitives/Filters";
 import SemesterFilterSelect from "@/components/domain/semesters/SemesterFilterSelect";
-import ThursdayCard from "@/app/thursdays/composition/ThursdayCard";
 import { ActionModeButton, ActionModeSurface } from "@/components/layout/ActionMode";
-import { formatSemesterCode, getSelectedSemester, getSelectedSemesterId, isAllSemestersValue } from "@/components/domain/semesters/semester-filter";
 import RouteModalPopup from "@/components/modal/RouteModalPopup";
 import ThursdayDetailContent, { thursdayDetailDialogClassName } from "@/components/domain/thursdays/ThursdayDetailContent";
 import PersonProfileModal from "@/components/domain/users/PersonProfileModal";
+import { confirmDeleteDialogClassName } from "@/components/confirm-delete/styles";
+
+// Composition
+import ThursdayCard from "@/app/thursdays/composition/ThursdayCard";
 import AddThursdayFormContent from "@/app/thursdays/add/AddThursdayFormContent";
 import EditThursdayFormContent from "@/app/thursdays/[id]/edit/EditThursdayFormContent";
 import ThursdayDeleteConfirmContent from "@/app/thursdays/composition/ThursdayDeleteConfirmContent";
-import { confirmDeleteDialogClassName } from "@/components/confirm-delete/styles";
+
+// Helpers
+import { ALL_SEMESTERS_VALUE, formatSemesterCode, getSelectedSemester, getSelectedSemesterId, isAllSemestersValue } from "@/components/domain/semesters/semester-filter";
+import { ACTION_MODES } from "@/constants/action-modes";
+import { THURSDAY_MODAL_PARAMS, USER_MODAL_PARAMS, type ThursdayModalParam } from "@/constants/modal-params";
+import { isAdminRole } from "@/constants/roles";
+import { auth } from "@/authentication";
 
 interface ThursdaysProps {
 	searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
-const thursdayModalParams = new Set(["addThursday", "thursdayId", "profileUserId", "editThursdayId", "deleteThursdayId"]);
+const thursdayModalParams = new Set<string>([
+  ...Object.values(THURSDAY_MODAL_PARAMS),
+  USER_MODAL_PARAMS.profile,
+]);
 
 function getSingleParam(value: string | string[] | undefined) {
   return Array.isArray(value) ? value[0] : value;
@@ -30,7 +45,7 @@ function getSingleParam(value: string | string[] | undefined) {
 
 function getThursdaysModalHref(
   filters: { [key: string]: string | string[] | undefined },
-  modalParam: "addThursday" | "thursdayId" | "profileUserId" | "editThursdayId" | "deleteThursdayId",
+  modalParam: ThursdayModalParam | typeof USER_MODAL_PARAMS.profile,
   value: string,
 ) {
   const params = new URLSearchParams();
@@ -94,7 +109,7 @@ async function ThursdaysList({
   }
 
   return (
-    <div className="grid gap-4 px-2 pb-6">
+    <div className="grid gap-4">
       {thursdays.map((thursday: any) => (
         <ThursdayCard key={thursday.id} thursday={thursday} isAdmin={isAdmin} />
       ))}
@@ -107,17 +122,17 @@ export default async function Thursdays({ searchParams }: ThursdaysProps) {
   const semestersResult = await getAllSemesters();
   const semesters = semestersResult.success ? semestersResult.data : [];
   const session = await auth();
-  const isAdmin = session?.user?.role === "ADMIN";
+  const isAdmin = isAdminRole(session?.user?.role);
 
   const selectedSemesterId = getSelectedSemesterId(filters, semesters);
   const selectedSemester = getSelectedSemester(filters, semesters);
   const semesterCode = formatSemesterCode(selectedSemester?.name || selectedSemesterId);
-  const currentFilterLabel = isAllSemestersValue(selectedSemesterId) ? "All" : semesterCode;
-  const addThursday = getSingleParam(filters.addThursday);
-  const thursdayId = getSingleParam(filters.thursdayId);
-  const profileUserId = getSingleParam(filters.profileUserId);
-  const editThursdayId = getSingleParam(filters.editThursdayId);
-  const deleteThursdayId = getSingleParam(filters.deleteThursdayId);
+  const currentFilterLabel = isAllSemestersValue(selectedSemesterId) ? ALL_SEMESTERS_VALUE : semesterCode;
+  const addThursday = getSingleParam(filters[THURSDAY_MODAL_PARAMS.add]);
+  const thursdayId = getSingleParam(filters[THURSDAY_MODAL_PARAMS.view]);
+  const profileUserId = getSingleParam(filters[USER_MODAL_PARAMS.profile]);
+  const editThursdayId = getSingleParam(filters[THURSDAY_MODAL_PARAMS.edit]);
+  const deleteThursdayId = getSingleParam(filters[THURSDAY_MODAL_PARAMS.delete]);
   const thursdaysReturnHref = getThursdaysReturnHref(filters);
 
   return (
@@ -135,11 +150,11 @@ export default async function Thursdays({ searchParams }: ThursdaysProps) {
           manageContent={
             isAdmin ? (
               <>
-                <Button href={getThursdaysModalHref(filters, "addThursday", "1")} variant="action">Add Thursday</Button>
-                <ActionModeButton type="button" variant="action" mode="edit-thursdays">
+                <Button href={getThursdaysModalHref(filters, THURSDAY_MODAL_PARAMS.add, "1")} variant="action">Add Thursday</Button>
+                <ActionModeButton type="button" variant="action" mode={ACTION_MODES.editThursdays}>
                   Edit Thursdays
                 </ActionModeButton>
-                <ActionModeButton type="button" variant="action" mode="delete-thursdays">
+                <ActionModeButton type="button" variant="action" mode={ACTION_MODES.deleteThursdays}>
                   Delete Thursdays
                 </ActionModeButton>
               </>
@@ -149,29 +164,31 @@ export default async function Thursdays({ searchParams }: ThursdaysProps) {
           mobileManageContent={
             isAdmin ? (
               <>
-                <Button href={getThursdaysModalHref(filters, "addThursday", "1")} variant="action">Add</Button>
-                <ActionModeButton type="button" variant="action" mode="edit-thursdays">
+                <Button href={getThursdaysModalHref(filters, THURSDAY_MODAL_PARAMS.add, "1")} variant="action">Add</Button>
+                <ActionModeButton type="button" variant="action" mode={ACTION_MODES.editThursdays}>
                   Edit
                 </ActionModeButton>
-                <ActionModeButton type="button" variant="action" mode="delete-thursdays">
+                <ActionModeButton type="button" variant="action" mode={ACTION_MODES.deleteThursdays}>
                   Del
                 </ActionModeButton>
               </>
             ) : null
           }
         />
-        <Suspense
-          fallback={<div style={{ opacity: 0.5, padding: "1rem", background: "transparent" }}>Loading days...</div>}
-        >
-          <ThursdaysList filters={filters} isAdmin={isAdmin} semesters={semesters} />
-        </Suspense>
+        <div className="px-3 pb-3">
+          <Suspense
+            fallback={<div style={{ opacity: 0.5, padding: "1rem", background: "transparent" }}>Loading days...</div>}
+          >
+            <ThursdaysList filters={filters} isAdmin={isAdmin} semesters={semesters} />
+          </Suspense>
+        </div>
         {profileUserId && (
           <PersonProfileModal key={profileUserId} profileUserId={profileUserId} />
         )}
         {addThursday && !thursdayId && !profileUserId && !editThursdayId && !deleteThursdayId && (
           <RouteModalPopup
             key="add-thursday"
-            paramName="addThursday"
+            paramName={THURSDAY_MODAL_PARAMS.add}
             title="Add Thursday"
             dialogClassName={thursdayDetailDialogClassName}
           >
@@ -181,7 +198,7 @@ export default async function Thursdays({ searchParams }: ThursdaysProps) {
         {editThursdayId && !addThursday && !thursdayId && !profileUserId && !deleteThursdayId && (
           <RouteModalPopup
             key={editThursdayId}
-            paramName="editThursdayId"
+            paramName={THURSDAY_MODAL_PARAMS.edit}
             title="Edit Thursday"
             dialogClassName={thursdayDetailDialogClassName}
           >
@@ -191,7 +208,7 @@ export default async function Thursdays({ searchParams }: ThursdaysProps) {
         {deleteThursdayId && !addThursday && !thursdayId && !profileUserId && !editThursdayId && (
           <RouteModalPopup
             key={deleteThursdayId}
-            paramName="deleteThursdayId"
+            paramName={THURSDAY_MODAL_PARAMS.delete}
             title="Delete Thursday"
             dialogClassName={confirmDeleteDialogClassName}
           >
@@ -204,7 +221,7 @@ export default async function Thursdays({ searchParams }: ThursdaysProps) {
         {thursdayId && !addThursday && !editThursdayId && !deleteThursdayId && (
           <RouteModalPopup
             key={thursdayId}
-            paramName="thursdayId"
+            paramName={THURSDAY_MODAL_PARAMS.view}
             title="Thursday"
             dialogClassName={thursdayDetailDialogClassName}
           >

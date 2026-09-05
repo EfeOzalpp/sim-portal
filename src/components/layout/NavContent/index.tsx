@@ -52,7 +52,7 @@ export default function NavContent({
 			{manageContent && (
 				<div className={styles.navSection}>
 					<span className="ui-label">{manageLabel}</span>
-					<div className={styles.navSectionControls}>{manageContent}</div>
+					<div className={clsx(styles.navSectionControls, styles.navSectionControlsManage)}>{manageContent}</div>
 				</div>
 			)}
 			{printContent && (

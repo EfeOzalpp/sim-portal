@@ -1,10 +1,19 @@
 "use client";
 
+// React & Next.js
 import { MouseEvent, useEffect, useRef, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import type { User } from "@prisma/client";
+
+// Components
 import { useActionMode } from "@/components/layout/ActionMode";
+
+// Composition
 import UserCard from "@/app/users/composition/UserCard";
+
+// Helpers
+import { ACTION_MODES } from "@/constants/action-modes";
+import { USER_MODAL_PARAMS, type UserModalParam } from "@/constants/modal-params";
+import type { User } from "@prisma/client";
 
 interface UserCardGridProps {
 	users: Pick<User, "id" | "name" | "image" | "role">[];
@@ -14,7 +23,7 @@ interface UserCardGridProps {
 // <Image>s that can trigger Next's image optimizer at once) bounded
 // regardless of how large the roster grows, instead of mounting every card
 // up front.
-const BATCH_SIZE = 24;
+const BATCH_SIZE = 30;
 
 export default function UserCardGrid({ users }: UserCardGridProps) {
 	const { activeMode } = useActionMode();
@@ -62,11 +71,11 @@ export default function UserCardGrid({ users }: UserCardGridProps) {
 		return () => window.removeEventListener("beforeprint", handleBeforePrint);
 	}, [users.length]);
 
-	function openUserModal(userId: string, modalParam: "editUserId" | "profileUserId" | "deleteUserId") {
+	function openUserModal(userId: string, modalParam: UserModalParam) {
 		const params = new URLSearchParams(searchParams.toString());
-		params.delete("editUserId");
-		params.delete("profileUserId");
-		params.delete("deleteUserId");
+		params.delete(USER_MODAL_PARAMS.edit);
+		params.delete(USER_MODAL_PARAMS.profile);
+		params.delete(USER_MODAL_PARAMS.delete);
 		params.set(modalParam, userId);
 		router.push(`${pathname}?${params.toString()}`, { scroll: false });
 	}
@@ -75,21 +84,21 @@ export default function UserCardGrid({ users }: UserCardGridProps) {
 
 	return (
 		<>
-			<div className="grid grid-cols-[repeat(auto-fill,minmax(10rem,1fr))] justify-center gap-2 bg-[var(--app-surface)] px-2 pb-6 [&>*]:min-w-0 [&>*]:w-full [&>*]:rounded-xl [&>*]:border-solid [&>*]:border-[var(--app-border)] [&>*]:bg-[var(--app-card-bg)] [&>*]:border print:grid-cols-[repeat(10,minmax(0,1fr))] print:justify-stretch print:gap-[0.06in] print:bg-white print:p-0 print:text-black print:[&>*]:break-inside-avoid print:[&>*]:border-[#ccc]! print:[&>*]:bg-white! print:[&>*]:[page-break-inside:avoid] print:[&_a]:text-inherit print:[&_a]:no-underline">
+			<div className="grid grid-cols-[repeat(auto-fill,minmax(10rem,1fr))] justify-center gap-2 bg-[var(--app-surface)] [&>*]:min-w-0 [&>*]:w-full [&>*]:rounded-xl [&>*]:border-solid [&>*]:border-[var(--app-border)] [&>*]:bg-[var(--app-card-bg)] [&>*]:border print:grid-cols-[repeat(10,minmax(0,1fr))] print:justify-stretch print:gap-[0.06in] print:bg-white print:text-black print:[&>*]:break-inside-avoid print:[&>*]:border-[#ccc]! print:[&>*]:bg-white! print:[&>*]:[page-break-inside:avoid] print:[&_a]:text-inherit print:[&_a]:no-underline">
 				{visibleUsers.map((user) => (
 					<UserCard
 						key={user.id}
 						user={user}
 						onClick={(event: MouseEvent<HTMLAnchorElement>) => {
-							if (activeMode === "edit-users") {
+							if (activeMode === ACTION_MODES.editUsers) {
 								event.preventDefault();
-								openUserModal(user.id, "editUserId");
+								openUserModal(user.id, USER_MODAL_PARAMS.edit);
 								return;
 							}
 
-							if (activeMode === "delete-users") {
+							if (activeMode === ACTION_MODES.deleteUsers) {
 								event.preventDefault();
-								openUserModal(user.id, "deleteUserId");
+								openUserModal(user.id, USER_MODAL_PARAMS.delete);
 								return;
 							}
 
@@ -101,7 +110,7 @@ export default function UserCardGrid({ users }: UserCardGridProps) {
 								!event.altKey
 							) {
 								event.preventDefault();
-								openUserModal(user.id, "profileUserId");
+								openUserModal(user.id, USER_MODAL_PARAMS.profile);
 							}
 						}}
 					/>
