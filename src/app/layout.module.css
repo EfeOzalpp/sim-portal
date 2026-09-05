@@ -24,17 +24,17 @@
 	grid-column: 1;
 	grid-row: 1 / -1;
 	align-self: start;
-	z-index: auto;
+	/* Above the app-shell nav rail (z-[295], layout.tsx), which is
+	   position:absolute and grows past its own track on hover - otherwise it
+	   visually covers this bar (and the action-mode trigger button inside it)
+	   even before any action mode is active. */
+	z-index: 296;
 	block-size: 100dvh;
 	max-block-size: 100dvh;
 	min-height: 0;
 }
 
 .contentDivider > [data-page-content][data-action-mode-active="true"] > [data-content-nav] {
-	/* Above the app-shell nav rail (z-[295], layout.tsx) - otherwise the rail's
-	   own stacking context caps this ancestor at 35, and no z-index on the
-	   action button nested inside it could ever escape that ceiling. */
-	z-index: 298;
 	border-right-color: color-mix(in srgb, var(--app-border) 50%, #000000);
 }
 
