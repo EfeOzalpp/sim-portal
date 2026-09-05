@@ -1,8 +1,9 @@
 import { auth } from "@/authentication";
+import { isAdminRole } from "@/constants/roles";
 
 export default async function IndividualLayout({ children }: { children: React.ReactNode }) {
 	const session = await auth();
-	const isAdmin = session?.user?.role === "ADMIN";
+	const isAdmin = isAdminRole(session?.user?.role);
 
 	if (isAdmin) {
 		return <>{children}</>;

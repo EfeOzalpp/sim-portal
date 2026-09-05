@@ -1,20 +1,7 @@
 import { UserInput } from "@/actions/schemas";
 import { parseUserLinks } from "@/actions/user-links";
-
-function formatSemesterCode(name?: string | null) {
-  if (!name) return "";
-
-  const code = name.match(/^(SP|FA)\d{2}$/i);
-  if (code) return name.toUpperCase();
-
-  const namedSemester = name.match(/^(Spring|Fall)\s+(\d{4})$/i);
-  if (namedSemester) {
-    const term = namedSemester[1].toLowerCase() === "spring" ? "SP" : "FA";
-    return `${term}${namedSemester[2].slice(-2)}`;
-  }
-
-  return name;
-}
+import { formatSemesterCode } from "@/components/domain/semesters/semester-filter";
+import { ROLES } from "@/constants/roles";
 
 export const transformUserFromAPI = (user: any): UserInput | null => {
   if (!user) return null;
@@ -29,7 +16,7 @@ export const transformUserFromAPI = (user: any): UserInput | null => {
     link: user.link || "",
     links: parseUserLinks(user.link),
     about: user.about || "",
-    role: user.role || "STUDENT",
+    role: user.role || ROLES.student,
     semesterIds,
     semesterCodes: user.semesters?.map((s: any) => formatSemesterCode(s.name)).filter(Boolean) || [],
   };

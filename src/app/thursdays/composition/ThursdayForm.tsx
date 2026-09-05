@@ -1,22 +1,31 @@
 "use client";
 
+// React & Next.js
 import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { Alert } from "@/components/alert";
-import { Button } from "@/components/button";
-import {
-  transformThursdayFromAPI,
-  transformThursdayPayload,
-} from "@/app/thursdays/composition/thursday.transformers";
-import ThursdaySection from "@/app/thursdays/composition/ThursdaySection";
-import ProductionsSection from "@/app/thursdays/composition/ProductionsSection";
-import { handleFormAction } from "@/helpers";
+
+// Actions
 import {
   BasicUser,
   ProductionInput,
   ThursdayInput,
 } from "@/actions/schemas";
 import { ActionResult } from "@/actions/utilities";
+
+// Components
+import { Alert } from "@/components/alert";
+import { Button } from "@/components/button";
+
+// Composition
+import {
+  transformThursdayFromAPI,
+  transformThursdayPayload,
+} from "@/app/thursdays/composition/thursday.transformers";
+import ThursdaySection from "@/app/thursdays/composition/ThursdaySection";
+import ProductionsSection from "@/app/thursdays/composition/ProductionsSection";
+
+// Helpers
+import { useForm } from "react-hook-form";
+import { handleFormAction } from "@/helpers";
 
 interface ThursdayFormValues extends Omit<ThursdayInput, "date"> {
   productions: ProductionInput[];

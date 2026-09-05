@@ -1,12 +1,16 @@
 "use server";
 
+// React & Next.js
 import { revalidatePath, unstable_noStore as noStore } from "next/cache";
 
-import { prisma } from "@/database";
-
+// Actions
 import { ensureAdmin } from "@/actions/auth";
 import { getAllSemesters as getAllSemestersUtil, action } from "@/actions/utilities";
 import { PresentationSchema, PresentationInput } from "@/actions/schemas";
+
+// Helpers
+import { prisma } from "@/database";
+import { isAllSemestersValue } from "@/constants/filters";
 
 export async function getAllSemesters() {
 	return await getAllSemestersUtil();
@@ -56,7 +60,7 @@ export async function getFilteredPresentations(filters: PresentationFilters) {
 			if (semesters.length > 0) {
 				defaultSemester = { production: { thursday: { semester: { id: semesters[0].id } } } };
 			}
-		} else if (filters.semester !== "All") {
+		} else if (!isAllSemestersValue(filters.semester)) {
 			defaultSemester = { production: { thursday: { semester: { name: { contains: filters.semester } } } } };
 		}
 

@@ -1,9 +1,9 @@
 "use server";
 
+// React & Next.js
 import { revalidatePath, unstable_noStore as noStore } from "next/cache";
 
-import { prisma } from "@/database";
-
+// Actions
 import { ensureAdmin, getAuthSession } from "@/actions/auth";
 import {
 	getAllSemesters as getAllSemestersUtil,
@@ -15,25 +15,18 @@ import {
 import { UserSchema, UserInput, FilterSchema, FilterInputValues } from "@/actions/schemas";
 import { serializeUserLinks } from "@/actions/user-links";
 import { deleteStoredUserImage, storeUserImage } from "@/actions/user-image-storage";
+
+// Helpers
+import { prisma } from "@/database";
+import { isAllSemestersValue } from "@/constants/filters";
+import { normalizeSemesterCode } from "@/components/domain/semesters/semester-filter";
+import { ROLES } from "@/constants/roles";
 import { Prisma } from "@prisma/client";
 
-function normalizeSemesterCode(value?: string | null) {
-	if (!value) return null;
-
-	const code = value.match(/^(SP|FA)\d{2}$/i);
-	if (code) return value.toUpperCase();
-
-	const namedSemester = value.match(/^(Spring|Fall)\s+(\d{4})$/i);
-	if (namedSemester) {
-		const term = namedSemester[1].toLowerCase() === "spring" ? "SP" : "FA";
-		return `${term}${namedSemester[2].slice(-2)}`;
-	}
-
-	return null;
-}
-
+// "__all__" is kept as a legacy fallback for any old saved/bookmarked
+// filter links from before this used the shared sentinel.
 function isAllFilter(value?: string) {
-	return value === "All" || value === "__all__";
+	return isAllSemestersValue(value) || value === "__all__";
 }
 
 function getSemesterYear(code: string) {
@@ -150,7 +143,7 @@ export async function getUser(id: string) {
 export async function getAllUsers() {
 	return await action(async () => {
 		return await prisma.user.findMany({
-			where: { role: { not: "STAFF" } },
+			where: { role: { not: ROLES.staff } },
 			select: {
 				id: true,
 				name: true,

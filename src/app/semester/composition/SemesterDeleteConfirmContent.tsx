@@ -1,6 +1,11 @@
+// React & Next.js
 import { notFound, redirect } from "next/navigation";
+
+// Actions
 import { getAuthSession } from "@/actions/auth";
 import { getSemester, removeSemester } from "@/actions/semesters";
+
+// Components
 import ConfirmDelete from "@/components/confirm-delete";
 
 interface SemesterDeleteConfirmContentProps {

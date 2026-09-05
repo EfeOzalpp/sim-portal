@@ -1,8 +1,12 @@
-import Block from "@/components/primitives/Block";
+// React & Next.js
 import Image from "next/image";
 import type { MouseEventHandler } from "react";
-import { normalizeFaceImagePath } from "@/helpers";
 
+// Components
+import Block from "@/components/primitives/Block";
+
+// Helpers
+import { normalizeFaceImagePath } from "@/helpers";
 import type { User } from "@prisma/client";
 
 interface UserCardProps {

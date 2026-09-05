@@ -1,9 +1,9 @@
 "use server";
 
+// React & Next.js
 import { revalidatePath, unstable_noStore as noStore } from "next/cache";
 
-import { prisma } from "@/database";
-
+// Actions
 import { ensureAdmin } from "@/actions/auth";
 import {
 	generateSemesterThursdays,
@@ -16,6 +16,11 @@ import {
 	action,
 } from "@/actions/utilities";
 import { SemesterSchema, SemesterInput, FilterSchema } from "@/actions/schemas";
+
+// Helpers
+import { prisma } from "@/database";
+import { isAllSemestersValue } from "@/constants/filters";
+import { ROLES } from "@/constants/roles";
 
 const gradeValues = new Set(["P", "NC", "INC", "W"]);
 
@@ -49,7 +54,7 @@ export async function getSemester(id: string) {
 export async function getSemesterFromName(name?: string) {
 	return await action(async () => {
 		let semesterName = name;
-		if (semesterName === "All") {
+		if (isAllSemestersValue(semesterName)) {
 			semesterName = "";
 		}
 
@@ -104,7 +109,7 @@ export async function getIndividualSemesterData(semesterId: string, rawFilters: 
 		const validation = FilterSchema.safeParse(rawFilters);
 		const filters = validation.success ? validation.data : {};
 		const userSearch = Array.isArray(filters.user) ? filters.user[0] : (filters.user || "");
-		const isAllSemesters = semesterId === "All";
+		const isAllSemesters = isAllSemestersValue(semesterId);
 
 		const semester = isAllSemesters
 			? null
@@ -182,7 +187,7 @@ export async function getIndividualSemesterData(semesterId: string, rawFilters: 
 			where: {
 				...(isAllSemesters ? {} : { semesters: { some: { id: semesterId } } }),
 				...userSearchWhere,
-				role: { not: "STAFF" },
+				role: { not: ROLES.staff },
 			},
 			orderBy: { name: "asc" },
 			select: {

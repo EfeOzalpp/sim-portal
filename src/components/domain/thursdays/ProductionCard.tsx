@@ -1,5 +1,6 @@
 import PersonLink from "@/components/domain/users/PersonLink";
 import PresentationCard from "@/components/domain/thursdays/PresentationCard";
+import { isAdminRole } from "@/constants/roles";
 
 interface ProductionCardProps {
   thursday: any;
@@ -33,10 +34,10 @@ export default async function ProductionCard({
   isAdmin = false,
 }: ProductionCardProps) {
   const producers = production.producers.filter(
-    (user: any) => user.role !== "ADMIN",
+    (user: any) => !isAdminRole(user.role),
   );
   const faculty = production.producers.filter(
-    (user: any) => user.role === "ADMIN",
+    (user: any) => isAdminRole(user.role),
   );
   const formattedDate = new Date(thursday.date).toLocaleDateString("en-US", {
     month: "short",

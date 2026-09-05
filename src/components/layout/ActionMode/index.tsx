@@ -4,10 +4,11 @@ import clsx from "clsx";
 import { createContext, ReactNode, useContext, useMemo, useState } from "react";
 import { Button, NativeButtonProps } from "@/components/button";
 import styles from "@/components/layout/ActionMode/ActionMode.module.css";
+import { ACTION_MODES, DELETE_ACTION_MODES, type ActionMode } from "@/constants/action-modes";
 
 interface ActionModeContextValue {
-	activeMode: string | null;
-	setActiveMode: (mode: string | null) => void;
+	activeMode: ActionMode | null;
+	setActiveMode: (mode: ActionMode | null) => void;
 }
 
 const ActionModeContext = createContext<ActionModeContextValue | null>(null);
@@ -31,7 +32,7 @@ interface ActionModeSurfaceProps {
 }
 
 export function ActionModeSurface({ children }: ActionModeSurfaceProps) {
-	const [activeMode, setActiveMode] = useState<string | null>(null);
+	const [activeMode, setActiveMode] = useState<ActionMode | null>(null);
 	const contextValue = useMemo(() => ({ activeMode, setActiveMode }), [activeMode]);
 
 	return (
@@ -52,13 +53,13 @@ export function ActionModeSurface({ children }: ActionModeSurfaceProps) {
 
 					const clickedActiveButton = event.target.closest(`[data-action-mode-button="${activeMode}"]`);
 					const clickedModeTarget =
-						((activeMode === "edit-users" || activeMode === "delete-users") &&
+						((activeMode === ACTION_MODES.editUsers || activeMode === ACTION_MODES.deleteUsers) &&
 							event.target.closest('[data-action-mode-target="user-card"]')) ||
-						((activeMode === "edit-thursdays" || activeMode === "delete-thursdays") &&
+						((activeMode === ACTION_MODES.editThursdays || activeMode === ACTION_MODES.deleteThursdays) &&
 							event.target.closest('[data-action-mode-target="thursday-card"]')) ||
-						((activeMode === "edit-semesters" || activeMode === "delete-semesters") &&
+						((activeMode === ACTION_MODES.editSemesters || activeMode === ACTION_MODES.deleteSemesters) &&
 							event.target.closest('[data-action-mode-target="semester-card"]')) ||
-						(activeMode === "edit-grades" &&
+						(activeMode === ACTION_MODES.editGrades &&
 							event.target.closest('[data-action-mode-target="grade-cell"]'));
 
 					if (clickedModeTarget) {
@@ -90,7 +91,7 @@ export function ActionModeSurface({ children }: ActionModeSurfaceProps) {
 // call site is a plain type="button", never an href link, and that union
 // otherwise doesn't play well with spreading unknown rest props onto <Button>.
 interface ActionModeButtonProps extends Omit<NativeButtonProps, "onClick"> {
-	mode: string;
+	mode: ActionMode;
 	onClick?: NativeButtonProps["onClick"];
 }
 
@@ -99,10 +100,12 @@ export function ActionModeButton({
 	children,
 	className,
 	onClick,
+	tone,
 	...props
 }: ActionModeButtonProps) {
 	const { activeMode, setActiveMode } = useActionModeContext();
 	const isActive = activeMode === mode;
+	const isDelete = DELETE_ACTION_MODES.includes(mode);
 
 	return (
 		<span
@@ -112,7 +115,18 @@ export function ActionModeButton({
 		>
 			<Button
 				{...props}
-				className={clsx(className, styles.actionButton)}
+				tone={tone ?? (isActive && isDelete ? "danger" : "default")}
+				className={clsx(
+					className,
+					styles.actionButton,
+					// Signals "this button is destructive" on the ring regardless of
+					// whether delete-mode is currently toggled on - unlike `tone`
+					// above, which only turns the rest of the button red once active.
+					// Same value tone="danger" would already set once isActive is
+					// true, so this is a no-op then, not a conflict - just makes the
+					// warning visible on focus/press even before you've clicked in.
+					isDelete && "focus-visible:outline-[var(--tone-danger-border)]! active:outline-[var(--tone-danger-border)]!",
+				)}
 				aria-pressed={isActive}
 				onClick={(event) => {
 					onClick?.(event);
@@ -124,10 +138,7 @@ export function ActionModeButton({
 			>
 					<span className={styles.actionButtonContent}>
 						<span
-							className={clsx(
-								styles.actionButtonIcon,
-								mode === "delete-users" || mode === "delete-thursdays" || mode === "delete-semesters" ? styles.deleteIcon : styles.editIcon,
-							)}
+							className={clsx(styles.actionButtonIcon, isDelete ? styles.deleteIcon : styles.editIcon)}
 							aria-hidden="true"
 						/>
 						<span className={styles.actionButtonText}>{children}</span>

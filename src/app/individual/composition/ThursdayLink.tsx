@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import type { ReactNode } from "react";
+import { THURSDAY_MODAL_PARAMS } from "@/constants/modal-params";
 
 type ThursdayLinkProps = {
 	thursdayId: string;
@@ -15,8 +16,8 @@ export default function ThursdayLink({ thursdayId, children, className }: Thursd
 	const searchParams = useSearchParams();
 
 	const params = new URLSearchParams(searchParams.toString());
-	params.delete("thursdayId");
-	params.set("thursdayId", thursdayId);
+	params.delete(THURSDAY_MODAL_PARAMS.view);
+	params.set(THURSDAY_MODAL_PARAMS.view, thursdayId);
 
 	return (
 		<Link href={`${pathname}?${params.toString()}`} className={className}>

@@ -3,6 +3,7 @@ import styles from "@/app/layout-composition/NavBar/NavBar.module.css";
 
 import { auth } from "@/authentication";
 import { Session } from "next-auth";
+import { isAdminRole } from "@/constants/roles";
 
 // primitive
 import Button from "@/components/button";
@@ -29,7 +30,7 @@ export default async function NavBar({ session: initialSession }: NavBarProps) {
 		return null;
 	}
 
-	const isAdmin = session.user?.role === "ADMIN";
+	const isAdmin = isAdminRole(session.user?.role);
 
 	return (
 		<>
@@ -42,8 +43,6 @@ export default async function NavBar({ session: initialSession }: NavBarProps) {
 						<AdminOnly>
 							<NavButtonLink href="/individual" label="Individual" iconClassName={styles.individualIcon} />
 						</AdminOnly>
-					</div>
-					<div className={clsx(styles.navButtonList, "mt-4 border-t border-t-[var(--app-border)] pt-4")}>
 						<NavButtonLink href="/thursdays" label="Thursdays" iconClassName={styles.thursdayIcon} />
 						<AdminOnly>
 							<NavButtonLink href="/semester" label="Semesters" iconClassName={styles.listIcon} />

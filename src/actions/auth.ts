@@ -2,6 +2,7 @@
 
 import { auth, signIn, signOut } from "@/authentication";
 import { prisma } from "@/database";
+import { isAdminRole } from "@/constants/roles";
 
 export async function logIn() {
 	await signIn("google");
@@ -16,7 +17,7 @@ export async function getAuthSession() {
 	return {
 		session,
 		user: session?.user ?? null,
-		isAdmin: session?.user?.role === "ADMIN"
+		isAdmin: isAdminRole(session?.user?.role)
 	};
 }
 

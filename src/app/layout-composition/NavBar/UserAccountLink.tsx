@@ -5,6 +5,7 @@ import clsx from "clsx";
 import { usePathname, useSearchParams } from "next/navigation";
 import type { Session } from "next-auth";
 import styles from "@/app/layout-composition/NavBar/UserAccountLink.module.css";
+import { ACCOUNT_MODAL_PARAMS, USER_MODAL_PARAMS } from "@/constants/modal-params";
 
 interface UserAccountLinkProps {
 	user: Session["user"];
@@ -33,16 +34,16 @@ function formatRole(role?: string) {
 function getAccountProfileHref(pathname: string, searchParams: URLSearchParams) {
 	const params = new URLSearchParams(searchParams.toString());
 	const modalParams = [
-		"accountProfile",
-		"accountEdit",
-		"addUser",
-		"editUserId",
-		"profileUserId",
-		"deleteUserId",
+		ACCOUNT_MODAL_PARAMS.profile,
+		ACCOUNT_MODAL_PARAMS.edit,
+		USER_MODAL_PARAMS.add,
+		USER_MODAL_PARAMS.edit,
+		USER_MODAL_PARAMS.profile,
+		USER_MODAL_PARAMS.delete,
 	];
 
 	modalParams.forEach((param) => params.delete(param));
-	params.set("accountProfile", "1");
+	params.set(ACCOUNT_MODAL_PARAMS.profile, "1");
 
 	const query = params.toString();
 	return query ? `${pathname}?${query}` : pathname;

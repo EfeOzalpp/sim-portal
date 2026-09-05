@@ -1,19 +1,30 @@
 "use client";
 
+// React & Next.js
 import { useState } from "react";
-import { useForm, Controller } from "react-hook-form";
+
+// Actions
+import { UserInput } from "@/actions/schemas";
+
+// Components
 import { Input, TextArea } from "@/components/input";
 import { Alert } from "@/components/alert";
 import { Select } from "@/components/select";
 import { Button } from "@/components/button";
-import { transformUserFromAPI } from "@/app/users/composition/user.transformers";
-import ImageUpload from "@/app/users/composition/ImageUpload";
 import ModalPopup from "@/components/modal";
 import ConfirmDelete from "@/components/confirm-delete";
 import { confirmDeleteDialogClassName } from "@/components/confirm-delete/styles";
+
+// Composition
+import { transformUserFromAPI } from "@/app/users/composition/user.transformers";
+import ImageUpload from "@/app/users/composition/ImageUpload";
 import RepeatableInput from "@/app/users/composition/RepeatableInput";
+
+// Helpers
+import { useForm, Controller } from "react-hook-form";
 import { handleFormAction } from "@/helpers";
-import { UserInput } from "@/actions/schemas";
+import { formatSemesterCode } from "@/components/domain/semesters/semester-filter";
+import { ROLES } from "@/constants/roles";
 
 function getSemesterNameOptions(currentValues: string[] = []) {
   const options = Array.from({ length: 100 }, (_, year) => {
@@ -29,21 +40,6 @@ function getSemesterNameOptions(currentValues: string[] = []) {
     .map((value) => ({ value, label: value }));
 
   return [...extraOptions, ...options];
-}
-
-function formatSemesterCode(name?: string | null) {
-  if (!name) return "";
-
-  const code = name.match(/^(SP|FA)\d{2}$/i);
-  if (code) return name.toUpperCase();
-
-  const namedSemester = name.match(/^(Spring|Fall)\s+(\d{4})$/i);
-  if (namedSemester) {
-    const term = namedSemester[1].toLowerCase() === "spring" ? "SP" : "FA";
-    return `${term}${namedSemester[2].slice(-2)}`;
-  }
-
-  return name;
 }
 
 function getCurrentSemesterYearValue() {
@@ -117,7 +113,7 @@ export default function UserForm({
     link: "",
     links: [""],
     about: "",
-    role: "STUDENT",
+    role: ROLES.student,
     semesterIds: allSemesters.length > 0 ? [allSemesters[0].id] : [],
     semesterCodes: defaultSemesterCode ? [defaultSemesterCode] : [],
   };
@@ -225,9 +221,9 @@ export default function UserForm({
                     <Select
                       {...field}
                       options={[
-                        { value: "STUDENT", label: "Student" },
-                        { value: "STAFF", label: "Staff" },
-                        { value: "ADMIN", label: "Admin" },
+                        { value: ROLES.student, label: "Student" },
+                        { value: ROLES.staff, label: "Staff" },
+                        { value: ROLES.admin, label: "Admin" },
                       ]}
                     />
                   )}

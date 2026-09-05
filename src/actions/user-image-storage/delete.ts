@@ -1,8 +1,9 @@
-import "server-only";
-
-import { unlink } from "node:fs/promises";
-
+// Actions
 import { getStorageDirectory, getStoredImageDestination, PUBLIC_IMAGE_PREFIX } from "@/actions/user-image-storage/path";
+
+// Helpers
+import "server-only";
+import { unlink } from "node:fs/promises";
 
 // Deletes a previously stored image from disk, given the public path saved on
 // a user row. Filenames are content hashes, so two users can end up sharing

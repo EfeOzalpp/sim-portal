@@ -1,8 +1,15 @@
 "use client";
 
+// React & Next.js
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+
+// Components
 import { useActionMode } from "@/components/layout/ActionMode";
+
+// Helpers
 import { formatSemesterCode } from "@/components/domain/semesters/semester-filter";
+import { ACTION_MODES } from "@/constants/action-modes";
+import { SEMESTER_MODAL_PARAMS, type SemesterModalParam } from "@/constants/modal-params";
 
 const dateFormat: Intl.DateTimeFormatOptions = { month: "short", day: "numeric", year: "numeric" };
 
@@ -55,11 +62,11 @@ export default function SemesterCardGrid({ semesters }: SemesterCardGridProps) {
 	const pathname = usePathname();
 	const searchParams = useSearchParams();
 
-	function openSemesterModal(semesterId: string, modalParam: "editSemesterId" | "deleteSemesterId") {
+	function openSemesterModal(semesterId: string, modalParam: SemesterModalParam) {
 		const params = new URLSearchParams(searchParams.toString());
-		params.delete("addSemester");
-		params.delete("editSemesterId");
-		params.delete("deleteSemesterId");
+		params.delete(SEMESTER_MODAL_PARAMS.add);
+		params.delete(SEMESTER_MODAL_PARAMS.edit);
+		params.delete(SEMESTER_MODAL_PARAMS.delete);
 		params.set(modalParam, semesterId);
 		router.push(`${pathname}?${params.toString()}`, { scroll: false });
 	}
@@ -72,13 +79,13 @@ export default function SemesterCardGrid({ semesters }: SemesterCardGridProps) {
 					data-action-mode-target="semester-card"
 					data-semester-id={semester.id}
 					onClick={() => {
-						if (activeMode === "edit-semesters") {
-							openSemesterModal(semester.id, "editSemesterId");
+						if (activeMode === ACTION_MODES.editSemesters) {
+							openSemesterModal(semester.id, SEMESTER_MODAL_PARAMS.edit);
 							return;
 						}
 
-						if (activeMode === "delete-semesters") {
-							openSemesterModal(semester.id, "deleteSemesterId");
+						if (activeMode === ACTION_MODES.deleteSemesters) {
+							openSemesterModal(semester.id, SEMESTER_MODAL_PARAMS.delete);
 						}
 					}}
 				>

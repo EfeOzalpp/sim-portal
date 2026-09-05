@@ -1,11 +1,16 @@
 "use client";
 
-import { Controller } from "react-hook-form";
+// Components
 import { Input } from "@/components/input";
 import { DatePicker } from "@/components/datepicker";
 import { Select } from "@/components/select";
-import dayjs from "dayjs";
+
+// Composition
 import { fieldStackClassName } from "@/app/thursdays/composition/thursdayFormClasses";
+
+// Helpers
+import { Controller } from "react-hook-form";
+import dayjs from "dayjs";
 
 interface ThursdaySectionProps {
   control: any;

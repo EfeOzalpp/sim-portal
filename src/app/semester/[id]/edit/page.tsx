@@ -1,7 +1,14 @@
-import { getSemester } from "@/actions/semesters";
+// React & Next.js
 import { notFound } from "next/navigation";
+
+// Actions
+import { getSemester } from "@/actions/semesters";
+
+// Components
 import NavContent from "@/components/layout/NavContent";
 import CloseButton from "@/components/primitives/CloseButton";
+
+// Composition
 import EditSemesterFormContent from "@/app/semester/[id]/edit/EditSemesterFormContent";
 
 interface EditSemesterProps {

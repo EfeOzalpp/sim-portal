@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { ROLES } from "@/constants/roles";
 
 export const UserSchema = z.object({
 	id: z.string().optional(),
@@ -9,7 +10,7 @@ export const UserSchema = z.object({
 	link: z.string().optional(),
 	links: z.array(z.string()).optional().default([]),
 	about: z.string().optional(),
-	role: z.enum(["STUDENT", "STAFF", "ADMIN"]).default("STUDENT"),
+	role: z.enum([ROLES.student, ROLES.staff, ROLES.admin]).default(ROLES.student),
 	semesterIds: z.array(z.string()).optional().default([]),
 	semesterCodes: z.array(z.string()).optional().default([]),
 });

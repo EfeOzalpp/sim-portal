@@ -1,10 +1,11 @@
 import { auth } from "@/authentication";
 import { NextResponse } from "next/server";
+import { isAdminRole } from "@/constants/roles";
 
 // Middleware to handle authentication, authorization, and route protection
 export default auth((req) => {
   const isLoggedIn = !!req.auth;
-  const isAdmin = req.auth?.user?.role === "ADMIN";
+  const isAdmin = isAdminRole(req.auth?.user?.role);
   const { pathname } = req.nextUrl;
 
   // Redirect unauthenticated users to the welcome page

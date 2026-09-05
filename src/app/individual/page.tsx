@@ -1,17 +1,29 @@
+// React & Next.js
 import { redirect } from "next/navigation";
-import { auth } from "@/authentication";
+
+// Actions
+import { getAllSemesters, getIndividualSemesterData } from "@/actions/semesters";
+
+// Components
 import { FilterInput } from "@/components/primitives/Filters";
 import SemesterFilterSelect from "@/components/domain/semesters/SemesterFilterSelect";
 import NavContent from "@/components/layout/NavContent";
 import PageTitle from "@/components/layout/PageTitle";
 import PrintLink from "@/components/primitives/PrintLink";
-import { getAllSemesters, getIndividualSemesterData } from "@/actions/semesters";
-import IndividualPerformanceTable from "@/app/individual/composition/IndividualPerformanceTable";
 import { ActionModeButton, ActionModeSurface } from "@/components/layout/ActionMode";
-import { formatSemesterCode, getSelectedSemesterId, isAllSemestersValue } from "@/components/domain/semesters/semester-filter";
 import PersonProfileModal from "@/components/domain/users/PersonProfileModal";
 import RouteModalPopup from "@/components/modal/RouteModalPopup";
 import ThursdayDetailContent, { thursdayDetailDialogClassName } from "@/components/domain/thursdays/ThursdayDetailContent";
+
+// Composition
+import IndividualPerformanceTable from "@/app/individual/composition/IndividualPerformanceTable";
+
+// Helpers
+import { ALL_SEMESTERS_VALUE, formatSemesterCode, getSelectedSemesterId, isAllSemestersValue } from "@/components/domain/semesters/semester-filter";
+import { ACTION_MODES } from "@/constants/action-modes";
+import { THURSDAY_MODAL_PARAMS, USER_MODAL_PARAMS } from "@/constants/modal-params";
+import { isAdminRole } from "@/constants/roles";
+import { auth } from "@/authentication";
 
 interface IndividualPageProps {
 	searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -19,18 +31,20 @@ interface IndividualPageProps {
 
 export default async function IndividualPage({ searchParams }: IndividualPageProps) {
 	const session = await auth();
-	if (session?.user?.role !== "ADMIN") redirect("/users");
+	if (!isAdminRole(session?.user?.role)) redirect("/users");
 
 	const filters = await searchParams;
-	const profileUserId = typeof filters.profileUserId === "string" ? filters.profileUserId : undefined;
-	const thursdayId = typeof filters.thursdayId === "string" ? filters.thursdayId : undefined;
+	const profileUserIdParam = filters[USER_MODAL_PARAMS.profile];
+	const profileUserId = typeof profileUserIdParam === "string" ? profileUserIdParam : undefined;
+	const thursdayIdParam = filters[THURSDAY_MODAL_PARAMS.view];
+	const thursdayId = typeof thursdayIdParam === "string" ? thursdayIdParam : undefined;
 
 	const semestersResult = await getAllSemesters();
 	const semesters = semestersResult.success ? semestersResult.data : [];
 	const semesterId = getSelectedSemesterId(filters, semesters);
 	const isAllSemesters = isAllSemestersValue(semesterId);
 	const currentFilterLabel = isAllSemesters
-		? "All"
+		? ALL_SEMESTERS_VALUE
 		: formatSemesterCode(semesters.find((semester: any) => semester.id === semesterId)?.name || semesterId);
 
 	const semesterDataResult = semesterId
@@ -53,13 +67,13 @@ export default async function IndividualPage({ searchParams }: IndividualPagePro
 					}
 					filterLabel="Search & Filter"
 					manageContent={
-						<ActionModeButton type="button" variant="action" mode="edit-grades">
+						<ActionModeButton type="button" variant="action" mode={ACTION_MODES.editGrades}>
 							Edit Grades
 						</ActionModeButton>
 					}
 					manageLabel="Manage Grades"
 					mobileManageContent={
-						<ActionModeButton type="button" variant="action" mode="edit-grades">
+						<ActionModeButton type="button" variant="action" mode={ACTION_MODES.editGrades}>
 							Edit Grades
 						</ActionModeButton>
 					}
@@ -76,7 +90,7 @@ export default async function IndividualPage({ searchParams }: IndividualPagePro
 				{thursdayId && (
 					<RouteModalPopup
 						key={thursdayId}
-						paramName="thursdayId"
+						paramName={THURSDAY_MODAL_PARAMS.view}
 						title="Thursday"
 						dialogClassName={thursdayDetailDialogClassName}
 					>

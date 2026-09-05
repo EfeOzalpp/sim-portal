@@ -1,12 +1,16 @@
 "use server";
 
+// React & Next.js
 import { revalidatePath, unstable_noStore as noStore } from "next/cache";
 
-import { prisma } from "@/database";
-
+// Actions
 import { ensureAdmin } from "@/actions/auth";
 import { getAllSemesters as getAllSemestersUtil, action } from "@/actions/utilities";
 import { ThursdaySchema, ThursdayInput, ProductionInput, PresentationInput, FilterSchema } from "@/actions/schemas";
+
+// Helpers
+import { prisma } from "@/database";
+import { isAllSemestersValue } from "@/constants/filters";
 import { Prisma } from "@prisma/client";
 
 export async function getAllSemesters() {
@@ -96,9 +100,9 @@ export async function getFilteredThursdays(rawFilters: { semester?: string | str
 
 		let semesterQuery: Prisma.ThursdayWhereInput = {};
 
-		if (filters.semesterId && filters.semesterId !== "All") {
+		if (filters.semesterId && !isAllSemestersValue(filters.semesterId)) {
 			semesterQuery = { semester: { id: filters.semesterId } };
-		} else if (filters.semester && filters.semester !== "All") {
+		} else if (filters.semester && !isAllSemestersValue(filters.semester)) {
 			// Fallback for legacy name-based filtering
 			semesterQuery = { semester: { name: { contains: filters.semester } } };
 		} else if (!filters.semesterId && !filters.semester) {

@@ -1,6 +1,9 @@
 "use client";
 
+// React & Next.js
 import { useEffect, useState } from "react";
+
+// Components
 import ModalPopup from "@/components/modal";
 import { Alert } from "@/components/alert";
 import { Button } from "@/components/button";

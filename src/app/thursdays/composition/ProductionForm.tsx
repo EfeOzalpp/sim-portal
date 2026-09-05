@@ -1,16 +1,24 @@
 "use client";
 
-import { Controller } from "react-hook-form";
+// Actions
+import { BasicUser } from "@/actions/schemas";
+
+// Components
 import { Input } from "@/components/input";
 import { Select } from "@/components/select";
 import { Button } from "@/components/button";
+
+// Composition
 import PresentationsField from "@/app/thursdays/composition/PresentationsField";
-import { BasicUser } from "@/actions/schemas";
 import {
   fieldStackClassName,
   inlineActionsClassName,
   sectionHeaderClassName,
 } from "@/app/thursdays/composition/thursdayFormClasses";
+
+// Helpers
+import { Controller } from "react-hook-form";
+import { isStaffRole } from "@/constants/roles";
 
 const LOCATIONS = [
   { label: "Pozen Center", value: "Pozen Center" },
@@ -30,7 +38,7 @@ export default function ProductionForm({
   control,
   users,
 }: ProductionFormProps) {
-  const producerUsers = users.filter((u) => (u as any).role !== "STAFF");
+  const producerUsers = users.filter((u) => !isStaffRole((u as any).role));
 
   return (
     <div className="flex w-full flex-col gap-6">
@@ -113,7 +121,7 @@ export default function ProductionForm({
                 options={[
                   ...producerUsers,
                   ...users.filter(
-                    (u) => (field.value ?? []).includes(u.id) && (u as any).role === "STAFF"
+                    (u) => (field.value ?? []).includes(u.id) && isStaffRole((u as any).role)
                   ),
                 ]
                   .sort((a, b) => (a.name ?? "").localeCompare(b.name ?? ""))

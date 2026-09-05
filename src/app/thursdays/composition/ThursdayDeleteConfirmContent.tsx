@@ -1,7 +1,14 @@
+// React & Next.js
 import { notFound, redirect } from "next/navigation";
+
+// Actions
 import { getAuthSession } from "@/actions/auth";
 import { getThursday, removeThursday } from "@/actions/thursdays";
+
+// Components
 import ConfirmDelete from "@/components/confirm-delete";
+
+// Helpers
 import { normalizeThursdayName } from "@/helpers";
 
 interface ThursdayDeleteConfirmContentProps {

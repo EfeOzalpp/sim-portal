@@ -1,7 +1,12 @@
 "use client";
 
+// React & Next.js
 import React from "react";
+
+// Actions
 import { logIn, logOut } from "@/actions/auth";
+
+// Components
 import { Button } from "@/components/button";
 
 export function LoginButton() {

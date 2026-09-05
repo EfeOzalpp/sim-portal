@@ -1,8 +1,13 @@
-import ProductionsCollapse from "@/app/thursdays/composition/ProductionsCollapse";
+// Components
 import ProductionCard from "@/components/domain/thursdays/ProductionCard";
+
+// Composition
+import ProductionsCollapse from "@/app/thursdays/composition/ProductionsCollapse";
+
+// Helpers
 import { auth } from "@/authentication";
 import { normalizeThursdayName } from "@/helpers";
-
+import { isAdminRole } from "@/constants/roles";
 import { Prisma } from "@prisma/client";
 
 type ThursdayWithProductions = Prisma.ThursdayGetPayload<{
@@ -32,7 +37,7 @@ export default async function ThursdayCard({
   let isAdmin = initialIsAdmin;
   if (isAdmin === undefined) {
     const session = await auth();
-    isAdmin = session?.user?.role === "ADMIN";
+    isAdmin = isAdminRole(session?.user?.role);
   }
   const formattedDate = new Date(thursday.date).toLocaleDateString("en-US", {
     month: "short",

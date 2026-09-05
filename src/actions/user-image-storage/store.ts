@@ -1,9 +1,10 @@
-import "server-only";
+// Actions
+import { getStorageDirectory, getStoredImageDestination, PUBLIC_IMAGE_PREFIX } from "@/actions/user-image-storage/path";
 
+// Helpers
+import "server-only";
 import { createHash } from "node:crypto";
 import { mkdir, writeFile } from "node:fs/promises";
-
-import { getStorageDirectory, getStoredImageDestination, PUBLIC_IMAGE_PREFIX } from "@/actions/user-image-storage/path";
 
 const MAX_IMAGE_BYTES = 8 * 1024 * 1024;
 const IMAGE_FORMATS = {

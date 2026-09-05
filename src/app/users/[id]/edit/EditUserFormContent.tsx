@@ -10,6 +10,7 @@ import {
 } from "@/actions/users";
 import { getCurrentUser } from "@/actions/auth";
 import UserForm from "@/app/users/composition/UserForm";
+import { isAdminRole } from "@/constants/roles";
 
 interface EditUserFormContentProps {
 	userId: string;
@@ -32,7 +33,7 @@ export default async function EditUserFormContent({
 	if (!currentUser) return null;
 
 	const session = await auth();
-	const isAdmin = session?.user?.role === "ADMIN";
+	const isAdmin = isAdminRole(session?.user?.role);
 	const semesters = await getAllSemesters();
 
 	async function onSubmitEditUser(data: any) {

@@ -1,4 +1,5 @@
 import { auth } from "@/authentication";
+import { isAdminRole } from "@/constants/roles";
 
 interface AdminOnlyProps {
 	children: React.ReactNode;
@@ -7,7 +8,7 @@ interface AdminOnlyProps {
 
 export default async function AdminOnly({ children, fallback = null }: AdminOnlyProps) {
 	const session = await auth();
-	const isAdmin = session?.user?.role === "ADMIN";
+	const isAdmin = isAdminRole(session?.user?.role);
 
 	if (!isAdmin) {
 		return <>{fallback}</>;

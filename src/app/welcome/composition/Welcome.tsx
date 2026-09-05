@@ -1,8 +1,11 @@
 "use client";
 
+// React & Next.js
 import React from "react";
-import { LoginButton } from "@/app/welcome/composition/AuthenticationButtons";
 import { useSearchParams } from "next/navigation";
+
+// Composition
+import { LoginButton } from "@/app/welcome/composition/AuthenticationButtons";
 
 export default function Welcome() {
 	const searchParams = useSearchParams();

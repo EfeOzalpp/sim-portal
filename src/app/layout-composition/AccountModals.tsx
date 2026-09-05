@@ -3,6 +3,7 @@
 import type { ReactNode } from "react";
 import { useSearchParams } from "next/navigation";
 import RouteModalPopup from "@/components/modal/RouteModalPopup";
+import { ACCOUNT_MODAL_PARAMS } from "@/constants/modal-params";
 
 interface AccountModalsProps {
 	profile: ReactNode;
@@ -17,19 +18,19 @@ export default function AccountModals({
 }: AccountModalsProps) {
 	const searchParams = useSearchParams();
 
-	if (searchParams.has("accountEdit")) {
+	if (searchParams.has(ACCOUNT_MODAL_PARAMS.edit)) {
 		return (
-			<RouteModalPopup key="account-edit" paramName="accountEdit" title="Edit Profile">
+			<RouteModalPopup key="account-edit" paramName={ACCOUNT_MODAL_PARAMS.edit} title="Edit Profile">
 				{edit}
 			</RouteModalPopup>
 		);
 	}
 
-	if (searchParams.has("accountProfile")) {
+	if (searchParams.has(ACCOUNT_MODAL_PARAMS.profile)) {
 		return (
 			<RouteModalPopup
 				key="account-profile"
-				paramName="accountProfile"
+				paramName={ACCOUNT_MODAL_PARAMS.profile}
 				title="Your Profile"
 				dialogClassName={profileDialogClassName}
 			>

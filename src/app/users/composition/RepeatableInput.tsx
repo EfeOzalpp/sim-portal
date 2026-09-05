@@ -1,6 +1,9 @@
 "use client";
 
+// Components
 import { Input, InputProps } from "@/components/input";
+
+// Helpers
 import clsx from "clsx";
 import addIcon from "@/components/theme/assets/add/add.svg";
 import deleteIcon from "@/components/theme/assets/delete/delete.svg";

@@ -1,15 +1,21 @@
 "use client";
 
+// React & Next.js
 import { useState } from "react";
-import { Controller, useFieldArray, useWatch } from "react-hook-form";
+
+// Actions
+import { BasicUser } from "@/actions/schemas";
+
+// Components
 import { Input } from "@/components/input";
 import { Select } from "@/components/select";
 import { Collapse } from "@/components/collapse";
 import { Button } from "@/components/button";
-import { BasicUser } from "@/actions/schemas";
 import ConfirmDelete from "@/components/confirm-delete";
 import ModalPopup from "@/components/modal";
 import { confirmDeleteDialogClassName } from "@/components/confirm-delete/styles";
+
+// Composition
 import {
   collapseBodyClassName,
   collapseHeaderClassName,
@@ -22,6 +28,10 @@ import {
   inlineActionsClassName,
   sectionHeaderClassName,
 } from "@/app/thursdays/composition/thursdayFormClasses";
+
+// Helpers
+import { Controller, useFieldArray, useWatch } from "react-hook-form";
+import { isStudentRole } from "@/constants/roles";
 
 interface PresentationsFieldProps {
   productionIndex: number;
@@ -45,7 +55,7 @@ export default function PresentationsField({
   });
 
   const [pendingRemoveIndex, setPendingRemoveIndex] = useState<number | null>(null);
-  const studentUsers = users.filter((u) => (u as any).role === "STUDENT");
+  const studentUsers = users.filter((u) => isStudentRole((u as any).role));
 
   return (
     <div>
@@ -172,7 +182,7 @@ export default function PresentationsField({
                             options={[
                               ...studentUsers,
                               ...users.filter(
-                                (u) => (field.value ?? []).includes(u.id) && (u as any).role !== "STUDENT"
+                                (u) => (field.value ?? []).includes(u.id) && !isStudentRole((u as any).role)
                               ),
                             ]
                               .sort((a, b) => (a.name ?? "").localeCompare(b.name ?? ""))

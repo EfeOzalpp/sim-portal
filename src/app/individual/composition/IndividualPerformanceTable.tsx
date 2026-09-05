@@ -1,15 +1,25 @@
 "use client";
 
+// React & Next.js
 import type { ReactNode } from "react";
 import { useRef, useEffect, useMemo, useState } from "react";
-import clsx from "clsx";
-import PersonLink from "@/components/domain/users/PersonLink";
-import ThursdayLink from "@/app/individual/composition/ThursdayLink";
-import { Prisma } from "@prisma/client";
-import GradeEditorModal, { GradeMap } from "@/app/individual/composition/GradeEditorModal";
-import { useActionMode } from "@/components/layout/ActionMode";
+
+// Actions
 import { updateUserSemesterGrades } from "@/actions/semesters";
+
+// Components
+import PersonLink from "@/components/domain/users/PersonLink";
+import { useActionMode } from "@/components/layout/ActionMode";
+
+// Composition
+import ThursdayLink from "@/app/individual/composition/ThursdayLink";
+import GradeEditorModal, { GradeMap } from "@/app/individual/composition/GradeEditorModal";
 import styles from "@/app/individual/composition/IndividualPerformanceTable.module.css";
+
+// Helpers
+import clsx from "clsx";
+import { ACTION_MODES } from "@/constants/action-modes";
+import { Prisma } from "@prisma/client";
 
 type ProductionWithThursday = Prisma.ProductionGetPayload<{ include: { thursday: { select: { id: true, date: true } } } }>;
 type PresentationWithProduction = Prisma.PresentationGetPayload<{ include: { production: { include: { thursday: { select: { id: true, date: true } } } } } }>;
@@ -262,7 +272,7 @@ export default function IndividualPerformanceTable({ users = [] }: IndividualPer
 									<td
 										data-action-mode-target="grade-cell"
 										onClick={() => {
-											if (activeMode === "edit-grades") {
+											if (activeMode === ACTION_MODES.editGrades) {
 												setSelectedGradeUser(user);
 											}
 										}}

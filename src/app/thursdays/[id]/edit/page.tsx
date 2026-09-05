@@ -1,8 +1,14 @@
+// React & Next.js
 import { notFound } from "next/navigation";
 
+// Actions
 import { getThursday } from "@/actions/thursdays";
+
+// Components
 import NavContent from "@/components/layout/NavContent";
 import CloseButton from "@/components/primitives/CloseButton";
+
+// Composition
 import EditThursdayFormContent from "@/app/thursdays/[id]/edit/EditThursdayFormContent";
 
 interface EditThursdayProps {

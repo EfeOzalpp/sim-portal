@@ -1,18 +1,27 @@
 "use client";
 
+// React & Next.js
 import { useState } from "react";
-import { useForm, Controller } from "react-hook-form";
+
+// Actions
+import { BasicUser, SemesterInput } from "@/actions/schemas";
+import { ActionResult } from "@/actions/utilities";
+
+// Components
 import { RangePicker } from "@/components/datepicker";
 import { Alert } from "@/components/alert";
 import { Select } from "@/components/select";
 import { Button } from "@/components/button";
+
+// Composition
 import {
   transformSemesterFromAPI,
   transformSemesterPayload,
 } from "@/app/semester/composition/semester.transformers";
+
+// Helpers
+import { useForm, Controller } from "react-hook-form";
 import { handleFormAction } from "@/helpers";
-import { BasicUser, SemesterInput } from "@/actions/schemas";
-import { ActionResult } from "@/actions/utilities";
 
 function getSemesterNameOptions(currentValue?: string) {
   const options = Array.from({ length: 100 }, (_, year) => {

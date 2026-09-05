@@ -2,10 +2,12 @@ import { redirect } from "next/navigation";
 import { auth } from "@/authentication";
 import { addUser, getAllSemesters, handleImageUpload } from "@/actions/users";
 import UserForm from "@/app/users/composition/UserForm";
+import { isAdminRole } from "@/constants/roles";
+import { USER_MODAL_PARAMS } from "@/constants/modal-params";
 
 export default async function AddUserFormContent() {
 	const session = await auth();
-	const isAdmin = session?.user?.role === "ADMIN";
+	const isAdmin = isAdminRole(session?.user?.role);
 	const semesters = await getAllSemesters();
 
 	async function onSubmitAddUser(data: any) {
@@ -20,7 +22,7 @@ export default async function AddUserFormContent() {
 
 		const result = await addUser(data);
 		if (result.success) {
-			redirect(`/users?profileUserId=${result.data.id}`);
+			redirect(`/users?${USER_MODAL_PARAMS.profile}=${result.data.id}`);
 		}
 		return result;
 	}

@@ -1,14 +1,20 @@
 "use client";
 
+// React & Next.js
 import { useState } from "react";
-import { useFieldArray, useWatch } from "react-hook-form";
+
+// Actions
+import { BasicUser } from "@/actions/schemas";
+
+// Components
 import { Collapse } from "@/components/collapse";
 import { Button } from "@/components/button";
-import ProductionForm from "@/app/thursdays/composition/ProductionForm";
-import { BasicUser } from "@/actions/schemas";
 import ConfirmDelete from "@/components/confirm-delete";
 import ModalPopup from "@/components/modal";
 import { confirmDeleteDialogClassName } from "@/components/confirm-delete/styles";
+
+// Composition
+import ProductionForm from "@/app/thursdays/composition/ProductionForm";
 import {
   collapseBodyClassName,
   collapseHeaderClassName,
@@ -20,6 +26,9 @@ import {
   iconButtonClassName,
   sectionHeaderClassName,
 } from "@/app/thursdays/composition/thursdayFormClasses";
+
+// Helpers
+import { useFieldArray, useWatch } from "react-hook-form";
 
 interface ProductionsSectionProps {
   control: any;
