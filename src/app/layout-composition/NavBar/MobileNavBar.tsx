@@ -74,8 +74,6 @@ export default function MobileNavBar({ isAdmin, user }: MobileNavBarProps) {
 							{isAdmin && (
 								<NavButtonLink href="/individual" label="Individual" iconClassName={navStyles.individualIcon} />
 							)}
-						</div>
-						<div className={clsx(navStyles.navButtonList, "mt-4 border-t border-t-[var(--app-border)] pt-4")}>
 							<NavButtonLink href="/thursdays" label="Thursdays" iconClassName={navStyles.thursdayIcon} />
 							{isAdmin && (
 								<NavButtonLink href="/semester" label="Semesters" iconClassName={navStyles.listIcon} />

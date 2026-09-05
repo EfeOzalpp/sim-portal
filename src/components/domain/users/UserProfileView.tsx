@@ -33,7 +33,7 @@ export default function UserProfileView({
 						className="object-cover object-top"
 					/>
 				</div>
-				<div className="self-start rounded-2xl border-solid border-[var(--app-border)] bg-[var(--app-card-label-bg)] px-2 py-1 font-sans text-[0.6875rem] leading-tight font-semibold text-[var(--app-muted)] uppercase border">
+				<div className="self-start rounded-md border-solid border-[var(--app-border)] bg-[var(--app-card-label-bg)] px-2 py-1 font-sans text-[0.6875rem] leading-tight font-semibold text-[var(--app-muted)] uppercase border">
 					{roleLabel}
 				</div>
 				<div className="flex min-w-0 flex-col gap-1">

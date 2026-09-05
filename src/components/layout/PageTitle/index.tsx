@@ -21,8 +21,8 @@ interface PageTitleProps {
 export default function PageTitle({ title, filter }: PageTitleProps) {
 	return (
 		<div
-			className="flex items-center justify-center p-4 text-center text-[var(--app-text)] print:hidden"
-			style={{ background: titleBackground, backgroundSize: "17rem 5.25rem" }}
+			className="flex items-center justify-center p-6 text-center text-[var(--app-text)] print:hidden"
+			style={{ background: titleBackground, backgroundSize: "24rem 5.25rem" }}
 			data-page-title
 		>
 			<h2 className="m-0 leading-tight" style={{ textShadow: titleTextShadow }}>

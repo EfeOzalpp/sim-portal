@@ -82,7 +82,6 @@ function SearchBox({ value, onChange, placeholder }: { value: string; onChange: 
 				onChange={(event) => onChange(event.target.value)}
 				onKeyDown={stopTypingPropagation}
 				placeholder={placeholder ?? "Search..."}
-				allowClear
 				autoFocus
 			/>
 		</div>
