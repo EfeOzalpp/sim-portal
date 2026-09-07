@@ -18,6 +18,13 @@ export interface CollapseItem {
 	content: ReactNode;
 	itemClassName?: string;
 	headerClassName?: string;
+	/** Merged onto the trigger <button> itself, not the header row around it —
+	 * padding belongs here, not on headerClassName. The row uses items-stretch,
+	 * so the button already fills the row's content-box; padding put on the
+	 * row instead sits outside that box, so it *looks* like part of the header
+	 * but isn't actually clickable, a well-earned mistake worth flagging in a
+	 * comment now that it's been made once. */
+	triggerClassName?: string;
 	contentClassName?: string;
 }
 
@@ -57,7 +64,7 @@ export function Collapse({ items, defaultValue, className }: CollapseProps) {
 							<button
 								type="button"
 								id={triggerId}
-								className={collapseTriggerClassName}
+								className={clsx(collapseTriggerClassName, item.triggerClassName)}
 								aria-expanded={isOpen}
 								aria-controls={contentId}
 								data-state={isOpen ? "open" : "closed"}

@@ -91,11 +91,11 @@ export default function ThursdayForm({
         )}
 
         <ThursdaySection control={control} semesters={semesters} />
-        <ProductionsSection control={control} users={users} />
+        <ProductionsSection control={control} users={users} semesters={semesters} />
       </div>
 
       <div className="mt-4 flex justify-start pt-4">
-        <Button type="submit" disabled={isSubmitting} tone="success">
+        <Button type="submit" disabled={isSubmitting} tone="success" fullWidth>
           {isSubmitting
             ? "Saving..."
             : thursdayId

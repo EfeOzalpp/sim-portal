@@ -41,7 +41,7 @@ export default function ThursdaySection({
           </div>
         )}
         <div className={fieldStackClassName}>
-          <span className="ui-label m-0 block">Day Name</span>
+          <span className="ui-label m-0 block">Day Name *</span>
           <Controller
             control={control}
             name="name"
@@ -63,7 +63,7 @@ export default function ThursdaySection({
       </div>
 
       <div className={fieldStackClassName}>
-        <span className="ui-label m-0 block">Date</span>
+        <span className="ui-label m-0 block">Date *</span>
         <Controller
           control={control}
           name="date"

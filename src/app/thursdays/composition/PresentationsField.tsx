@@ -23,6 +23,7 @@ import {
   collapseItemClassName,
   collapseLabelClassName,
   collapseTitleTextClassName,
+  collapseTriggerPaddingClassName,
   fieldStackClassName,
   iconButtonClassName,
   inlineActionsClassName,
@@ -32,17 +33,25 @@ import {
 // Helpers
 import { Controller, useFieldArray, useWatch } from "react-hook-form";
 import { isStudentRole } from "@/constants/roles";
+import { formatSemesterCode, getCurrentSemesterCode, normalizeSemesterCode } from "@/components/domain/filters/semester-filter";
+
+// Sentinel for the semester filter's own "show everyone" option - distinct
+// from ALL_SEMESTERS_VALUE (the page-level filter's sentinel), since this is
+// a separate, local-only filter with no URL state of its own.
+const ALL_SEMESTERS_FILTER_VALUE = "all";
 
 interface PresentationsFieldProps {
   productionIndex: number;
   control: any;
   users: BasicUser[];
+  semesters?: Array<{ id: string; name: string }>;
 }
 
 export default function PresentationsField({
   productionIndex,
   control,
   users,
+  semesters = [],
 }: PresentationsFieldProps) {
   const { fields, append, remove } = useFieldArray({
     control,
@@ -56,6 +65,17 @@ export default function PresentationsField({
 
   const [pendingRemoveIndex, setPendingRemoveIndex] = useState<number | null>(null);
   const studentUsers = users.filter((u) => isStudentRole((u as any).role));
+
+  // Narrows which people show up as Presenters candidates to just this
+  // semester's members - defaults to whichever semester matches today (same
+  // rule as the page-level filters), same as usual.
+  const currentSemesterCode = getCurrentSemesterCode();
+  const currentSemester = semesters.find(
+    (semester) => normalizeSemesterCode(semester.name) === currentSemesterCode,
+  );
+  const [semesterFilterId, setSemesterFilterId] = useState<string | null>(
+    currentSemester?.id ?? semesters[0]?.id ?? null,
+  );
 
   return (
     <div>
@@ -85,19 +105,12 @@ export default function PresentationsField({
             const name = watchPresentations?.[pIndex]?.name;
             const trigger = (
               <span className={collapseLabelClassName}>
-                <span className={collapseTitleTextClassName}>
-                  {name ? `Presentation ${pIndex + 1}: ${name}` : `Unnamed Presentation ${pIndex + 1}`}
-                </span>
                 {/* Rotation reads the trigger's own data-state — Radix sets
                     data-state="open"/"closed" on it directly, no isActive
                     render-prop needed. */}
-                <span
-                  className={`${collapseIconClassName} ml-auto inline-flex h-[1.375rem] w-[1.375rem] items-center justify-center text-[var(--app-text)] transition-transform duration-200 [[data-state=open]_&]:rotate-180`}
-                  aria-hidden="true"
-                >
-                  <svg className="h-full w-full" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 15.4L6 9.4L7.4 8L12 12.6L16.6 8L18 9.4L12 15.4Z" fill="currentColor" />
-                  </svg>
+                <span className={collapseIconClassName} aria-hidden="true" />
+                <span className={collapseTitleTextClassName}>
+                  {name ? `Presentation ${pIndex + 1}: ${name}` : `Unnamed Presentation ${pIndex + 1}`}
                 </span>
               </span>
             );
@@ -106,12 +119,13 @@ export default function PresentationsField({
               value: field.id,
               itemClassName: `${collapseItemClassName}${pIndex > 0 ? " mt-2" : ""}`,
               headerClassName: collapseHeaderClassName,
+              triggerClassName: collapseTriggerPaddingClassName,
               contentClassName: collapseBodyClassName,
               trigger,
               extra: (
                 <button
                   type="button"
-                  className={iconButtonClassName}
+                  className={`${iconButtonClassName} self-center mr-4`}
                   aria-label="Remove presentation"
                   onClick={(e) => {
                     e.stopPropagation();
@@ -129,7 +143,7 @@ export default function PresentationsField({
               content: (
                 <div className="flex w-full flex-col gap-4">
                   <div className={fieldStackClassName}>
-                    <span className="ui-label m-0 block">Presentation Name</span>
+                    <span className="ui-label m-0 block">Name *</span>
                     <Controller
                       control={control}
                       name={`productions.${productionIndex}.presentations.${pIndex}.name`}
@@ -153,44 +167,77 @@ export default function PresentationsField({
                     <Controller
                       control={control}
                       name={`productions.${productionIndex}.presentations.${pIndex}.presenters`}
-                      render={({ field }) => (
-                        <>
-                          <div className={sectionHeaderClassName}>
-                            <span className="ui-label m-0 block">Presenters</span>
-                            <div className={inlineActionsClassName}>
-                              <Button
-                                type="button"
-                                onClick={() => field.onChange(studentUsers.map((u) => u.id))}
-                              >
-                                Select all
-                              </Button>
-                              <Button
-                                type="button"
-                                tone="danger"
-                                onClick={() => field.onChange([])}
-                              >
-                                Unselect all
-                              </Button>
+                      render={({ field }) => {
+                        const selectedIds = new Set<string>(field.value ?? []);
+                        // A person already selected stays visible/selectable
+                        // regardless of the semester filter - it only
+                        // narrows who else shows up.
+                        const filteredStudentUsers = studentUsers.filter(
+                          (u) =>
+                            selectedIds.has(u.id) ||
+                            !semesterFilterId ||
+                            (u.semesterIds ?? []).includes(semesterFilterId),
+                        );
+
+                        return (
+                          <>
+                            <div className={sectionHeaderClassName}>
+                              <span className="ui-label m-0 block">Presenters</span>
+                              <div className={inlineActionsClassName}>
+                                {semesters.length > 0 && (
+                                  <Select
+                                    inModal
+                                    className="w-[5.5rem]!"
+                                    value={semesterFilterId ?? ALL_SEMESTERS_FILTER_VALUE}
+                                    onChange={(value) =>
+                                      setSemesterFilterId(value && value !== ALL_SEMESTERS_FILTER_VALUE ? value : null)
+                                    }
+                                    placeholder="Semester"
+                                    options={[
+                                      { value: ALL_SEMESTERS_FILTER_VALUE, label: "All" },
+                                      ...semesters.map((semester) => ({
+                                        value: semester.id,
+                                        label: formatSemesterCode(semester.name),
+                                      })),
+                                    ]}
+                                  />
+                                )}
+                                <Button
+                                  type="button"
+                                  className="whitespace-nowrap"
+                                  onClick={() => field.onChange(filteredStudentUsers.map((u) => u.id))}
+                                >
+                                  Select all
+                                </Button>
+                                <Button
+                                  type="button"
+                                  tone="danger"
+                                  className="whitespace-nowrap"
+                                  onClick={() => field.onChange([])}
+                                >
+                                  Unselect all
+                                </Button>
+                              </div>
                             </div>
-                          </div>
-                          <Select
-                            inModal
-                            {...field}
-                            mode="multiple"
-                            searchable
-                            maxTagCount={12}
-                            placeholder="Search and select presenters..."
-                            options={[
-                              ...studentUsers,
-                              ...users.filter(
-                                (u) => (field.value ?? []).includes(u.id) && !isStudentRole((u as any).role)
-                              ),
-                            ]
-                              .sort((a, b) => (a.name ?? "").localeCompare(b.name ?? ""))
-                              .map((u) => ({ value: u.id, label: u.name ?? "Unnamed User" }))}
-                          />
-                        </>
-                      )}
+                            <Select
+                              inModal
+                              {...field}
+                              mode="multiple"
+                              searchable
+                              maxTagCount={12}
+                              placeholder="Search and select presenters..."
+                              options={[
+                                ...filteredStudentUsers,
+                                ...users.filter(
+                                  (u) => selectedIds.has(u.id) && !isStudentRole((u as any).role)
+                                ),
+                              ]
+                                .sort((a, b) => (a.name ?? "").localeCompare(b.name ?? ""))
+                                .map((u) => ({ value: u.id, label: u.name ?? "Unnamed User" }))}
+                            />
+                          </>
+                        );
+                      }}
                     />
                   </div>
                 </div>

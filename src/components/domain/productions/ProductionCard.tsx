@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import PersonLink from "@/components/domain/profile/PersonLink";
 import PresentationCard from "@/components/domain/productions/PresentationCard";
 import { isAdminRole } from "@/constants/roles";
@@ -44,63 +45,60 @@ export default async function ProductionCard({
     day: "numeric",
     year: "numeric",
   });
-  const productionTitle =
-    productionCount > 1 ? `${formatOrdinal(productionIndex + 1)} Production` : "Production";
+  const isMultiple = productionCount > 1;
+  const productionTitle = isMultiple ? `${formatOrdinal(productionIndex + 1)} Production` : "Production";
 
-  return (
-    <div className={productionIndex > 0 ? "-mx-4 mt-7 border-t border-[var(--app-border)] px-4 pt-6" : undefined}>
-      <div className="flex flex-col gap-2">
-        <h3 className="m-0 text-[1.15rem] font-bold leading-[1.25]">{productionTitle}</h3>
-        <div className="flex flex-col gap-4 min-[768px]:flex-row">
-          <div className="flex flex-1 flex-col gap-3">
-            <div className="flex flex-col gap-1">
-              <b>Name</b>
-              <div className="leading-[1.4]">{production.name}</div>
-            </div>
-            <div className="flex flex-col gap-1">
-              <b>Location</b>
-              <div className="leading-[1.4]">{production.location}</div>
-            </div>
-            <div className="flex flex-col gap-1">
-              <b>Date</b>
-              <div className="leading-[1.4]">{formattedDate}</div>
-            </div>
+  const fields = (
+    <>
+      <div className="flex flex-col gap-4 min-[768px]:flex-row">
+        <div className="flex flex-1 flex-col gap-3">
+          <div className="flex flex-col gap-1">
+            <b>Name</b>
+            <div className="leading-[1.4]">{production.name}</div>
           </div>
-          <div className="flex flex-1 flex-col gap-[0.4rem] pt-3 min-[768px]:pt-0">
-            <b>Producers</b>
-            <div className="mt-1 flex flex-row flex-wrap gap-x-2 gap-y-[0.15rem] min-[768px]:flex-col min-[768px]:gap-[0.2rem]">
-              {producers.length > 0 ? (
-                producers.map((producer: any) => (
-                  <PersonLink
-                    key={producer.id}
-                    userId={producer.id}
-                    className="text-inherit! no-underline underline-offset-[0.14em] hover:text-[var(--brand-color)]! hover:underline"
-                  >
-                    {producer.name}
-                  </PersonLink>
-                ))
-              ) : (
-                <i>No producers credited yet.</i>
-              )}
-            </div>
+          <div className="flex flex-col gap-1">
+            <b>Location</b>
+            <div className="leading-[1.4]">{production.location}</div>
           </div>
-          <div className="flex flex-1 flex-col gap-[0.4rem] pt-3 min-[768px]:pt-0">
-            <b>Faculty</b>
-            <div className="mt-1 flex flex-row flex-wrap gap-x-2 gap-y-[0.15rem] min-[768px]:flex-col min-[768px]:gap-[0.2rem]">
-              {faculty.length > 0 ? (
-                faculty.map((facultyMember: any) => (
-                  <PersonLink
-                    key={facultyMember.id}
-                    userId={facultyMember.id}
-                    className="text-inherit! no-underline underline-offset-[0.14em] hover:text-[var(--brand-color)]! hover:underline"
-                  >
-                    {facultyMember.name}
-                  </PersonLink>
-                ))
-              ) : (
-                <i>No faculty assigned yet.</i>
-              )}
-            </div>
+          <div className="flex flex-col gap-1">
+            <b>Date</b>
+            <div className="leading-[1.4]">{formattedDate}</div>
+          </div>
+        </div>
+        <div className="flex flex-1 flex-col gap-[0.4rem] pt-3 min-[768px]:pt-0">
+          <b>Producers</b>
+          <div className="mt-1 flex flex-row flex-wrap gap-x-2 gap-y-[0.15rem] min-[768px]:flex-col min-[768px]:gap-[0.2rem]">
+            {producers.length > 0 ? (
+              producers.map((producer: any) => (
+                <PersonLink
+                  key={producer.id}
+                  userId={producer.id}
+                  className="text-inherit! no-underline underline-offset-[0.14em] hover:text-[var(--brand-color)]! hover:underline"
+                >
+                  {producer.name}
+                </PersonLink>
+              ))
+            ) : (
+              <i>No producers credited yet.</i>
+            )}
+          </div>
+        </div>
+        <div className="flex flex-1 flex-col gap-[0.4rem] pt-3 min-[768px]:pt-0">
+          <b>Faculty</b>
+          <div className="mt-1 flex flex-row flex-wrap gap-x-2 gap-y-[0.15rem] min-[768px]:flex-col min-[768px]:gap-[0.2rem]">
+            {faculty.length > 0 ? (
+              faculty.map((facultyMember: any) => (
+                <PersonLink
+                  key={facultyMember.id}
+                  userId={facultyMember.id}
+                  className="text-inherit! no-underline underline-offset-[0.14em] hover:text-[var(--brand-color)]! hover:underline"
+                >
+                  {facultyMember.name}
+                </PersonLink>
+              ))
+            ) : (
+              <i>No faculty assigned yet.</i>
+            )}
           </div>
         </div>
       </div>
@@ -123,6 +121,31 @@ export default async function ProductionCard({
             </p>
           )}
         </div>
+      </div>
+    </>
+  );
+
+  // A single production keeps its original, borderless layout untouched.
+  // Multiple productions each get an ordinal title above a bordered box
+  // (matching PresentationCard's isUserProfile box) around their fields,
+  // so several productions under one Thursday read as distinct blocks
+  // instead of one long flow separated only by thin dividers.
+  if (!isMultiple) {
+    return (
+      <div>
+        <div className="flex flex-col gap-2">
+          <h3 className="m-0 text-[1.15rem] font-bold leading-[1.25]">{productionTitle}</h3>
+          {fields}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className={clsx("flex flex-col gap-2", productionIndex > 0 && "mt-6")}>
+      <h3 className="m-0 text-[1.15rem] font-bold leading-[1.25]">{productionTitle}</h3>
+      <div className="rounded-md border border-solid border-[var(--app-border)] bg-[var(--app-secondary)] p-3">
+        {fields}
       </div>
     </div>
   );

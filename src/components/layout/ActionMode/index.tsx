@@ -80,6 +80,25 @@ export function ActionModeSurface({ children }: ActionModeSurfaceProps) {
 						className={styles.backdrop}
 						data-action-mode-backdrop
 						aria-hidden="true"
+						// pointer-events: auto (see the CSS) means this fixed,
+						// full-viewport div is what actually gets hit-tested under
+						// the cursor, so wheel scrolling over it needs to be
+						// forwarded by hand instead of relying on the browser to
+						// chain it to the real scroll container on its own. Which
+						// ancestor that is differs per page (usually <main>, but a
+						// page can make its own content div scroll instead - see
+						// [data-full-bleed-content] in app/layout.module.css), so
+						// this walks up looking for one instead of hardcoding it.
+						onWheel={(event) => {
+							let node = event.currentTarget.parentElement;
+							while (node) {
+								if (/(auto|scroll)/.test(getComputedStyle(node).overflowY) && node.scrollHeight > node.clientHeight) {
+									node.scrollBy(0, event.deltaY);
+									return;
+								}
+								node = node.parentElement;
+							}
+						}}
 					/>
 				)}
 				{children}

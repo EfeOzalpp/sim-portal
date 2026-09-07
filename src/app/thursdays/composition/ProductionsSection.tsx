@@ -1,7 +1,7 @@
 "use client";
 
 // React & Next.js
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 // Actions
 import { BasicUser } from "@/actions/schemas";
@@ -23,6 +23,7 @@ import {
   collapseLabelClassName,
   collapseMetaClassName,
   collapseTitleTextClassName,
+  collapseTriggerPaddingClassName,
   iconButtonClassName,
   sectionHeaderClassName,
 } from "@/app/thursdays/composition/thursdayFormClasses";
@@ -33,11 +34,13 @@ import { useFieldArray, useWatch } from "react-hook-form";
 interface ProductionsSectionProps {
   control: any;
   users: BasicUser[];
+  semesters?: Array<{ id: string; name: string }>;
 }
 
 export default function ProductionsSection({
   control,
   users,
+  semesters,
 }: ProductionsSectionProps) {
   const { fields, append, remove } = useFieldArray({
     control,
@@ -52,6 +55,27 @@ export default function ProductionsSection({
     : null;
 
   const [pendingRemoveIndex, setPendingRemoveIndex] = useState<number | null>(null);
+
+  // A brand-new Thursday (add form, nothing to load) starts with zero
+  // productions - seed one so there's already something to fill in instead
+  // of making Add Production the first required click. Appending after
+  // mount (not as part of useForm's defaultValues) means it lands outside
+  // Collapse's own defaultValue snapshot, so it starts collapsed rather than
+  // forced open like a genuinely pre-existing (edit-mode) production would.
+  //
+  // hasSeededProduction (not just checking fields.length again) - StrictMode
+  // runs this effect, its cleanup, then this effect again, all before the
+  // append from the first run has actually re-rendered - so fields.length
+  // would still read 0 on that second pass and append a second production.
+  // The ref survives that whole cycle, so it correctly blocks the repeat.
+  const hasSeededProduction = useRef(false);
+  useEffect(() => {
+    if (!hasSeededProduction.current && fields.length === 0) {
+      hasSeededProduction.current = true;
+      append({ name: "", location: "Pozen Center", producers: [], presentations: [] });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div>
@@ -85,18 +109,11 @@ export default function ProductionsSection({
             const displayName = name || `Unnamed Production ${pIndex + 1}`;
             const trigger = (
               <span className={collapseLabelClassName}>
-                <span className={collapseTitleTextClassName}>{displayName}</span>
-                {formattedDate && <span className={collapseMetaClassName}>{formattedDate}</span>}
                 {/* Rotation reads the trigger's own data-state — Radix sets
                     data-state="open"/"closed" on it directly. */}
-                <span
-                  className={`${collapseIconClassName} ml-auto inline-flex h-[1.375rem] w-[1.375rem] items-center justify-center text-[var(--app-text)] transition-transform duration-200 [[data-state=open]_&]:rotate-180`}
-                  aria-hidden="true"
-                >
-                  <svg className="h-full w-full" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 15.4L6 9.4L7.4 8L12 12.6L16.6 8L18 9.4L12 15.4Z" fill="currentColor" />
-                  </svg>
-                </span>
+                <span className={collapseIconClassName} aria-hidden="true" />
+                <span className={collapseTitleTextClassName}>{displayName}</span>
+                {formattedDate && <span className={collapseMetaClassName}>{formattedDate}</span>}
               </span>
             );
 
@@ -104,12 +121,13 @@ export default function ProductionsSection({
               value: field.id,
               itemClassName: `${collapseItemClassName}${pIndex > 0 ? " mt-2" : ""}`,
               headerClassName: collapseHeaderClassName,
+              triggerClassName: collapseTriggerPaddingClassName,
               contentClassName: collapseBodyClassName,
               trigger,
               extra: (
                 <button
                   type="button"
-                  className={iconButtonClassName}
+                  className={`${iconButtonClassName} self-center mr-4`}
                   aria-label="Remove production"
                   onClick={(e) => {
                     e.stopPropagation();
@@ -129,6 +147,7 @@ export default function ProductionsSection({
                   productionIndex={pIndex}
                   control={control}
                   users={users}
+                  semesters={semesters}
                 />
               ),
             };

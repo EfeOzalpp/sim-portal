@@ -1,17 +1,21 @@
 "use client";
 
 // React & Next.js
-import Link from "next/link";
 import type { ReactNode } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 // Components
 import { Collapse } from "@/components/collapse";
+import { Button } from "@/components/button";
 import { useActionMode } from "@/components/layout/ActionMode";
 
 // Helpers
 import { ACTION_MODES } from "@/constants/action-modes";
 import { THURSDAY_MODAL_PARAMS, type ThursdayModalParam } from "@/constants/modal-params";
+
+// Shared by the mobile and desktop trigger layouts below.
+const chevronClassName =
+  "h-5 w-5 flex-none bg-[var(--input-icon)] transition-transform duration-250 [mask-image:url(../assets/arrow/down.svg)] [mask-position:center] [mask-repeat:no-repeat] [mask-size:contain] [[data-state=open]_&]:rotate-180";
 
 interface ProductionItem {
   id: string;
@@ -72,12 +76,18 @@ export default function ProductionsCollapse({ productions }: ProductionsCollapse
       }}
     >
       <Collapse
-        className="overflow-hidden rounded-xl border border-solid border-[var(--app-border)] bg-[var(--app-secondary)] text-[var(--app-text)]"
+        className="overflow-hidden rounded-xl border border-solid border-[var(--app-border)] text-[var(--app-text)]"
         items={productions.map((p, pIndex) => ({
           value: p.id,
           itemClassName: pIndex > 0 ? "border-t border-t-[var(--app-border)]" : "",
+          // bg lives on the header only - it's the title row, not the body content below it.
           headerClassName: "items-center bg-[var(--app-secondary)] text-[var(--app-text)] transition-[background] duration-150 hover:bg-[var(--app-card-bg-hover)]",
-          contentClassName: "bg-[var(--app-secondary)] text-[var(--app-text)]",
+          // Padding lives on the trigger button itself (not headerClassName,
+          // the row around it) - the row uses items-stretch, so padding put
+          // there sits outside the button's own box, unclickable despite
+          // looking like part of the header.
+          triggerClassName: "px-4 py-5",
+          contentClassName: "px-4 pt-3 pb-4 text-[var(--app-text)]",
           // The title used to double as both the toggle trigger and a
           // navigation link when p.href was set (relying on stopPropagation
           // to keep the two from fighting). Radix's Trigger renders as a
@@ -86,50 +96,94 @@ export default function ProductionsCollapse({ productions }: ProductionsCollapse
           // link in `extra` below. A real, visible behavior change from the
           // antd version, not just a technical swap.
           trigger: (
-            <span className="inline-flex items-center gap-[0.85rem]">
-              <h3 className="m-0 font-heading text-xl font-bold leading-tight text-[var(--app-text)]">
-                {p.name}
-              </h3>
-              {p.location && (
-                <>
-                  <span className="text-[1.05rem] font-normal text-[var(--app-muted)]">|</span>
-                  <span className="text-[1.05rem] font-bold">{p.location}</span>
-                </>
-              )}
-              <span
-                className="h-4 w-4 flex-none bg-[var(--app-text)] transition-transform duration-250 [mask-image:url(../assets/arrow/down.svg)] [mask-position:center] [mask-repeat:no-repeat] [mask-size:contain] [[data-state=open]_&]:rotate-180"
-                aria-hidden="true"
-              />
-            </span>
-          ),
-          extra: (p.date || p.href) ? (
-            <span className="flex items-center gap-[0.6rem] pr-4">
-              {p.date && (
-                <span className="inline-block whitespace-nowrap rounded-sm bg-[var(--app-border)] px-[0.8rem] py-[0.3rem] text-[0.8rem] font-bold text-[var(--app-text)]">
-                  {p.date}
+            <>
+              {/* Mobile: date/title/location stack vertically instead of
+                  running in one row, which is what was overflowing the
+                  viewport - the chevron sits to their left, centered against
+                  the whole stack's height rather than stretched full-height
+                  like the desktop dividers (there's nothing to divide here). */}
+              <span className="flex min-w-0 flex-1 items-center gap-3 min-[769px]:hidden">
+                <span className={chevronClassName} aria-hidden="true" />
+                <span className="flex min-w-0 flex-1 flex-col gap-2">
+                  {p.date && (
+                    <span className="w-fit rounded-md border border-solid border-[var(--app-border)] bg-[var(--app-card-label-bg)] px-2 py-1 font-sans text-[0.6875rem] leading-tight font-semibold text-[var(--app-muted)] uppercase">
+                      {p.date}
+                    </span>
+                  )}
+                  <h3
+                    className="m-0 w-full truncate font-heading text-xl font-bold leading-tight text-[var(--app-text)]"
+                    title={p.name}
+                  >
+                    {p.name}
+                  </h3>
+                  {p.location && (
+                    <span className="truncate text-[1.05rem] font-bold">{p.location}</span>
+                  )}
                 </span>
-              )}
-              {p.href && (
-                <Link
-                  className="text-inherit! whitespace-nowrap no-underline hover:text-[var(--brand-color)]! hover:underline hover:underline-offset-[0.14em]"
-                  href={p.href}
-                  onClick={(event) => {
-                    if (handleActionModeClick(p.id)) {
-                      event.preventDefault();
-                    }
-                    event.stopPropagation();
-                  }}
+              </span>
+              {/* Desktop: everything in one row - items-stretch (not center)
+                  lets the border dividers below reach the row's full height,
+                  self-center on the text/badge siblings keeps their own
+                  vertical centering unaffected. self-stretch on this span
+                  itself: collapseTriggerClassName (the <button> wrapping
+                  this, shared by every Collapse consumer) centers its own
+                  child instead of stretching it, so without this the
+                  dividers would only reach this span's own content height,
+                  not the button's full padded height. */}
+              <span className="hidden items-stretch gap-[0.85rem] self-stretch min-[769px]:inline-flex">
+                {p.date && (
+                  // Same role-badge style as UserProfileView's role pill,
+                  // not the mismatched ad-hoc styling this used to have.
+                  // min-w keeps every date badge the same width, so the
+                  // chevron/title after it start at a consistent line
+                  // regardless of how long the date string is.
+                  <span className="min-w-[5.5rem] self-center text-center rounded-md border border-solid border-[var(--app-border)] bg-[var(--app-card-label-bg)] px-2 py-1 font-sans text-[0.6875rem] leading-tight font-semibold text-[var(--app-muted)] uppercase">
+                    {p.date}
+                  </span>
+                )}
+                <span className={`${chevronClassName} self-center`} aria-hidden="true" />
+                <h3
+                  className="m-0 w-48 shrink-0 self-center truncate font-heading text-xl font-bold leading-tight text-[var(--app-text)]"
+                  title={p.name}
                 >
-                  View →
-                </Link>
-              )}
-            </span>
+                  {p.name}
+                </h3>
+                {p.location && (
+                  <>
+                    <span className="self-stretch border-l border-l-[var(--app-border)]" aria-hidden="true" />
+                    <span className="self-center text-[1.05rem] font-bold">{p.location}</span>
+                  </>
+                )}
+              </span>
+            </>
+          ),
+          extra: p.href ? (
+            <Button
+              href={p.href}
+              variant="action"
+              icon="view/forward.svg"
+              iconPosition="end"
+              className="self-center mr-4"
+              onClick={(event) => {
+                if (handleActionModeClick(p.id)) {
+                  event.preventDefault();
+                }
+                event.stopPropagation();
+              }}
+            >
+              View
+            </Button>
           ) : undefined,
           content: p.content,
         }))}
       />
       <span
-        className="pointer-events-none absolute inset-0 z-[5] flex items-center justify-center text-[var(--app-card-action-icon)] opacity-0"
+        // --app-text (not --app-card-action-icon): that token is a fixed
+        // white, meant for icons sitting on top of a photo (UserCard) - this
+        // card has no photo, just the flat surface color, so a hardcoded
+        // white icon is invisible in light mode. --app-text already flips
+        // dark/light with the theme, so it reliably contrasts either way.
+        className="pointer-events-none absolute inset-0 z-[5] flex items-center justify-center text-[var(--app-text)] opacity-0"
         data-thursday-action-overlay
         aria-hidden="true"
       >

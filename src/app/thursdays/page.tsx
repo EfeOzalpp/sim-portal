@@ -109,7 +109,7 @@ async function ThursdaysList({
   }
 
   return (
-    <div className="grid gap-4">
+    <div className="grid gap-2">
       {thursdays.map((thursday: any) => (
         <ThursdayCard key={thursday.id} thursday={thursday} isAdmin={isAdmin} />
       ))}
@@ -142,17 +142,11 @@ export default async function Thursdays({ searchParams }: ThursdaysProps) {
         <NavContent
           filterContent={
             <>
-              <div className="flex flex-col gap-2">
-                <span className="ui-label hidden min-[769px]:block">Filter</span>
-                <SemesterFilterSelect semesters={semesters} defaultValue={selectedSemesterId} />
-              </div>
-              <div className="flex flex-col gap-2">
-                <span className="ui-label hidden min-[769px]:block">Search</span>
-                <FilterInput query={"thursdays"} placeholder="Search production" />
-              </div>
+              <SemesterFilterSelect semesters={semesters} defaultValue={selectedSemesterId} />
+              <FilterInput query={"thursdays"} placeholder="Search production" />
             </>
           }
-          filterLabel=""
+          filterLabel="Filter & Search"
           manageContent={
             isAdmin ? (
               <>
@@ -181,7 +175,7 @@ export default async function Thursdays({ searchParams }: ThursdaysProps) {
             ) : null
           }
         />
-        <div className="px-3 pb-3">
+        <div className="px-3">
           <Suspense
             fallback={<div style={{ opacity: 0.5, padding: "1rem", background: "transparent" }}>Loading days...</div>}
           >

@@ -1,5 +1,8 @@
 "use client";
 
+// React & Next.js
+import { useState } from "react";
+
 // Actions
 import { BasicUser } from "@/actions/schemas";
 
@@ -19,6 +22,7 @@ import {
 // Helpers
 import { Controller } from "react-hook-form";
 import { isStaffRole } from "@/constants/roles";
+import { formatSemesterCode, getCurrentSemesterCode, normalizeSemesterCode } from "@/components/domain/filters/semester-filter";
 
 const LOCATIONS = [
   { label: "Pozen Center", value: "Pozen Center" },
@@ -27,24 +31,42 @@ const LOCATIONS = [
   { label: "Main Hall", value: "Main Hall" },
 ];
 
+// Sentinel for the semester filter's own "show everyone" option - distinct
+// from ALL_SEMESTERS_VALUE (the page-level filter's sentinel), since this is
+// a separate, local-only filter with no URL state of its own.
+const ALL_SEMESTERS_FILTER_VALUE = "all";
+
 interface ProductionFormProps {
   productionIndex: number;
   control: any;
   users: BasicUser[];
+  semesters?: Array<{ id: string; name: string }>;
 }
 
 export default function ProductionForm({
   productionIndex,
   control,
   users,
+  semesters = [],
 }: ProductionFormProps) {
   const producerUsers = users.filter((u) => !isStaffRole((u as any).role));
+
+  // Narrows which people show up as Producers & Faculty candidates to just
+  // this semester's members - defaults to whichever semester matches today
+  // (same rule as the page-level filters), same as usual.
+  const currentSemesterCode = getCurrentSemesterCode();
+  const currentSemester = semesters.find(
+    (semester) => normalizeSemesterCode(semester.name) === currentSemesterCode,
+  );
+  const [semesterFilterId, setSemesterFilterId] = useState<string | null>(
+    currentSemester?.id ?? semesters[0]?.id ?? null,
+  );
 
   return (
     <div className="flex w-full flex-col gap-6">
       <div className="grid grid-cols-1 gap-6 min-[601px]:grid-cols-2">
         <div className={fieldStackClassName}>
-          <span className="ui-label m-0 block">Production Name</span>
+          <span className="ui-label m-0 block">Name *</span>
           <Controller
             control={control}
             name={`productions.${productionIndex}.name`}
@@ -65,7 +87,7 @@ export default function ProductionForm({
         </div>
 
         <div className={fieldStackClassName}>
-          <span className="ui-label m-0 block">Location</span>
+          <span className="ui-label m-0 block">Location *</span>
           <Controller
             control={control}
             name={`productions.${productionIndex}.location`}
@@ -77,7 +99,6 @@ export default function ProductionForm({
                   {...field}
                   placeholder="Select location"
                   options={LOCATIONS}
-                  allowClear
                   status={fieldState.error ? "error" : ""}
                 />
                 {fieldState.error && (
@@ -93,44 +114,76 @@ export default function ProductionForm({
         <Controller
           control={control}
           name={`productions.${productionIndex}.producers`}
-          render={({ field }) => (
-            <>
-              <div className={sectionHeaderClassName}>
-                <span className="ui-label m-0 block">Producers & Faculty</span>
-                <div className={inlineActionsClassName}>
-                  <Button
-                    type="button"
-                    onClick={() => field.onChange(producerUsers.map((u) => u.id))}
-                  >
-                    Select all
-                  </Button>
-                  <Button
-                    type="button"
-                    tone="danger"
-                    onClick={() => field.onChange([])}
-                  >
-                    Unselect all
-                  </Button>
+          render={({ field }) => {
+            const selectedIds = new Set<string>(field.value ?? []);
+            // A person already selected stays visible/selectable regardless
+            // of the semester filter - it only narrows who else shows up.
+            const filteredProducerUsers = producerUsers.filter(
+              (u) =>
+                selectedIds.has(u.id) ||
+                !semesterFilterId ||
+                (u.semesterIds ?? []).includes(semesterFilterId),
+            );
+
+            return (
+              <>
+                <div className={sectionHeaderClassName}>
+                  <span className="ui-label m-0 block">Producers & Faculty</span>
+                  <div className={inlineActionsClassName}>
+                    {semesters.length > 0 && (
+                      <Select
+                        inModal
+                        className="w-[5.5rem]!"
+                        value={semesterFilterId ?? ALL_SEMESTERS_FILTER_VALUE}
+                        onChange={(value) =>
+                          setSemesterFilterId(value && value !== ALL_SEMESTERS_FILTER_VALUE ? value : null)
+                        }
+                        placeholder="Semester"
+                        options={[
+                          { value: ALL_SEMESTERS_FILTER_VALUE, label: "All" },
+                          ...semesters.map((semester) => ({
+                            value: semester.id,
+                            label: formatSemesterCode(semester.name),
+                          })),
+                        ]}
+                      />
+                    )}
+                    <Button
+                      type="button"
+                      className="whitespace-nowrap"
+                      onClick={() => field.onChange(filteredProducerUsers.map((u) => u.id))}
+                    >
+                      Select all
+                    </Button>
+                    <Button
+                      type="button"
+                      tone="danger"
+                      className="whitespace-nowrap"
+                      onClick={() => field.onChange([])}
+                    >
+                      Unselect all
+                    </Button>
+                  </div>
                 </div>
-              </div>
-              <Select
-                inModal
-                {...field}
-                mode="multiple"
-                searchable
-                maxTagCount={12}
-                placeholder="Search and select users..."
-                options={[
-                  ...producerUsers,
-                  ...users.filter(
-                    (u) => (field.value ?? []).includes(u.id) && isStaffRole((u as any).role)
-                  ),
-                ]
-                  .sort((a, b) => (a.name ?? "").localeCompare(b.name ?? ""))
-                  .map((u) => ({ value: u.id, label: u.name ?? "Unnamed User" }))}
-              />
-            </>
-          )}
+                <Select
+                  inModal
+                  {...field}
+                  mode="multiple"
+                  searchable
+                  maxTagCount={12}
+                  placeholder="Search and select users..."
+                  options={[
+                    ...filteredProducerUsers,
+                    ...users.filter(
+                      (u) => selectedIds.has(u.id) && isStaffRole((u as any).role)
+                    ),
+                  ]
+                    .sort((a, b) => (a.name ?? "").localeCompare(b.name ?? ""))
+                    .map((u) => ({ value: u.id, label: u.name ?? "Unnamed User" }))}
+                />
+              </>
+            );
+          }}
         />
       </div>
 
@@ -138,6 +191,7 @@ export default function ProductionForm({
         productionIndex={productionIndex}
         control={control}
         users={users}
+        semesters={semesters}
       />
     </div>
   );
