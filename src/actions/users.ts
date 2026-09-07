@@ -19,7 +19,7 @@ import { deleteStoredUserImage, storeUserImage } from "@/actions/user-image-stor
 // Helpers
 import { prisma } from "@/database";
 import { isAllSemestersValue } from "@/constants/filters";
-import { normalizeSemesterCode } from "@/components/domain/semesters/semester-filter";
+import { normalizeSemesterCode } from "@/components/domain/filters/semester-filter";
 import { ROLES } from "@/constants/roles";
 import { Prisma } from "@prisma/client";
 
