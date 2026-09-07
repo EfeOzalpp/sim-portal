@@ -20,11 +20,11 @@ html[data-theme="light"] {
   --app-card-label-bg: #ededed;
   --app-secondary: #ffffff;
   --app-subtle: rgba(245, 247, 255, 0.3);
-  --app-text: #1f2933;
+  --app-text: #232e39;
   --app-muted: #4d525e;
   --app-icon: #586456;
-  --app-border: #e1e1e1;
-  --scrollbar-thumb: rgba(0, 0, 0, 0.15);
+  --app-border: #e1e3e7;
+  --scrollbar-thumb: rgba(41, 4, 4, 0.15);
   --scrollbar-thumb-hover: rgba(0, 0, 0, 0.28);
 
   /* Brand */
@@ -52,21 +52,21 @@ html[data-theme="light"] {
 
   /* Button: separate from --app-surface so each variant can diverge on its own; nav's hover/active live here too, same idea. */
   --btn-default-bg: #ffffff;
-  --nav-button-bg-hover: rgba(238, 239, 244, 0.5);
-  --nav-button-bg-active: rgba(225, 227, 232, 0.9);
+  --nav-button-bg-hover: rgba(238, 239, 244, 0.8);
+  --nav-button-bg-active: rgb(222, 225, 230);
 
   /* Input, Select, and their shared field chrome. Backgrounds are the one
      thing that isn't actually shared - Select keeps its own --select-bg. */
-  --input-bg: #f3f4f6;
+  --input-bg: #f5f5f5;
   --input-bg-hover: #ffffff;
   --select-bg: #ffffff;
   --select-bg-hover: #ffffff;
-  --input-border: #aca7a2;
+  --input-border: #d4d4da;
   --input-border-hover: #c7c7c7;
   --input-error-border: #d36b6b;
   --input-text: var(--app-text);
   --input-placeholder: var(--app-muted);
-  --input-icon: #494541;
+  --input-icon: #646464;
   --input-dropdown-bg: #ffffff;
   --input-hover-shadow: 0 0 0 1px rgba(0, 0, 0, 0.12);
   --input-tag-text: #1f1f1f;
@@ -116,7 +116,7 @@ html[data-theme="dark"] {
 
   /* Button */
   --btn-default-bg: #1c1c20;
-  --nav-button-bg-hover: #303035;
+  --nav-button-bg-hover: #2c2c31;
   --nav-button-bg-active: #35353b;
 
   /* Input, Select, and their shared field chrome. Backgrounds are the one

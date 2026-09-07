@@ -61,17 +61,11 @@ export default async function IndividualPage({ searchParams }: IndividualPagePro
 				<NavContent
 					filterContent={
 						<>
-							<div className="flex flex-col gap-2">
-								<span className="ui-label hidden min-[769px]:block">Filter</span>
-								<SemesterFilterSelect semesters={semesters} defaultValue={semesterId} />
-							</div>
-							<div className="flex flex-col gap-2">
-								<span className="ui-label hidden min-[769px]:block">Search</span>
-								<FilterInput query="user" placeholder="Search" />
-							</div>
+							<SemesterFilterSelect semesters={semesters} defaultValue={semesterId} />
+							<FilterInput query="user" placeholder="Search" />
 						</>
 					}
-					filterLabel=""
+					filterLabel="Filter & Search"
 					manageContent={
 						<ActionModeButton type="button" variant="action" mode={ACTION_MODES.editGrades}>
 							Edit Grades

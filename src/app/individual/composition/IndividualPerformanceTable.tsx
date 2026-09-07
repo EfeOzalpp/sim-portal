@@ -66,6 +66,21 @@ function ItemList({ children }: { children: ReactNode }) {
 
 const TABLE_MIN_WIDTH = 720;
 
+// Shared between the header table and the body table (see the render below)
+// so their columns line up exactly - table-layout: fixed makes both tables
+// honor these widths precisely instead of letting content nudge them apart.
+const COLUMN_WIDTHS = ["16%", "31%", "31%", "22%"];
+
+function ColumnWidths() {
+	return (
+		<colgroup>
+			{COLUMN_WIDTHS.map((width, index) => (
+				<col key={index} style={{ width }} />
+			))}
+		</colgroup>
+	);
+}
+
 type SortKey = "name" | "productions" | "presentations";
 type SortDirection = "asc" | "desc";
 type SortState = { key: SortKey; direction: SortDirection } | null;
@@ -97,6 +112,7 @@ function SortableHeader({ label, sortKey, sort, onSort }: { label: string; sortK
 export default function IndividualPerformanceTable({ users = [] }: IndividualPerformanceTableProps) {
 	const scrollRef = useRef<HTMLDivElement>(null);
 	const topScrollRef = useRef<HTMLDivElement>(null);
+	const headerScrollRef = useRef<HTMLDivElement>(null);
 	const { activeMode } = useActionMode();
 	const [selectedGradeUser, setSelectedGradeUser] = useState<UserStat | null>(null);
 	const [sort, setSort] = useState<SortState>(null);
@@ -119,25 +135,37 @@ export default function IndividualPerformanceTable({ users = [] }: IndividualPer
 		setGradesByUser(persistedGradesByUser);
 	}, [persistedGradesByUser]);
 
-	// Mirrors a fake scrollbar above the table (visible even when the real
-	// one, at the table's bottom edge, is scrolled far out of view) with the
-	// table's own actual horizontal scroll position.
+	// Keeps three independently-scrollable regions in horizontal lockstep:
+	// the fake scrollbar above the table (visible even when the real one, at
+	// the table's bottom edge, is scrolled far out of view), the header row,
+	// and the body. The header has its own scroll container (rather than
+	// sharing one with the body, like a plain <thead>/<tbody> pair normally
+	// would) specifically so it can be position: sticky - an element with
+	// overflow-x: auto is a scroll container as a whole, on both axes at
+	// once, regardless of what overflow-y is set to, which would otherwise
+	// permanently block any sticky descendant from ever reaching a scroll
+	// ancestor further out. The header never fires its own scroll events
+	// (overflow: hidden, no direct user interaction), so it only ever gets
+	// written to here, never read from.
 	useEffect(() => {
 		const scroll = scrollRef.current;
 		const topScroll = topScrollRef.current;
-		if (!scroll || !topScroll) return;
+		const headerScroll = headerScrollRef.current;
+		if (!scroll || !topScroll || !headerScroll) return;
 
 		let syncing = false;
 		const onScroll = () => {
 			if (syncing) return;
 			syncing = true;
 			topScroll.scrollLeft = scroll.scrollLeft;
+			headerScroll.scrollLeft = scroll.scrollLeft;
 			syncing = false;
 		};
 		const onTopScroll = () => {
 			if (syncing) return;
 			syncing = true;
 			scroll.scrollLeft = topScroll.scrollLeft;
+			headerScroll.scrollLeft = topScroll.scrollLeft;
 			syncing = false;
 		};
 
@@ -173,22 +201,28 @@ export default function IndividualPerformanceTable({ users = [] }: IndividualPer
 			<div ref={topScrollRef} className={styles.topScrollbar} aria-hidden="true">
 				<div style={{ width: TABLE_MIN_WIDTH, height: 1 }} />
 			</div>
-			<div ref={scrollRef} className={styles.tableScroll}>
+			<div ref={headerScrollRef} className={styles.headerScroll}>
 				<table className={styles.table}>
+					<ColumnWidths />
 					<thead>
 						<tr>
-							<th style={{ width: "16%" }} aria-sort={ariaSortFor("name")}>
+							<th aria-sort={ariaSortFor("name")}>
 								<SortableHeader label="Names" sortKey="name" sort={sort} onSort={toggleSort} />
 							</th>
-							<th style={{ width: "31%" }} aria-sort={ariaSortFor("productions")}>
+							<th aria-sort={ariaSortFor("productions")}>
 								<SortableHeader label="Productions" sortKey="productions" sort={sort} onSort={toggleSort} />
 							</th>
-							<th style={{ width: "31%" }} aria-sort={ariaSortFor("presentations")}>
+							<th aria-sort={ariaSortFor("presentations")}>
 								<SortableHeader label="Presentations" sortKey="presentations" sort={sort} onSort={toggleSort} />
 							</th>
-							<th style={{ width: "22%" }}>Grades</th>
+							<th>Grades</th>
 						</tr>
 					</thead>
+				</table>
+			</div>
+			<div ref={scrollRef} className={styles.tableScroll}>
+				<table className={styles.table}>
+					<ColumnWidths />
 					<tbody>
 						{sortedUsers.map((user) => {
 							const productions = user.productions || [];

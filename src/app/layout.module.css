@@ -38,19 +38,50 @@
 .contentDivider > [data-page-content] > :not([data-content-nav]):not([data-action-mode-backdrop]) {
 	min-width: 0;
 	min-height: 0;
-	padding-top: 0.75rem;
+	padding-block: 0.75rem;
 	overflow: visible;
 	overscroll-behavior: contain;
+	/*
+	 * align-self: start (overriding the inherited stretch) - <main>'s row is
+	 * minmax(0, 1fr), a flexible height, not "size to content". With
+	 * stretch, this box is exactly that (often too-short) row height, and
+	 * overflow: visible just lets taller content spill past its edge - so
+	 * padding-bottom ends up sitting at the end of the short box, not at the
+	 * end of the actually-overflowing content, and visually disappears.
+	 * start instead sizes this box to its own real content height, so
+	 * padding-bottom lands where content really ends. Full-bleed content
+	 * below explicitly wants real stretch instead, so it opts back in.
+	 */
+	align-self: start;
 }
 
 .contentDivider > [data-page-content] > [data-full-bleed-content]:not([data-content-nav]):not([data-action-mode-backdrop]) {
 	padding-top: 0;
+	align-self: stretch;
+}
+
+@media print {
+	.contentDivider > [data-page-content] > :not([data-content-nav]):not([data-action-mode-backdrop]) {
+		padding-block: 0;
+	}
 }
 
 .contentDivider > :not([data-page-title]):not([data-page-content]) {
 	grid-row: 1 / -1;
 	min-height: 0;
 	overflow: auto;
+}
+
+/*
+ * Content that wants to fill (and center within) the full viewport, with no
+ * PageTitle/NavContent around it (e.g. the Welcome/login page) - <main>'s
+ * row template is otherwise `auto` (content-sized) below 769px, so spanning
+ * grid-row: 1 / -1 above has nothing tall to span into on mobile. This gives
+ * it one genuinely flexible row instead, at every breakpoint; align-items:
+ * stretch (already set on .contentDivider) does the rest.
+ */
+.contentDivider:has(> [data-center-content]) {
+	grid-template-rows: minmax(0, 1fr);
 }
 
 @media (min-width: 769px) {

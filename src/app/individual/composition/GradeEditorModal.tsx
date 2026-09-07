@@ -88,7 +88,7 @@ export default function GradeEditorModal({
 					onClose();
 				}
 			}}
-			title={`Edit Grades: ${user.name || "Student"}`}
+			title={`Edit ${user.name || "Student"}'s Grade`}
 			dialogClassName="w-[min(38rem,100%)]"
 		>
 			<div className="flex flex-col gap-6">

@@ -1,21 +1,33 @@
+/* The header (below) and body each get their own horizontal scroll region
+   instead of sharing one <table> - an element with overflow-x: auto is a
+   scroll container as a whole, on both axes, no matter what overflow-y is
+   set to, which would otherwise permanently block the header's position:
+   sticky from ever reaching a scroll ancestor further out (the page itself).
+   Splitting them means each side needs to be told the columns line up on
+   its own - see table-layout: fixed + <colgroup> (IndividualPerformanceTable.tsx). */
 .tableScroll {
 	overflow-x: auto;
+}
+
+.headerScroll {
+	position: sticky;
+	top: 0;
+	z-index: 10;
+	overflow: hidden;
 }
 
 .table {
 	width: 100%;
 	min-width: 720px;
+	table-layout: fixed;
 	border-collapse: collapse;
 	padding: 0;
 	color: var(--app-text);
 }
 
 .table thead > tr > th {
-	position: sticky;
-	top: 0;
-	z-index: 10;
-	padding: 0.5rem 1rem;
-	background: var(--app-subtle);
+	padding: 0.85rem 1rem;
+	background: var(--app-surface);
 	border-bottom: 1px solid var(--app-border);
 	color: var(--app-text);
 	font-family: var(--font-heading);
@@ -30,8 +42,10 @@
 }
 
 .table tbody > tr > td {
-	padding: 0.5rem 1rem;
-	background: var(--app-subtle);
+	/* padding-top lives here rather than on <tr> - tr padding is a no-op
+	   under border-collapse: collapse (only td/th respect it). */
+	padding: 0.85rem 1rem;
+	background: var(--app-surface);
 	border-bottom: 1px solid var(--app-border);
 	color: var(--app-text);
 	vertical-align: top;
@@ -48,7 +62,7 @@
 .sortableHeader {
 	display: inline-flex;
 	align-items: center;
-	gap: calc(0.5rem / 2);
+	gap: 0.5rem;
 	cursor: pointer;
 	border: 0;
 	background: transparent;
@@ -99,20 +113,22 @@
 	gap: 0.5rem;
 }
 
+/* Mirrors the role-badge style (UserProfileView.tsx's rounded-md/border/
+   bg-[var(--app-card-label-bg)] pill), not the old ad-hoc 16px pill this had before. */
 .countValue {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	min-width: 2.5rem;
-	padding: calc(0.5rem / 2) 0.5rem;
+	min-width: 1.25rem;
+	padding: 0.25rem 0.5rem;
 	background: var(--app-card-label-bg);
 	border: 1px solid var(--app-border);
-	border-radius: 16px;
-	color: var(--app-text);
+	border-radius: 0.375rem;
+	color: var(--app-muted);
 	font-family: var(--font-sans);
-	font-size: 0.875rem;
+	font-size: 0.6875rem;
 	font-weight: 600;
-	line-height: 1.2;
+	line-height: 1.25;
 	text-transform: uppercase;
 }
 
@@ -243,11 +259,14 @@
 		color: #000 !important;
 	}
 
+	.headerScroll {
+		position: static !important;
+	}
+
 	.table thead > tr > th {
 		background: #f0f0f0 !important;
 		color: #000 !important;
 		border-bottom: 1px solid #aaa !important;
-		position: static !important;
 	}
 
 	.table tbody > tr > td {
@@ -287,7 +306,7 @@
 	}
 
 	/* Offset below MobileNavContent (toggle bar ~2rem + 1px border) */
-	.table thead > tr > th {
+	.headerScroll {
 		top: 2rem;
 	}
 
