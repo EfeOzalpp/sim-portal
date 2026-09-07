@@ -25,6 +25,17 @@ export function getSemesterFilterValue(searchParams: SearchParamsLike) {
 	);
 }
 
+// The semester code ("SP26"/"FA26") "right now" should default to, purely
+// from today's date - January through July is Spring of the current year,
+// August through December is Fall of the current year. Exported so any
+// other "default to the current semester" spot (e.g. ProductionForm's
+// Producers & Faculty filter) can reuse the same rule.
+export function getCurrentSemesterCode(now: Date = new Date()) {
+	const year = now.getFullYear() % 100;
+	const season = now.getMonth() < 7 ? "SP" : "FA";
+	return `${season}${String(year).padStart(2, "0")}`;
+}
+
 export function getSelectedSemesterId(
 	searchParams: SearchParamsLike,
 	semesters: SemesterFilterOption[],
@@ -36,7 +47,14 @@ export function getSelectedSemesterId(
 	}
 
 	if (!filterValue) {
-		return semesters[0]?.id || null;
+		// Prefer whichever semester actually matches "now" (e.g. SP26 while
+		// we're in Feb 2026) - falls back to the most recent semester (index
+		// 0, per getAllSemesters' own sort) when that one doesn't exist yet.
+		const currentCode = getCurrentSemesterCode();
+		const currentSemester = semesters.find(
+			(semester) => normalizeSemesterCode(semester.name) === currentCode,
+		);
+		return currentSemester?.id || semesters[0]?.id || null;
 	}
 
 	const selectedSemester = semesters.find((semester) =>

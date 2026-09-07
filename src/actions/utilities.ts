@@ -1,5 +1,21 @@
 import { prisma } from "@/database";
 import { Prisma } from "@prisma/client";
+import { normalizeSemesterCode } from "@/components/domain/filters/semester-filter";
+
+// Sortable key from a semester's own code (SP/FA + year) - two "slots" per
+// year, Spring before Fall, so e.g. FA26 sorts just after SP26. Doesn't
+// depend on any Thursday existing under the semester yet, unlike sorting by
+// first-Thursday-date (below) - a freshly created semester has none, and
+// used to always sort first regardless of what year/season it represents.
+// Unparseable names sort last.
+function getSemesterSortKey(name: string): number {
+	const code = normalizeSemesterCode(name);
+	if (!code) return -Infinity;
+
+	const season = code.slice(0, 2);
+	const year = Number(code.slice(2));
+	return year * 2 + (season === "FA" ? 1 : 0);
+}
 
 // Fetch all semesters with their thursdays and associated users
 export async function getAllSemesters() {
@@ -22,12 +38,8 @@ export async function getAllSemesters() {
 			},
 		});
 
-		// Sort Semesters by their first Thursday date
-		semesters.sort((a, b) => {
-			const aFirstThursdayDate = a.thursdays.length > 0 ? a.thursdays[0].date.getTime() : Infinity;
-			const bFirstThursdayDate = b.thursdays.length > 0 ? b.thursdays[0].date.getTime() : Infinity;
-			return bFirstThursdayDate - aFirstThursdayDate;
-		});
+		// Sort by the semester's own code (SP/FA + year), newest first.
+		semesters.sort((a, b) => getSemesterSortKey(b.name) - getSemesterSortKey(a.name));
 
 		return semesters;
 	} catch (error) {

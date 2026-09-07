@@ -37,13 +37,13 @@ const RADIUS = 12;
 // sync with the matching app token (named alongside each value below) -
 // this file won't notice if styling-theme.css changes out from under it.
 const lightValues: DatePickerThemeValues = {
-	background: "#ffffff", // = --input-bg
+	background: "#ffffff", // = --select-bg
 	elevatedBackground: "#ffffff", // = --input-dropdown-bg
-	border: "#d9d9d9", // = --app-border
+	border: "#d4d4da", // = --input-border
 	text: "#1f2933", // = --app-text
-	placeholder: "#6b7280", // = --input-placeholder / --app-muted
-	icon: "#6b7280", // = --input-placeholder / --app-muted
-	hoverBackground: "#ffffff", // = --input-bg-hover
+	placeholder: "#4d525e", // = --input-placeholder / --app-muted
+	icon: "#494541", // = --input-icon
+	hoverBackground: "#ffffff", // = --select-bg-hover
 	hoverBorder: "#c7c7c7", // = --input-border-hover
 	focusShadow: "var(--input-hover-shadow)",
 	error: "#d36b6b", // = --input-error-border
@@ -55,14 +55,14 @@ const lightValues: DatePickerThemeValues = {
 };
 
 const darkValues: DatePickerThemeValues = {
-	background: "#1f1f1f", // = --input-bg (dark: var(--app-secondary), currently #1f1f1f)
-	elevatedBackground: "#1f1f1f", // = --input-dropdown-bg (dark: var(--app-secondary))
-	border: "#343434", // = --input-border
-	text: "#f5f5f5", // = --app-text
-	placeholder: "#a3a3a3", // = --app-muted
-	icon: "#c6c6c6", // = --input-icon
-	hoverBackground: "#292929", // = --input-bg-hover
-	hoverBorder: "#4a4a4a", // = --input-border-hover
+	background: "#1c1c20", // = --select-bg (= --app-secondary)
+	elevatedBackground: "#1c1c20", // = --input-dropdown-bg (= --app-secondary)
+	border: "#38383e", // = --input-border
+	text: "#f2f2f4", // = --app-text
+	placeholder: "#b5b8be", // = --app-muted
+	icon: "#cacad2", // = --input-icon
+	hoverBackground: "#242429", // = --select-bg-hover
+	hoverBorder: "#504f57", // = --input-border-hover
 	focusShadow: "var(--input-hover-shadow)",
 	error: "#b36a6a", // = --input-error-border
 	primary: "#6aa47a", // calendar-only accent, no app token

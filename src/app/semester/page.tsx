@@ -106,11 +106,11 @@ export default async function SemesterPage({ searchParams }: SemesterPageProps) 
 
   return (
     <>
-      <PageTitle title="Semester" filter={ALL_SEMESTERS_VALUE} />
+      <PageTitle title={ALL_SEMESTERS_VALUE} />
       <ActionModeSurface>
         <NavContent
           filterContent={<FilterInput query="semesterSearch" placeholder="Search semester" />}
-          filterLabel="Search"
+          filterLabel="Semesters"
           manageContent={
             <>
               <Button href={getSemesterModalHref(filters, SEMESTER_MODAL_PARAMS.add, "1")} variant="action">New Semester</Button>
@@ -127,7 +127,7 @@ export default async function SemesterPage({ searchParams }: SemesterPageProps) 
             </>
           }
         />
-        <div className="px-3 pb-3">
+        <div className="px-3">
           {visibleSemesters.length > 0 ? (
             <SemesterCardGrid semesters={visibleSemesters} />
           ) : (

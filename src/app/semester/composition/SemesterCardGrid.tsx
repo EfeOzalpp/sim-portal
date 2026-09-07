@@ -42,7 +42,11 @@ function SemesterCard({ semester }: { semester: any }) {
 				{getSemesterDateRange(semester)}
 			</p>
 			<span
-				className="pointer-events-none absolute inset-0 z-[5] flex items-center justify-center text-[var(--app-card-action-icon)] opacity-0"
+				// --app-text (not --app-card-action-icon): that token is a fixed
+				// white, meant for icons on top of a photo (UserCard) - this card
+				// has no photo, just the flat surface color, so a hardcoded white
+				// icon is invisible in light mode. --app-text flips with the theme.
+				className="pointer-events-none absolute inset-0 z-[5] flex items-center justify-center text-[var(--app-text)] opacity-0"
 				data-semester-action-overlay
 				aria-hidden="true"
 			>
@@ -72,7 +76,7 @@ export default function SemesterCardGrid({ semesters }: SemesterCardGridProps) {
 	}
 
 	return (
-		<div className="grid grid-cols-[repeat(auto-fill,minmax(14rem,1fr))] items-stretch gap-4">
+		<div className="grid grid-cols-[repeat(auto-fill,minmax(14rem,1fr))] items-stretch gap-2">
 			{semesters.map((semester: any) => (
 				<div
 					key={semester.id}

@@ -57,7 +57,7 @@ export const inputBareClassName = [
 
 // The "clear" (x) button shown once a value is entered, when `allowClear` is set.
 export const inputClearButtonClassName = [
-	"inline-grid h-5 w-5 flex-none cursor-pointer place-items-center",
+	"inline-grid h-4 w-4 flex-none cursor-pointer place-items-center",
 	"border-none bg-transparent p-0 text-[var(--input-icon)] hover:text-[var(--input-text)]",
 ].join(" ");
 

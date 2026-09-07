@@ -21,6 +21,18 @@ interface UserCardGridProps {
 
 const BATCH_SIZE = 30;
 
+// Grid: auto-filling columns, centered when they don't fill a row. Every
+// direct child (each UserCard) gets its sizing/border/background pushed down
+// from here instead of repeating it per-card. print: overrides force a fixed
+// 10-column printable roster in physical units, white regardless of theme.
+const gridClassName = [
+	"grid grid-cols-[repeat(auto-fill,minmax(10rem,1fr))] justify-center gap-2 bg-[var(--app-surface)]",
+	"[&>*]:min-w-0 [&>*]:w-full [&>*]:rounded-xl [&>*]:border-solid [&>*]:border-[var(--app-border)] [&>*]:bg-[var(--app-secondary)] [&>*]:border",
+	"print:grid-cols-[repeat(10,minmax(0,1fr))] print:justify-stretch print:gap-[0.06in] print:bg-white print:text-black",
+	"print:[&>*]:break-inside-avoid print:[&>*]:border-[#ccc]! print:[&>*]:bg-white! print:[&>*]:[page-break-inside:avoid]",
+	"print:[&_a]:text-inherit print:[&_a]:no-underline",
+].join(" ");
+
 export default function UserCardGrid({ users }: UserCardGridProps) {
 	const { activeMode } = useActionMode();
 	const router = useRouter();
@@ -80,7 +92,7 @@ export default function UserCardGrid({ users }: UserCardGridProps) {
 
 	return (
 		<>
-			<div className="grid grid-cols-[repeat(auto-fill,minmax(10rem,1fr))] justify-center gap-2 bg-[var(--app-surface)] [&>*]:min-w-0 [&>*]:w-full [&>*]:rounded-xl [&>*]:border-solid [&>*]:border-[var(--app-border)] [&>*]:bg-[var(--app-secondary)] [&>*]:border print:grid-cols-[repeat(10,minmax(0,1fr))] print:justify-stretch print:gap-[0.06in] print:bg-white print:text-black print:[&>*]:break-inside-avoid print:[&>*]:border-[#ccc]! print:[&>*]:bg-white! print:[&>*]:[page-break-inside:avoid] print:[&_a]:text-inherit print:[&_a]:no-underline">
+			<div className={gridClassName}>
 				{visibleUsers.map((user) => (
 					<UserCard
 						key={user.id}

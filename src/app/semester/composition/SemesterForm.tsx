@@ -22,6 +22,12 @@ import {
 // Helpers
 import { useForm, Controller } from "react-hook-form";
 import { handleFormAction } from "@/helpers";
+import { formatSemesterCode, getCurrentSemesterCode, normalizeSemesterCode } from "@/components/domain/filters/semester-filter";
+
+// Sentinel for the semester filter's own "show everyone" option - distinct
+// from ALL_SEMESTERS_VALUE (the page-level filter's sentinel), since this is
+// a separate, local-only filter with no URL state of its own.
+const ALL_SEMESTERS_FILTER_VALUE = "all";
 
 function getSemesterNameOptions(currentValue?: string) {
   const options = Array.from({ length: 100 }, (_, year) => {
@@ -67,6 +73,7 @@ interface SemesterFormProps {
   semester?: any;
   usersFromCurrentSemester?: BasicUser[];
   users: BasicUser[];
+  semesters?: Array<{ id: string; name: string }>;
 }
 
 export default function SemesterForm({
@@ -74,6 +81,7 @@ export default function SemesterForm({
   semester,
   usersFromCurrentSemester,
   users,
+  semesters = [],
 }: SemesterFormProps) {
   const initialValues = transformSemesterFromAPI(
     semester,
@@ -95,6 +103,15 @@ export default function SemesterForm({
     usersFromCurrentSemester,
   );
 
+  // Narrows Select Users candidates to members of a reference semester -
+  // defaults to whichever semester matches today, same as usual.
+  const currentSemesterCode = getCurrentSemesterCode();
+  const currentSemester = semesters.find(
+    (s) => normalizeSemesterCode(s.name) === currentSemesterCode,
+  );
+  const [semesterFilterId, setSemesterFilterId] = useState<string | null>(
+    currentSemester?.id ?? semesters[0]?.id ?? null,
+  );
 
   const handleFormSubmit = async (data: SemesterFormValues) => {
     const payload = transformSemesterPayload(data);
@@ -119,7 +136,7 @@ export default function SemesterForm({
         <div className="flex flex-1 flex-col gap-4">
           <div className="grid w-full grid-cols-[max-content_minmax(0,1fr)] gap-4 max-[600px]:grid-cols-1">
             <div className="flex min-w-0 flex-col gap-2">
-              <span className="ui-label m-0 block">Semester Name</span>
+              <span className="ui-label m-0 block">Semester Name *</span>
               <Controller
                 control={control}
                 name="name"
@@ -144,7 +161,7 @@ export default function SemesterForm({
             </div>
 
             <div className="flex min-w-0 flex-col gap-2">
-              <span className="ui-label m-0 block">Select Date Range</span>
+              <span className="ui-label m-0 block">Select Date Range *</span>
               <Controller
                 control={control}
                 name="dates"
@@ -169,37 +186,70 @@ export default function SemesterForm({
             <Controller
               control={control}
               name="users"
-              render={({ field }) => (
-                <>
-                  <div className="mb-2 flex items-end justify-between gap-4 max-[600px]:flex-col max-[600px]:items-stretch">
-                    <span className="ui-label m-0 block">Select Users</span>
-                    <div className="flex items-center gap-2">
-                      <Button
-                        type="button"
-                        onClick={() => field.onChange(selectableUsers.map((u) => u.id))}
-                      >
-                        Select all
-                      </Button>
-                      <Button
-                        type="button"
-                        tone="danger"
-                        onClick={() => field.onChange([])}
-                      >
-                        Unselect all
-                      </Button>
+              render={({ field }) => {
+                const selectedIds = new Set<string>(field.value ?? []);
+                // A person already selected stays visible/selectable
+                // regardless of the semester filter - it only narrows who
+                // else shows up.
+                const filteredSelectableUsers = selectableUsers.filter(
+                  (u) =>
+                    selectedIds.has(u.id) ||
+                    !semesterFilterId ||
+                    (u.semesterIds ?? []).includes(semesterFilterId),
+                );
+
+                return (
+                  <>
+                    <div className="mb-2 flex items-end justify-between gap-4 max-[600px]:flex-col max-[600px]:items-stretch">
+                      <span className="ui-label m-0 block">Select Users</span>
+                      <div className="flex flex-wrap items-center gap-2">
+                        {semesters.length > 0 && (
+                          <Select
+                            inModal
+                            className="w-[5.5rem]!"
+                            value={semesterFilterId ?? ALL_SEMESTERS_FILTER_VALUE}
+                            onChange={(value) =>
+                              setSemesterFilterId(value && value !== ALL_SEMESTERS_FILTER_VALUE ? value : null)
+                            }
+                            placeholder="Semester"
+                            options={[
+                              { value: ALL_SEMESTERS_FILTER_VALUE, label: "All" },
+                              ...semesters.map((s) => ({
+                                value: s.id,
+                                label: formatSemesterCode(s.name),
+                              })),
+                            ]}
+                          />
+                        )}
+                        <Button
+                          type="button"
+                          className="whitespace-nowrap"
+                          onClick={() => field.onChange(filteredSelectableUsers.map((u) => u.id))}
+                        >
+                          Select all
+                        </Button>
+                        <Button
+                          type="button"
+                          tone="danger"
+                          className="whitespace-nowrap"
+                          onClick={() => field.onChange([])}
+                        >
+                          Unselect all
+                        </Button>
+                      </div>
                     </div>
-                  </div>
-                  <Select
-                    inModal
-                    {...field}
-                    mode="multiple"
-                    searchable
-                    maxTagCount={12}
-                    placeholder="Search and select users..."
-                    options={selectableUsers.map((u) => ({ value: u.id, label: u.name ?? "Unnamed User" }))}
-                  />
-                </>
-              )}
+                    <Select
+                      inModal
+                      {...field}
+                      mode="multiple"
+                      searchable
+                      maxTagCount={12}
+                      placeholder="Search and select users..."
+                      options={filteredSelectableUsers.map((u) => ({ value: u.id, label: u.name ?? "Unnamed User" }))}
+                    />
+                  </>
+                );
+              }}
             />
           </div>
         </div>

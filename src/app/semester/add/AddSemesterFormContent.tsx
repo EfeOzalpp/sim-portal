@@ -26,6 +26,7 @@ export default async function AddSemesterFormContent() {
 			onSubmit={onSubmitAddSemester}
 			usersFromCurrentSemester={usersFromCurrentSemester}
 			users={users}
+			semesters={semesters}
 		/>
 	);
 }

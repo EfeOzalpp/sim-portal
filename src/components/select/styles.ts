@@ -35,7 +35,7 @@ export const selectIndicatorsClassName = "flex flex-none items-center gap-1";
 
 // The trigger's dropdown chevron; flips 180° when the popover is open.
 export const selectChevronClassName = [
-	"h-5 w-5 flex-none bg-[var(--input-icon)]",
+	"h-4 w-4 flex-none bg-[var(--input-icon)]",
 	"transition-transform duration-150 group-data-[state=open]:rotate-180",
 	"[mask-image:url(../assets/arrow/down.svg)] [mask-position:center] [mask-repeat:no-repeat] [mask-size:contain]",
 ].join(" ");
@@ -45,7 +45,7 @@ export const selectSpinnerClassName = "flex h-4 w-4 flex-none items-center justi
 
 // The "clear selection" (x) button, shown once a value is selected when `allowClear` is set.
 export const selectClearButtonClassName = [
-	"inline-grid h-5 w-5 flex-none cursor-pointer place-items-center",
+	"inline-grid h-4 w-4 flex-none cursor-pointer place-items-center",
 	"border-none bg-transparent p-0 text-[var(--input-icon)] hover:text-[var(--input-text)]",
 ].join(" ");
 

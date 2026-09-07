@@ -21,6 +21,10 @@ export type BasicUser = {
 	id: string;
 	name: string;
 	image: string;
+	/** Semester ids this user belongs to - drives the Producers & Faculty
+	 * semester filter (ProductionForm.tsx). Optional since not every
+	 * getAllUsers-shaped list bothers selecting it. */
+	semesterIds?: string[];
 };
 
 export const SemesterSchema = z.object({

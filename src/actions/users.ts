@@ -142,7 +142,7 @@ export async function getUser(id: string) {
 
 export async function getAllUsers() {
 	return await action(async () => {
-		return await prisma.user.findMany({
+		const users = await prisma.user.findMany({
 			where: { role: { not: ROLES.staff } },
 			select: {
 				id: true,
@@ -150,9 +150,15 @@ export async function getAllUsers() {
 				email: true,
 				image: true,
 				role: true,
+				semesters: { select: { id: true } },
 			},
 			orderBy: { name: "asc" }
 		});
+
+		return users.map(({ semesters, ...user }) => ({
+			...user,
+			semesterIds: semesters.map((s) => s.id),
+		}));
 	});
 }
 

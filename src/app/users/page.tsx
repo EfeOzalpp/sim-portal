@@ -134,17 +134,11 @@ export default async function UsersPage({ searchParams }: UsersProps) {
 				<NavContent
 					filterContent={
 						<>
-							<div className="flex flex-col gap-2">
-								<span className="ui-label hidden min-[769px]:block">Filter</span>
-								<SemesterFilterSelect semesters={semesters} defaultValue={selectedSemesterId} />
-							</div>
-							<div className="flex flex-col gap-2">
-								<span className="ui-label hidden min-[769px]:block">Search</span>
-								<FilterInput query={"user"} placeholder="Search user" />
-							</div>
+							<SemesterFilterSelect semesters={semesters} defaultValue={selectedSemesterId} />
+							<FilterInput query={"user"} placeholder="Search user" />
 						</>
 					}
-					filterLabel=""
+					filterLabel="Filter & Search"
 					manageContent={
 						isAdmin ? (
 							<>
@@ -179,7 +173,7 @@ export default async function UsersPage({ searchParams }: UsersProps) {
 					// has label but is already defaulted to export in upstream
 					printContent={<PrintLink />}
 				/>
-				<div className="px-2 pb-2 print:p-0">
+				<div className="px-2 print:px-0">
 					{/* PageTitle (which normally shows this same label) is print:hidden,
 					    so this is the only place the current filter reaches the printed page. */}
 					<div className="mb-[0.15in] hidden font-sans text-[9pt] font-bold tracking-[0.06em] text-black uppercase print:block">

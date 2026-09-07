@@ -239,7 +239,7 @@ export default function UserForm({
         <div className="grid grid-cols-2 gap-4 max-[600px]:w-full max-[600px]:grid-cols-1">
           <div>
             <span className="ui-label mb-2 block">
-              Full Name
+              Full Name *
             </span>
             <Controller
               control={control}
@@ -275,7 +275,7 @@ export default function UserForm({
 
           <div>
             <span className="ui-label mb-2 block">
-              Email Address
+              Email Address *
             </span>
             <Controller
               control={control}
