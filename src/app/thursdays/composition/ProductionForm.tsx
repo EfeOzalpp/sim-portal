@@ -73,6 +73,7 @@ export default function ProductionForm({
             render={({ field, fieldState }) => (
               <>
                 <Select
+                  inModal
                   {...field}
                   placeholder="Select location"
                   options={LOCATIONS}
@@ -113,6 +114,7 @@ export default function ProductionForm({
                 </div>
               </div>
               <Select
+                inModal
                 {...field}
                 mode="multiple"
                 searchable

@@ -1,6 +1,6 @@
 import { UserInput } from "@/actions/schemas";
 import { parseUserLinks } from "@/actions/user-links";
-import { formatSemesterCode } from "@/components/domain/semesters/semester-filter";
+import { formatSemesterCode } from "@/components/domain/filters/semester-filter";
 import { ROLES } from "@/constants/roles";
 
 export const transformUserFromAPI = (user: any): UserInput | null => {

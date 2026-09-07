@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { getThursday } from "@/actions/thursdays";
-import ProductionCard from "@/components/domain/thursdays/ProductionCard";
+import ProductionCard from "@/components/domain/productions/ProductionCard";
 import { normalizeThursdayName } from "@/helpers";
 
 export const thursdayDetailDialogClassName = "h-dvh w-[min(52rem,100%)] min-[769px]:h-auto";

@@ -19,10 +19,6 @@ interface UserCardGridProps {
 	users: Pick<User, "id" | "name" | "image" | "role">[];
 }
 
-// How many cards to mount at once. Keeps DOM node count (and the number of
-// <Image>s that can trigger Next's image optimizer at once) bounded
-// regardless of how large the roster grows, instead of mounting every card
-// up front.
 const BATCH_SIZE = 30;
 
 export default function UserCardGrid({ users }: UserCardGridProps) {
@@ -84,7 +80,7 @@ export default function UserCardGrid({ users }: UserCardGridProps) {
 
 	return (
 		<>
-			<div className="grid grid-cols-[repeat(auto-fill,minmax(10rem,1fr))] justify-center gap-2 bg-[var(--app-surface)] [&>*]:min-w-0 [&>*]:w-full [&>*]:rounded-xl [&>*]:border-solid [&>*]:border-[var(--app-border)] [&>*]:bg-[var(--app-card-bg)] [&>*]:border print:grid-cols-[repeat(10,minmax(0,1fr))] print:justify-stretch print:gap-[0.06in] print:bg-white print:text-black print:[&>*]:break-inside-avoid print:[&>*]:border-[#ccc]! print:[&>*]:bg-white! print:[&>*]:[page-break-inside:avoid] print:[&_a]:text-inherit print:[&_a]:no-underline">
+			<div className="grid grid-cols-[repeat(auto-fill,minmax(10rem,1fr))] justify-center gap-2 bg-[var(--app-surface)] [&>*]:min-w-0 [&>*]:w-full [&>*]:rounded-xl [&>*]:border-solid [&>*]:border-[var(--app-border)] [&>*]:bg-[var(--app-secondary)] [&>*]:border print:grid-cols-[repeat(10,minmax(0,1fr))] print:justify-stretch print:gap-[0.06in] print:bg-white print:text-black print:[&>*]:break-inside-avoid print:[&>*]:border-[#ccc]! print:[&>*]:bg-white! print:[&>*]:[page-break-inside:avoid] print:[&_a]:text-inherit print:[&_a]:no-underline">
 				{visibleUsers.map((user) => (
 					<UserCard
 						key={user.id}

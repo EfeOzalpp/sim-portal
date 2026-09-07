@@ -6,7 +6,7 @@ import { getAllSemesters } from "@/actions/semesters";
 
 // Components
 import { FilterInput } from "@/components/primitives/Filters";
-import SemesterFilterSelect from "@/components/domain/semesters/SemesterFilterSelect";
+import SemesterFilterSelect from "@/components/domain/filters/SemesterFilterSelect";
 import NavContent from "@/components/layout/NavContent";
 import PageTitle from "@/components/layout/PageTitle";
 import PrintLink from "@/components/primitives/PrintLink";
@@ -19,7 +19,7 @@ import { confirmDeleteDialogClassName } from "@/components/confirm-delete/styles
 import UsersList from "@/app/users/composition/UsersList";
 
 // Helpers
-import { ALL_SEMESTERS_VALUE, formatSemesterCode, getSelectedSemester, getSelectedSemesterId, isAllSemestersValue } from "@/components/domain/semesters/semester-filter";
+import { ALL_SEMESTERS_VALUE, formatSemesterCode, getSelectedSemester, getSelectedSemesterId, isAllSemestersValue } from "@/components/domain/filters/semester-filter";
 import { ACTION_MODES } from "@/constants/action-modes";
 import { USER_MODAL_PARAMS, type UserModalParam } from "@/constants/modal-params";
 import { isAdminRole } from "@/constants/roles";
@@ -121,7 +121,7 @@ export default async function UsersPage({ searchParams }: UsersProps) {
 		? (await import("@/app/users/add/AddUserFormContent")).default
 		: null;
 	const PersonProfileModal = showProfileModal
-		? (await import("@/components/domain/users/PersonProfileModal")).default
+		? (await import("@/components/domain/profile/PersonProfileModal")).default
 		: null;
 	const UserDeleteConfirmContent = showDeleteModal
 		? (await import("@/app/users/composition/UserDeleteConfirmContent")).default
@@ -132,14 +132,19 @@ export default async function UsersPage({ searchParams }: UsersProps) {
 			<PageTitle title="People" filter={currentFilterLabel} />
 			<ActionModeSurface>
 				<NavContent
-					className="print:hidden!"
 					filterContent={
 						<>
-							<FilterInput query={"user"} placeholder="Search user" />
-							<SemesterFilterSelect semesters={semesters} defaultValue={selectedSemesterId} />
+							<div className="flex flex-col gap-2">
+								<span className="ui-label hidden min-[769px]:block">Filter</span>
+								<SemesterFilterSelect semesters={semesters} defaultValue={selectedSemesterId} />
+							</div>
+							<div className="flex flex-col gap-2">
+								<span className="ui-label hidden min-[769px]:block">Search</span>
+								<FilterInput query={"user"} placeholder="Search user" />
+							</div>
 						</>
 					}
-					filterLabel="Search & Filter"
+					filterLabel=""
 					manageContent={
 						isAdmin ? (
 							<>
@@ -171,9 +176,15 @@ export default async function UsersPage({ searchParams }: UsersProps) {
 							</>
 						) : null
 					}
+					// has label but is already defaulted to export in upstream
 					printContent={<PrintLink />}
 				/>
-				<div className="px-3 pb-3 print:p-0">
+				<div className="px-2 pb-2 print:p-0">
+					{/* PageTitle (which normally shows this same label) is print:hidden,
+					    so this is the only place the current filter reaches the printed page. */}
+					<div className="mb-[0.15in] hidden font-sans text-[9pt] font-bold tracking-[0.06em] text-black uppercase print:block">
+						{currentFilterLabel}
+					</div>
 					<Suspense fallback={<div style={{ opacity: 0.5, padding: "1rem", background: "transparent" }}>Loading users...</div>}>
 						<UsersList filters={filters} />
 					</Suspense>

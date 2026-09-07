@@ -1,7 +1,7 @@
 import { auth } from "@/authentication";
 import RouteModalPopup from "@/components/modal/RouteModalPopup";
-import UserProfileContent from "@/components/domain/users/UserProfileContent";
-import { userProfileDialogClassName } from "@/components/domain/users/styles";
+import UserProfileContent from "@/components/domain/profile/UserProfileContent";
+import { userProfileDialogClassName } from "@/components/domain/profile/styles";
 import { ACCOUNT_MODAL_PARAMS, USER_MODAL_PARAMS } from "@/constants/modal-params";
 
 interface PersonProfileModalProps {

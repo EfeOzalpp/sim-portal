@@ -1,12 +1,11 @@
 // React & Next.js
-import Image from "next/image";
 import type { MouseEventHandler } from "react";
 
 // Components
 import Block from "@/components/primitives/Block";
+import FaceImage from "@/components/primitives/FaceImage";
 
 // Helpers
-import { normalizeFaceImagePath } from "@/helpers";
 import type { User } from "@prisma/client";
 
 interface UserCardProps {
@@ -19,18 +18,18 @@ export default function UserCard({ user, onClick }: UserCardProps) {
     <Block
       as="a"
       href={`/users?profileUserId=${user.id}`}
-      className="group block h-full w-full overflow-hidden rounded-xl bg-[var(--app-card-bg)] p-0 text-[var(--app-text)] no-underline print:h-auto print:border! print:border-[#222]! print:text-[#111] print:shadow-none! print:[transform:none]!"
+      className="group block h-full w-full overflow-hidden rounded-xl bg-[var(--app-secondary)] p-0 text-[var(--app-text)] no-underline print:h-auto print:border! print:border-[#222]! print:text-[#111] print:shadow-none! print:[transform:none]!"
       onClick={onClick}
       data-action-mode-target="user-card"
     >
-      <div className="relative flex h-full w-full flex-col overflow-hidden rounded-xl bg-[var(--app-card-bg)] group-hover:bg-[var(--app-card-bg-hover)] group-focus-visible:bg-[var(--app-card-bg-hover)] print:rounded-none">
-        <div className="relative h-[12.6rem] w-full overflow-hidden print:h-auto print:aspect-square">
-          <Image
-            src={normalizeFaceImagePath(user.image)}
+      <div className="relative flex h-full w-full flex-col overflow-hidden rounded-xl bg-[var(--app-secondary)] group-hover:bg-[var(--app-card-bg-hover)] group-focus-visible:bg-[var(--app-card-bg-hover)] print:rounded-none">
+        <div className="relative aspect-[3/4] w-full overflow-hidden print:aspect-square">
+          <FaceImage
+            imagePath={user.image}
             alt={`${user.name}'s face`}
-            fill
             sizes="(max-width: 600px) calc(50vw - 1rem), (max-width: 1000px) calc(33vw - 1rem), 12rem"
             style={{ objectFit: "cover" }}
+            loading="eager"
           />
         </div>
         <div className="flex min-h-12 items-center justify-center px-2 py-[0.4rem] text-center print:min-h-[0.23in] print:px-[0.045in] print:py-[0.035in]">
@@ -39,7 +38,7 @@ export default function UserCard({ user, onClick }: UserCardProps) {
           </h4>
         </div>
         <span
-          className="pointer-events-none absolute inset-0 z-[5] flex items-center justify-center bg-[var(--app-card-action-overlay)] text-[var(--app-card-action-icon)] opacity-0"
+          className="pointer-events-none absolute inset-0 z-[5] flex items-center justify-center text-[var(--app-card-action-icon)] opacity-0"
           data-user-action-overlay
           aria-hidden="true"
         >

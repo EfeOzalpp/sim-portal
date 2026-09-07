@@ -23,7 +23,7 @@ import RepeatableInput from "@/app/users/composition/RepeatableInput";
 // Helpers
 import { useForm, Controller } from "react-hook-form";
 import { handleFormAction } from "@/helpers";
-import { formatSemesterCode } from "@/components/domain/semesters/semester-filter";
+import { formatSemesterCode } from "@/components/domain/filters/semester-filter";
 import { ROLES } from "@/constants/roles";
 
 function getSemesterNameOptions(currentValues: string[] = []) {
@@ -188,6 +188,7 @@ export default function UserForm({
                     return (
                       <div className="grid w-full grid-cols-[minmax(0,1fr)_min-content_minmax(0,1fr)] items-center gap-x-4">
                         <Select
+                          inModal
                           value={startCode}
                           placeholder="From"
                           searchable
@@ -198,6 +199,7 @@ export default function UserForm({
                         />
                         <span className="justify-self-center whitespace-nowrap text-[0.9rem] leading-none font-bold text-[var(--app-muted)]">to</span>
                         <Select
+                          inModal
                           value={endCode}
                           placeholder="To"
                           searchable
@@ -219,6 +221,7 @@ export default function UserForm({
                   name="role"
                   render={({ field }) => (
                     <Select
+                      inModal
                       {...field}
                       options={[
                         { value: ROLES.student, label: "Student" },
@@ -321,9 +324,6 @@ export default function UserForm({
                 />
               )}
             />
-            <span className="ui-note mt-1 block">
-              Phone number, social media, gallery of your presentations, handles, etc.
-            </span>
           </div>
         </div>
 

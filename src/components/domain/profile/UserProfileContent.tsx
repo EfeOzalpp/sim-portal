@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { getAuthSession } from "@/actions/auth";
 import { getUser } from "@/actions/users";
-import UserProfileView from "@/components/domain/users/UserProfileView";
+import UserProfileView from "@/components/domain/profile/UserProfileView";
 
 export async function getProfileUser(userId: string) {
 	const result = await getUser(userId);

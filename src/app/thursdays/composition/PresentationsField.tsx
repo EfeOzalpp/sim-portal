@@ -174,6 +174,7 @@ export default function PresentationsField({
                             </div>
                           </div>
                           <Select
+                            inModal
                             {...field}
                             mode="multiple"
                             searchable

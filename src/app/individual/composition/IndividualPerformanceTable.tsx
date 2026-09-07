@@ -8,7 +8,7 @@ import { useRef, useEffect, useMemo, useState } from "react";
 import { updateUserSemesterGrades } from "@/actions/semesters";
 
 // Components
-import PersonLink from "@/components/domain/users/PersonLink";
+import PersonLink from "@/components/domain/profile/PersonLink";
 import { useActionMode } from "@/components/layout/ActionMode";
 
 // Composition

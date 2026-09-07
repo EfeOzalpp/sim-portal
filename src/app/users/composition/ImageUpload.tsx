@@ -50,7 +50,16 @@ export default function ImageUpload({ onChange, currentImagePath = "/face.jpg" }
 				onChange={handleFileChange}
 			/>
 			{preview ? (
-				<img src={preview} alt="avatar" className="h-full w-full object-cover" />
+				preview === "/face.jpg" ? (
+					// Default placeholder (no photo chosen/uploaded yet) - swap in the
+					// dark-mode variant via CSS, same as FaceImage does for cards/profiles.
+					<>
+						<img src="/face.jpg" alt="avatar" className="absolute inset-0 h-full w-full object-cover dark:hidden" />
+						<img src="/face-darkmode.jpg" alt="avatar" className="absolute inset-0 hidden h-full w-full object-cover dark:block" />
+					</>
+				) : (
+					<img src={preview} alt="avatar" className="h-full w-full object-cover" />
+				)
 			) : (
 				<span className="flex flex-col items-center gap-1 text-[var(--app-muted)]">
 					<svg viewBox="0 0 24 24" fill="none" aria-hidden="true" className="h-[1.375rem] w-[1.375rem]">

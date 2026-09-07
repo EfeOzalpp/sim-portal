@@ -72,12 +72,12 @@ export default function ProductionsCollapse({ productions }: ProductionsCollapse
       }}
     >
       <Collapse
-        className="overflow-hidden rounded-xl border border-solid border-[var(--app-border)] bg-[var(--app-card-bg)] text-[var(--app-text)]"
+        className="overflow-hidden rounded-xl border border-solid border-[var(--app-border)] bg-[var(--app-secondary)] text-[var(--app-text)]"
         items={productions.map((p, pIndex) => ({
           value: p.id,
           itemClassName: pIndex > 0 ? "border-t border-t-[var(--app-border)]" : "",
-          headerClassName: "items-center bg-[var(--app-card-bg)] text-[var(--app-text)] transition-[background] duration-150 hover:bg-[var(--app-card-bg-hover)]",
-          contentClassName: "bg-[var(--app-card-bg)] text-[var(--app-text)]",
+          headerClassName: "items-center bg-[var(--app-secondary)] text-[var(--app-text)] transition-[background] duration-150 hover:bg-[var(--app-card-bg-hover)]",
+          contentClassName: "bg-[var(--app-secondary)] text-[var(--app-text)]",
           // The title used to double as both the toggle trigger and a
           // navigation link when p.href was set (relying on stopPropagation
           // to keep the two from fighting). Radix's Trigger renders as a
@@ -97,13 +97,9 @@ export default function ProductionsCollapse({ productions }: ProductionsCollapse
                 </>
               )}
               <span
-                className="flex items-center text-[var(--app-text)] transition-transform duration-250 [&_svg]:h-4 [&_svg]:w-4 [[data-state=open]_&]:rotate-180"
+                className="h-4 w-4 flex-none bg-[var(--app-text)] transition-transform duration-250 [mask-image:url(../assets/arrow/down.svg)] [mask-position:center] [mask-repeat:no-repeat] [mask-size:contain] [[data-state=open]_&]:rotate-180"
                 aria-hidden="true"
-              >
-                <svg viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M1 1L5 5L9 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </span>
+              />
             </span>
           ),
           extra: (p.date || p.href) ? (
@@ -133,7 +129,7 @@ export default function ProductionsCollapse({ productions }: ProductionsCollapse
         }))}
       />
       <span
-        className="pointer-events-none absolute inset-0 z-[5] flex items-center justify-center bg-[var(--app-card-action-overlay)] text-[var(--app-card-action-icon)] opacity-0"
+        className="pointer-events-none absolute inset-0 z-[5] flex items-center justify-center text-[var(--app-card-action-icon)] opacity-0"
         data-thursday-action-overlay
         aria-hidden="true"
       >

@@ -19,7 +19,7 @@ import SemesterDeleteConfirmContent from "@/app/semester/composition/SemesterDel
 import SemesterCardGrid from "@/app/semester/composition/SemesterCardGrid";
 
 // Helpers
-import { ALL_SEMESTERS_VALUE, formatSemesterCode, getSearchParamValue } from "@/components/domain/semesters/semester-filter";
+import { ALL_SEMESTERS_VALUE, formatSemesterCode, getSearchParamValue } from "@/components/domain/filters/semester-filter";
 import { ACTION_MODES } from "@/constants/action-modes";
 import { SEMESTER_MODAL_PARAMS, type SemesterModalParam } from "@/constants/modal-params";
 import { isAdminRole } from "@/constants/roles";

@@ -6,20 +6,20 @@ import { getAllSemesters, getIndividualSemesterData } from "@/actions/semesters"
 
 // Components
 import { FilterInput } from "@/components/primitives/Filters";
-import SemesterFilterSelect from "@/components/domain/semesters/SemesterFilterSelect";
+import SemesterFilterSelect from "@/components/domain/filters/SemesterFilterSelect";
 import NavContent from "@/components/layout/NavContent";
 import PageTitle from "@/components/layout/PageTitle";
 import PrintLink from "@/components/primitives/PrintLink";
 import { ActionModeButton, ActionModeSurface } from "@/components/layout/ActionMode";
-import PersonProfileModal from "@/components/domain/users/PersonProfileModal";
+import PersonProfileModal from "@/components/domain/profile/PersonProfileModal";
 import RouteModalPopup from "@/components/modal/RouteModalPopup";
-import ThursdayDetailContent, { thursdayDetailDialogClassName } from "@/components/domain/thursdays/ThursdayDetailContent";
+import ThursdayDetailContent, { thursdayDetailDialogClassName } from "@/components/domain/productions/ThursdayDetailContent";
 
 // Composition
 import IndividualPerformanceTable from "@/app/individual/composition/IndividualPerformanceTable";
 
 // Helpers
-import { ALL_SEMESTERS_VALUE, formatSemesterCode, getSelectedSemesterId, isAllSemestersValue } from "@/components/domain/semesters/semester-filter";
+import { ALL_SEMESTERS_VALUE, formatSemesterCode, getSelectedSemesterId, isAllSemestersValue } from "@/components/domain/filters/semester-filter";
 import { ACTION_MODES } from "@/constants/action-modes";
 import { THURSDAY_MODAL_PARAMS, USER_MODAL_PARAMS } from "@/constants/modal-params";
 import { isAdminRole } from "@/constants/roles";
@@ -61,11 +61,17 @@ export default async function IndividualPage({ searchParams }: IndividualPagePro
 				<NavContent
 					filterContent={
 						<>
-							<FilterInput query="user" placeholder="Search" />
-							<SemesterFilterSelect semesters={semesters} defaultValue={semesterId} />
+							<div className="flex flex-col gap-2">
+								<span className="ui-label hidden min-[769px]:block">Filter</span>
+								<SemesterFilterSelect semesters={semesters} defaultValue={semesterId} />
+							</div>
+							<div className="flex flex-col gap-2">
+								<span className="ui-label hidden min-[769px]:block">Search</span>
+								<FilterInput query="user" placeholder="Search" />
+							</div>
 						</>
 					}
-					filterLabel="Search & Filter"
+					filterLabel=""
 					manageContent={
 						<ActionModeButton type="button" variant="action" mode={ACTION_MODES.editGrades}>
 							Edit Grades

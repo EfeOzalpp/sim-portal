@@ -10,11 +10,11 @@ import { Button } from "@/components/button";
 import NavContent from "@/components/layout/NavContent";
 import PageTitle from "@/components/layout/PageTitle";
 import { FilterInput } from "@/components/primitives/Filters";
-import SemesterFilterSelect from "@/components/domain/semesters/SemesterFilterSelect";
+import SemesterFilterSelect from "@/components/domain/filters/SemesterFilterSelect";
 import { ActionModeButton, ActionModeSurface } from "@/components/layout/ActionMode";
 import RouteModalPopup from "@/components/modal/RouteModalPopup";
-import ThursdayDetailContent, { thursdayDetailDialogClassName } from "@/components/domain/thursdays/ThursdayDetailContent";
-import PersonProfileModal from "@/components/domain/users/PersonProfileModal";
+import ThursdayDetailContent, { thursdayDetailDialogClassName } from "@/components/domain/productions/ThursdayDetailContent";
+import PersonProfileModal from "@/components/domain/profile/PersonProfileModal";
 import { confirmDeleteDialogClassName } from "@/components/confirm-delete/styles";
 
 // Composition
@@ -24,7 +24,7 @@ import EditThursdayFormContent from "@/app/thursdays/[id]/edit/EditThursdayFormC
 import ThursdayDeleteConfirmContent from "@/app/thursdays/composition/ThursdayDeleteConfirmContent";
 
 // Helpers
-import { ALL_SEMESTERS_VALUE, formatSemesterCode, getSelectedSemester, getSelectedSemesterId, isAllSemestersValue } from "@/components/domain/semesters/semester-filter";
+import { ALL_SEMESTERS_VALUE, formatSemesterCode, getSelectedSemester, getSelectedSemesterId, isAllSemestersValue } from "@/components/domain/filters/semester-filter";
 import { ACTION_MODES } from "@/constants/action-modes";
 import { THURSDAY_MODAL_PARAMS, USER_MODAL_PARAMS, type ThursdayModalParam } from "@/constants/modal-params";
 import { isAdminRole } from "@/constants/roles";
@@ -142,11 +142,17 @@ export default async function Thursdays({ searchParams }: ThursdaysProps) {
         <NavContent
           filterContent={
             <>
-              <FilterInput query={"thursdays"} placeholder="Search production" />
-              <SemesterFilterSelect semesters={semesters} defaultValue={selectedSemesterId} />
+              <div className="flex flex-col gap-2">
+                <span className="ui-label hidden min-[769px]:block">Filter</span>
+                <SemesterFilterSelect semesters={semesters} defaultValue={selectedSemesterId} />
+              </div>
+              <div className="flex flex-col gap-2">
+                <span className="ui-label hidden min-[769px]:block">Search</span>
+                <FilterInput query={"thursdays"} placeholder="Search production" />
+              </div>
             </>
           }
-          filterLabel="Search & Filter"
+          filterLabel=""
           manageContent={
             isAdmin ? (
               <>

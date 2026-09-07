@@ -32,6 +32,7 @@ export default function ThursdaySection({
               name="semesterId"
               render={({ field }) => (
                 <Select
+                  inModal
                   {...field}
                   options={semesters.map((s) => ({ label: s.name, value: s.id }))}
                 />

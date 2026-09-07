@@ -5,7 +5,7 @@ import {
 	ALL_SEMESTERS_VALUE,
 	SEMESTER_FILTER_KEY,
 	SemesterFilterOption,
-} from "@/components/domain/semesters/semester-filter";
+} from "@/components/domain/filters/semester-filter";
 import { SingleSelectProps } from "@/components/select";
 
 interface SemesterFilterSelectProps extends Omit<SingleSelectProps, "value" | "onChange" | "options" | "loading" | "mode"> {

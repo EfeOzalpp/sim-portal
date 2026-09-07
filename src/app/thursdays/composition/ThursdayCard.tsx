@@ -1,5 +1,5 @@
 // Components
-import ProductionCard from "@/components/domain/thursdays/ProductionCard";
+import ProductionCard from "@/components/domain/productions/ProductionCard";
 
 // Composition
 import ProductionsCollapse from "@/app/thursdays/composition/ProductionsCollapse";

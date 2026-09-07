@@ -8,11 +8,13 @@
 import closeIcon from "@/components/theme/assets/close/close.svg";
 import downloadIcon from "@/components/theme/assets/download/download.svg";
 import searchIcon from "@/components/theme/assets/search/search.svg";
+import viewForwardIcon from "@/components/theme/assets/view/forward.svg";
 
 export const iconAssets = {
 	"close/close.svg": closeIcon,
 	"download/download.svg": downloadIcon,
 	"search/search.svg": searchIcon,
+	"view/forward.svg": viewForwardIcon,
 };
 
 export type IconName = keyof typeof iconAssets;

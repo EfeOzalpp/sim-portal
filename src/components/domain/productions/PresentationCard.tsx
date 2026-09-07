@@ -1,5 +1,5 @@
-import Link from "next/link";
-import PersonLink from "@/components/domain/users/PersonLink";
+import { Button } from "@/components/button";
+import PersonLink from "@/components/domain/profile/PersonLink";
 import { formatNiceListFromArray } from "@/helpers";
 import { Prisma } from "@prisma/client";
 
@@ -69,26 +69,26 @@ export default function PresentationCard({
     );
   }
 
-  const content = (
-    <div className="flex w-full flex-row flex-wrap items-baseline gap-x-3 gap-y-1 [&_div]:m-0">
-      <div><b>{presentation.name}</b></div>
-      {presentation.about !== "" ? (
-        <div><i>{presentation.about}</i></div>
-      ) : null}
-      {authors.length > 0 ? (
-        <div className="flex flex-wrap gap-x-1 gap-y-0">{formatNiceListFromArray(authors)}</div>
-      ) : (
-        <div>No one is credited as an author of this presentation yet.</div>
+  return (
+    <div className="flex w-full flex-col gap-2 rounded-md border border-solid border-[var(--app-border)] bg-[var(--app-secondary)] p-2 pt-3">
+      <div className="font-bold">{presentation.name}</div>
+      <div className="flex w-full flex-row flex-wrap items-baseline gap-x-4 gap-y-2 [&_div]:m-0">
+        {presentation.about !== "" ? (
+          <div><i>{presentation.about}</i></div>
+        ) : null}
+        {authors.length > 0 ? (
+          <div className="flex flex-wrap gap-x-1 gap-y-0">{formatNiceListFromArray(authors)}</div>
+        ) : (
+          <div>No one is credited as an author of this presentation yet.</div>
+        )}
+      </div>
+      {thursdayId && (
+        <div className="flex w-full justify-start">
+          <Button href={`/thursdays/${thursdayId}`} variant="action" icon="view/forward.svg" iconPosition="end">
+            View
+          </Button>
+        </div>
       )}
     </div>
-  );
-
-  return (
-    <Link
-      href={thursdayId ? `/thursdays/${thursdayId}` : "#"}
-      className="my-3 flex w-full text-inherit! no-underline hover:text-[var(--brand-color)]!"
-    >
-      {content}
-    </Link>
   );
 }

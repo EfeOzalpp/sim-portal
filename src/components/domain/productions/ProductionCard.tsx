@@ -1,5 +1,5 @@
-import PersonLink from "@/components/domain/users/PersonLink";
-import PresentationCard from "@/components/domain/thursdays/PresentationCard";
+import PersonLink from "@/components/domain/profile/PersonLink";
+import PresentationCard from "@/components/domain/productions/PresentationCard";
 import { isAdminRole } from "@/constants/roles";
 
 interface ProductionCardProps {

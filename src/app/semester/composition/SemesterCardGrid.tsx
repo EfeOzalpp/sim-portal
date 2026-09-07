@@ -7,7 +7,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useActionMode } from "@/components/layout/ActionMode";
 
 // Helpers
-import { formatSemesterCode } from "@/components/domain/semesters/semester-filter";
+import { formatSemesterCode } from "@/components/domain/filters/semester-filter";
 import { ACTION_MODES } from "@/constants/action-modes";
 import { SEMESTER_MODAL_PARAMS, type SemesterModalParam } from "@/constants/modal-params";
 
@@ -33,7 +33,7 @@ function SemesterCard({ semester }: { semester: any }) {
 	const showSemesterName = semester.name && semester.name !== semesterCode;
 
 	return (
-		<article className="relative box-border flex min-h-36 flex-col gap-6 overflow-hidden rounded-xl border-solid border-[var(--app-border)] bg-[var(--app-card-bg)] p-6 border hover:bg-[var(--app-card-bg-hover)]">
+		<article className="relative box-border flex min-h-36 flex-col gap-6 overflow-hidden rounded-xl border-solid border-[var(--app-border)] bg-[var(--app-secondary)] p-6 border hover:bg-[var(--app-card-bg-hover)]">
 			<div className="flex flex-col gap-2">
 				<h3 className="m-0 text-[var(--app-text)]">{semesterCode}</h3>
 				{showSemesterName && <p className="m-0 text-[var(--app-muted)]">{semester.name}</p>}
@@ -42,7 +42,7 @@ function SemesterCard({ semester }: { semester: any }) {
 				{getSemesterDateRange(semester)}
 			</p>
 			<span
-				className="pointer-events-none absolute inset-0 z-[5] flex items-center justify-center bg-[var(--app-card-action-overlay)] text-[var(--app-card-action-icon)] opacity-0"
+				className="pointer-events-none absolute inset-0 z-[5] flex items-center justify-center text-[var(--app-card-action-icon)] opacity-0"
 				data-semester-action-overlay
 				aria-hidden="true"
 			>

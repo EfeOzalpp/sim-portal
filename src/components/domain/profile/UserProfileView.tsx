@@ -1,8 +1,7 @@
-import PresentationCard from "@/components/domain/thursdays/PresentationCard";
-import Image from "next/image";
+import PresentationCard from "@/components/domain/productions/PresentationCard";
+import FaceImage from "@/components/primitives/FaceImage";
 import { logOut } from "@/actions/auth";
 import { getDisplayUserLinks, getUserLinkHref } from "@/actions/user-links";
-import { normalizeFaceImagePath } from "@/helpers";
 import { Button } from "@/components/button";
 
 interface UserProfileViewProps {
@@ -24,11 +23,10 @@ export default function UserProfileView({
 	return (
 		<div className="grid w-full min-w-0 grid-cols-[minmax(10rem,13rem)_minmax(0,1fr)] gap-4 max-[767px]:grid-cols-1">
 			<aside className="flex min-w-0 flex-col gap-4">
-				<div className="relative aspect-square w-full overflow-hidden rounded-xl border-solid border-[var(--app-border)] border">
-					<Image
-						src={normalizeFaceImagePath(user.image || "")}
+				<div className="relative aspect-[3/4] w-full overflow-hidden rounded-xl border-solid border-[var(--app-border)] border">
+					<FaceImage
+						imagePath={user.image}
 						alt={`${user.name}'s image`}
-						fill
 						sizes="(max-width: 767px) calc(100vw - 2rem), 13rem"
 						className="object-cover object-top"
 					/>
@@ -80,7 +78,7 @@ export default function UserProfileView({
 				</div>
 			</aside>
 			<section className="flex min-w-0 flex-col gap-4">
-				<div className="flex flex-col gap-1 border-b border-b-[var(--app-border)] pb-4 [&_h2]:m-0">
+				<div className="flex flex-col gap-1 [&_h2]:m-0">
 					<div className="flex min-w-0 items-center justify-between gap-2 max-[767px]:flex-col max-[767px]:items-start">
 						<h2 className="min-w-0">{user.name}</h2>
 					</div>

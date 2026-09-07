@@ -127,6 +127,7 @@ export default function SemesterForm({
                 render={({ field, fieldState }) => (
                   <>
                     <Select
+                      inModal
                       {...field}
                       value={field.value || undefined}
                       searchable
@@ -189,6 +190,7 @@ export default function SemesterForm({
                     </div>
                   </div>
                   <Select
+                    inModal
                     {...field}
                     mode="multiple"
                     searchable
