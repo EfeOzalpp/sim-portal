@@ -197,14 +197,28 @@ async function setup() {
   fs.writeFileSync(envPath, envContent);
   console.log("\n.env file updated.");
 
-  rl.close();
-
   // Run Prisma commands to sync schema and seed data
   console.log("\nSetting up the database...");
   try {
     console.log(
-      "Synchronizing database schema... [--force-reset will clear existing data]",
+      `\n⚠️  --force-reset PERMANENTLY DELETES ALL DATA in:\n    ${dbUrl}\n`,
     );
+    if (!/localhost|127\.0\.0\.1/.test(dbUrl)) {
+      console.log(
+        "⚠️  This does not look like a local database URL. If this is a shared, staging, or production database, do NOT proceed.\n",
+      );
+    }
+    const confirmReset = await question(
+      'Type "reset" to permanently erase this database and continue, or anything else to abort: ',
+    );
+    rl.close();
+
+    if (confirmReset.trim().toLowerCase() !== "reset") {
+      console.log("Aborted - database was not touched.");
+      process.exit(1);
+    }
+
+    console.log("Synchronizing database schema...");
     execSync("npx prisma db push --force-reset", { stdio: "inherit" });
 
     console.log("Seeding database...");
