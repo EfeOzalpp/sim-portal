@@ -6,7 +6,7 @@ import styles from "@/app/layout-composition/NavBar/NavBar.module.css";
 import {
 	LEGACY_SEMESTER_FILTER_KEY,
 	SEMESTER_FILTER_KEY,
-} from "@/components/domain/semesters/semester-filter";
+} from "@/components/domain/filters/semester-filter";
 
 interface NavButtonLinkProps {
 	href: string;

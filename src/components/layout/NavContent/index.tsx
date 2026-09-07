@@ -19,6 +19,8 @@ export interface NavContentProps {
 	filterLabel?: string;
 	/** Section label for the manage area in the desktop sidebar. */
 	manageLabel?: string;
+	/** Section label for the print/export area in the desktop sidebar. */
+	printLabel?: string;
 	className?: string;
 	style?: CSSProperties;
 	ariaLabel?: string;
@@ -33,6 +35,7 @@ export default function NavContent({
 	printContent,
 	filterLabel = "Search & Filter",
 	manageLabel = "Manage",
+	printLabel = "Export",
 	className,
 	style,
 	ariaLabel = "Content navigation",
@@ -44,20 +47,27 @@ export default function NavContent({
 	const desktopEnd = (filterContent || manageContent || printContent) ? (
 		<>
 			{filterContent && (
-				<div className={styles.navSection}>
-					<span className="ui-label">{filterLabel}</span>
-					<div className={styles.navSectionControls}>{filterContent}</div>
+				<div className={clsx(styles.navSection, "px-4")}>
+					<div className="flex flex-col gap-2">
+						{filterLabel && <span className="ui-label">{filterLabel}</span>}
+						<div className={styles.navSectionControls}>{filterContent}</div>
+					</div>
 				</div>
 			)}
 			{manageContent && (
-				<div className={styles.navSection}>
-					<span className="ui-label">{manageLabel}</span>
-					<div className={clsx(styles.navSectionControls, styles.navSectionControlsManage)}>{manageContent}</div>
+				<div className={clsx(styles.navSection, "px-4")}>
+					<div className="flex flex-col gap-2">
+						<span className="ui-label">{manageLabel}</span>
+						<div className={clsx(styles.navSectionControls, styles.navSectionControlsManage)}>{manageContent}</div>
+					</div>
 				</div>
 			)}
 			{printContent && (
-				<div className={styles.navSection}>
-					<div className={styles.navSectionControls}>{printContent}</div>
+				<div className={clsx(styles.navSection, "px-4")}>
+					<div className="flex flex-col gap-2">
+						<span className="ui-label">{printLabel}</span>
+						<div className={styles.navSectionControls}>{printContent}</div>
+					</div>
 				</div>
 			)}
 		</>

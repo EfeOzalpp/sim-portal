@@ -20,6 +20,8 @@ interface SharedButtonProps {
 	className?: string;
 	/** A registered icon name (see components/theme/icons.ts). Sized automatically per variant. */
 	icon?: IconName;
+	/** Which side of the text the icon renders on. Defaults to "start". */
+	iconPosition?: "start" | "end";
 }
 
 export type NativeButtonProps = SharedButtonProps &
@@ -48,6 +50,7 @@ export function Button(props: ButtonProps) {
 		fullWidth = false,
 		className,
 		icon,
+		iconPosition = "start",
 		href,
 		disabled = false,
 		ref,
@@ -55,12 +58,19 @@ export function Button(props: ButtonProps) {
 		...elementProps
 	} = props;
 	const finalClassName = clsx(buttonVariants({ variant, tone, fullWidth }), className);
-	const content = (
-		<>
-			{icon && <ButtonIcon icon={icon} variant={variant} />}
-			{children}
-		</>
-	);
+	const iconElement = icon && <ButtonIcon icon={icon} variant={variant} />;
+	const content =
+		iconPosition === "end" ? (
+			<>
+				{children}
+				{iconElement}
+			</>
+		) : (
+			<>
+				{iconElement}
+				{children}
+			</>
+		);
 
 	if (href !== undefined) {
 		const { tabIndex, ...anchorProps } = elementProps as AnchorHTMLAttributes<HTMLAnchorElement>;

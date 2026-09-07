@@ -1,5 +1,6 @@
 import { cva } from "class-variance-authority";
 
+// Shared base classes for a plain <input>/<textarea>.
 const fieldBase = [
 	"input-field w-full min-w-0 rounded-xl bg-[var(--input-bg)] text-[var(--input-text)]",
 	"border border-[var(--input-border)]",
@@ -13,6 +14,7 @@ const fieldBase = [
 	"disabled:cursor-not-allowed disabled:opacity-60",
 ];
 
+// A standalone input/textarea with no prefix/suffix content; `error` swaps in the danger-tone border.
 export const inputFieldVariants = cva(fieldBase, {
 	variants: {
 		error: {
@@ -23,12 +25,13 @@ export const inputFieldVariants = cva(fieldBase, {
 	defaultVariants: { error: false },
 });
 
+// The wrapper around an input that has a prefix/suffix (e.g. a search icon), styled to read as one field; `error` swaps in the danger-tone border.
 export const inputWrapperVariants = cva(
 	[
-		"input-affix-wrapper inline-flex w-full min-w-0 items-center gap-1",
+		"input-affix-wrapper inline-flex w-full min-w-0 items-center gap-2",
 		"rounded-xl bg-[var(--input-bg)] text-[var(--input-text)]",
 		"border border-[var(--input-border)]",
-		"px-3 py-3",
+		"px-3 py-2",
 		"transition",
 		"hover:border-[var(--input-border-hover)] hover:bg-[var(--input-bg-hover)] hover:shadow-[var(--input-hover-shadow)]",
 		"focus-within:border-[var(--input-border-hover)] focus-within:shadow-[var(--input-hover-shadow)]",
@@ -45,12 +48,14 @@ export const inputWrapperVariants = cva(
 	},
 );
 
+// The actual <input> nested inside inputWrapperVariants - no border/background of its own, since the wrapper already provides those.
 export const inputBareClassName = [
 	"w-full min-w-0 flex-1 border-none bg-transparent p-0 [font:inherit]",
 	"text-[var(--input-text)] outline-none placeholder:text-[var(--input-placeholder)]",
 	"disabled:cursor-not-allowed disabled:opacity-60",
 ].join(" ");
 
+// The "clear" (x) button shown once a value is entered, when `allowClear` is set.
 export const inputClearButtonClassName = [
 	"inline-grid h-5 w-5 flex-none cursor-pointer place-items-center",
 	"border-none bg-transparent p-0 text-[var(--input-icon)] hover:text-[var(--input-text)]",

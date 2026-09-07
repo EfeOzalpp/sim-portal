@@ -24,27 +24,15 @@
 	grid-column: 1;
 	grid-row: 1 / -1;
 	align-self: start;
-	/* Above the app-shell nav rail (z-[295], layout.tsx), which is
-	   position:absolute and grows past its own track on hover - otherwise it
-	   visually covers this bar (and the action-mode trigger button inside it)
-	   even before any action mode is active. */
-	z-index: 296;
+	/* The nav rail (z-[295], layout.tsx) should always render above this bar -
+	   this used to be bumped above it so the action-mode trigger button
+	   stayed reachable, but that button now escapes independently via a
+	   portal (ActionMode/index.tsx) whenever it's active, so this bar itself
+	   no longer needs its own elevated z-index at all. */
+	z-index: auto;
 	block-size: 100dvh;
 	max-block-size: 100dvh;
 	min-height: 0;
-}
-
-.contentDivider > [data-page-content][data-action-mode-active="true"] > [data-content-nav] {
-	border-right-color: color-mix(in srgb, var(--app-border) 50%, #000000);
-}
-
-.contentDivider > [data-page-content][data-action-mode-active="true"] > [data-content-nav]::after {
-	content: "";
-	position: absolute;
-	inset: 0;
-	z-index: 20;
-	background: var(--scrim);
-	pointer-events: none;
 }
 
 .contentDivider > [data-page-content] > :not([data-content-nav]):not([data-action-mode-backdrop]) {

@@ -4,6 +4,15 @@
 	display: none;
 }
 
+/* Never part of the printed output, regardless of what the max-width query
+   below evaluates to under print (browsers are inconsistent about what
+   "viewport width" means for a printed page). */
+@media print {
+	.root {
+		display: none !important;
+	}
+}
+
 @media (max-width: 768px) {
 	/* Root: secondary nav bar — fixed intrinsic height, sticks under topBar when scrolled */
 	.root {

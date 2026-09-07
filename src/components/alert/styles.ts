@@ -1,5 +1,6 @@
 import { cva } from "class-variance-authority";
 
+// The alert's outer container; `tone` picks its border/background/text color.
 export const alertVariants = cva(
 	[
 		"alert flex items-start gap-2 rounded-xl border-solid",
@@ -18,10 +19,13 @@ export const alertVariants = cva(
 	},
 );
 
+// The leading status icon, shown when `showIcon` is set.
 export const alertIconClassName = "h-[1.375rem] w-[1.375rem] flex-none";
 
+// The message text itself.
 export const alertDescriptionClassName = "min-w-0 flex-1 text-sm leading-normal";
 
+// The dismiss ("x") button, shown when `closable` is set.
 export const alertCloseButtonClassName = [
 	"inline-grid h-4 w-4 flex-none cursor-pointer place-items-center",
 	"border-none bg-transparent p-0 text-current opacity-70 hover:opacity-100",

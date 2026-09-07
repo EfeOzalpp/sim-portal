@@ -11,6 +11,16 @@
 	overscroll-behavior: contain;
 }
 
+/* Never part of the printed output - this is on-screen-only navigation
+   (filter/manage/search labels), regardless of which page renders it.
+   Centralized here instead of a print:hidden className per page, since most
+   pages weren't actually passing one. */
+@media print {
+	.root {
+		display: none !important;
+	}
+}
+
 .stack {
 	display: flex;
 	flex-direction: column;
@@ -54,14 +64,19 @@
 }
 
 .navSection {
+	/* No gap here - each section now wraps its own label+controls pair in a
+	   Tailwind gap-2 div (index.tsx), so the label-to-content spacing is
+	   consistent with the per-field labels inside filterContent itself.
+	   Horizontal padding is Tailwind too (px-4 on the element in index.tsx) -
+	   only the vertical rhythm (first/last-child overrides below) stays here,
+	   since Tailwind can't key off sibling position. */
 	position: relative;
 	display: flex;
 	flex-direction: column;
 	align-items: stretch;
-	gap: 1rem;
 	inline-size: calc(100% + 1rem);
 	margin-inline: -0.5rem;
-	padding: 0.75rem;
+	padding-block-end: 0.75rem;
 	box-sizing: border-box;
 }
 
@@ -70,7 +85,7 @@
 }
 
 .navSection:not(:first-child) {
-   padding-top: 2rem;
+   padding-top: 1.5rem;
 }
 .navSection::before,
 .navSection::after {

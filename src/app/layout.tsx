@@ -1,6 +1,5 @@
 // React & Next.js
 import { Metadata } from "next";
-import Script from "next/script";
 
 // Global styles (side-effect only - order matters for cascade layers)
 import "@/components/theme/fonts/sour-gummy/sour-gummy.css";
@@ -11,14 +10,14 @@ import "@/components/theme/global-styles/app-theme/layout-theme.css";
 import "@/components/theme/global-styles/tailwind.css";
 
 // Components
-import UserProfileContent from "@/components/domain/users/UserProfileContent";
-import { userProfileDialogClassName } from "@/components/domain/users/styles";
+import UserProfileContent from "@/components/domain/profile/UserProfileContent";
+import { userProfileDialogClassName } from "@/components/domain/profile/styles";
 
 // Composition
 import AccountModals from "@/app/layout-composition/AccountModals";
 import EditUserFormContent from "@/app/users/[id]/edit/EditUserFormContent";
 import NavBar from "@/app/layout-composition/NavBar";
-import ThemeSessionSync from "@/app/layout-composition/ThemeSessionSync";
+import ThemeStorageSync from "@/app/layout-composition/ThemeStorageSync";
 import styles from "@/app/layout.module.css";
 
 // Helpers
@@ -31,10 +30,11 @@ const appDividerClassName =
 	"flex min-h-0 flex-[1_1_auto] flex-col items-stretch overflow-hidden min-[769px]:flex-row print:block! print:h-auto! print:overflow-visible!";
 
 const navDividerClassName = [
-	// z-[295]: above ModalPopup's scrim (z-[290], components/modal/styles.ts)
-	// so nav stays clickable over an open modal, but below Select's open
-	// dropdown (z-[300], components/select/styles.ts).
-	"relative z-[295] min-h-0 min-w-0 flex-none overflow-visible bg-[var(--app-surface)] overscroll-contain",
+	// z-[200]: above a default (non-modal) Select dropdown (z-[150],
+	// components/select/styles.ts) and NavContent's own bar - but below
+	// ActionMode's backdrop (z-[250]) and an open modal (z-[300],
+	// components/modal/styles.ts), both of which always win over nav.
+	"relative z-[200] min-h-0 min-w-0 flex-none overflow-visible bg-[var(--app-surface)] overscroll-contain",
 	"w-full border-r-0 border-b-0 before:content-none print:hidden!",
 	"min-[769px]:w-auto",
 	"min-[769px]:before:invisible min-[769px]:before:block min-[769px]:before:box-border",
@@ -58,7 +58,7 @@ const themeInitScript = `
 (() => {
   try {
     const key = "sim-theme";
-    const storedTheme = sessionStorage.getItem(key);
+    const storedTheme = localStorage.getItem(key);
     const isValidTheme = storedTheme === "light" || storedTheme === "dark";
 
     if (isValidTheme) {
@@ -66,7 +66,7 @@ const themeInitScript = `
       return;
     }
 
-    sessionStorage.setItem(key, document.documentElement.dataset.theme || "light");
+    localStorage.setItem(key, document.documentElement.dataset.theme || "light");
   } catch {}
 })();
 `;
@@ -77,17 +77,17 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
 	return (
 		<html lang="en" data-theme="light" className="h-full overflow-hidden print:h-auto print:overflow-visible" suppressHydrationWarning>
+			{/* Explicit <head> (not next/script) so this runs before first paint,
+			    not just before hydration - avoids the light-mode flash. */}
+			<head>
+				<script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+			</head>
 			{/* icon.tsx supplies the plain, unconditional favicon (light mode and any
 			    browser that doesn't support this at all); this one only kicks in for
 			    browsers/OS combos actually reporting a dark preference. */}
 			<link rel="icon" href="/icon-dark.png" media="(prefers-color-scheme: dark)" />
 			<body className="m-0 h-full overflow-hidden print:h-auto print:overflow-visible">
-				<Script
-					id="theme-init"
-					strategy="beforeInteractive"
-					dangerouslySetInnerHTML={{ __html: themeInitScript }}
-				/>
-				<ThemeSessionSync />
+				<ThemeStorageSync />
 				<div className={appShellClassName}>
 					<div className={appDividerClassName}>
 						{session && (

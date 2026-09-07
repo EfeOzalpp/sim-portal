@@ -10,6 +10,7 @@ import {
 	selectClearButtonClassName,
 	selectClearIconClassName,
 	selectContentClassName,
+	selectContentInModalClassName,
 	selectEmptyClassName,
 	selectIndicatorsClassName,
 	selectItemVariants,
@@ -40,6 +41,8 @@ interface SharedSelectProps {
 	loading?: boolean;
 	status?: "error" | "";
 	className?: string;
+	/** Set when this Select renders inside a ModalPopup, so its dropdown clears the modal's own z-index instead of sitting behind it. */
+	inModal?: boolean;
 }
 
 export interface SingleSelectProps extends SharedSelectProps {
@@ -100,6 +103,7 @@ function SingleSelectImpl({
 	loading,
 	status,
 	className,
+	inModal,
 }: SingleSelectProps) {
 	const [search, setSearch] = useState("");
 	const [open, setOpen] = useState(false);
@@ -168,7 +172,7 @@ function SingleSelectImpl({
 			</Popover.Trigger>
 			<Popover.Portal>
 				<Popover.Content
-					className={selectContentClassName}
+					className={clsx(selectContentClassName, inModal && selectContentInModalClassName)}
 					sideOffset={4}
 					align="start"
 					style={{ width: "var(--radix-popover-trigger-width)" }}
@@ -222,6 +226,7 @@ function MultiSelectImpl({
 	status,
 	className,
 	maxTagCount,
+	inModal,
 }: MultiSelectProps) {
 	const [search, setSearch] = useState("");
 	const error = status === "error";
@@ -287,7 +292,7 @@ function MultiSelectImpl({
 			</Popover.Trigger>
 			<Popover.Portal>
 				<Popover.Content
-					className={selectContentClassName}
+					className={clsx(selectContentClassName, inModal && selectContentInModalClassName)}
 					sideOffset={4}
 					align="start"
 					style={{ width: "var(--radix-popover-trigger-width)" }}

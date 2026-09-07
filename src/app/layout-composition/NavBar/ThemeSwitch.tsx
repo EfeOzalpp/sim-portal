@@ -32,8 +32,18 @@ export default function ThemeSwitch() {
 	}, []);
 
 	function handleToggle() {
-		document.documentElement.dataset.theme = nextTheme;
+		const root = document.documentElement;
+
+		// Suppress transitions for one frame so colors snap instantly (see styling-theme.css).
+		root.classList.add("theme-toggle-in-progress");
+		root.dataset.theme = nextTheme;
 		setTheme(nextTheme);
+
+		requestAnimationFrame(() => {
+			requestAnimationFrame(() => {
+				root.classList.remove("theme-toggle-in-progress");
+			});
+		});
 	}
 
 	return (

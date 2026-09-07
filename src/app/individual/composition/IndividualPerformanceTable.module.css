@@ -300,28 +300,28 @@
 	}
 
 	.topScrollbar::-webkit-scrollbar {
-		height: 6px;
+		height: 0.5rem;
 	}
 
 	.topScrollbar::-webkit-scrollbar-track {
-		background: var(--app-subtle);
+		background: transparent;
 	}
 
 	.topScrollbar::-webkit-scrollbar-thumb {
-		background: var(--app-muted);
-		border-radius: 3px;
+		background: var(--scrollbar-thumb);
+		border-radius: 9999px;
 	}
 
 	.tableScroll::-webkit-scrollbar {
-		height: 6px;
+		height: 0.5rem;
 	}
 
 	.tableScroll::-webkit-scrollbar-track {
-		background: var(--app-subtle);
+		background: transparent;
 	}
 
 	.tableScroll::-webkit-scrollbar-thumb {
-		background: var(--app-muted);
-		border-radius: 3px;
+		background: var(--scrollbar-thumb);
+		border-radius: 9999px;
 	}
 }

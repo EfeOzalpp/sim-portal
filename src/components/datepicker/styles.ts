@@ -3,6 +3,7 @@ import type { ThemeConfig } from "antd";
 type ComponentTokens = NonNullable<ThemeConfig["components"]>;
 type DatePickerToken = NonNullable<ComponentTokens["DatePicker"]>;
 
+// The subset of antd's DatePicker token API this file actually sets, named by meaning rather than antd's own token names.
 type DatePickerThemeValues = {
 	background: string;
 	elevatedBackground: string;
@@ -21,6 +22,7 @@ type DatePickerThemeValues = {
 	linkHover: string;
 };
 
+// Corner radius for the picker's trigger/panel, in px - antd's token API takes a number, not a rem/Tailwind class.
 const RADIUS = 12;
 
 // The semantic values behind this app's calendar theme, mapped below to the
@@ -70,6 +72,7 @@ const darkValues: DatePickerThemeValues = {
 	linkHover: "#9be2a6", // calendar-only accent, no app token
 };
 
+// Maps one semantic value set (light or dark) onto the actual antd ConfigProvider token names.
 function createDatePickerTheme(values: DatePickerThemeValues): ThemeConfig {
 	const datePickerToken: DatePickerToken = {
 		colorBgContainer: values.background,
@@ -115,5 +118,6 @@ function createDatePickerTheme(values: DatePickerThemeValues): ThemeConfig {
 	};
 }
 
+// Passed to ConfigProvider by DatePickerThemeProvider based on the app's current light/dark theme.
 export const datePickerThemeLight = createDatePickerTheme(lightValues);
 export const datePickerThemeDark = createDatePickerTheme(darkValues);

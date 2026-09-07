@@ -8,7 +8,7 @@ function isTheme(value: string | undefined | null): value is "light" | "dark" {
 	return value === "light" || value === "dark";
 }
 
-export default function ThemeSessionSync() {
+export default function ThemeStorageSync() {
 	useEffect(() => {
 		const root = document.documentElement;
 
@@ -16,12 +16,12 @@ export default function ThemeSessionSync() {
 			const currentTheme = root.dataset.theme;
 
 			if (isTheme(currentTheme)) {
-				sessionStorage.setItem(THEME_STORAGE_KEY, currentTheme);
+				localStorage.setItem(THEME_STORAGE_KEY, currentTheme);
 			}
 		}
 
 		try {
-			const storedTheme = sessionStorage.getItem(THEME_STORAGE_KEY);
+			const storedTheme = localStorage.getItem(THEME_STORAGE_KEY);
 
 			if (isTheme(storedTheme)) {
 				root.dataset.theme = storedTheme;

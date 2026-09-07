@@ -5,13 +5,19 @@
 .backdrop {
 	position: fixed;
 	inset: 0;
-	z-index: 25;
+	z-index: 250;
 	margin: 0;
 	padding: 0;
 	background: var(--scrim);
 	border: 0;
 	cursor: default;
-	pointer-events: none;
+	/* auto (not none): clicks on non-target content are already stopped by
+	   ActionModeSurface's capture-phase handler regardless of this, but that
+	   only covers clicks - without this, a dimmed card underneath could still
+	   show its own :hover state through the scrim. The portaled active
+	   button and highlighted targets sit above this in z-index, so normal
+	   hit-testing already routes hover/clicks to them directly either way. */
+	pointer-events: auto;
 }
 
 .actionButtonShell {
@@ -22,7 +28,7 @@
 }
 
 .actionButtonShell[data-action-mode-active="true"] {
-	z-index: 40;
+	z-index: 260;
 }
 
 .actionButtonShell > div[class*="wrapper"],
@@ -30,23 +36,6 @@
 .actionButtonShell :global(.btn) {
 	width: 100%;
 	min-width: 0;
-}
-
-/*
- * Neutral "pressed" look for active edit-mode buttons. Delete-mode buttons
- * are excluded on purpose: ActionModeButton now passes tone="danger" to
- * Button directly while active+delete, so Button renders its own correct
- * border/bg/text/outline natively from the tone system - this rule used to
- * also target delete buttons and patch the same colors in from outside,
- * which is exactly the kind of hardcoded-divergence-from-a-token bug this
- * app has been getting swept for. Letting both this rule and Button's own
- * tone="danger" classes target the same element only reintroduces that.
- */
-.actionButtonShell[data-action-mode-active="true"]:not([data-action-mode-button="delete-users"]):not([data-action-mode-button="delete-thursdays"]):not([data-action-mode-button="delete-semesters"])
-	:global(.btn.btn-action) {
-	background: var(--app-subtle);
-	border-color: var(--app-border);
-	color: var(--app-text);
 }
 
 .actionButtonContent {
@@ -101,9 +90,7 @@
 	}
 
 	:global([data-mobile-content-bar]) .actionButtonShell[data-action-mode-active="true"] .actionButtonIcon {
-		position: static;
-		flex: 0 0 auto;
-		opacity: 1;
+		display: none;
 	}
 }
 
@@ -115,7 +102,7 @@
 .surface[data-action-mode="delete-semesters"] :global([data-action-mode-target="semester-card"]),
 .surface[data-action-mode="edit-grades"] :global([data-action-mode-target="grade-cell"]) {
 	position: relative;
-	z-index: 35;
+	z-index: 270;
 }
 
 .surface[data-action-mode="edit-thursdays"] :global([data-action-mode-target="thursday-card"]),

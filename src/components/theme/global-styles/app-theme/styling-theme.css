@@ -8,30 +8,30 @@
 :root {
   /* Theme-invariant — scrims stay dark regardless of light/dark mode. */
   --scrim: rgba(0, 0, 0, 0.5);
+  --app-card-action-icon: #ffffff;
 }
 
 html[data-theme="light"] {
   color-scheme: light;
 
   /* App surfaces, text, and structural colors */
-  --app-bg: #c76d6d;
   --app-surface: #fafafa;
-  --app-card-bg: #ffffff;
   --app-card-bg-hover: #f7f8fa;
-  --app-card-label-bg: #ffffff;
-  --app-secondary: var(--app-card-bg);
+  --app-card-label-bg: #ededed;
+  --app-secondary: #ffffff;
   --app-subtle: rgba(245, 247, 255, 0.3);
   --app-text: #1f2933;
-  --app-muted: #6b7280;
-  --app-icon: #665f59;
+  --app-muted: #4d525e;
+  --app-icon: #586456;
   --app-border: #e1e1e1;
-  --app-card-action-overlay: rgba(245, 245, 245, 0.4);
-  --app-card-action-icon: #1f2933;
+  --scrollbar-thumb: rgba(0, 0, 0, 0.15);
+  --scrollbar-thumb-hover: rgba(0, 0, 0, 0.28);
 
   /* Brand */
   --app-theme: #8abb7a;
   --brand-color: #7dbb7a;
   --brand-accent: #dff2df;
+  --app-title: #1e4a29;
 
   /* Semantic tones (success/danger/warning/info) */
   --tone-success-border: #98c9ad;
@@ -52,12 +52,15 @@ html[data-theme="light"] {
 
   /* Button: separate from --app-surface so each variant can diverge on its own; nav's hover/active live here too, same idea. */
   --btn-default-bg: #ffffff;
-  --nav-button-bg-hover: rgba(235, 235, 240, 0.55);
-  --nav-button-bg-active: rgba(187, 187, 198, 0.4);
+  --nav-button-bg-hover: rgba(238, 239, 244, 0.5);
+  --nav-button-bg-active: rgba(225, 227, 232, 0.9);
 
-  /* Input, Select, and their shared field chrome */
-  --input-bg: #ffffff;
+  /* Input, Select, and their shared field chrome. Backgrounds are the one
+     thing that isn't actually shared - Select keeps its own --select-bg. */
+  --input-bg: #f3f4f6;
   --input-bg-hover: #ffffff;
+  --select-bg: #ffffff;
+  --select-bg-hover: #ffffff;
   --input-border: #aca7a2;
   --input-border-hover: #c7c7c7;
   --input-error-border: #d36b6b;
@@ -73,25 +76,26 @@ html[data-theme="light"] {
 html[data-theme="dark"] {
   color-scheme: dark;
 
-  /* App surfaces, text, and structural colors */
-  --app-bg: #111111;
-  --app-surface: #111111;
-  --app-card-bg: #1d1d1e;
-  --app-card-bg-hover: #292929;
-  --app-card-label-bg: #2a2a2a;
-  --app-secondary: var(--app-card-bg);
-  --app-subtle: #242424;
-  --app-text: #f5f5f5;
-  --app-muted: #a3a3a3;
-  --app-icon: #adadad;
-  --app-border: #333333;
-  --app-card-action-overlay: rgba(17, 17, 17, 0.3);
-  --app-card-action-icon: #f5f5f5;
+  /* App surfaces, text, and structural colors. Each step is a real jump from
+     the last (surface < secondary < subtle < hover) instead of a cluster of
+     near-identical darks with no visible hierarchy between them. */
+  --app-surface: #121214;
+  --app-card-bg-hover: #2b2b2f;
+  --app-card-label-bg: #232327;
+  --app-secondary: #1c1c20;
+  --app-subtle: #27272b;
+  --app-text: #f2f2f4;
+  --app-muted: #b5b8be;
+  --app-icon: #c8c8d0;
+  --app-border: #38383e;
+  --scrollbar-thumb: rgba(255, 255, 255, 0.15);
+  --scrollbar-thumb-hover: rgba(255, 255, 255, 0.28);
 
   /* Brand */
   --app-theme: #9cbc91;
   --brand-color: #acd1aa;
   --brand-accent: #243929;
+  --app-title: #b3dba8;
 
   /* Semantic tones (success/danger/warning/info) */
   --tone-success-border: #548a69;
@@ -110,20 +114,23 @@ html[data-theme="dark"] {
   --tone-info-bg: #294256;
   --tone-info-text: #eaf4ff;
 
-  /* Button (see light block) */
-  --btn-default-bg: #1c1c1c;
-  --nav-button-bg-hover: #353535;
-  --nav-button-bg-active: #373737;
+  /* Button */
+  --btn-default-bg: #1c1c20;
+  --nav-button-bg-hover: #303035;
+  --nav-button-bg-active: #35353b;
 
-  /* Input, Select, and their shared field chrome */
-  --input-bg: var(--app-secondary);
-  --input-bg-hover: #292929;
-  --input-border: #343434;
-  --input-border-hover: #4a4a4a;
+  /* Input, Select, and their shared field chrome. Backgrounds are the one
+     thing that isn't actually shared - Select keeps its own --select-bg. */
+  --input-bg: #2a2a2e;
+  --input-bg-hover: #2a2a2f;
+  --select-bg: var(--app-secondary);
+  --select-bg-hover: #242429;
+  --input-border: #38383e;
+  --input-border-hover: #504f57;
   --input-error-border: #b36a6a;
   --input-text: var(--app-text);
   --input-placeholder: var(--app-muted);
-  --input-icon: #c6c6c6;
+  --input-icon: #cacad2;
   --input-dropdown-bg: var(--app-secondary);
   --input-hover-shadow: 0 0 0 1px rgba(255, 255, 255, 0.16);
   --input-tag-text: #f3f3f3;
@@ -145,4 +152,41 @@ html[data-theme="dark"] {
 [data-radix-select-viewport]::-webkit-scrollbar {
   display: block !important;
   width: 0.5rem;
+}
+
+/*
+ * App-wide scrollbar: thin, translucent thumb on a transparent track,
+ * instead of each browser's bold opaque default. Firefox reads
+ * scrollbar-width/scrollbar-color (inherited, so setting it once on html
+ * covers every scrollable element); everything else needs the ::-webkit-
+ * scrollbar family repeated per element, so it's applied via a universal
+ * selector rather than one specific container.
+ */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 0.5rem;
+  height: 0.5rem;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 9999px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
+}
+
+/* Applied to <html> for one frame around a theme toggle (ThemeSwitch.tsx) so color transitions don't visibly fade when the palette swaps. */
+.theme-toggle-in-progress,
+.theme-toggle-in-progress * {
+  transition: none !important;
 }
