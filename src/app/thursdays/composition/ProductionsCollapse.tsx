@@ -76,12 +76,17 @@ export default function ProductionsCollapse({ productions }: ProductionsCollapse
       }}
     >
       <Collapse
-        className="overflow-hidden rounded-xl border border-solid border-[var(--app-border)] text-[var(--app-text)]"
+        // bg lives here (the whole card) rather than only on the header or
+        // only on a ProductionCard's own inner box - those left the content
+        // area's padding/gaps and any single-production Thursday with no
+        // background at all, so the boxes read as floating disconnected
+        // patches instead of one continuous card. overflow-hidden + rounded-xl
+        // above already clip it to the card's shape.
+        className="overflow-hidden rounded-xl border border-solid border-[var(--app-border)] bg-[var(--app-secondary)] text-[var(--app-text)]"
         items={productions.map((p, pIndex) => ({
           value: p.id,
           itemClassName: pIndex > 0 ? "border-t border-t-[var(--app-border)]" : "",
-          // bg lives on the header only - it's the title row, not the body content below it.
-          headerClassName: "items-center bg-[var(--app-secondary)] text-[var(--app-text)] transition-[background] duration-150 hover:bg-[var(--app-card-bg-hover)]",
+          headerClassName: "items-center text-[var(--app-text)] transition-[background] duration-150 hover:bg-[var(--app-card-bg-hover)]",
           // Padding lives on the trigger button itself (not headerClassName,
           // the row around it) - the row uses items-stretch, so padding put
           // there sits outside the button's own box, unclickable despite

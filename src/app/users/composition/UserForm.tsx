@@ -23,7 +23,7 @@ import RepeatableInput from "@/app/users/composition/RepeatableInput";
 // Helpers
 import { useForm, Controller } from "react-hook-form";
 import { handleFormAction } from "@/helpers";
-import { formatSemesterCode } from "@/components/domain/filters/semester-filter";
+import { formatSemesterCode, getCurrentSemesterCode, normalizeSemesterCode } from "@/components/domain/filters/semester-filter";
 import { ROLES } from "@/constants/roles";
 
 function getSemesterNameOptions(currentValues: string[] = []) {
@@ -42,10 +42,6 @@ function getSemesterNameOptions(currentValues: string[] = []) {
   return [...extraOptions, ...options];
 }
 
-function getCurrentSemesterYearValue() {
-  return `SP${String(new Date().getFullYear()).slice(-2)}`;
-}
-
 function getSemesterNameIndex(value?: string) {
   const match = value?.match(/^(SP|FA)(\d{2})$/i);
   if (!match) return 0;
@@ -54,8 +50,19 @@ function getSemesterNameIndex(value?: string) {
   return Number(match[2]) * 2 + termOffset;
 }
 
-function getDefaultSemesterCode(semesters: any[]) {
-  return formatSemesterCode(semesters[0]?.name) || getCurrentSemesterYearValue();
+// Prefer whichever semester actually matches today over semesters[0]
+// (newest by code) - production keeps future semesters pre-created for
+// planning ahead, and those would otherwise always outrank the real
+// current one as "newest".
+function getDefaultSemester(semesters: any[]) {
+  const currentCode = getCurrentSemesterCode();
+  const currentSemester = semesters.find(
+    (semester) => normalizeSemesterCode(semester.name) === currentCode,
+  );
+  return {
+    id: currentSemester?.id ?? semesters[0]?.id ?? null,
+    code: formatSemesterCode(currentSemester?.name) || currentCode,
+  };
 }
 
 function getRangeEndpoints(selectedCodes: string[] = []) {
@@ -104,7 +111,7 @@ export default function UserForm({
   isCurrentUserAdmin = false,
   allSemesters = [],
 }: UserFormProps) {
-  const defaultSemesterCode = getDefaultSemesterCode(allSemesters);
+  const defaultSemester = getDefaultSemester(allSemesters);
   const initialValues = transformUserFromAPI(user) || {
     name: "",
     pronouns: "",
@@ -114,8 +121,8 @@ export default function UserForm({
     links: [""],
     about: "",
     role: ROLES.student,
-    semesterIds: allSemesters.length > 0 ? [allSemesters[0].id] : [],
-    semesterCodes: defaultSemesterCode ? [defaultSemesterCode] : [],
+    semesterIds: defaultSemester.id ? [defaultSemester.id] : [],
+    semesterCodes: defaultSemester.code ? [defaultSemester.code] : [],
   };
 
   const {

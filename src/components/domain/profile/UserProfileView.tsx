@@ -1,4 +1,5 @@
 import PresentationCard from "@/components/domain/productions/PresentationCard";
+import ProductionSummaryCard from "@/components/domain/productions/ProductionSummaryCard";
 import FaceImage from "@/components/primitives/FaceImage";
 import { logOut } from "@/actions/auth";
 import { getDisplayUserLinks, getUserLinkHref } from "@/actions/user-links";
@@ -102,7 +103,26 @@ export default function UserProfileView({
 						)}
 					</div>
 				</div>
-				<div className="flex min-w-0 flex-col gap-1">
+				<div className="flex min-w-0 flex-col gap-1 pb-2">
+					<h3 className="m-0 text-xl">Productions</h3>
+					<div className="flex flex-col gap-2 [&>*]:m-0">
+						{(user.productions?.length ?? 0) > 0 ? (
+							user.productions?.map((production: any) => (
+								<ProductionSummaryCard
+									key={production.id}
+									production={production}
+								/>
+							))
+						) : (
+							<span className="ui-note">
+								{isCurrentUser
+									? "You have not been credited on any productions yet."
+									: "This user has not been credited on any productions yet."}
+							</span>
+						)}
+					</div>
+				</div>
+				<div className="flex min-w-0 flex-col gap-1 pb-2">
 					<h3 className="m-0 text-xl">Presentations</h3>
 					<div className="flex flex-col gap-2 [&>*]:m-0">
 						{(user.presentations?.length ?? 0) > 0 ? (

@@ -29,14 +29,21 @@ import { formatSemesterCode, getCurrentSemesterCode, normalizeSemesterCode } fro
 // a separate, local-only filter with no URL state of its own.
 const ALL_SEMESTERS_FILTER_VALUE = "all";
 
-function getSemesterNameOptions(currentValue?: string) {
+// takenCodes excludes semesters that already exist (adding a new one
+// shouldn't offer names that would just collide) - currentValue is always
+// kept selectable regardless, since it's either the field's own existing
+// value (editing) or a value the field already holds for some other reason,
+// and either way removing it out from under the Select would be confusing.
+function getSemesterNameOptions(currentValue?: string, takenCodes: Set<string> = new Set()) {
   const options = Array.from({ length: 100 }, (_, year) => {
     const shortYear = String(year).padStart(2, "0");
     return [
       { value: `SP${shortYear}`, label: `SP${shortYear}` },
       { value: `FA${shortYear}`, label: `FA${shortYear}` },
     ];
-  }).flat();
+  })
+    .flat()
+    .filter((option) => option.value === currentValue || !takenCodes.has(option.value));
 
   if (currentValue && !options.some((option) => option.value === currentValue)) {
     return [{ value: currentValue, label: currentValue }, ...options];
@@ -97,6 +104,14 @@ export default function SemesterForm({
   });
 
   const [error, setError] = useState<string | null>(null);
+  // Excludes the semester currently being edited (if any) - its own name
+  // shouldn't be flagged as "taken" by itself.
+  const takenSemesterCodes = new Set(
+    semesters
+      .filter((s) => s.id !== semester?.id)
+      .map((s) => normalizeSemesterCode(s.name))
+      .filter((code): code is string => !!code),
+  );
   const selectableUsers = getSelectableUsers(
     users,
     semester?.users,
@@ -150,7 +165,7 @@ export default function SemesterForm({
                       searchable
                       placeholder="e.g. FA26"
                       status={fieldState.error ? "error" : ""}
-                      options={getSemesterNameOptions(field.value)}
+                      options={getSemesterNameOptions(field.value, takenSemesterCodes)}
                     />
                     {fieldState.error && (
                       <span className="ui-note">{fieldState.error.message}</span>
@@ -188,9 +203,11 @@ export default function SemesterForm({
               name="users"
               render={({ field }) => {
                 const selectedIds = new Set<string>(field.value ?? []);
-                // A person already selected stays visible/selectable
-                // regardless of the semester filter - it only narrows who
-                // else shows up.
+                // Only scopes "Select all" - the dropdown itself always
+                // lists every selectableUser (below), so unselecting someone
+                // outside the reference semester flips their row to
+                // "Unselected" instead of yanking it out of the list, which
+                // read as broken (looked like unselecting = removed).
                 const filteredSelectableUsers = selectableUsers.filter(
                   (u) =>
                     selectedIds.has(u.id) ||
@@ -245,7 +262,7 @@ export default function SemesterForm({
                       searchable
                       maxTagCount={12}
                       placeholder="Search and select users..."
-                      options={filteredSelectableUsers.map((u) => ({ value: u.id, label: u.name ?? "Unnamed User" }))}
+                      options={selectableUsers.map((u) => ({ value: u.id, label: u.name ?? "Unnamed User" }))}
                     />
                   </>
                 );
@@ -255,7 +272,7 @@ export default function SemesterForm({
         </div>
 
         <div className="mt-4 flex justify-start border-t border-t-[var(--app-border)] pt-4">
-        <Button type="submit" disabled={isSubmitting} tone="success">
+        <Button type="submit" disabled={isSubmitting} tone="success" fullWidth>
           {isSubmitting
             ? "Saving..."
             : semester

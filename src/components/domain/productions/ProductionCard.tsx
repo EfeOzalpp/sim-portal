@@ -1,6 +1,7 @@
 import clsx from "clsx";
 import PersonLink from "@/components/domain/profile/PersonLink";
 import PresentationCard from "@/components/domain/productions/PresentationCard";
+import EditThursdayButton from "@/components/domain/productions/EditThursdayButton";
 import { isAdminRole } from "@/constants/roles";
 
 interface ProductionCardProps {
@@ -9,6 +10,12 @@ interface ProductionCardProps {
   productionIndex?: number;
   productionCount?: number;
   isAdmin?: boolean;
+  // The Thursdays list (ThursdayCard/ProductionsCollapse) puts this
+  // background on its own outer collapse card instead, covering the whole
+  // expanded area rather than just this box - false there so the two
+  // don't stack. The Thursday detail modal (ThursdayDetailContent), which
+  // has no such wrapper of its own, keeps the default true.
+  hasOwnBackground?: boolean;
 }
 
 function formatOrdinal(value: number) {
@@ -33,6 +40,7 @@ export default async function ProductionCard({
   productionIndex = 0,
   productionCount = 1,
   isAdmin = false,
+  hasOwnBackground = true,
 }: ProductionCardProps) {
   const producers = production.producers.filter(
     (user: any) => !isAdminRole(user.role),
@@ -47,6 +55,13 @@ export default async function ProductionCard({
   });
   const isMultiple = productionCount > 1;
   const productionTitle = isMultiple ? `${formatOrdinal(productionIndex + 1)} Production` : "Production";
+
+  const titleRow = (
+    <div className="flex items-center justify-between gap-2">
+      <h3 className="m-0 text-[1.15rem] font-bold leading-[1.25]">{productionTitle}</h3>
+      {isAdmin && <EditThursdayButton thursdayId={thursday.id} />}
+    </div>
+  );
 
   const fields = (
     <>
@@ -134,7 +149,7 @@ export default async function ProductionCard({
     return (
       <div>
         <div className="flex flex-col gap-2">
-          <h3 className="m-0 text-[1.15rem] font-bold leading-[1.25]">{productionTitle}</h3>
+          {titleRow}
           {fields}
         </div>
       </div>
@@ -143,8 +158,8 @@ export default async function ProductionCard({
 
   return (
     <div className={clsx("flex flex-col gap-2", productionIndex > 0 && "mt-6")}>
-      <h3 className="m-0 text-[1.15rem] font-bold leading-[1.25]">{productionTitle}</h3>
-      <div className="rounded-md border border-solid border-[var(--app-border)] bg-[var(--app-secondary)] p-3">
+      {titleRow}
+      <div className={clsx("rounded-md border border-solid border-[var(--app-border)] p-3", hasOwnBackground && "bg-[var(--app-secondary)]")}>
         {fields}
       </div>
     </div>

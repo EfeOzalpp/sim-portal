@@ -2,6 +2,8 @@ import { notFound } from "next/navigation";
 import { getThursday } from "@/actions/thursdays";
 import ProductionCard from "@/components/domain/productions/ProductionCard";
 import { normalizeThursdayName } from "@/helpers";
+import { isAdminRole } from "@/constants/roles";
+import { auth } from "@/authentication";
 
 export const thursdayDetailDialogClassName = "h-dvh w-[min(52rem,100%)] min-[769px]:h-auto";
 
@@ -12,6 +14,9 @@ interface ThursdayDetailContentProps {
 export default async function ThursdayDetailContent({ thursdayId }: ThursdayDetailContentProps) {
   const result = await getThursday(thursdayId);
   if (!result.success) notFound();
+
+  const session = await auth();
+  const isAdmin = isAdminRole(session?.user?.role);
 
   const thursday = result.data;
   const thursdayName = normalizeThursdayName(thursday.name);
@@ -39,6 +44,7 @@ export default async function ThursdayDetailContent({ thursdayId }: ThursdayDeta
             production={production}
             productionIndex={index}
             productionCount={thursday.productions.length}
+            isAdmin={isAdmin}
           />
         ))
       ) : (

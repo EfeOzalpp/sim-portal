@@ -50,7 +50,7 @@ export default async function NavBar({ session: initialSession }: NavBarProps) {
 					</div>
 				</div>
 				<div className="flex w-full min-w-0 flex-col gap-2 border-t border-t-[var(--app-border)] pt-4">
-					<div className={styles.externalMarker} aria-label="External links">
+					<div className={styles.externalMarker} aria-label="More links">
 						<span className={`${styles.externalMarkerButton} rounded-md bg-transparent text-[var(--app-icon)]`} aria-hidden="true">
 							<span className={`${styles.navIcon} ${styles.assetIcon} ${styles.linkIcon}`} />
 						</span>
@@ -71,6 +71,15 @@ export default async function NavBar({ session: initialSession }: NavBarProps) {
 								</span>
 							</Button>
 						))}
+						{/* Internal page, not an external URL - same list/styling as
+						    SIM Website & SIM Courses above, but no target="_blank"
+						    since it's a normal in-app route, not a link off-site. */}
+						<Button href="/sim-history" variant="nav">
+							<span className={styles.navItemContent}>
+								<span className={`${styles.navIcon} ${styles.assetIcon} ${styles.linkIcon}`} aria-hidden="true" />
+								<span className={styles.navLabel}>SIM History</span>
+							</span>
+						</Button>
 					</div>
 				</div>
 				<div className="mt-auto flex w-full min-w-0 flex-col">

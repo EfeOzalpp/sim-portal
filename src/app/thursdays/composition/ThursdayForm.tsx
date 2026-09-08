@@ -26,6 +26,7 @@ import ProductionsSection from "@/app/thursdays/composition/ProductionsSection";
 // Helpers
 import { useForm } from "react-hook-form";
 import { handleFormAction } from "@/helpers";
+import { getCurrentSemesterCode, normalizeSemesterCode } from "@/components/domain/filters/semester-filter";
 
 interface ThursdayFormValues extends Omit<ThursdayInput, "date"> {
   productions: ProductionInput[];
@@ -54,7 +55,14 @@ export default function ThursdayForm({
     : {
         name: "",
         date: "",
-        semesterId: semesters?.[0]?.id || null,
+        // Prefer whichever semester actually matches today over semesters[0]
+        // (newest by code) - production keeps future semesters pre-created
+        // for planning ahead, and those would otherwise always outrank the
+        // real current one as "newest", silently misfiling a new Day.
+        semesterId:
+          semesters?.find(
+            (semester) => normalizeSemesterCode(semester.name) === getCurrentSemesterCode(),
+          )?.id ?? semesters?.[0]?.id ?? null,
         productions: [],
       };
 

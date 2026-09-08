@@ -5,6 +5,11 @@ export { ALL_SEMESTERS_VALUE, isAllSemestersValue };
 export const SEMESTER_FILTER_KEY = "semesterId";
 export const LEGACY_SEMESTER_FILTER_KEY = "semester";
 
+// Individual Performance's semester filter: which semester's
+// productions/presentations/grades are shown for the (unfiltered-by-semester)
+// people list. No legacy key - this one's new.
+export const THURSDAY_SCOPE_FILTER_KEY = "thursdayScopeId";
+
 export type SemesterFilterOption = {
 	id: string;
 	name: string;
@@ -17,10 +22,10 @@ export function getSearchParamValue(value: SearchParamValue) {
 	return Array.isArray(value) ? value[0] : value;
 }
 
-export function getSemesterFilterValue(searchParams: SearchParamsLike) {
+export function getSemesterFilterValue(searchParams: SearchParamsLike, key: string = SEMESTER_FILTER_KEY) {
 	return (
-		getSearchParamValue(searchParams[SEMESTER_FILTER_KEY]) ||
-		getSearchParamValue(searchParams[LEGACY_SEMESTER_FILTER_KEY]) ||
+		getSearchParamValue(searchParams[key]) ||
+		(key === SEMESTER_FILTER_KEY ? getSearchParamValue(searchParams[LEGACY_SEMESTER_FILTER_KEY]) : null) ||
 		null
 	);
 }
@@ -39,8 +44,9 @@ export function getCurrentSemesterCode(now: Date = new Date()) {
 export function getSelectedSemesterId(
 	searchParams: SearchParamsLike,
 	semesters: SemesterFilterOption[],
+	key: string = SEMESTER_FILTER_KEY,
 ) {
-	const filterValue = getSemesterFilterValue(searchParams);
+	const filterValue = getSemesterFilterValue(searchParams, key);
 
 	if (isAllSemestersValue(filterValue)) {
 		return ALL_SEMESTERS_VALUE;
@@ -67,8 +73,9 @@ export function getSelectedSemesterId(
 export function getSelectedSemester(
 	searchParams: SearchParamsLike,
 	semesters: SemesterFilterOption[],
+	key: string = SEMESTER_FILTER_KEY,
 ) {
-	const selectedSemesterId = getSelectedSemesterId(searchParams, semesters);
+	const selectedSemesterId = getSelectedSemesterId(searchParams, semesters, key);
 
 	if (isAllSemestersValue(selectedSemesterId)) {
 		return null;

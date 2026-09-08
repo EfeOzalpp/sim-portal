@@ -1,5 +1,6 @@
 import { Button } from "@/components/button";
 import PersonLink from "@/components/domain/profile/PersonLink";
+import SemesterBadge from "@/components/domain/productions/SemesterBadge";
 import { formatNiceListFromArray } from "@/helpers";
 import { Prisma } from "@prisma/client";
 
@@ -15,6 +16,15 @@ type PresentationWithPresenters = Prisma.PresentationGetPayload<{
     production: {
       select: {
         thursday_id: true;
+        thursday: {
+          select: {
+            semester: {
+              select: {
+                name: true;
+              };
+            };
+          };
+        };
       };
     };
   };
@@ -44,12 +54,12 @@ export default function PresentationCard({
   ));
 
   const thursdayId = (presentation as any).production?.thursday_id;
+  const semesterName = (presentation as any).production?.thursday?.semester?.name;
 
   if (!isUserProfile) {
     return (
       <div className="my-3 grid w-full grid-cols-1 items-baseline gap-1 text-inherit no-underline min-[768px]:grid-cols-[minmax(10rem,14rem)_minmax(0,1fr)] min-[768px]:gap-4">
         <div className="flex min-w-0 flex-col gap-1 leading-[1.4]">
-          <b>Name</b>
           <div>{presentation.name}</div>
         </div>
         <div className="flex min-w-0 flex-col gap-[0.35rem]">
@@ -71,6 +81,7 @@ export default function PresentationCard({
 
   return (
     <div className="flex w-full flex-col gap-2 rounded-md border border-solid border-[var(--app-border)] bg-[var(--app-secondary)] p-2 pt-3">
+      <SemesterBadge name={semesterName} />
       <div className="font-bold">{presentation.name}</div>
       <div className="flex w-full flex-row flex-wrap items-baseline gap-x-4 gap-y-2 [&_div]:m-0">
         {presentation.about !== "" ? (

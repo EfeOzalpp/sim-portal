@@ -105,6 +105,75 @@
 	z-index: 270;
 }
 
+@keyframes actionModeSweep {
+	from {
+		background-position: 200% 0;
+	}
+	to {
+		background-position: -100% 0;
+	}
+}
+
+/* Continuous left-to-right sweep (not hover-only) for as long as the card
+   is a target, as a ::after painted in front of the card rather than a
+   background-image on the target itself: thursday-card and semester-card
+   each put their own opaque background on a NESTED child
+   (ProductionsCollapse's Collapse, SemesterCard's <article>), which fully
+   hides anything painted underneath it on the target element itself - a
+   background-image there is invisible, occluded by that child's own
+   background-color. Painting in front instead works the same way
+   regardless of where a card's own background actually lives.
+   mix-blend-mode: soft-light (not a flat translucent color) + z-index: 1,
+   well below each card's own z-[5] edit/delete icon overlay, so this reads
+   as a darker hue passing over the surface instead of a stripe that covers
+   the card's own text as it sweeps across it.
+   border-radius matches rounded-xl (0.75rem) - user-card, thursday-card,
+   and semester-card all render (or wrap) a rounded-xl surface. */
+.surface[data-action-mode="edit-users"] :global([data-action-mode-target="user-card"])::after,
+.surface[data-action-mode="delete-users"] :global([data-action-mode-target="user-card"])::after,
+.surface[data-action-mode="edit-thursdays"] :global([data-action-mode-target="thursday-card"])::after,
+.surface[data-action-mode="delete-thursdays"] :global([data-action-mode-target="thursday-card"])::after,
+.surface[data-action-mode="edit-semesters"] :global([data-action-mode-target="semester-card"])::after,
+.surface[data-action-mode="delete-semesters"] :global([data-action-mode-target="semester-card"])::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	z-index: 1;
+	pointer-events: none;
+	border-radius: 0.75rem;
+	mix-blend-mode: soft-light;
+	/* rgba(0,0,0,...), not var(--nav-button-bg-hover) - that token is a
+	   near-white highlight in light mode, so soft-light blended against it
+	   barely registered instead of reading as a darker hue passing over
+	   the card. Flat black at this alpha, blended with soft-light, darkens
+	   the surface clearly without going opaque enough to swallow the text
+	   under it (soft-light preserves detail rather than covering it). */
+	background-image: linear-gradient(100deg, transparent 15%, rgba(0, 0, 0, 0.55) 50%, transparent 85%);
+	background-repeat: no-repeat;
+	background-size: 300% 100%;
+	animation: actionModeSweep 3s linear infinite;
+}
+
+/* grade-cell is a plain <td>, no rounding of its own. */
+.surface[data-action-mode="edit-grades"] :global([data-action-mode-target="grade-cell"])::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	z-index: 1;
+	pointer-events: none;
+	mix-blend-mode: soft-light;
+	/* rgba(0,0,0,...), not var(--nav-button-bg-hover) - that token is a
+	   near-white highlight in light mode, so soft-light blended against it
+	   barely registered instead of reading as a darker hue passing over
+	   the card. Flat black at this alpha, blended with soft-light, darkens
+	   the surface clearly without going opaque enough to swallow the text
+	   under it (soft-light preserves detail rather than covering it). */
+	background-image: linear-gradient(100deg, transparent 15%, rgba(0, 0, 0, 0.55) 50%, transparent 85%);
+	background-repeat: no-repeat;
+	background-size: 300% 100%;
+	animation: actionModeSweep 3s linear infinite;
+}
+
 .surface[data-action-mode="edit-thursdays"] :global([data-action-mode-target="thursday-card"]),
 .surface[data-action-mode="delete-thursdays"] :global([data-action-mode-target="thursday-card"]),
 .surface[data-action-mode="edit-semesters"] :global([data-action-mode-target="semester-card"]),

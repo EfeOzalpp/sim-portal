@@ -11,6 +11,7 @@ import { PresentationSchema, PresentationInput } from "@/actions/schemas";
 // Helpers
 import { prisma } from "@/database";
 import { isAllSemestersValue } from "@/constants/filters";
+import { getSelectedSemesterId } from "@/components/domain/filters/semester-filter";
 
 export async function getAllSemesters() {
 	return await getAllSemestersUtil();
@@ -56,9 +57,15 @@ export async function getFilteredPresentations(filters: PresentationFilters) {
 		let defaultSemester: any = { production: { thursday: { semester: { name: { contains: "" } } } } };
 
 		if (filters.semester === undefined) {
+			// No explicit filter provided - default to whatever the page-level
+			// filter Select shows as pre-selected (the semester matching
+			// today's date, falling back to the newest one), not just "the
+			// newest semester" outright - see getFilteredUsers/getFilteredThursdays
+			// for why those can disagree.
 			const semesters = await getAllSemestersUtil();
-			if (semesters.length > 0) {
-				defaultSemester = { production: { thursday: { semester: { id: semesters[0].id } } } };
+			const defaultSemesterId = getSelectedSemesterId({ semester: filters.semester }, semesters);
+			if (defaultSemesterId && !isAllSemestersValue(defaultSemesterId)) {
+				defaultSemester = { production: { thursday: { semester: { id: defaultSemesterId } } } };
 			}
 		} else if (!isAllSemestersValue(filters.semester)) {
 			defaultSemester = { production: { thursday: { semester: { name: { contains: filters.semester } } } } };

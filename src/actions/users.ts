@@ -19,7 +19,7 @@ import { deleteStoredUserImage, storeUserImage } from "@/actions/user-image-stor
 // Helpers
 import { prisma } from "@/database";
 import { isAllSemestersValue } from "@/constants/filters";
-import { normalizeSemesterCode } from "@/components/domain/filters/semester-filter";
+import { getSelectedSemesterId, normalizeSemesterCode } from "@/components/domain/filters/semester-filter";
 import { ROLES } from "@/constants/roles";
 import { Prisma } from "@prisma/client";
 
@@ -117,8 +117,17 @@ export async function getUser(id: string) {
 				semesters: {
 					select: { id: true, name: true }
 				},
-				presentations: { 
-					include: { 
+				productions: {
+					orderBy: { thursday: { date: "desc" } },
+					include: {
+						thursday: {
+							select: { id: true, date: true, semester: { select: { id: true, name: true } } }
+						},
+					}
+				},
+				presentations: {
+					orderBy: { production: { thursday: { date: "desc" } } },
+					include: {
 						presenters: {
 							select: {
 								id: true,
@@ -128,11 +137,11 @@ export async function getUser(id: string) {
 						production: {
 							select: {
 								thursday_id: true,
+								thursday: { select: { date: true, semester: { select: { id: true, name: true } } } },
 							}
 						}
-					} 
+					}
 				},
-				// Exclude productions as they aren't used in the main profile view currently
 			}
 		});
 		if (!user) throw new Error("User not found");
@@ -183,10 +192,17 @@ export async function getFilteredUsers(rawFilters: any) {
 			// Fallback for legacy name-based filtering
 			semesterQuery = { semesters: { some: { name: { contains: filters.semester } } } };
 		} else if (!filters.semesterId && !filters.semester) {
-			// Default to first semester if no filter provided
+			// No explicit filter in the URL yet - default to whatever the
+			// page's own filter Select shows as pre-selected (the semester
+			// matching today's date, falling back to the newest one), not just
+			// "the newest semester" outright. Those can differ - e.g. a future
+			// semester already exists but has no members yet - and blindly
+			// querying the newest one made a fresh page load show "no
+			// results" even though the visible filter looked normal.
 			const semesters = await getAllSemestersUtil();
-			if (semesters.length > 0) {
-				semesterQuery = { semesters: { some: { id: semesters[0].id } } };
+			const defaultSemesterId = getSelectedSemesterId(rawFilters, semesters);
+			if (defaultSemesterId && !isAllSemestersValue(defaultSemesterId)) {
+				semesterQuery = { semesters: { some: { id: defaultSemesterId } } };
 			}
 		}
 

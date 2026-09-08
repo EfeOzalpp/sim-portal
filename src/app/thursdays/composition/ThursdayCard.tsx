@@ -64,6 +64,7 @@ export default async function ThursdayCard({
                   productionIndex={index}
                   productionCount={thursday.productions.length}
                   isAdmin={isAdmin}
+                  hasOwnBackground={false}
                 />
               ))
             ) : (

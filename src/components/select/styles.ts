@@ -123,15 +123,15 @@ export const selectTagRemoveClassName = "inline-grid h-3 w-3 flex-none place-ite
 // every antd-era consumer (SemesterForm, ProductionForm, PresentationsField)
 // hand-rolled the same badge independently; centralizing it here instead of
 // exposing a renderOption prop each consumer would reimplement identically.
+// Sized/padded like an actual button (min-h-9, px-2, rounded-md) rather than
+// a small text tag - matches the grade-picker chips in GradeEditorModal,
+// including the same green tone-success treatment once selected.
 export const selectOptionBadgeVariants = cva(
-	[
-		"shrink-0 rounded-md border border-solid px-1.5 py-0.5",
-		"text-[0.65rem] font-bold tracking-[0.05em] uppercase",
-	],
+	["inline-flex min-h-9 shrink-0 items-center justify-center rounded-md border border-solid px-2 text-sm"],
 	{
 		variants: {
 			selected: {
-				true: "border-[var(--tone-success-border)] bg-[var(--tone-success-bg)] text-[var(--tone-success-text)]",
+				true: "border-[var(--tone-success-border)] bg-[var(--tone-success-bg)] text-[var(--tone-success-text)] font-semibold",
 				false: "border-[var(--app-border)] bg-[var(--app-subtle)] text-[var(--app-muted)]",
 			},
 		},

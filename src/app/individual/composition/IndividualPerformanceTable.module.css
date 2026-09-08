@@ -51,6 +51,15 @@
 	vertical-align: top;
 }
 
+/* Column separators for body rows only (not :first-child, so there's no
+   stray line before Names) - Productions/Presentations/Grades otherwise
+   blend into each other with no border of their own between them. Left off
+   the header intentionally, per how the header/body tables are split (see
+   the split-table comment at the top of this file). */
+.table tbody > tr > td:not(:first-child) {
+	border-left: 1px solid var(--app-border);
+}
+
 .table tbody > tr:hover > td {
 	background: var(--app-card-bg-hover);
 }
@@ -140,7 +149,7 @@
 .itemList {
 	display: flex;
 	flex-direction: column;
-	gap: calc(0.5rem / 2);
+	gap: 0.65rem;
 }
 
 .nameLink,

@@ -169,9 +169,12 @@ export default function PresentationsField({
                       name={`productions.${productionIndex}.presentations.${pIndex}.presenters`}
                       render={({ field }) => {
                         const selectedIds = new Set<string>(field.value ?? []);
-                        // A person already selected stays visible/selectable
-                        // regardless of the semester filter - it only
-                        // narrows who else shows up.
+                        // Only scopes "Select all" - the dropdown itself
+                        // always lists every studentUser (below), so
+                        // unselecting someone outside the reference semester
+                        // flips their row to "Unselected" instead of
+                        // yanking it out of the list, which read as broken
+                        // (looked like unselecting = removed).
                         const filteredStudentUsers = studentUsers.filter(
                           (u) =>
                             selectedIds.has(u.id) ||
@@ -227,7 +230,7 @@ export default function PresentationsField({
                               maxTagCount={12}
                               placeholder="Search and select presenters..."
                               options={[
-                                ...filteredStudentUsers,
+                                ...studentUsers,
                                 ...users.filter(
                                   (u) => selectedIds.has(u.id) && !isStudentRole((u as any).role)
                                 ),

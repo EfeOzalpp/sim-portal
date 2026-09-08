@@ -102,7 +102,16 @@ export async function getSemesterFromName(name?: string) {
 	});
 }
 
-export async function getIndividualSemesterData(semesterId: string, rawFilters: any = {}) {
+export async function getIndividualSemesterData(
+	semesterId: string,
+	rawFilters: any = {},
+	// Decoupled from semesterId: semesterId picks who's on the roster (people
+	// enrolled in that semester), this picks which semester's productions,
+	// presentations, and grades are shown for those people. Defaults to
+	// semesterId so callers that don't pass it get the old, coupled
+	// behavior unchanged.
+	workSemesterId: string = semesterId,
+) {
 	return await action(async () => {
 		noStore();
 
@@ -110,6 +119,7 @@ export async function getIndividualSemesterData(semesterId: string, rawFilters: 
 		const filters = validation.success ? validation.data : {};
 		const userSearch = Array.isArray(filters.user) ? filters.user[0] : (filters.user || "");
 		const isAllSemesters = isAllSemestersValue(semesterId);
+		const isAllWorkSemesters = isAllSemestersValue(workSemesterId);
 
 		const semester = isAllSemesters
 			? null
@@ -118,30 +128,6 @@ export async function getIndividualSemesterData(semesterId: string, rawFilters: 
 				select: {
 					id: true,
 					name: true,
-					thursdays: {
-						orderBy: { date: "asc" },
-						select: {
-							id: true,
-							date: true,
-							name: true,
-							productions: {
-								select: {
-									id: true,
-									name: true,
-									location: true,
-									presentations: {
-										select: { 
-											id: true,
-											name: true,
-											presenters: {
-												select: { id: true, name: true, image: true, role: true }
-											}
-										},
-									},
-								},
-							},
-						},
-					},
 					users: {
 						select: { id: true, name: true }
 					},
@@ -152,11 +138,25 @@ export async function getIndividualSemesterData(semesterId: string, rawFilters: 
 			return { semester: null, users: [] };
 		}
 
-		const midTimestamp = semester ? getMidSemesterTimestamp(semester.thursdays) : null;
-		const scopedProductionWhere = isAllSemesters
+		// Only needed for Pre-Mid/Post-Mid splitting below, so it's its own
+		// light query rather than piggybacking on the roster semester lookup
+		// above - the two can be different semesters entirely.
+		const workThursdays = isAllWorkSemesters
+			? []
+			: await prisma.thursday.findMany({
+				where: { semester_id: workSemesterId },
+				select: { date: true },
+			});
+		const midTimestamp = isAllWorkSemesters ? null : getMidSemesterTimestamp(workThursdays);
+
+		// Used only to narrow the People search ("does this person have a
+		// production/presentation matching the search text") - scoped to the
+		// roster semester, since search is a people-filtering concern, not
+		// the decoupled productions/presentations/grades one.
+		const rosterProductionWhere = isAllSemesters
 			? {}
 			: { thursday: { semester_id: semesterId } };
-		const scopedPresentationWhere = isAllSemesters
+		const rosterPresentationWhere = isAllSemesters
 			? {}
 			: { production: { thursday: { semester_id: semesterId } } };
 		const userSearchWhere = userSearch
@@ -166,7 +166,7 @@ export async function getIndividualSemesterData(semesterId: string, rawFilters: 
 					{
 						productions: {
 							some: {
-								...scopedProductionWhere,
+								...rosterProductionWhere,
 								name: { contains: userSearch, mode: "insensitive" as const },
 							},
 						},
@@ -174,7 +174,7 @@ export async function getIndividualSemesterData(semesterId: string, rawFilters: 
 					{
 						presentations: {
 							some: {
-								...scopedPresentationWhere,
+								...rosterPresentationWhere,
 								name: { contains: userSearch, mode: "insensitive" as const },
 							},
 						},
@@ -182,6 +182,15 @@ export async function getIndividualSemesterData(semesterId: string, rawFilters: 
 				],
 			}
 			: {};
+
+		// What actually gets shown for each person - scoped to the
+		// independently-selected work semester.
+		const workProductionWhere = isAllWorkSemesters
+			? {}
+			: { thursday: { semester_id: workSemesterId } };
+		const workPresentationWhere = isAllWorkSemesters
+			? {}
+			: { production: { thursday: { semester_id: workSemesterId } } };
 
 		const users = await prisma.user.findMany({
 			where: {
@@ -198,16 +207,16 @@ export async function getIndividualSemesterData(semesterId: string, rawFilters: 
 					select: { id: true, name: true },
 				},
 				semesterGrades: {
-					where: isAllSemesters ? {} : { semesterId },
+					where: isAllWorkSemesters ? {} : { semesterId: workSemesterId },
 					select: { semesterId: true, grade: true },
 				},
-				productions: { 
-					where: scopedProductionWhere,
-					include: { thursday: { select: { id: true, date: true } } } 
+				productions: {
+					where: workProductionWhere,
+					include: { thursday: { select: { id: true, date: true, semester: { select: { name: true } } } } }
 				},
-				presentations: { 
-					where: scopedPresentationWhere,
-					include: { production: { include: { thursday: { select: { id: true, date: true } } } } } 
+				presentations: {
+					where: workPresentationWhere,
+					include: { production: { include: { thursday: { select: { id: true, date: true, semester: { select: { name: true } } } } } } }
 				},
 			},
 		});

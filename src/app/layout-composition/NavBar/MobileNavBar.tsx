@@ -97,6 +97,15 @@ export default function MobileNavBar({ isAdmin, user }: MobileNavBarProps) {
 									</span>
 								</Button>
 							))}
+							{/* Internal page, not an external URL - same list/styling as
+							    SIM Website & SIM Courses above, but no target="_blank"
+							    since it's a normal in-app route, not a link off-site. */}
+							<Button href="/sim-history" variant="nav">
+								<span className={navStyles.navItemContent}>
+									<span className={`${navStyles.navIcon} ${navStyles.assetIcon} ${navStyles.linkIcon}`} aria-hidden="true" />
+									<span className={navStyles.navLabel}>SIM History</span>
+								</span>
+							</Button>
 						</div>
 					</div>
 

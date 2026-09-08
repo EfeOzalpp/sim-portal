@@ -116,8 +116,11 @@ export default function ProductionForm({
           name={`productions.${productionIndex}.producers`}
           render={({ field }) => {
             const selectedIds = new Set<string>(field.value ?? []);
-            // A person already selected stays visible/selectable regardless
-            // of the semester filter - it only narrows who else shows up.
+            // Only scopes "Select all" - the dropdown itself always lists
+            // every producerUser (below), so unselecting someone outside the
+            // reference semester flips their row to "Unselected" instead of
+            // yanking it out of the list, which read as broken (looked like
+            // unselecting = removed).
             const filteredProducerUsers = producerUsers.filter(
               (u) =>
                 selectedIds.has(u.id) ||
@@ -173,7 +176,7 @@ export default function ProductionForm({
                   maxTagCount={12}
                   placeholder="Search and select users..."
                   options={[
-                    ...filteredProducerUsers,
+                    ...producerUsers,
                     ...users.filter(
                       (u) => selectedIds.has(u.id) && isStaffRole((u as any).role)
                     ),

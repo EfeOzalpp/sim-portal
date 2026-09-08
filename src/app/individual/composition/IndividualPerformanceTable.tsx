@@ -20,9 +20,10 @@ import styles from "@/app/individual/composition/IndividualPerformanceTable.modu
 import clsx from "clsx";
 import { ACTION_MODES } from "@/constants/action-modes";
 import { Prisma } from "@prisma/client";
+import { formatSemesterCode } from "@/components/domain/filters/semester-filter";
 
-type ProductionWithThursday = Prisma.ProductionGetPayload<{ include: { thursday: { select: { id: true, date: true } } } }>;
-type PresentationWithProduction = Prisma.PresentationGetPayload<{ include: { production: { include: { thursday: { select: { id: true, date: true } } } } } }>;
+type ProductionWithThursday = Prisma.ProductionGetPayload<{ include: { thursday: { select: { id: true, date: true, semester: { select: { name: true } } } } } }>;
+type PresentationWithProduction = Prisma.PresentationGetPayload<{ include: { production: { include: { thursday: { select: { id: true, date: true, semester: { select: { name: true } } } } } } } }>;
 
 interface UserStat {
 	id: string;
@@ -35,17 +36,24 @@ interface UserStat {
 
 interface IndividualPerformanceTableProps {
 	users?: UserStat[];
+	// Only worth showing per-item - every row's items already share the one
+	// selected semester otherwise, so the label would just repeat itself.
+	isAllSemesters?: boolean;
 }
 
 const dateFormat: Intl.DateTimeFormatOptions = { month: "short", day: "numeric" };
 
-function TableItem({ name, date, thursdayId }: { name: string; date?: Date; thursdayId?: string }) {
+function TableItem({ name, date, thursdayId, semesterName }: { name: string; date?: Date; thursdayId?: string; semesterName?: string }) {
+	const dateLabel = date ? new Date(date).toLocaleDateString("en-US", dateFormat) : "No date";
+	// Plain text alongside the date (e.g. "Sep 3, FA26") rather than a
+	// separate badge - this list is dense enough already without another
+	// pill per row, and it's only shown at all when semesterName is passed
+	// (i.e. the "All Semesters" filter is active).
+	const dateWithSemester = semesterName ? `${dateLabel}, ${formatSemesterCode(semesterName)}` : dateLabel;
 	const content = (
 		<>
 			<span className={styles.itemName}>{name}</span>
-			<span className={styles.itemDate}>
-				{date ? new Date(date).toLocaleDateString("en-US", dateFormat) : "No date"}
-			</span>
+			<span className={styles.itemDate}>{dateWithSemester}</span>
 		</>
 	);
 
@@ -109,7 +117,7 @@ function SortableHeader({ label, sortKey, sort, onSort }: { label: string; sortK
 	);
 }
 
-export default function IndividualPerformanceTable({ users = [] }: IndividualPerformanceTableProps) {
+export default function IndividualPerformanceTable({ users = [], isAllSemesters = false }: IndividualPerformanceTableProps) {
 	const scrollRef = useRef<HTMLDivElement>(null);
 	const topScrollRef = useRef<HTMLDivElement>(null);
 	const headerScrollRef = useRef<HTMLDivElement>(null);
@@ -243,9 +251,6 @@ export default function IndividualPerformanceTable({ users = [] }: IndividualPer
 											<span className="ui-note">No current productions</span>
 										) : (
 											<div className={styles.section}>
-												<span className={clsx("ui-label", styles.countLabel)}>
-													<span className={styles.countValue}>{productions.length}</span>
-												</span>
 												<ItemList>
 													{productions.map((production) => (
 														<TableItem
@@ -253,6 +258,7 @@ export default function IndividualPerformanceTable({ users = [] }: IndividualPer
 															name={production.name}
 															date={production.date}
 															thursdayId={production.thursday_id}
+															semesterName={isAllSemesters ? production.thursday?.semester?.name : undefined}
 														/>
 													))}
 												</ItemList>
@@ -267,7 +273,6 @@ export default function IndividualPerformanceTable({ users = [] }: IndividualPer
 												{hasPreMid && (
 													<div className={styles.section}>
 														<span className={clsx("ui-label", styles.countLabel)}>
-															<span className={styles.countValue}>{user.presentationsBeforeMid.length}</span>
 															<span className={styles.countText}>Pre-Mid</span>
 														</span>
 														<ItemList>
@@ -277,6 +282,7 @@ export default function IndividualPerformanceTable({ users = [] }: IndividualPer
 																	name={presentation.name}
 																	date={presentation.date}
 																	thursdayId={presentation.production?.thursday?.id}
+																	semesterName={isAllSemesters ? presentation.production?.thursday?.semester?.name : undefined}
 																/>
 															))}
 														</ItemList>
@@ -285,7 +291,6 @@ export default function IndividualPerformanceTable({ users = [] }: IndividualPer
 												{hasPostMid && (
 													<div className={styles.section}>
 														<span className={clsx("ui-label", styles.countLabel)}>
-															<span className={styles.countValue}>{user.presentationsAfterMid.length}</span>
 															<span className={styles.countText}>Post-Mid</span>
 														</span>
 														<ItemList>
@@ -295,6 +300,7 @@ export default function IndividualPerformanceTable({ users = [] }: IndividualPer
 																	name={presentation.name}
 																	date={presentation.date}
 																	thursdayId={presentation.production?.thursday?.id}
+																	semesterName={isAllSemesters ? presentation.production?.thursday?.semester?.name : undefined}
 																/>
 															))}
 														</ItemList>

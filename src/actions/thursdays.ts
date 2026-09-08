@@ -11,6 +11,7 @@ import { ThursdaySchema, ThursdayInput, ProductionInput, PresentationInput, Filt
 // Helpers
 import { prisma } from "@/database";
 import { isAllSemestersValue } from "@/constants/filters";
+import { getSelectedSemesterId } from "@/components/domain/filters/semester-filter";
 import { Prisma } from "@prisma/client";
 
 export async function getAllSemesters() {
@@ -106,10 +107,17 @@ export async function getFilteredThursdays(rawFilters: { semester?: string | str
 			// Fallback for legacy name-based filtering
 			semesterQuery = { semester: { name: { contains: filters.semester } } };
 		} else if (!filters.semesterId && !filters.semester) {
-			// Default to first semester if no filter provided
+			// No explicit filter in the URL yet - default to whatever the
+			// page's own filter Select shows as pre-selected (the semester
+			// matching today's date, falling back to the newest one), not just
+			// "the newest semester" outright. Those can differ - e.g. a future
+			// semester already exists but has no members yet - and blindly
+			// querying the newest one made a fresh page load show "no
+			// results" even though the visible filter looked normal.
 			const semesters = await getAllSemestersUtil();
-			if (semesters.length > 0) {
-				semesterQuery = { semester: { id: semesters[0].id } };
+			const defaultSemesterId = getSelectedSemesterId(rawFilters, semesters);
+			if (defaultSemesterId && !isAllSemestersValue(defaultSemesterId)) {
+				semesterQuery = { semester: { id: defaultSemesterId } };
 			}
 		}
 
@@ -301,8 +309,14 @@ export async function createThursdayWithProductions(data: ThursdayInput & { seme
 
 		let semesterId = data.semesterId || validatedFields.semester_id;
 		if (!semesterId) {
+			// Prefer whichever semester actually matches today over
+			// semesters[0] (newest by code) - production keeps future
+			// semesters pre-created for planning ahead, and those would
+			// otherwise always outrank the real current one as "newest".
 			const semesters = await getAllSemestersUtil();
-			semesterId = semesters[0]?.id;
+			// No filter value passed in, so this can only resolve to a real
+			// semester id or null - never the "all semesters" sentinel.
+			semesterId = getSelectedSemesterId({}, semesters) ?? undefined;
 		}
 
 		return await prisma.$transaction(async (tx) => {
