@@ -322,8 +322,8 @@ export default function IndividualPerformanceTable({ users = [], isAllSemesters 
 												<div className={styles.gradeList}>
 													{selectedGrades.map(({ semester, grade }) => (
 														<span key={semester.id} className={styles.gradeValue}>
-															<span>{semester.name}</span>
 															<strong>{grade}</strong>
+															<span className={styles.gradeSemester}>{semester.name}</span>
 														</span>
 													))}
 												</div>

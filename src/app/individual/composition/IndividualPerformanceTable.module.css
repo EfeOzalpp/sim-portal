@@ -27,8 +27,8 @@
 
 .table thead > tr > th {
 	padding: 0.85rem 1rem;
-	background: var(--app-surface);
-	border-bottom: 1px solid var(--app-border);
+	background: var(--app-ind-progress-surface);
+	border-bottom: 1px solid var(--modal-border);
 	color: var(--app-text);
 	font-family: var(--font-heading);
 	font-size: 1rem;
@@ -45,8 +45,8 @@
 	/* padding-top lives here rather than on <tr> - tr padding is a no-op
 	   under border-collapse: collapse (only td/th respect it). */
 	padding: 0.85rem 1rem;
-	background: var(--app-surface);
-	border-bottom: 1px solid var(--app-border);
+	background: var(--app-ind-progress-surface);
+	border-bottom: 1px solid var(--modal-border);
 	color: var(--app-text);
 	vertical-align: top;
 }
@@ -57,7 +57,7 @@
    the header intentionally, per how the header/body tables are split (see
    the split-table comment at the top of this file). */
 .table tbody > tr > td:not(:first-child) {
-	border-left: 1px solid var(--app-border);
+	border-left: 1px solid var(--modal-border);
 }
 
 .table tbody > tr:hover > td {
@@ -86,12 +86,12 @@
 	height: 1rem;
 	background: currentColor;
 	opacity: 0.35;
-	mask-image: url("../../../components/theme/assets/arrow/down.svg");
+	mask-image: url("../../../theme/assets/arrow/down.svg");
 	mask-position: center;
 	mask-repeat: no-repeat;
 	mask-size: contain;
 	transition: transform 120ms ease, opacity 120ms ease;
-	-webkit-mask-image: url("../../../components/theme/assets/arrow/down.svg");
+	-webkit-mask-image: url("../../../theme/assets/arrow/down.svg");
 	-webkit-mask-position: center;
 	-webkit-mask-repeat: no-repeat;
 	-webkit-mask-size: contain;
@@ -123,26 +123,26 @@
 }
 
 /* Mirrors the role-badge style (UserProfileView.tsx's rounded-md/border/
-   bg-[var(--app-card-label-bg)] pill), not the old ad-hoc 16px pill this had before. */
+   bg-[var(--label-bg)] pill), not the old ad-hoc 16px pill this had before. */
 .countValue {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
 	min-width: 1.25rem;
 	padding: 0.25rem 0.5rem;
-	background: var(--app-card-label-bg);
-	border: 1px solid var(--app-border);
+	background: var(--label-bg);
+	border: 1px solid var(--modal-border);
 	border-radius: 0.375rem;
-	color: var(--app-muted);
+	color: var(--label-text);
 	font-family: var(--font-sans);
-	font-size: 0.6875rem;
+	font-size: 0.75rem;
 	font-weight: 600;
 	line-height: 1.25;
 	text-transform: uppercase;
 }
 
 .countText {
-	color: var(--app-muted);
+	color: var(--app-label);
 	font: inherit;
 }
 
@@ -181,9 +181,11 @@
 }
 
 .itemDate {
-	color: var(--app-muted);
-	font-size: 0.875rem;
+	color: var(--label-text);
+	font-size: 0.8rem;
 	font-weight: 600;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
 	white-space: nowrap;
 }
 
@@ -214,6 +216,15 @@
 	font-weight: 600;
 }
 
+.gradeSemester {
+	color: var(--label-text);
+	font-size: 0.8rem;
+	font-weight: 600;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+	white-space: nowrap;
+}
+
 .gradeEditOverlay {
 	position: absolute;
 	inset: calc(0.5rem * -1);
@@ -234,12 +245,12 @@
 	width: 1.75rem;
 	height: 1.75rem;
 	background: var(--app-text);
-	mask-image: url("../../../components/theme/assets/edit/edit.svg");
+	mask-image: url("../../../theme/assets/edit/edit.svg");
 	mask-position: center;
 	mask-repeat: no-repeat;
 	mask-size: contain;
 	transition: transform 120ms ease;
-	-webkit-mask-image: url("../../../components/theme/assets/edit/edit.svg");
+	-webkit-mask-image: url("../../../theme/assets/edit/edit.svg");
 	-webkit-mask-position: center;
 	-webkit-mask-repeat: no-repeat;
 	-webkit-mask-size: contain;
@@ -286,7 +297,8 @@
 
 	.emptyLabel,
 	.countLabel,
-	.itemDate {
+	.itemDate,
+	.gradeSemester {
 		color: #555 !important;
 	}
 
@@ -324,7 +336,7 @@
 		display: block;
 		overflow-x: scroll;
 		overflow-y: hidden;
-		border-bottom: 1px solid var(--app-border);
+		border-bottom: 1px solid var(--modal-border);
 	}
 
 	.topScrollbar::-webkit-scrollbar {
