@@ -1,4 +1,4 @@
-import { resolveIconSrc, type IconName } from "@/components/theme/icons";
+import { resolveIconSrc, type IconName } from "@/theme/icons";
 
 interface MaskIconProps {
 	icon: IconName;

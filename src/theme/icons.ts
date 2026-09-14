@@ -1,20 +1,29 @@
-// Every icon referenced dynamically (as a prop value, not a literal Tailwind
-// class) has to be imported here as a real static import — a mask-image URL
-// built by interpolating a runtime string into a Tailwind arbitrary-value
-// class (`[mask-image:url(../assets/${icon})]`) never gets generated: Tailwind
-// scans source text for complete literal class strings, it doesn't execute
-// JS, so an interpolated one is invisible to it. Static imports sidestep that
-// entirely since the resolved asset URL is applied via inline style instead.
-import closeIcon from "@/components/theme/assets/close/close.svg";
-import downloadIcon from "@/components/theme/assets/download/download.svg";
-import filterIcon from "@/components/theme/assets/filter/filter.svg";
-import searchIcon from "@/components/theme/assets/search/search.svg";
-import viewForwardIcon from "@/components/theme/assets/view/forward.svg";
+import addIcon from "@/theme/assets/add/add.svg";
+import arrowUpIcon from "@/theme/assets/arrow/up.svg";
+import checkIcon from "@/theme/assets/check/check.svg";
+import brushIcon from "@/theme/assets/color/brush.svg";
+import closeIcon from "@/theme/assets/close/close.svg";
+import dayIcon from "@/theme/assets/day/day.svg";
+import deleteIcon from "@/theme/assets/delete/delete.svg";
+import downloadIcon from "@/theme/assets/download/download.svg";
+import editIcon from "@/theme/assets/edit/edit.svg";
+import filterIcon from "@/theme/assets/filter/filter.svg";
+import locationIcon from "@/theme/assets/location/location.svg";
+import searchIcon from "@/theme/assets/search/search.svg";
+import viewForwardIcon from "@/theme/assets/view/forward.svg";
 
 export const iconAssets = {
+	"add/add.svg": addIcon,
+	"arrow/up.svg": arrowUpIcon,
+	"check/check.svg": checkIcon,
+	"color/brush.svg": brushIcon,
 	"close/close.svg": closeIcon,
+	"day/day.svg": dayIcon,
+	"delete/delete.svg": deleteIcon,
 	"download/download.svg": downloadIcon,
+	"edit/edit.svg": editIcon,
 	"filter/filter.svg": filterIcon,
+	"location/location.svg": locationIcon,
 	"search/search.svg": searchIcon,
 	"view/forward.svg": viewForwardIcon,
 };

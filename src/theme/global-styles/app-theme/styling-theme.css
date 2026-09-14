@@ -1,41 +1,72 @@
-/*
- * Every color token for the app lives in this one file - app-wide surfaces,
- * Button's own backgrounds, and Input's palette all together, rather than
- * split across a separate file per primitive. Grouped by domain below with
- * a heading comment on each group; blank lines separate them.
- */
+/* Every color token for the app: light theme first, dark second, same order in each. Surfaces & text -> Border colors -> Semantic tones -> Input & Select -> Select's variant=title -> Nav-area (green) -> Action area -> Brand + app-bg. */
 
 :root {
-  /* Theme-invariant — scrims stay dark regardless of light/dark mode. */
+  /* Theme-invariant */
   --scrim: rgba(0, 0, 0, 0.5);
   --app-card-action-icon: #ffffff;
+  /* lines */
+  --lines-color: gray;
 }
 
 html[data-theme="light"] {
   color-scheme: light;
 
-  /* App surfaces, text, and structural colors */
-  --app-surface: #fafafa;
-  --app-card-bg-hover: #f7f8fa;
-  --app-card-label-bg: #ededed;
-  --app-secondary: #ffffff;
-  --app-subtle: rgba(245, 247, 255, 0.3);
-  --app-text: #232e39;
-  --app-muted: #4d525e;
-  --app-icon: #586456;
-  --app-border: #e1e3e7;
-  --scrollbar-thumb: rgba(41, 4, 4, 0.15);
-  --scrollbar-thumb-hover: rgba(0, 0, 0, 0.28);
+  /* Surfaces & text - app-surface: NavContent only. app-*-surface (user/ind-progress/thursdays/semesters): each page's own content area. app-gray-surface: expanded nav rail + modals. */
+  --app-surface: rgba(255, 255, 255, 0.65);
+  --app-user-surface: #f0f0f0;
+  --app-ind-progress-surface: #ffffff;
+  --app-thursdays-surface: #fafafa;
+  --app-semesters-surface: #fafafa;
+  
+  /* modal bg */
+  --app-gray-surface: #f5f5f5;
 
-  /* Brand */
-  --app-theme: #8abb7a;
-  --brand-color: #7dbb7a;
-  --brand-accent: #dff2df;
-  --app-title: #1e4a29;
+  /* checker pattern */
+  --checker-bg: rgba(220, 224, 234, 0.4);
+  --checker-bg-hover: rgba(220, 224, 234, 0.6);
+  
+  /* elevated surface */
+  --elevated-surface: rgb(252, 252, 252);
+  --elevated-surface-hover: rgb(239, 239, 239);
+  --elevated-surface-border: #dbdee2;
 
-  /* Semantic tones (success/danger/warning/info) */
-  --tone-success-border: #98c9ad;
-  --tone-success-bg: #7dbb7a;
+  /* elevated surface (no border) */
+  --elevated-surface-2: rgb(252, 252, 252);
+  --elevated-surface-hover-2: rgb(239, 239, 239);
+  --app-card-bg-hover: rgb(239, 239, 239);
+  
+  /* label */
+  --label-bg: #f1f1f1;
+  --label-text: #555555;
+
+  /* lines */
+  --lines-color: rgb(164, 171, 180);
+  
+  /* text */
+  --app-text: #000000;
+  --content-muted: #7a7a7a;
+  --scrollbar-thumb: rgba(0, 0, 0, 0.15);
+  --scrollbar-thumb-hover: rgba(0, 0, 0, 0.1);
+
+  /* Border colors */
+  --card-border: #dbdee2;
+  --modal-border: #e1e3e7;
+  --button-border: #e1e3e7;
+
+  --modal-button-border: #e1e3e7;
+  --input-border: #d4d4da;
+  --input-dropdown-border: #b0b0b0;
+  --input-border-hover: #c7c7c7;
+  --input-error-border: #d36b6b;
+
+  /* Button/Input focus-visible outline - not a "tone", so it's its own token rather than living under Semantic tones below. */
+  --focus-ring: #a8c8e8;
+  /* NavContent + the page content column's own drop shadow - plain black/white by design, not one of mainframe-theme/*.css's own tokens, so it stays the same regardless of which color theme is active. */
+  --content-shadow: 0 0 14px rgba(0, 0, 0, 0.2);
+
+  /* Semantic tones */
+  --tone-success-border: #b7dcc0;
+  --tone-success-bg: #dcf2e0;
   --tone-success-text: #143821;
 
   --tone-danger-border: #e4baba;
@@ -46,58 +77,105 @@ html[data-theme="light"] {
   --tone-warning-bg: #f7e8c4;
   --tone-warning-text: #4a3810;
 
-  --tone-info-border: #a8c8e8;
-  --tone-info-bg: #d9ebfa;
-  --tone-info-text: #163a5c;
-
-  /* Button: separate from --app-surface so each variant can diverge on its own; nav's hover/active live here too, same idea. */
-  --btn-default-bg: #ffffff;
-  --nav-button-bg-hover: rgba(238, 239, 244, 0.8);
-  --nav-button-bg-active: rgb(222, 225, 230);
-
-  /* Input, Select, and their shared field chrome. Backgrounds are the one
-     thing that isn't actually shared - Select keeps its own --select-bg. */
-  --input-bg: #f5f5f5;
+  /* Input & Select */
+  --input-bg: #ffffff;
   --input-bg-hover: #ffffff;
-  --select-bg: #ffffff;
-  --select-bg-hover: #ffffff;
-  --input-border: #d4d4da;
-  --input-border-hover: #c7c7c7;
-  --input-error-border: #d36b6b;
+
   --input-text: var(--app-text);
-  --input-placeholder: var(--app-muted);
+  --input-placeholder: #5a5a5a;
+
   --input-icon: #646464;
   --input-dropdown-bg: #ffffff;
   --input-hover-shadow: 0 0 0 1px rgba(0, 0, 0, 0.12);
   --input-tag-text: #1f1f1f;
   --input-tag-icon: #555555;
+
+  /* Select area - bg + the active/selected option row & tag chip */
+  --select-bg: #ffffff;
+  --select-bg-hover: #ffffff;
+  --select-active-border: #a8c8e8;
+  --select-active-bg: #d9ebfa;
+  --select-active-text: #56a1e7;
+  --select-checkbox-active-text: #56a1e7;
+  --select-checkbox-active-bg: #56a1e7;
+
+  /* Action area - Button, Select hover, GradeEditorModal, CloseButton, etc. */
+  --btn-default-bg: #ffffff;
+  --nav-button-bg-hover: rgba(238, 239, 244, 0.8);
+  /* nav-button-bg-hover is near-white - fine against Select/Input's own white-ish surfaces, but barely visible against the modal's own gray surface. This is tuned for that instead. */
+  --modal-button-bg-hover: #d9d9dc;
+
+  /* NavContent's own "Add"/"Delete" action buttons - subtler than tone-success/tone-danger, since that pair is for real modal CTAs and this area isn't a modal. */
+  --action-add-border: #6fae74;
+  --action-add-bg: #cdead1;
+  --action-add-text: #1e7a42;
+  --action-delete-border: #d98a8a;
+  --action-delete-bg: #f5c6c6;
+  --action-delete-text: #b83232;
+
+  /* Brand + app-shell background, nav-area green, and Select's variant="title"
+     green live in mainframe-theme/purple-green.css instead - gated by
+     [data-color-theme] alongside this file's own [data-theme]. */
 }
 
+/* dark theme */
 html[data-theme="dark"] {
   color-scheme: dark;
 
-  /* App surfaces, text, and structural colors. Each step is a real jump from
-     the last (surface < secondary < subtle < hover) instead of a cluster of
-     near-identical darks with no visible hierarchy between them. */
-  --app-surface: #121214;
-  --app-card-bg-hover: #2b2b2f;
-  --app-card-label-bg: #232327;
-  --app-secondary: #1c1c20;
-  --app-subtle: #27272b;
-  --app-text: #f2f2f4;
-  --app-muted: #b5b8be;
-  --app-icon: #c8c8d0;
-  --app-border: #38383e;
-  --scrollbar-thumb: rgba(255, 255, 255, 0.15);
-  --scrollbar-thumb-hover: rgba(255, 255, 255, 0.28);
+  /* Surfaces & text - app-surface: NavContent only. app-*-surface (user/ind-progress/thursdays/semesters): each page's own content area. app-gray-surface: expanded nav rail + modals. */
+  --app-surface: linear-gradient(180deg, rgba(19, 19, 19, 0.75) 0%, rgba(19, 19, 19, 0.9) 100%);
+  
+  /* users page */
+  --app-user-surface: linear-gradient(180deg, rgba(31, 31, 31, 0.55) 0%, rgba(31, 31, 31, 0.8) 100%);
 
-  /* Brand */
-  --app-theme: #9cbc91;
-  --brand-color: #acd1aa;
-  --brand-accent: #243929;
-  --app-title: #b3dba8;
+  --app-ind-progress-surface: #26282b;
+  --app-thursdays-surface: #1f2124;
+  --app-semesters-surface: #1f2124;
 
-  /* Semantic tones (success/danger/warning/info) */
+  /* modal bg */
+  --app-gray-surface: #1b1b1b;
+
+  /* checker pattern */
+  --checker-bg: #45454c4d;
+  --checker-bg-hover: #2d2d32;
+
+  /* elevated surface */
+  --elevated-surface: #2b2b2f;
+  --elevated-surface-hover: #33333a;
+  --elevated-surface-border: rgba(188, 188, 188, 0.2);
+
+  /* elevated surface (no border) */
+  --elevated-surface-2: #2b2b2f;
+  --elevated-surface-hover-2: #36363a;
+
+  /* label */
+  --label-bg: #2b2b2b;
+  --label-text: #c5c5c5;
+
+  /* dark-only - no light counterpart yet */
+  --app-subtle: #272728;
+
+  /* text */
+  --app-text: #ffffff;
+  --subtle-text: #f3f3f3;
+  --content-muted: #c1c1c1;
+  --scrollbar-thumb: rgba(255, 255, 255, 0.2);
+  --scrollbar-thumb-hover: rgba(255, 255, 255, 0.4);
+
+  /* Border colors - see the light theme's copy of this note. */
+  --subtle-border: #464748;
+  --card-border: #6d7278;
+
+  --modal-border: #2e2e2e;
+
+  --input-error-border: #b36a6a;
+
+  --focus-ring: #ffffff;
+
+  /* Same shadow as the light theme's, just the other grayscale end - white, not black. */
+  --content-shadow: 0 0 18px rgba(255, 255, 255, 0.25);
+
+  /* Semantic tones */
   --tone-success-border: #548a69;
   --tone-success-bg: #4c7154;
   --tone-success-text: #eefcf2;
@@ -110,40 +188,57 @@ html[data-theme="dark"] {
   --tone-warning-bg: #564a29;
   --tone-warning-text: #fff8ea;
 
-  --tone-info-border: #4a7ba0;
-  --tone-info-bg: #294256;
-  --tone-info-text: #eaf4ff;
-
-  /* Button */
-  --btn-default-bg: #1c1c20;
-  --nav-button-bg-hover: #2c2c31;
-  --nav-button-bg-active: #35353b;
-
-  /* Input, Select, and their shared field chrome. Backgrounds are the one
-     thing that isn't actually shared - Select keeps its own --select-bg. */
-  --input-bg: #2a2a2e;
-  --input-bg-hover: #2a2a2f;
-  --select-bg: var(--app-secondary);
-  --select-bg-hover: #242429;
-  --input-border: #38383e;
-  --input-border-hover: #504f57;
-  --input-error-border: #b36a6a;
+  /* Input & Select */
+  --input-bg: #3a3a3a;
+  --input-bg-hover: #4a4a4a;
   --input-text: var(--app-text);
-  --input-placeholder: var(--app-muted);
-  --input-icon: #cacad2;
-  --input-dropdown-bg: var(--app-secondary);
+  
+  --input-border: rgb(88, 88, 88);
+  --input-border-hover: #595959;
+
+  --input-placeholder: #f4f4f4;
+  --input-icon: #ffffff;
+
+  --input-dropdown-border: #b2b2b2;
+  --input-dropdown-bg: #3a3a3a;
+
   --input-hover-shadow: 0 0 0 1px rgba(255, 255, 255, 0.16);
   --input-tag-text: #f3f3f3;
   --input-tag-icon: #d0d0d0;
+
+  /* Select area */
+  --select-bg: #3a3a3a;
+  --select-bg-hover: #4a4a4a;
+  /* blue, not gray/muddy-slate. */
+  --select-active-border: #425975;
+  --select-active-bg: rgb(182, 218, 235);
+  /* Clean sky-blue, hue pulled down from the last attempt's ~205deg (read as periwinkle/purple at that lightness) to ~203deg at lower L - reads as unambiguous blue. */
+  --select-active-text: #2b343e;
+  --select-checkbox-active-text: #cbebff;
+  --select-checkbox-active-bg: #cbebff;
+
+  /* Action area, its hover styles are handled via brightness in Tailwind */
+
+  /* Neutral gray, not the green this was - light's own --btn-default-bg is plain white, no hue at all, and a green button clashes against the grayscale modal surface it often sits on. */
+  --btn-default-bg: rgb(57, 58, 60);
+  /* button borders */
+  --button-border: #404040;
+  --modal-button-border: #383838;
+
+  /* Translucent white wash, not a solid gray - lightens whatever dark surface it sits on (Select's dropdown, CloseButton, GradeEditorModal's grade buttons), same role as light's near-white rgba. */
+  --nav-button-bg-hover: rgba(255, 255, 255, 0.15);
+  --modal-button-bg-hover: #3a3a40;
+
+  /* NavContent's own "Add"/"Delete" action buttons - see the light theme's copy of this note. Bg darkened further (same hue, lower L) - it's only ever shown at /50 opacity on hover or full-strength on press/active, so it reads as a wash either way. */
+  --action-add-border: #598064;
+  --action-add-bg: #b4efac;
+  --action-add-text: #d5fddb;
+  --action-delete-border: #8a5f5f;
+  --action-delete-bg: #ce7373;
+  --action-delete-text: #ffb5b5;
 }
 
-/*
- * Radix's Select.Viewport injects its own <style> tag that force-hides the
- * native scrollbar (expecting ScrollUpButton/ScrollDownButton as the scroll
- * affordance instead, which our Select doesn't use) — !important because
- * that injected tag can land after this stylesheet and Radix's rule doesn't
- * use !important itself, so plain specificity/order isn't reliable here.
- */
+  /* Radix's Select.Viewport injects its own <style> tag that force-hides the native scrollbar - !important since that tag can land after this stylesheet. */
 [data-radix-select-viewport] {
   scrollbar-width: thin !important;
   -ms-overflow-style: auto !important;
@@ -154,16 +249,15 @@ html[data-theme="dark"] {
   width: 0.5rem;
 }
 
-/*
- * App-wide scrollbar: thin, translucent thumb on a transparent track,
- * instead of each browser's bold opaque default. Firefox reads
- * scrollbar-width/scrollbar-color (inherited, so setting it once on html
- * covers every scrollable element); everything else needs the ::-webkit-
- * scrollbar family repeated per element, so it's applied via a universal
- * selector rather than one specific container.
- */
+* {
+  scrollbar-color: transparent transparent;
+}
+
 html {
   scrollbar-width: thin;
+}
+
+*:hover {
   scrollbar-color: var(--scrollbar-thumb) transparent;
 }
 
@@ -177,12 +271,29 @@ html {
 }
 
 *::-webkit-scrollbar-thumb {
-  background: var(--scrollbar-thumb);
+  background: transparent;
   border-radius: 9999px;
+  transition: background-color 150ms ease;
 }
 
-*::-webkit-scrollbar-thumb:hover {
+*:hover::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+}
+
+*:hover::-webkit-scrollbar-thumb:hover {
   background: var(--scrollbar-thumb-hover);
+}
+
+/* Chromium/Windows draws its own arrow stepper buttons at each end by default - suppressed here, this app draws its own thumb-only bar. */
+*::-webkit-scrollbar-button {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+/* The corner where a vertical and horizontal scrollbar meet - transparent instead of the browser's opaque default. */
+*::-webkit-scrollbar-corner {
+  background: transparent;
 }
 
 /* Applied to <html> for one frame around a theme toggle (ThemeSwitch.tsx) so color transitions don't visibly fade when the palette swaps. */

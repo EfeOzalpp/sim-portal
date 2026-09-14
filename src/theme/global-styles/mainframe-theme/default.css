@@ -1,0 +1,71 @@
+/* Color theme: Default */
+
+html[data-color-theme="default"][data-theme="light"] {
+	/* Brand + app-shell background (layout.tsx's appShellClassName) */
+	--app-theme: #56a1e7;
+
+	--app-icon: #4b4b4b;
+	--app-label: #575757;
+
+	--brand-color: #5d5d6c;
+	--profile-indicator: rgb(119, 176, 234);
+	--app-title: #4d4d5b;
+
+	--main-border: #e1e3e7;
+	--main-border-2: #dbe4f7;
+
+	--app-bg: linear-gradient(90deg, #e5effa 0%, #e5f2ff 36%, #bcc6e6 60%);
+
+	/* Select's variant="title" - the modal's own blue (--select-active-border/-bg), not a separate hue. */
+	--green-select-bg: #7aade4;
+	--green-text: #f2f9ff;
+	--green-select-bg-hover: #68a4e5;
+	--green-select-bg-active: #6692c1;
+	--green-select-bg-active-hover: #5a82ab;
+	--green-select-border: #b8c1c8;
+
+	/* Nav-area - blue wash, same hue as --select-active-bg/-border below. */
+	--nav-hover-bg: #e8f4fd;
+	--nav-active-bg: #77aae0;
+	--nav-active-text: #ffffff;
+
+	/* action nav area */
+	--action-item-bg: #eef4fb;
+	--action-input-bg: #f4f8fc;
+}
+
+html[data-color-theme="default"][data-theme="dark"] {
+	--app-theme: #7db5d8;
+
+	--app-icon: rgb(244, 244, 244, 0.8);
+	--app-label: rgb(224, 232, 240, 0.8);
+
+	--brand-color: rgba(242, 242, 242, 0.95);
+	--profile-indicator: #b7ddff;
+	--app-title: #ffffff;
+
+	--main-border: rgba(162, 182, 197, 0.65);
+	--main-border-2: rgba(198, 202, 204, 0.25);
+
+	--app-bg: linear-gradient(90deg, #476286 0%, #96abbf 36%, #404962 72%);
+
+	/* Select's variant="title" - matching light, the modal's own blue. */
+	--green-select-bg: #c7e3f3;
+	--green-select-border: #e4f0ff;
+
+	--green-text: rgb(0, 0, 0);
+
+	--green-select-bg-hover: rgb(198, 233, 255);
+
+	--green-select-bg-active: #b6e4ff;
+	--green-select-bg-active-hover: #95bad1;
+
+	/* Nav-area - matching light, the modal's own blue. */
+	--nav-active-bg: #b0e2ff;
+	--nav-hover-bg: rgba(103, 128, 157, 0.35);
+	--nav-active-text: #000000;
+
+	/* action nav area */
+	--action-item-bg: rgb(82, 79, 79);
+	--action-input-bg: rgba(126, 123, 121, 0.75);
+}

@@ -3,12 +3,6 @@
  * Tailwind's own scale covers them (font-sans/font-heading, text-sm/base/xl,
  * font-semibold, leading-tight/normal, w-4/h-7 etc), so the values below
  * are plain CSS. Only color stays tokenized (see styling-theme.css).
- *
- * These are base element defaults, so they belong in the `base` layer
- * (see tailwind.css's `@layer theme, base, components, utilities;` and
- * antd-reset.css) — that's what lets a Tailwind class applied directly to
- * a heading (e.g. `<h2 className="m-0">`) actually win instead of losing
- * to this file's plain, unlayered element selectors.
  */
 
 @layer base {
@@ -20,19 +14,29 @@
   }
 
   .ui-label {
-    color: var(--app-muted);
+    color: var(--label-text);
     font-family: var(--font-sans);
     font-size: 0.8rem;
-    font-weight: 600;
+    font-weight: 500;
     line-height: 1.2;
+    letter-spacing: 0.04em;
     text-transform: uppercase;
   }
 
+  [data-content-nav] .ui-label,
+  [data-mobile-content-bar] .ui-label {
+    color: var(--app-label);
+  }
+
   .ui-note {
-    color: var(--app-muted);
+    color: var(--content-muted);
     font-size: 0.875rem;
     font-style: italic;
-    line-height: 1.5;
+    line-height: 1.6;
+  }
+
+  p {
+    line-height: 1.2;
   }
 
   h1,
@@ -47,17 +51,19 @@
 
   h1 {
     font-size: 2rem;
-    font-weight: 700;
+    font-weight: 500;
+    letter-spacing: 0.4px;
   }
 
   h2 {
     font-size: 2rem;
-    font-weight: 700;
+    font-weight: 500;
+    letter-spacing: 1px;
   }
 
   h3 {
     font-size: 1.25rem;
-    font-weight: 600;
+    font-weight: 500;
   }
 
   h4,

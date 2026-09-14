@@ -1,0 +1,69 @@
+/* Color theme: Purple & Green */
+
+html[data-color-theme="purple-green"][data-theme="light"] {
+	/* Brand + app-shell background (layout.tsx's appShellClassName) */
+	--app-theme: #cba8db;
+
+	--app-icon: #445841;
+	--app-label: #4d525e;
+
+	--brand-color: rgb(73, 131, 57);
+	--profile-indicator: #79ac55;
+	--app-title: #b13991;
+
+	--main-border: #ffffff;
+	--main-border-2: #c9cfdb;
+
+	--app-bg: linear-gradient(135deg, #dcbbeb 0%, #ffeeff 28%, #b5a8d4 70%);
+
+	/* Nav-area theme (green) - NavBar/MobileNavBar's variant="nav" buttons, all breakpoints. */
+	--nav-hover-bg: rgb(235, 246, 239);
+	--nav-active-bg: rgb(128, 186, 112);
+	--nav-active-text: #ffffff;
+
+	/* Select's variant="title" - its own green-tinted box; search box inside the dropdown reuses these same two. */
+	--green-select-bg: #b575bb;
+	--green-text: rgb(255, 255, 255);
+	--green-select-bg-hover: #704e74;
+	--green-select-bg-active: #a369a8;
+	--green-select-bg-active-hover: #915e96;
+	--green-select-border: #d4aed4;
+
+	/* action nav area */
+	--action-item-bg: #eef5ec;
+	--action-input-bg: #f3f8f1;
+}
+
+html[data-color-theme="purple-green"][data-theme="dark"] {
+	--app-theme: #49654f;
+
+	--app-icon: #fef5ff;
+	--app-label: #fff7ff;
+
+	--brand-color: #a5dcb2;
+	
+	--profile-indicator: #7cbb77;
+	--app-title: #fcf6ff;
+
+	--main-border: rgb(223, 181, 232);
+	--main-border-2: rgba(114, 94, 117, 0.6);
+
+	--app-bg: linear-gradient(135deg, #876a9a 0%, #b992c0 28%, #7068a9 70%);
+
+	/* Select's variant="title" - green, matching light. */
+	--green-select-bg: #eac5f2;
+	--green-text: rgb(37, 35, 37);
+	--green-select-bg-hover: #ae88b6;
+	--green-select-bg-active: #e4beeb;
+	--green-select-bg-active-hover: #ba9cc1;
+	--green-select-border: #ddb7e5;
+
+	/* Nav-area theme (green) - green, matching light. */
+	--nav-hover-bg: rgb(40, 41, 40);
+	--nav-active-bg: rgb(158, 207, 157);
+	--nav-active-text: #000000;
+
+	/* action nav area */
+	--action-item-bg: #313a2f;
+	--action-input-bg: #383f36;
+}
