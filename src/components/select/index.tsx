@@ -1,12 +1,14 @@
 "use client";
 
-import { useMemo, useRef, useState, type KeyboardEvent } from "react";
+import { useMemo, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
 import * as Popover from "@radix-ui/react-popover";
 import { LoadingOutlined } from "@ant-design/icons";
 import clsx from "clsx";
 import { Input } from "@/components/input";
+import { inputIconClassName } from "@/components/input/styles";
+import { MaskIcon } from "@/theme/MaskIcon";
 import {
-	selectChevronClassName,
+	selectChevronVariants,
 	selectClearButtonClassName,
 	selectClearIconClassName,
 	selectContentClassName,
@@ -14,7 +16,7 @@ import {
 	selectEmptyClassName,
 	selectIndicatorsClassName,
 	selectItemVariants,
-	selectOptionBadgeVariants,
+	selectOptionCheckboxClassName,
 	selectPlaceholderClassName,
 	selectSearchWrapperClassName,
 	selectSpinnerClassName,
@@ -43,6 +45,10 @@ interface SharedSelectProps {
 	className?: string;
 	/** Set when this Select renders inside a ModalPopup, so its dropdown clears the modal's own z-index instead of sitting behind it. */
 	inModal?: boolean;
+	/** "title": large heading-styled text + the nav-area green, for the page-title bar's semester filter. Defaults to the plain boxed input look with the shared blue "selected" tone. */
+	variant?: "default" | "title";
+	/** On open, scroll this option into view instead of wherever the list happens to start - e.g. a generated 100-year option list opening at its first entry instead of near the current one. */
+	scrollToValueOnOpen?: string;
 }
 
 export interface SingleSelectProps extends SharedSelectProps {
@@ -50,6 +56,8 @@ export interface SingleSelectProps extends SharedSelectProps {
 	value?: string | null;
 	onChange?: (value: string | undefined) => void;
 	allowClear?: boolean;
+	/** Formats the trigger's own closed-state text differently from the dropdown option list's (e.g. "Semester: Fall 2026" on the trigger, still "FA26" in the list) - the list itself always shows option.label as-is. */
+	formatSelectedLabel?: (option: SelectOption) => string;
 }
 
 export interface MultiSelectProps extends SharedSelectProps {
@@ -58,6 +66,8 @@ export interface MultiSelectProps extends SharedSelectProps {
 	onChange?: (value: string[]) => void;
 	/** Tags beyond this count collapse into a "+N" pill. */
 	maxTagCount?: number;
+	/** Rendered to the left of the search box inside the open dropdown - e.g. a role-filter popover narrowing which options show. */
+	filterExtra?: ReactNode;
 }
 
 export type SelectProps = SingleSelectProps | MultiSelectProps;
@@ -68,23 +78,30 @@ function filterOptions(options: SelectOption[], search: string) {
 	return options.filter((option) => option.label.toLowerCase().includes(query));
 }
 
-// Keeps typing in the search box from also triggering Radix's own
-// type-ahead / roving-focus handling on the surrounding list, while still
-// letting Escape/Arrow/Enter bubble up to it.
+// Keeps typing in the search box from also triggering Radix's own type-ahead/roving-focus on the list, while letting Escape/Arrow/Enter bubble up.
 function stopTypingPropagation(event: KeyboardEvent) {
 	if (event.key !== "Escape" && event.key !== "ArrowDown" && event.key !== "ArrowUp" && event.key !== "Enter") {
 		event.stopPropagation();
 	}
 }
 
-function SearchBox({ value, onChange, placeholder }: { value: string; onChange: (next: string) => void; placeholder?: string }) {
+function SearchBox({
+	value,
+	onChange,
+	placeholder,
+}: {
+	value: string;
+	onChange: (next: string) => void;
+	placeholder?: string;
+}) {
 	return (
 		<div className={selectSearchWrapperClassName}>
 			<Input
 				value={value}
 				onChange={(event) => onChange(event.target.value)}
 				onKeyDown={stopTypingPropagation}
-				placeholder={placeholder ?? "Search..."}
+				placeholder={placeholder ?? "Search"}
+				prefix={<MaskIcon icon="search/search.svg" className={inputIconClassName} />}
 				autoFocus
 			/>
 		</div>
@@ -104,6 +121,9 @@ function SingleSelectImpl({
 	status,
 	className,
 	inModal,
+	variant = "default",
+	formatSelectedLabel,
+	scrollToValueOnOpen,
 }: SingleSelectProps) {
 	const [search, setSearch] = useState("");
 	const [open, setOpen] = useState(false);
@@ -127,10 +147,10 @@ function SingleSelectImpl({
 					return;
 				}
 
-				// Same reasoning as the multi-select viewport: a long option list
-				// should open scrolled to the current value, not the top.
+				// A long option list should open scrolled to the current value (or scrollToValueOnOpen, when given), not the top.
 				requestAnimationFrame(() => {
-					viewportRef.current?.querySelector('[data-selected="true"]')?.scrollIntoView({ block: "center" });
+					const selector = scrollToValueOnOpen ? `[data-value="${scrollToValueOnOpen}"]` : '[data-selected="true"]';
+					viewportRef.current?.querySelector(selector)?.scrollIntoView({ block: "center" });
 				});
 			}}
 		>
@@ -138,10 +158,12 @@ function SingleSelectImpl({
 				<button
 					type="button"
 					disabled={disabled}
-					className={clsx(selectTriggerVariants({ error }), "group", className)}
+					className={clsx(selectTriggerVariants({ error, variant }), "group", className)}
 				>
 					<span className={selectedOption ? selectValueClassName : selectPlaceholderClassName}>
-						{selectedOption ? selectedOption.label : (placeholder ?? "Select...")}
+						{selectedOption
+							? (formatSelectedLabel ? formatSelectedLabel(selectedOption) : selectedOption.label)
+							: (placeholder ?? "Select...")}
 					</span>
 					<span className={selectIndicatorsClassName}>
 						{loading ? (
@@ -164,7 +186,7 @@ function SingleSelectImpl({
 										<span className={selectClearIconClassName} aria-hidden="true" />
 									</span>
 								)}
-								<span className={selectChevronClassName} aria-hidden="true" />
+								<span className={selectChevronVariants({ variant })} aria-hidden="true" />
 							</>
 						)}
 					</span>
@@ -178,7 +200,9 @@ function SingleSelectImpl({
 					style={{ width: "var(--radix-popover-trigger-width)" }}
 					onCloseAutoFocus={(event) => event.preventDefault()}
 				>
-					{searchable && <SearchBox value={search} onChange={setSearch} placeholder={searchPlaceholder} />}
+					{searchable && (
+						<SearchBox value={search} onChange={setSearch} placeholder={searchPlaceholder} />
+					)}
 					<div ref={viewportRef} className={selectViewportClassName} role="listbox">
 						{filtered.length === 0 ? (
 							<div className={selectEmptyClassName}>No results</div>
@@ -192,8 +216,9 @@ function SingleSelectImpl({
 										aria-selected={isSelected}
 										aria-disabled={option.disabled}
 										data-selected={isSelected ? "true" : undefined}
+										data-value={option.value}
 										tabIndex={option.disabled ? -1 : 0}
-										className={selectItemVariants({ selected: isSelected, disabled: option.disabled })}
+										className={selectItemVariants({ selected: isSelected, disabled: option.disabled, variant })}
 										onClick={() => !option.disabled && select(option.value)}
 										onKeyDown={(event) => {
 											if ((event.key === "Enter" || event.key === " ") && !option.disabled) {
@@ -227,9 +252,12 @@ function MultiSelectImpl({
 	className,
 	maxTagCount,
 	inModal,
+	scrollToValueOnOpen,
+	filterExtra,
 }: MultiSelectProps) {
 	const [search, setSearch] = useState("");
 	const error = status === "error";
+	const viewportRef = useRef<HTMLDivElement>(null);
 	const filtered = useMemo(() => filterOptions(options, search), [options, search]);
 	const selectedOptions = useMemo(() => options.filter((option) => value.includes(option.value)), [options, value]);
 	const visibleTags = maxTagCount ? selectedOptions.slice(0, maxTagCount) : selectedOptions;
@@ -246,14 +274,28 @@ function MultiSelectImpl({
 	return (
 		<Popover.Root
 			onOpenChange={(open) => {
-				if (!open) setSearch("");
+				if (!open) {
+					setSearch("");
+					return;
+				}
+
+				if (scrollToValueOnOpen) {
+					requestAnimationFrame(() => {
+						viewportRef.current
+							?.querySelector(`[data-value="${scrollToValueOnOpen}"]`)
+							?.scrollIntoView({ block: "center" });
+					});
+				}
 			}}
 		>
 			<Popover.Trigger asChild>
 				<button
 					type="button"
 					disabled={disabled}
-					className={clsx(selectTriggerVariants({ error }), "group flex-wrap", className)}
+					// pl-2! over selectTriggerVariants' own px-3 - only this (MultiSelectImpl,
+					// shared by every mode="multiple" Select) needs less left padding; the
+					// tag chips already carry their own left inset, unlike single-select's plain text.
+					className={clsx(selectTriggerVariants({ error }), "group min-h-9 flex-wrap pl-2!", className)}
 				>
 					{selectedOptions.length === 0 ? (
 						<span className={selectPlaceholderClassName}>{placeholder ?? "Select..."}</span>
@@ -285,7 +327,7 @@ function MultiSelectImpl({
 								<LoadingOutlined spin />
 							</span>
 						) : (
-							<span className={selectChevronClassName} aria-hidden="true" />
+							<span className={selectChevronVariants({ variant: "default" })} aria-hidden="true" />
 						)}
 					</span>
 				</button>
@@ -298,8 +340,17 @@ function MultiSelectImpl({
 					style={{ width: "var(--radix-popover-trigger-width)" }}
 					onCloseAutoFocus={(event) => event.preventDefault()}
 				>
-					{searchable && <SearchBox value={search} onChange={setSearch} placeholder={searchPlaceholder} />}
-					<div className={selectViewportClassName} role="listbox" aria-multiselectable="true">
+					{(searchable || filterExtra) && (
+						<div className="flex items-center">
+							{filterExtra && <div className="py-[0.333rem] pl-[0.333rem]">{filterExtra}</div>}
+							{searchable && (
+								<div className="min-w-0 flex-1">
+									<SearchBox value={search} onChange={setSearch} placeholder={searchPlaceholder} />
+								</div>
+							)}
+						</div>
+					)}
+					<div ref={viewportRef} className={selectViewportClassName} role="listbox" aria-multiselectable="true">
 						{filtered.length === 0 ? (
 							<div className={selectEmptyClassName}>No results</div>
 						) : (
@@ -311,8 +362,9 @@ function MultiSelectImpl({
 										role="option"
 										aria-selected={isSelected}
 										aria-disabled={option.disabled}
+										data-value={option.value}
 										tabIndex={option.disabled ? -1 : 0}
-										className={selectItemVariants({ selected: isSelected, disabled: option.disabled })}
+										className={selectItemVariants({ selected: isSelected, disabled: option.disabled, highlightSelected: false })}
 										onClick={() => !option.disabled && toggle(option.value)}
 										onKeyDown={(event) => {
 											if ((event.key === "Enter" || event.key === " ") && !option.disabled) {
@@ -321,9 +373,14 @@ function MultiSelectImpl({
 											}
 										}}
 									>
-										<span className={selectOptionBadgeVariants({ selected: isSelected })}>
-											{isSelected ? "Selected" : "Unselected"}
-										</span>
+										<input
+											type="checkbox"
+											checked={isSelected}
+											disabled={option.disabled}
+											readOnly
+											tabIndex={-1}
+											className={selectOptionCheckboxClassName}
+										/>
 										<span className="min-w-0 flex-1 truncate font-semibold">{option.label}</span>
 									</div>
 								);
