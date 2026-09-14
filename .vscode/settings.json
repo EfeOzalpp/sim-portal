@@ -6,7 +6,7 @@
 	// split `@import "tailwindcss/theme.css" layer(theme); ...` isn't the
 	// standard single-line `@import "tailwindcss";` the extension's
 	// auto-detection expects.
-	"tailwindCSS.experimental.configFile": "src/components/theme/global-styles/tailwind.css",
+	"tailwindCSS.experimental.configFile": "src/theme/global-styles/tailwind.css",
 
 	// Widens class detection past plain className="..." strings so
 	// IntelliSense (autocomplete, hover previews, linting) reaches into the

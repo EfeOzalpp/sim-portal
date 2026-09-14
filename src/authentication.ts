@@ -1,13 +1,16 @@
 import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
+import { cache } from "react";
 
 import { PrismaAdapter } from "@auth/prisma-adapter";
 
 import { prisma } from "@/database";
 
 
-// Configure and export NextAuth utilities for authentication
-export const { handlers, signIn, signOut, auth } = NextAuth({
+// Configure NextAuth. `auth` itself isn't request-memoized by next-auth - every
+// call re-runs the jwt callback below, which does its own prisma.user.findUnique -
+// so it's wrapped in React's cache() further down instead of exported directly.
+const { handlers, signIn, signOut, auth: uncachedAuth } = NextAuth({
   trustHost: true,
   debug: process.env.NODE_ENV === "development",
   adapter: PrismaAdapter(prisma),
@@ -108,3 +111,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
   },
 });
+
+// Every call site (layout, pages, form-content composition files, etc.) calls
+// auth() independently and expects its own DB round trip - cache() collapses
+// all of those into one prisma lookup per request instead of one per call site.
+export const auth = cache(uncachedAuth);
+export { handlers, signIn, signOut };
