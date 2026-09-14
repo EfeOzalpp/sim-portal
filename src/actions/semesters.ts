@@ -8,6 +8,7 @@ import { ensureAdmin } from "@/actions/auth";
 import {
 	generateSemesterThursdays,
 	getAllSemesters as getAllSemestersUtil,
+	getSemesterOptions as getSemesterOptionsUtil,
 	getDateKey,
 	getDefaultProductionsForThursday,
 	getSemesterThursdayName,
@@ -30,6 +31,13 @@ export async function getAllSemesters() {
 	});
 }
 
+// {id, name} only - for pages that just need a semester picker, not the full nested thursdays/users payload.
+export async function getSemesterOptions() {
+	return await action(async () => {
+		return await getSemesterOptionsUtil();
+	});
+}
+
 export async function getSemester(id: string) {
 	return await action(async () => {
 		const semester = await prisma.semester.findUnique({
@@ -38,7 +46,7 @@ export async function getSemester(id: string) {
 				id: true,
 				name: true,
 				users: {
-					select: { id: true, name: true, image: true }
+					select: { id: true, name: true, image: true, role: true }
 				},
 				thursdays: {
 					orderBy: { date: "asc" },
@@ -196,7 +204,7 @@ export async function getIndividualSemesterData(
 			where: {
 				...(isAllSemesters ? {} : { semesters: { some: { id: semesterId } } }),
 				...userSearchWhere,
-				role: { not: ROLES.staff },
+				role: ROLES.student,
 			},
 			orderBy: { name: "asc" },
 			select: {

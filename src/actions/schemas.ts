@@ -25,6 +25,8 @@ export type BasicUser = {
 	 * semester filter (ProductionForm.tsx). Optional since not every
 	 * getAllUsers-shaped list bothers selecting it. */
 	semesterIds?: string[];
+	/** Drives the Enrollment role filter (SemesterForm.tsx). Optional since not every getAllUsers-shaped list bothers selecting it. */
+	role?: string;
 };
 
 export const SemesterSchema = z.object({
@@ -71,6 +73,7 @@ export const FilterSchema = z.object({
 	user: z.union([z.string(), z.array(z.string())]).optional(),
 	thursdays: z.union([z.string(), z.array(z.string())]).optional(),
 	semester: z.union([z.string(), z.array(z.string())]).optional(), // Legacy name support
+	role: z.union([z.string(), z.array(z.string())]).optional(),
 });
 
 export type FilterInputValues = z.infer<typeof FilterSchema>;

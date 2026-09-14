@@ -17,28 +17,52 @@ function getSemesterSortKey(name: string): number {
 	return year * 2 + (season === "FA" ? 1 : 0);
 }
 
-// Fetch all semesters with their thursdays and associated users
+// Fetch all semesters with their thursdays and associated users - heavy
+// (nested thursdays/productions/users per semester). Only semester/page.tsx
+// (SemesterCardGrid's thursday-count/date-range display) actually needs
+// this; everywhere else just wants {id, name} for a picker - use
+// getSemesterOptions below for those instead, so a plain filter-select
+// navigation isn't paying for this whole nested query every time.
 export async function getAllSemesters() {
 	try {
 		const semesters = await prisma.semester.findMany({
 			select: {
 				id: true,
 				name: true,
-				thursdays: { 
+				thursdays: {
 					orderBy: { date: "asc" },
 					select: {
 						id: true,
 						date: true,
 						productions: { select: { id: true } }
-					} 
-				}, 
+					}
+				},
 				users: {
-					select: { id: true, name: true, image: true }
+					select: { id: true, name: true, image: true, role: true }
 				}
 			},
 		});
 
 		// Sort by the semester's own code (SP/FA + year), newest first.
+		semesters.sort((a, b) => getSemesterSortKey(b.name) - getSemesterSortKey(a.name));
+
+		return semesters;
+	} catch (error) {
+		console.error("Database Error:", error);
+		throw new Error("Failed to fetch Semesters.");
+	}
+}
+
+// Lightweight {id, name} version of getAllSemesters, for the many spots that
+// only ever feed a semester picker/dropdown or do id/name matching - see the
+// comment on getAllSemesters above for why this exists as its own query
+// instead of just reusing that one's result.
+export async function getSemesterOptions() {
+	try {
+		const semesters = await prisma.semester.findMany({
+			select: { id: true, name: true },
+		});
+
 		semesters.sort((a, b) => getSemesterSortKey(b.name) - getSemesterSortKey(a.name));
 
 		return semesters;
