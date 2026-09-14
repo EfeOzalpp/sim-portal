@@ -3,7 +3,7 @@ import { Suspense } from "react";
 
 // Actions
 import { getFilteredThursdays } from "@/actions/thursdays";
-import { getAllSemesters } from "@/actions/semesters";
+import { getSemesterOptions } from "@/actions/semesters";
 
 // Components
 import { Button } from "@/components/button";
@@ -13,6 +13,7 @@ import { FilterInput } from "@/components/primitives/Filters";
 import SemesterFilterSelect from "@/components/domain/filters/SemesterFilterSelect";
 import { ActionModeButton, ActionModeSurface } from "@/components/layout/ActionMode";
 import RouteModalPopup from "@/components/modal/RouteModalPopup";
+import ModalContentFallback from "@/components/modal/ModalContentFallback";
 import ThursdayDetailContent, { thursdayDetailDialogClassName } from "@/components/domain/productions/ThursdayDetailContent";
 import PersonProfileModal from "@/components/domain/profile/PersonProfileModal";
 import { confirmDeleteDialogClassName } from "@/components/confirm-delete/styles";
@@ -24,7 +25,7 @@ import EditThursdayFormContent from "@/app/thursdays/[id]/edit/EditThursdayFormC
 import ThursdayDeleteConfirmContent from "@/app/thursdays/composition/ThursdayDeleteConfirmContent";
 
 // Helpers
-import { ALL_SEMESTERS_VALUE, formatSemesterCode, getSelectedSemester, getSelectedSemesterId, isAllSemestersValue } from "@/components/domain/filters/semester-filter";
+import { getSelectedSemesterId } from "@/components/domain/filters/semester-filter";
 import { ACTION_MODES } from "@/constants/action-modes";
 import { THURSDAY_MODAL_PARAMS, USER_MODAL_PARAMS, type ThursdayModalParam } from "@/constants/modal-params";
 import { isAdminRole } from "@/constants/roles";
@@ -109,25 +110,27 @@ async function ThursdaysList({
   }
 
   return (
-    <div className="grid gap-2">
-      {thursdays.map((thursday: any) => (
-        <ThursdayCard key={thursday.id} thursday={thursday} isAdmin={isAdmin} />
-      ))}
-    </div>
+    <>
+      <span className="ui-label m-0 mb-2 block pl-1">
+        {thursdays.length} Thursday Production{thursdays.length === 1 ? "" : "s"}
+      </span>
+      <div className="grid">
+        {thursdays.map((thursday: any, index: number) => (
+          <ThursdayCard key={thursday.id} thursday={thursday} isAdmin={isAdmin} checker={index % 2 === 0} isFirst={index === 0} isLast={index === thursdays.length - 1} />
+        ))}
+      </div>
+    </>
   );
 }
 
 export default async function Thursdays({ searchParams }: ThursdaysProps) {
   const filters = await searchParams;
-  const semestersResult = await getAllSemesters();
+  // getSemesterOptions and auth are independent - run them in parallel, not one after another.
+  const [semestersResult, session] = await Promise.all([getSemesterOptions(), auth()]);
   const semesters = semestersResult.success ? semestersResult.data : [];
-  const session = await auth();
   const isAdmin = isAdminRole(session?.user?.role);
 
   const selectedSemesterId = getSelectedSemesterId(filters, semesters);
-  const selectedSemester = getSelectedSemester(filters, semesters);
-  const semesterCode = formatSemesterCode(selectedSemester?.name || selectedSemesterId);
-  const currentFilterLabel = isAllSemestersValue(selectedSemesterId) ? ALL_SEMESTERS_VALUE : semesterCode;
   const addThursday = getSingleParam(filters[THURSDAY_MODAL_PARAMS.add]);
   const thursdayId = getSingleParam(filters[THURSDAY_MODAL_PARAMS.view]);
   const profileUserId = getSingleParam(filters[USER_MODAL_PARAMS.profile]);
@@ -137,20 +140,22 @@ export default async function Thursdays({ searchParams }: ThursdaysProps) {
 
   return (
     <>
-      <PageTitle title="Thursdays" filter={currentFilterLabel} />
+      <PageTitle
+        title="Thursdays"
+        filterControl={<SemesterFilterSelect semesters={semesters} defaultValue={selectedSemesterId} variant="title" />}
+      />
       <ActionModeSurface>
         <NavContent
           filterContent={
-            <>
-              <SemesterFilterSelect semesters={semesters} defaultValue={selectedSemesterId} />
-              <FilterInput query={"thursdays"} placeholder="Search production" />
-            </>
+            <div className="[&_.input-affix-wrapper]:bg-[var(--action-input-bg)]!">
+              <FilterInput query={"thursdays"} placeholder="Search" />
+            </div>
           }
-          filterLabel="Filter & Search"
+          filterLabel="Search Thursdays"
           manageContent={
             isAdmin ? (
               <>
-                <Button href={getThursdaysModalHref(filters, THURSDAY_MODAL_PARAMS.add, "1")} variant="action">Add Thursday</Button>
+                <Button href={getThursdaysModalHref(filters, THURSDAY_MODAL_PARAMS.add, "1")} variant="action" tone="success" icon="add/add.svg">Add Thursday</Button>
                 <ActionModeButton type="button" variant="action" mode={ACTION_MODES.editThursdays}>
                   Edit Thursdays
                 </ActionModeButton>
@@ -164,7 +169,7 @@ export default async function Thursdays({ searchParams }: ThursdaysProps) {
           mobileManageContent={
             isAdmin ? (
               <>
-                <Button href={getThursdaysModalHref(filters, THURSDAY_MODAL_PARAMS.add, "1")} variant="action">Add</Button>
+                <Button href={getThursdaysModalHref(filters, THURSDAY_MODAL_PARAMS.add, "1")} variant="action" tone="success" icon="add/add.svg">Add</Button>
                 <ActionModeButton type="button" variant="action" mode={ACTION_MODES.editThursdays}>
                   Edit
                 </ActionModeButton>
@@ -175,7 +180,8 @@ export default async function Thursdays({ searchParams }: ThursdaysProps) {
             ) : null
           }
         />
-        <div className="px-3">
+        {/* bg here, not on individual cards' own container - see users/page.tsx for the full explanation. */}
+        <div className="bg-[var(--app-thursdays-surface)] px-6 pt-9! pb-9! min-[769px]:rounded-tr-[0.5rem] min-[1025px]:pr-6 min-[1025px]:pl-9">
           <Suspense
             fallback={<div style={{ opacity: 0.5, padding: "1rem", background: "transparent" }}>Loading days...</div>}
           >
@@ -192,7 +198,9 @@ export default async function Thursdays({ searchParams }: ThursdaysProps) {
             title="Add Thursday"
             dialogClassName={thursdayDetailDialogClassName}
           >
-            <AddThursdayFormContent />
+            <Suspense fallback={<ModalContentFallback />}>
+              <AddThursdayFormContent />
+            </Suspense>
           </RouteModalPopup>
         )}
         {editThursdayId && !addThursday && !thursdayId && !profileUserId && !deleteThursdayId && (
@@ -202,7 +210,9 @@ export default async function Thursdays({ searchParams }: ThursdaysProps) {
             title="Edit Thursday"
             dialogClassName={thursdayDetailDialogClassName}
           >
-            <EditThursdayFormContent thursdayId={editThursdayId} />
+            <Suspense fallback={<ModalContentFallback />}>
+              <EditThursdayFormContent thursdayId={editThursdayId} />
+            </Suspense>
           </RouteModalPopup>
         )}
         {deleteThursdayId && !addThursday && !thursdayId && !profileUserId && !editThursdayId && (
@@ -212,10 +222,12 @@ export default async function Thursdays({ searchParams }: ThursdaysProps) {
             title="Delete Thursday"
             dialogClassName={confirmDeleteDialogClassName}
           >
-            <ThursdayDeleteConfirmContent
-              thursdayId={deleteThursdayId}
-              returnHref={thursdaysReturnHref}
-            />
+            <Suspense fallback={<ModalContentFallback />}>
+              <ThursdayDeleteConfirmContent
+                thursdayId={deleteThursdayId}
+                returnHref={thursdaysReturnHref}
+              />
+            </Suspense>
           </RouteModalPopup>
         )}
         {thursdayId && !addThursday && !editThursdayId && !deleteThursdayId && (
@@ -225,7 +237,9 @@ export default async function Thursdays({ searchParams }: ThursdaysProps) {
             title="Thursday"
             dialogClassName={thursdayDetailDialogClassName}
           >
-            <ThursdayDetailContent thursdayId={thursdayId} />
+            <Suspense fallback={<ModalContentFallback />}>
+              <ThursdayDetailContent thursdayId={thursdayId} />
+            </Suspense>
           </RouteModalPopup>
         )}
       </ActionModeSurface>

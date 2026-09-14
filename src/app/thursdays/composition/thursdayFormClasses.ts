@@ -11,15 +11,9 @@ export const inlineActionsClassName = "flex flex-wrap items-center gap-2";
 // [data-state=open]>& is Radix Accordion.Item's own open-state attribute —
 // both PresentationsField and ProductionsSection (the two Collapse consumers
 // in this domain) render through Radix now, so this only needs the one
-// selector. ProductionsCollapse (still antd, a separate file with its own
-// local styling) doesn't use these constants at all.
-// items-stretch! (not items-center!) - the trigger <button> needs to
-// actually stretch to fill this row's full height (including min-h), or its
-// own padding (collapseTriggerPaddingClassName) only ever centers within a
-// taller row instead of covering it, leaving dead top/bottom strips that
-// look like part of the header but aren't inside the clickable button.
+// selector.
 export const collapseHeaderClassName =
-	"min-h-[3.75rem] items-stretch! rounded-xl! bg-[var(--app-surface)]! text-[var(--app-text)]! transition-[background] duration-150 hover:bg-[var(--app-card-bg-hover)]! [[data-state=open]>&]:rounded-b-none! [[data-state=open]>&]:border-b [[data-state=open]>&]:border-b-[var(--app-border)]";
+	"min-h-[3.75rem] items-stretch! rounded-xl! bg-[var(--app-surface)]! text-[var(--app-text)]! transition-[background] duration-150 hover:bg-[var(--app-card-bg-hover)]! [[data-state=open]>&]:rounded-b-none! [[data-state=open]>&]:border-b [[data-state=open]>&]:border-b-[var(--card-border)]";
 
 // Merged onto the trigger <button> itself (via Collapse's triggerClassName),
 // not collapseHeaderClassName above - the header row uses items-stretch, so
@@ -35,7 +29,7 @@ export const collapseIconClassName =
 	"h-5 w-5 flex-none bg-[var(--input-icon)] transition-transform duration-200 [mask-image:url(../assets/arrow/down.svg)] [mask-position:center] [mask-repeat:no-repeat] [mask-size:contain] [[data-state=open]_&]:rotate-180";
 
 export const collapseItemClassName =
-	"overflow-hidden rounded-xl! border! border-solid! border-[var(--app-border)]! bg-[var(--app-surface)]!";
+	"overflow-hidden rounded-xl! border! border-solid! border-[var(--card-border)]! bg-[var(--app-surface)]!";
 
 export const collapseLabelClassName =
 	"inline-flex min-w-0 items-center gap-2 text-[var(--app-text)]";
@@ -44,7 +38,7 @@ export const collapseTitleTextClassName =
 	"min-w-0 overflow-hidden text-ellipsis whitespace-nowrap font-heading text-base font-semibold leading-tight text-[var(--app-text)]";
 
 export const collapseMetaClassName =
-	"shrink-0 text-sm font-semibold leading-tight text-[var(--app-muted)]";
+	"shrink-0 text-sm font-semibold leading-tight text-[var(--app-label)]";
 
 export const iconButtonClassName =
 	"m-0 inline-grid h-9 w-9 cursor-pointer place-items-center rounded-xl border border-solid border-[var(--input-border)] bg-transparent p-0 text-[var(--input-icon)] hover:border-[var(--input-border-hover)] hover:bg-[var(--input-bg-hover)] hover:text-[var(--input-text)] hover:shadow-[var(--input-hover-shadow)]";

@@ -2,7 +2,10 @@ import { Button } from "@/components/button";
 import PersonLink from "@/components/domain/profile/PersonLink";
 import SemesterBadge from "@/components/domain/productions/SemesterBadge";
 import { formatNiceListFromArray } from "@/helpers";
+import { MaskIcon } from "@/theme/MaskIcon";
 import { Prisma } from "@prisma/client";
+
+const metaIconClassName = "h-4 w-4 flex-none bg-[var(--app-text)] [mask-position:center] [mask-repeat:no-repeat] [mask-size:contain]";
 
 type PresentationWithPresenters = Prisma.PresentationGetPayload<{
   include: {
@@ -55,6 +58,10 @@ export default function PresentationCard({
 
   const thursdayId = (presentation as any).production?.thursday_id;
   const semesterName = (presentation as any).production?.thursday?.semester?.name;
+  const thursdayDate = (presentation as any).production?.thursday?.date;
+  const formattedDate = thursdayDate
+    ? new Date(thursdayDate).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
+    : null;
 
   if (!isUserProfile) {
     return (
@@ -80,7 +87,7 @@ export default function PresentationCard({
   }
 
   return (
-    <div className="flex w-full flex-col gap-2 rounded-md border border-solid border-[var(--app-border)] bg-[var(--app-secondary)] p-2 pt-3">
+    <div className="flex w-full flex-col gap-2 rounded-xl border border-solid border-[var(--elevated-surface-border)] bg-[var(--elevated-surface)] p-4 pt-5">
       <SemesterBadge name={semesterName} />
       <div className="font-bold">{presentation.name}</div>
       <div className="flex w-full flex-row flex-wrap items-baseline gap-x-4 gap-y-2 [&_div]:m-0">
@@ -93,8 +100,14 @@ export default function PresentationCard({
           <div>No one is credited as an author of this presentation yet.</div>
         )}
       </div>
+      {formattedDate && (
+        <div className="flex items-center gap-1.5">
+          <MaskIcon icon="day/day.svg" className={metaIconClassName} />
+          {formattedDate}
+        </div>
+      )}
       {thursdayId && (
-        <div className="flex w-full justify-start">
+        <div className="flex w-full justify-end">
           <Button href={`/thursdays/${thursdayId}`} variant="action" icon="view/forward.svg" iconPosition="end">
             View
           </Button>

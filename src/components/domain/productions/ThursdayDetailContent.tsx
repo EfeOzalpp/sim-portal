@@ -32,7 +32,7 @@ export default async function ThursdayDetailContent({ thursdayId }: ThursdayDeta
         <h3 className="m-0 font-heading text-xl font-bold leading-tight">
           {thursdayName}
         </h3>
-        <span className="whitespace-nowrap text-sm text-[var(--app-muted)]">
+        <span className="whitespace-nowrap text-sm text-[var(--app-label)]">
           {formattedDate}
         </span>
       </div>
@@ -48,7 +48,7 @@ export default async function ThursdayDetailContent({ thursdayId }: ThursdayDeta
           />
         ))
       ) : (
-        <p className="text-[var(--app-muted)] italic">No productions scheduled on this Thursday yet.</p>
+        <p className="text-[var(--app-label)] italic">No productions scheduled on this Thursday yet.</p>
       )}
     </div>
   );

@@ -28,7 +28,7 @@ export default function EditThursdayButton({ thursdayId, className }: EditThursd
 	params.set(THURSDAY_MODAL_PARAMS.edit, thursdayId);
 
 	return (
-		<Button href={`${pathname}?${params.toString()}`} variant="action" className={className}>
+		<Button href={`${pathname}?${params.toString()}`} variant="action" icon="edit/edit.svg" className={className}>
 			Edit
 		</Button>
 	);

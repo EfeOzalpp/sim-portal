@@ -98,7 +98,7 @@ export default function ProductionsSection({
       </div>
 
       {fields.length === 0 ? (
-        <p className="my-6 text-center text-sm leading-normal text-[var(--app-muted)] italic">
+        <p className="my-6 text-center text-sm leading-normal text-[var(--app-label)] italic">
           No productions yet.
         </p>
       ) : (

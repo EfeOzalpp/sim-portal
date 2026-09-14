@@ -28,11 +28,17 @@ type ThursdayWithProductions = Prisma.ThursdayGetPayload<{
 interface ThursdayCardProps {
   thursday: ThursdayWithProductions;
   isAdmin?: boolean;
+  checker?: boolean;
+  isFirst?: boolean;
+  isLast?: boolean;
 }
 
 export default async function ThursdayCard({
   thursday,
   isAdmin: initialIsAdmin,
+  checker,
+  isFirst,
+  isLast,
 }: ThursdayCardProps) {
   let isAdmin = initialIsAdmin;
   if (isAdmin === undefined) {
@@ -48,6 +54,9 @@ export default async function ThursdayCard({
 
   return (
     <ProductionsCollapse
+      checker={checker}
+      isFirst={isFirst}
+      isLast={isLast}
       productions={[{
         id: thursday.id,
         name: thursdayName,
@@ -68,7 +77,7 @@ export default async function ThursdayCard({
                 />
               ))
             ) : (
-              <span className="text-[0.82rem] text-[var(--app-muted)] italic">No current productions</span>
+              <span className="text-[0.82rem] text-[var(--app-label)] italic">No current productions</span>
             )}
           </>
         ),

@@ -27,7 +27,7 @@ export default async function EditThursday({ params }: EditThursdayProps) {
 	return (
 		<>
 			<NavContent
-				className="mx-auto max-w-[50%] border-b border-[var(--app-border)]"
+				className="mx-auto max-w-[50%] border-b border-[var(--main-border)]"
 				start={<h2>Edit Day</h2>}
 				end={<CloseButton href={`/thursdays?thursdayId=${id}`} />}
 			/>

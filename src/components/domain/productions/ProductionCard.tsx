@@ -10,11 +10,6 @@ interface ProductionCardProps {
   productionIndex?: number;
   productionCount?: number;
   isAdmin?: boolean;
-  // The Thursdays list (ThursdayCard/ProductionsCollapse) puts this
-  // background on its own outer collapse card instead, covering the whole
-  // expanded area rather than just this box - false there so the two
-  // don't stack. The Thursday detail modal (ThursdayDetailContent), which
-  // has no such wrapper of its own, keeps the default true.
   hasOwnBackground?: boolean;
 }
 
@@ -118,7 +113,7 @@ export default async function ProductionCard({
         </div>
       </div>
 
-      <div className="my-3 border-t border-[var(--app-border)]" />
+      <div className="my-3 border-t border-[var(--card-border)]" />
 
       <div>
         <span className="ui-label block">Presentations</span>
@@ -140,11 +135,6 @@ export default async function ProductionCard({
     </>
   );
 
-  // A single production keeps its original, borderless layout untouched.
-  // Multiple productions each get an ordinal title above a bordered box
-  // (matching PresentationCard's isUserProfile box) around their fields,
-  // so several productions under one Thursday read as distinct blocks
-  // instead of one long flow separated only by thin dividers.
   if (!isMultiple) {
     return (
       <div>
@@ -159,7 +149,7 @@ export default async function ProductionCard({
   return (
     <div className={clsx("flex flex-col gap-2", productionIndex > 0 && "mt-6")}>
       {titleRow}
-      <div className={clsx("rounded-md border border-solid border-[var(--app-border)] p-3", hasOwnBackground && "bg-[var(--app-secondary)]")}>
+      <div className={clsx("rounded-md border border-solid p-3", hasOwnBackground ? "border-[var(--elevated-surface-border)] bg-[var(--elevated-surface)]" : "border-[var(--card-border)]")}>
         {fields}
       </div>
     </div>

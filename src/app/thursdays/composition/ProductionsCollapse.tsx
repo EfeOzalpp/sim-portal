@@ -1,21 +1,50 @@
 "use client";
 
 // React & Next.js
-import type { ReactNode } from "react";
+import { useRef, useState, type ReactNode } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import clsx from "clsx";
 
 // Components
 import { Collapse } from "@/components/collapse";
-import { Button } from "@/components/button";
 import { useActionMode } from "@/components/layout/ActionMode";
+import { MaskIcon } from "@/theme/MaskIcon";
 
 // Helpers
 import { ACTION_MODES } from "@/constants/action-modes";
 import { THURSDAY_MODAL_PARAMS, type ThursdayModalParam } from "@/constants/modal-params";
 
-// Shared by the mobile and desktop trigger layouts below.
 const chevronClassName =
   "h-5 w-5 flex-none bg-[var(--input-icon)] transition-transform duration-250 [mask-image:url(../assets/arrow/down.svg)] [mask-position:center] [mask-repeat:no-repeat] [mask-size:contain] [[data-state=open]_&]:rotate-180";
+
+// Same convention as RoleFilterPopover's trigger button.
+const printButtonClassName =
+  "m-0 inline-grid h-9 w-9 flex-none cursor-pointer place-items-center self-center rounded-xl border border-solid border-[var(--input-border)] bg-[var(--btn-default-bg)] p-0 text-[var(--input-icon)] hover:border-[var(--input-border-hover)] hover:bg-[var(--input-bg-hover)] hover:text-[var(--input-text)] hover:shadow-[var(--input-hover-shadow)]";
+
+// Marks every sibling along target's ancestor chain (up to <body>) with
+// data-print-hidden, so @media print's [data-print-hidden] rule (tailwind.css)
+// leaves only target's own subtree in the printed output - then clears those
+// marks again once print() returns.
+function printOnlyElement(target: HTMLElement) {
+  const marked: HTMLElement[] = [];
+  let node: HTMLElement | null = target;
+
+  while (node && node !== document.body) {
+    const parent: HTMLElement | null = node.parentElement;
+    if (parent) {
+      Array.from(parent.children).forEach((sibling) => {
+        if (sibling !== node && sibling instanceof HTMLElement) {
+          sibling.setAttribute("data-print-hidden", "true");
+          marked.push(sibling);
+        }
+      });
+    }
+    node = parent;
+  }
+
+  window.print();
+  marked.forEach((el) => el.removeAttribute("data-print-hidden"));
+}
 
 interface ProductionItem {
   id: string;
@@ -28,13 +57,18 @@ interface ProductionItem {
 
 interface ProductionsCollapseProps {
   productions: ProductionItem[];
+  checker?: boolean;
+  isFirst?: boolean;
+  isLast?: boolean;
 }
 
-export default function ProductionsCollapse({ productions }: ProductionsCollapseProps) {
+export default function ProductionsCollapse({ productions, checker, isFirst, isLast }: ProductionsCollapseProps) {
   const { activeMode } = useActionMode();
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const contentRefs = useRef<Map<string, HTMLDivElement | null>>(new Map());
+  const [openValues, setOpenValues] = useState<string[]>([]);
 
   function openThursdayModal(thursdayId: string, modalParam: ThursdayModalParam) {
     const params = new URLSearchParams(searchParams.toString());
@@ -60,6 +94,29 @@ export default function ProductionsCollapse({ productions }: ProductionsCollapse
     return false;
   }
 
+  // Force the item open (if it isn't already) so its content actually exists
+  // to print, isolate just the productions inside it (not the trigger row's
+  // date/name/location) via printOnlyElement, then put the open state back.
+  async function handlePrintClick(productionId: string) {
+    const wasOpen = openValues.includes(productionId);
+
+    if (!wasOpen) {
+      setOpenValues((current) => [...current, productionId]);
+      await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+    }
+
+    const contentEl = contentRefs.current.get(productionId);
+    if (contentEl) {
+      printOnlyElement(contentEl);
+    } else {
+      window.print();
+    }
+
+    if (!wasOpen) {
+      setOpenValues((current) => current.filter((value) => value !== productionId));
+    }
+  }
+
   return (
     <div
       className="relative"
@@ -76,45 +133,32 @@ export default function ProductionsCollapse({ productions }: ProductionsCollapse
       }}
     >
       <Collapse
-        // bg lives here (the whole card) rather than only on the header or
-        // only on a ProductionCard's own inner box - those left the content
-        // area's padding/gaps and any single-production Thursday with no
-        // background at all, so the boxes read as floating disconnected
-        // patches instead of one continuous card. overflow-hidden + rounded-xl
-        // above already clip it to the card's shape.
-        className="overflow-hidden rounded-xl border border-solid border-[var(--app-border)] bg-[var(--app-secondary)] text-[var(--app-text)]"
+        value={openValues}
+        onValueChange={setOpenValues}
+        className={clsx(
+          "overflow-hidden text-[var(--app-text)]",
+          "[&:has([data-state=open])]:rounded-xl [&:has([data-state=open])]:border [&:has([data-state=open])]:border-solid [&:has([data-state=open])]:border-[var(--card-border)]",
+          !isFirst && "[&:has([data-state=open])]:mt-2",
+          !isLast && "[&:has([data-state=open])]:mb-2",
+          isFirst && "[&:not(:has([data-state=open]))]:rounded-t-xl",
+          isLast && "[&:not(:has([data-state=open]))]:rounded-b-xl",
+          checker ? "bg-[var(--checker-bg)]" : "bg-[var(--elevated-surface)]",
+        )}
         items={productions.map((p, pIndex) => ({
           value: p.id,
-          itemClassName: pIndex > 0 ? "border-t border-t-[var(--app-border)]" : "",
-          headerClassName: "items-center text-[var(--app-text)] transition-[background] duration-150 hover:bg-[var(--app-card-bg-hover)]",
-          // Padding lives on the trigger button itself (not headerClassName,
-          // the row around it) - the row uses items-stretch, so padding put
-          // there sits outside the button's own box, unclickable despite
-          // looking like part of the header.
+          itemClassName: pIndex > 0 ? "border-t border-t-[var(--card-border)]" : "",
+          headerClassName: clsx(
+            "items-center text-[var(--app-text)] transition-[background] duration-150",
+            checker ? "hover:bg-[var(--checker-bg-hover)]" : "hover:bg-[var(--app-card-bg-hover)]",
+          ),
           triggerClassName: "px-4 py-5",
           contentClassName: "px-4 pt-3 pb-4 text-[var(--app-text)]",
-          // The title used to double as both the toggle trigger and a
-          // navigation link when p.href was set (relying on stopPropagation
-          // to keep the two from fighting). Radix's Trigger renders as a
-          // real <button>, which an <a> can't legally nest inside — so the
-          // title is now toggle-only, and navigation moved to a separate
-          // link in `extra` below. A real, visible behavior change from the
-          // antd version, not just a technical swap.
           trigger: (
             <>
-              {/* Mobile: date/title/location stack vertically instead of
-                  running in one row, which is what was overflowing the
-                  viewport - the chevron sits to their left, centered against
-                  the whole stack's height rather than stretched full-height
-                  like the desktop dividers (there's nothing to divide here). */}
               <span className="flex min-w-0 flex-1 items-center gap-3 min-[769px]:hidden">
                 <span className={chevronClassName} aria-hidden="true" />
                 <span className="flex min-w-0 flex-1 flex-col gap-2">
-                  {p.date && (
-                    <span className="w-fit rounded-md border border-solid border-[var(--app-border)] bg-[var(--app-card-label-bg)] px-2 py-1 font-sans text-[0.6875rem] leading-tight font-semibold text-[var(--app-muted)] uppercase">
-                      {p.date}
-                    </span>
-                  )}
+                  {p.date && <span className="ui-label m-0 block w-fit">{p.date}</span>}
                   <h3
                     className="m-0 w-full truncate font-heading text-xl font-bold leading-tight text-[var(--app-text)]"
                     title={p.name}
@@ -126,25 +170,9 @@ export default function ProductionsCollapse({ productions }: ProductionsCollapse
                   )}
                 </span>
               </span>
-              {/* Desktop: everything in one row - items-stretch (not center)
-                  lets the border dividers below reach the row's full height,
-                  self-center on the text/badge siblings keeps their own
-                  vertical centering unaffected. self-stretch on this span
-                  itself: collapseTriggerClassName (the <button> wrapping
-                  this, shared by every Collapse consumer) centers its own
-                  child instead of stretching it, so without this the
-                  dividers would only reach this span's own content height,
-                  not the button's full padded height. */}
               <span className="hidden items-stretch gap-[0.85rem] self-stretch min-[769px]:inline-flex">
                 {p.date && (
-                  // Same role-badge style as UserProfileView's role pill,
-                  // not the mismatched ad-hoc styling this used to have.
-                  // min-w keeps every date badge the same width, so the
-                  // chevron/title after it start at a consistent line
-                  // regardless of how long the date string is.
-                  <span className="min-w-[5.5rem] self-center text-center rounded-md border border-solid border-[var(--app-border)] bg-[var(--app-card-label-bg)] px-2 py-1 font-sans text-[0.6875rem] leading-tight font-semibold text-[var(--app-muted)] uppercase">
-                    {p.date}
-                  </span>
+                  <span className="ui-label m-0 min-w-[5.5rem] shrink-0 self-center text-center">{p.date}</span>
                 )}
                 <span className={`${chevronClassName} self-center`} aria-hidden="true" />
                 <h3
@@ -155,39 +183,34 @@ export default function ProductionsCollapse({ productions }: ProductionsCollapse
                 </h3>
                 {p.location && (
                   <>
-                    <span className="self-stretch border-l border-l-[var(--app-border)]" aria-hidden="true" />
+                    <span className="self-stretch border-l border-l-[var(--card-border)]" aria-hidden="true" />
                     <span className="self-center text-[1.05rem] font-bold">{p.location}</span>
                   </>
                 )}
               </span>
             </>
           ),
-          extra: p.href ? (
-            <Button
-              href={p.href}
-              variant="action"
-              icon="view/forward.svg"
-              iconPosition="end"
-              className="self-center mr-4"
+          extra: (
+            <button
+              type="button"
+              className={clsx(printButtonClassName, "mr-4")}
+              aria-label="Print"
               onClick={(event) => {
-                if (handleActionModeClick(p.id)) {
-                  event.preventDefault();
-                }
                 event.stopPropagation();
+                handlePrintClick(p.id);
               }}
             >
-              View
-            </Button>
-          ) : undefined,
-          content: p.content,
+              <MaskIcon icon="download/download.svg" className="h-4 w-4 bg-current [mask-position:center] [mask-repeat:no-repeat] [mask-size:contain]" />
+            </button>
+          ),
+          content: (
+            <div ref={(el) => { contentRefs.current.set(p.id, el); }}>
+              {p.content}
+            </div>
+          ),
         }))}
       />
       <span
-        // --app-text (not --app-card-action-icon): that token is a fixed
-        // white, meant for icons sitting on top of a photo (UserCard) - this
-        // card has no photo, just the flat surface color, so a hardcoded
-        // white icon is invisible in light mode. --app-text already flips
-        // dark/light with the theme, so it reliably contrasts either way.
         className="pointer-events-none absolute inset-0 z-[5] flex items-center justify-center text-[var(--app-text)] opacity-0"
         data-thursday-action-overlay
         aria-hidden="true"
