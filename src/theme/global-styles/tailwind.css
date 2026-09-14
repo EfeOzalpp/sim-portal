@@ -33,9 +33,38 @@
 	}
 }
 
+@keyframes toast-in {
+	from {
+		opacity: 0;
+		transform: translateY(-0.5rem);
+	}
+
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@keyframes toast-out {
+	from {
+		opacity: 1;
+		transform: translateY(0);
+	}
+
+	to {
+		opacity: 0;
+		transform: translateY(-0.5rem);
+	}
+}
+
 @media print {
 	@page {
 		size: legal landscape;
 		margin: 0.25in 0.3in;
+	}
+
+	/* Set on every sibling along an element's ancestor chain right before window.print(), to isolate just that one element's subtree in the printed output. */
+	[data-print-hidden="true"] {
+		display: none !important;
 	}
 }

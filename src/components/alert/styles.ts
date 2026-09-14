@@ -12,10 +12,9 @@ export const alertVariants = cva(
 				success: "border-[var(--tone-success-border)] bg-[var(--tone-success-bg)] text-[var(--tone-success-text)]",
 				danger: "border-[var(--tone-danger-border)] bg-[var(--tone-danger-bg)] text-[var(--tone-danger-text)]",
 				warning: "border-[var(--tone-warning-border)] bg-[var(--tone-warning-bg)] text-[var(--tone-warning-text)]",
-				info: "border-[var(--tone-info-border)] bg-[var(--tone-info-bg)] text-[var(--tone-info-text)]",
 			},
 		},
-		defaultVariants: { tone: "info" },
+		defaultVariants: { tone: "danger" },
 	},
 );
 

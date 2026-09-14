@@ -7,7 +7,7 @@ import {
 	alertVariants,
 } from "@/components/alert/styles";
 
-export type AlertTone = "success" | "danger" | "warning" | "info";
+export type AlertTone = "success" | "danger" | "warning";
 
 interface AlertProps {
 	tone?: AlertTone;
@@ -38,17 +38,10 @@ const icons: Record<AlertTone, ReactNode> = {
 			<circle cx="12" cy="17" r="1" fill="currentColor" />
 		</svg>
 	),
-	info: (
-		<svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-			<circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.5" />
-			<path d="M12 11V16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-			<circle cx="12" cy="8" r="1" fill="currentColor" />
-		</svg>
-	),
 };
 
 export function Alert({
-	tone = "info",
+	tone = "danger",
 	description,
 	showIcon = false,
 	closable = false,

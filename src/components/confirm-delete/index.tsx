@@ -3,6 +3,7 @@
 import { useState } from "react";
 import type { FormEvent, ReactNode } from "react";
 import { Button } from "@/components/button";
+import { useToast } from "@/components/toast";
 
 interface ConfirmDeleteProps {
 	itemName: string;
@@ -11,6 +12,8 @@ interface ConfirmDeleteProps {
 	confirmLabel?: string;
 	pendingLabel?: string;
 	errorMessage?: string;
+	/** Shown as a danger-toned toast once the delete actually goes through. */
+	successMessage?: string;
 	onConfirm: () => Promise<any> | any;
 	onConfirmed?: () => void;
 }
@@ -38,11 +41,13 @@ export default function ConfirmDelete({
 	confirmLabel = "Confirm Delete",
 	pendingLabel = "Deleting...",
 	errorMessage = "An error occurred while deleting.",
+	successMessage,
 	onConfirm,
 	onConfirmed,
 }: ConfirmDeleteProps) {
 	const [error, setError] = useState<string | null>(null);
 	const [isSubmitting, setIsSubmitting] = useState(false);
+	const toast = useToast();
 
 	async function handleSubmit(event: FormEvent<HTMLFormElement>) {
 		event.preventDefault();
@@ -57,9 +62,11 @@ export default function ConfirmDelete({
 				return;
 			}
 
+			if (successMessage) toast.danger(successMessage);
 			onConfirmed?.();
 		} catch (err) {
 			if (isNextRedirect(err)) {
+				if (successMessage) toast.danger(successMessage);
 				throw err;
 			}
 

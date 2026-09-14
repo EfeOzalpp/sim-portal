@@ -43,6 +43,7 @@ export default async function UserDeleteConfirmContent({
 			itemType="user"
 			confirmLabel="Delete User"
 			errorMessage="An error occurred while deleting the user."
+			successMessage="User deleted"
 			onConfirm={onConfirmDelete}
 		/>
 	);
