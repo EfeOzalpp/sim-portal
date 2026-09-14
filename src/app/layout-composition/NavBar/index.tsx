@@ -11,9 +11,12 @@ import Button from "@/components/button";
 // layout specific 
 import AdminOnly from "@/app/layout-composition/NavBar/AdminOnly";
 import NavButtonLink from "@/app/layout-composition/NavBar/NavButtonLink";
+import NavScrollArea from "@/app/layout-composition/NavBar/NavScrollArea";
 import UserAccountLink from "@/app/layout-composition/NavBar/UserAccountLink";
 import ThemeSwitch from "@/app/layout-composition/NavBar/ThemeSwitch";
+import ColorThemePopover from "@/app/layout-composition/NavBar/ColorThemePopover";
 import MobileNavBar from "@/app/layout-composition/NavBar/MobileNavBar";
+import SimHistoryLink from "@/app/layout-composition/NavBar/SimHistoryLink";
 
 interface NavBarProps {
 	session?: Session | null;
@@ -36,12 +39,13 @@ export default async function NavBar({ session: initialSession }: NavBarProps) {
 		<>
 			{/* Desktop nav: collapsible rail, hidden on mobile */}
 			<nav className={styles.root} aria-label="Primary navigation" data-collapsible-nav>
-				<div className="m-0 flex min-h-5 items-center justify-center overflow-hidden font-heading text-2xl font-bold whitespace-nowrap leading-tight text-[var(--brand-color)]">SIM</div>
-				<div className="w-full min-w-0">
+				{/* Just a small mt-[0.8rem] nudge - matching PageTitle's height overlapped once the rail expands on hover. Desktop-only already, since .root is display: none below 769px. */}
+				<div className="m-0 mt-[0.8rem] flex min-h-5 shrink-0 items-center justify-center overflow-hidden font-heading text-2xl font-bold whitespace-nowrap leading-tight text-[var(--brand-color)]">SIM</div>
+				<div className="w-full min-w-0 shrink-0">
 					<div className={styles.navButtonList}>
 						<NavButtonLink href="/users" label="People" iconClassName={styles.peopleIcon} />
 						<AdminOnly>
-							<NavButtonLink href="/individual" label="Individual" iconClassName={styles.individualIcon} />
+							<NavButtonLink href="/individual" label="Progress" iconClassName={styles.individualIcon} />
 						</AdminOnly>
 						<NavButtonLink href="/thursdays" label="Thursdays" iconClassName={styles.thursdayIcon} />
 						<AdminOnly>
@@ -49,44 +53,51 @@ export default async function NavBar({ session: initialSession }: NavBarProps) {
 						</AdminOnly>
 					</div>
 				</div>
-				<div className="flex w-full min-w-0 flex-col gap-2 border-t border-t-[var(--app-border)] pt-4">
+				<div className="flex min-h-0 w-full min-w-0 flex-1 flex-col gap-2  pt-4">
 					<div className={styles.externalMarker} aria-label="More links">
 						<span className={`${styles.externalMarkerButton} rounded-md bg-transparent text-[var(--app-icon)]`} aria-hidden="true">
 							<span className={`${styles.navIcon} ${styles.assetIcon} ${styles.linkIcon}`} />
 						</span>
 						<span className={`${styles.navIcon} ${styles.assetIcon} ${styles.moreVerticalIcon} ${styles.externalMoreIcon}`} aria-hidden="true" />
 					</div>
-					<div className={styles.externalLinkList}>
-						{externalLinks.map((link) => (
-							<Button
-								key={link.label}
-								href={link.href}
-								target="_blank"
-								rel="noreferrer"
-								variant="nav"
-							>
+					{/* This list (not navButtonList) grows over time - fills the room left between navButtonList and the footer, scrolls once it exceeds that. */}
+					<NavScrollArea>
+						<div className={styles.externalLinkList}>
+							{externalLinks.map((link) => (
+								<Button
+									key={link.label}
+									href={link.href}
+									target="_blank"
+									rel="noreferrer"
+									variant="nav"
+								>
+									<span className={styles.navItemContent}>
+										<span className={`${styles.navIcon} ${styles.assetIcon} ${styles.linkIcon}`} aria-hidden="true" />
+										<span className={styles.navLabel}>{link.label}</span>
+									</span>
+								</Button>
+							))}
+							<SimHistoryLink />
+							<Button href="https://massartsim.slack.com" target="_blank" rel="noreferrer" variant="nav">
 								<span className={styles.navItemContent}>
 									<span className={`${styles.navIcon} ${styles.assetIcon} ${styles.linkIcon}`} aria-hidden="true" />
-									<span className={styles.navLabel}>{link.label}</span>
+									<span className={styles.navLabel}>Slack</span>
 								</span>
 							</Button>
-						))}
-						{/* Internal page, not an external URL - same list/styling as
-						    SIM Website & SIM Courses above, but no target="_blank"
-						    since it's a normal in-app route, not a link off-site. */}
-						<Button href="/sim-history" variant="nav">
-							<span className={styles.navItemContent}>
-								<span className={`${styles.navIcon} ${styles.assetIcon} ${styles.linkIcon}`} aria-hidden="true" />
-								<span className={styles.navLabel}>SIM History</span>
-							</span>
-						</Button>
-					</div>
+						</div>
+					</NavScrollArea>
 				</div>
-				<div className="mt-auto flex w-full min-w-0 flex-col">
-					<div className={styles.themeNav}>
-						<ThemeSwitch />
+				{/* No mt-auto needed - the flex-1 section above already consumes remaining space, leaving this at the bottom. */}
+				<div className="flex w-full min-w-0 flex-none flex-col">
+					<div className="flex w-full min-w-0 items-center gap-2">
+						<div className={clsx(styles.themeNav, "min-w-0 flex-1")}>
+							<ThemeSwitch />
+						</div>
+						<div className={styles.colorThemeNav}>
+							<ColorThemePopover />
+						</div>
 					</div>
-					<div className={clsx(styles.accountNav, "pt-4")}>
+					<div className={clsx(styles.accountNav, "pt-2")}>
 						<UserAccountLink user={session.user} />
 					</div>
 				</div>

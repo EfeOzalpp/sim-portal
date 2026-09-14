@@ -1,8 +1,4 @@
-/*
- * These rules place route-owned children relative to one another. Keeping
- * them here is clearer than encoding multi-level :has()/:not() selectors as
- * Tailwind arbitrary variants on the root layout element.
- */
+/* These rules place route-owned children relative to one another - clearer here than as multi-level :has()/:not() Tailwind arbitrary variants. */
 
 .contentDivider > * {
 	grid-column: 1 / -1;
@@ -10,6 +6,8 @@
 }
 
 .contentDivider > [data-page-title] {
+	display: flex;
+	align-items: center;
 	grid-column: 1 / -1;
 	grid-row: 1;
 }
@@ -24,11 +22,7 @@
 	grid-column: 1;
 	grid-row: 1 / -1;
 	align-self: start;
-	/* The nav rail (z-[295], layout.tsx) should always render above this bar -
-	   this used to be bumped above it so the action-mode trigger button
-	   stayed reachable, but that button now escapes independently via a
-	   portal (ActionMode/index.tsx) whenever it's active, so this bar itself
-	   no longer needs its own elevated z-index at all. */
+	/* The action-mode trigger button escapes via its own portal when active, so this bar no longer needs an elevated z-index. */
 	z-index: auto;
 	block-size: 100dvh;
 	max-block-size: 100dvh;
@@ -41,17 +35,7 @@
 	padding-block: 0.75rem;
 	overflow: visible;
 	overscroll-behavior: contain;
-	/*
-	 * align-self: start (overriding the inherited stretch) - <main>'s row is
-	 * minmax(0, 1fr), a flexible height, not "size to content". With
-	 * stretch, this box is exactly that (often too-short) row height, and
-	 * overflow: visible just lets taller content spill past its edge - so
-	 * padding-bottom ends up sitting at the end of the short box, not at the
-	 * end of the actually-overflowing content, and visually disappears.
-	 * start instead sizes this box to its own real content height, so
-	 * padding-bottom lands where content really ends. Full-bleed content
-	 * below explicitly wants real stretch instead, so it opts back in.
-	 */
+	/* align-self: start sizes this box to its real content height, so padding-bottom lands where content actually ends, not the row's own (often shorter) height. */
 	align-self: start;
 }
 
@@ -72,30 +56,73 @@
 	overflow: auto;
 }
 
-/*
- * Content that wants to fill (and center within) the full viewport, with no
- * PageTitle/NavContent around it (e.g. the Welcome/login page) - <main>'s
- * row template is otherwise `auto` (content-sized) below 769px, so spanning
- * grid-row: 1 / -1 above has nothing tall to span into on mobile. This gives
- * it one genuinely flexible row instead, at every breakpoint; align-items:
- * stretch (already set on .contentDivider) does the rest.
- */
+/* Fills the viewport with one flexible row at every breakpoint, for content with no PageTitle/NavContent around it (e.g. Welcome/login). */
 .contentDivider:has(> [data-center-content]) {
 	grid-template-rows: minmax(0, 1fr);
 }
 
 @media (min-width: 769px) {
 	.contentDivider:has(> [data-page-content] > [data-content-nav]) {
-		grid-template-columns: minmax(12rem, 16rem) minmax(0, 1fr);
+		grid-template-columns: var(--nav-rail-collapsed-width) minmax(12rem, 16rem) minmax(0, 1fr) 0.5rem;
 	}
 
+	/* PageTitle becomes a subgrid of the same columns so its content lines up exactly under the content column below it. */
 	.contentDivider:has(> [data-page-content] > [data-content-nav]) > [data-page-title] {
-		grid-column: 2;
+		display: grid;
+		grid-template-columns: subgrid;
 	}
 
+	.contentDivider:has(> [data-page-content] > [data-content-nav]) > [data-page-title] > [data-page-title-content] {
+		grid-column: 3;
+	}
+
+	.contentDivider:has(> [data-page-content] > [data-content-nav]) > [data-page-content] {
+		display: grid;
+		grid-template-columns: subgrid;
+		grid-template-rows: subgrid;
+		grid-column: 2 / 4;
+		grid-row: 2 / -1;
+		min-width: 0;
+		min-height: 0;
+		/* Matches NavContent's own border-top-left-radius (NavContent.module.css) and the content
+		   column's own rounded-tr - only so the shadow curves with them, not a visible fill/clip
+		   of its own (this box has no background, no overflow:hidden). */
+		border-top-left-radius: 0.5rem;
+		border-top-right-radius: 0.5rem;
+		box-shadow: var(--content-shadow);
+	}
+
+	/* PageTitle stays full-width and sticky above both columns; NavContent starts at row 2 below it. Desktop-only - mobile has its own sticky content bar instead. */
+	.contentDivider > [data-page-title] {
+		position: sticky;
+		top: 0;
+		z-index: 1;
+	}
+
+	/* top: 4rem, not 0 - PageTitle above is sticky too (4rem tall), so NavContent sticks just below it. */
+	.contentDivider > [data-page-content] > [data-content-nav] {
+		grid-row: 1;
+		top: 4rem;
+		block-size: 100%;
+		max-block-size: 100%;
+		/* Top/left/right only - right is the deliberate seam against the content column, on its own token (main-border-2) so it can be tuned independently. */
+		border-top: 1px solid var(--main-border);
+		border-left: 1px solid var(--main-border);
+		border-right: 1px solid var(--main-border-2);
+	}
+
+	/* Scrolls on its own (not with <main>) so its scrollbar sits at this column's own right edge - true whether or not NavContent exists alongside it. */
 	.contentDivider > [data-page-content] > :not([data-content-nav]):not([data-action-mode-backdrop]) {
+		height: 100%;
+		overflow-y: auto;
+		border-top: 1px solid var(--main-border);
+	}
+
+	/* Only once NavContent exists: column 2 next to it, row 1 of its own subgrid (still the real outer row 2), with its own right-seam border. */
+	.contentDivider:has(> [data-page-content] > [data-content-nav]) > [data-page-content] > :not([data-content-nav]):not([data-action-mode-backdrop]) {
 		grid-column: 2;
-		grid-row: 2;
+		grid-row: 1;
+		border-right: 1px solid var(--main-border);
 	}
 }
 

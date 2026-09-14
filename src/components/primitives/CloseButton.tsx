@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import Block from "@/components/primitives/Block";
-import closeIcon from "@/components/theme/assets/close/close.svg";
+import closeIcon from "@/theme/assets/close/close.svg";
 
 interface CloseButtonProps {
   href: string;

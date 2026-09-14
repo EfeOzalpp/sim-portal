@@ -8,6 +8,7 @@ import { Button } from "@/components/button";
 import NavButtonLink from "@/app/layout-composition/NavBar/NavButtonLink";
 import UserAccountLink from "@/app/layout-composition/NavBar/UserAccountLink";
 import ThemeSwitch from "@/app/layout-composition/NavBar/ThemeSwitch";
+import SimHistoryLink from "@/app/layout-composition/NavBar/SimHistoryLink";
 import navStyles from "@/app/layout-composition/NavBar/NavBar.module.css";
 import styles from "@/app/layout-composition/NavBar/MobileNavBar.module.css";
 
@@ -72,7 +73,7 @@ export default function MobileNavBar({ isAdmin, user }: MobileNavBarProps) {
 						<div className={navStyles.navButtonList}>
 							<NavButtonLink href="/users" label="People" iconClassName={navStyles.peopleIcon} />
 							{isAdmin && (
-								<NavButtonLink href="/individual" label="Individual" iconClassName={navStyles.individualIcon} />
+								<NavButtonLink href="/individual" label="Progress" iconClassName={navStyles.individualIcon} />
 							)}
 							<NavButtonLink href="/thursdays" label="Thursdays" iconClassName={navStyles.thursdayIcon} />
 							{isAdmin && (
@@ -81,7 +82,7 @@ export default function MobileNavBar({ isAdmin, user }: MobileNavBarProps) {
 						</div>
 					</div>
 
-					<div className="flex w-full min-w-0 flex-col gap-2 border-t border-t-[var(--app-border)] pt-4">
+					<div className="flex w-full min-w-0 flex-col gap-2 border-t border-t-[var(--main-border)] pt-4">
 						<div className={navStyles.externalLinkList}>
 							{externalLinks.map((link) => (
 								<Button
@@ -97,13 +98,11 @@ export default function MobileNavBar({ isAdmin, user }: MobileNavBarProps) {
 									</span>
 								</Button>
 							))}
-							{/* Internal page, not an external URL - same list/styling as
-							    SIM Website & SIM Courses above, but no target="_blank"
-							    since it's a normal in-app route, not a link off-site. */}
-							<Button href="/sim-history" variant="nav">
+							<SimHistoryLink />
+							<Button href="https://massartsim.slack.com" target="_blank" rel="noreferrer" variant="nav">
 								<span className={navStyles.navItemContent}>
 									<span className={`${navStyles.navIcon} ${navStyles.assetIcon} ${navStyles.linkIcon}`} aria-hidden="true" />
-									<span className={navStyles.navLabel}>SIM History</span>
+									<span className={navStyles.navLabel}>Slack</span>
 								</span>
 							</Button>
 						</div>

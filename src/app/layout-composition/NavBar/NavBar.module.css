@@ -9,24 +9,32 @@
 	flex-direction: column;
 	align-items: stretch;
 	gap: 1rem;
-	width: 100%;
+	/* Not 100% - the rail's own container (navDividerClassName, layout.tsx) is w-0 at desktop now
+	   (it no longer reserves space; the rail overlays instead), so a percentage here would resolve
+	   against that and collapse to nothing. --nav-rail-collapsed-width (layout-theme.css) instead -
+	   layout.module.css's own grid (.contentDivider's left gutter track) reads that same token so
+	   the two can't drift apart. */
+	width: var(--nav-rail-collapsed-width);
 	min-height: 100%;
+	/* The rail doesn't scroll as one unit - navButtonList stays its natural size, external links below fills the rest and scrolls internally once needed. */
 	overflow-x: hidden;
-	overflow-y: auto;
-	padding: 0.5rem;
-	background: var(--app-surface);
-	border-right: 1px solid var(--app-border);
+	overflow-y: hidden;
+	padding: 0.625rem;
 	box-sizing: border-box;
 	overscroll-behavior: contain;
-	transition: width 160ms ease;
+	transition: width 160ms ease, background-color 160ms ease;
 }
 
 .root:hover,
-.root:has(:focus-visible) {
+.root:has(:focus-visible),
+/* A popover trigger inside the rail (ColorThemePopover) reporting itself open - keeps
+   the rail from collapsing out from under its own (portaled, non-descendant) content. */
+.root:has([aria-expanded="true"]) {
 	width: 15rem;
+	background: var(--app-gray-surface);
 }
 
-.root:not(:hover):not(:has(:focus-visible)) {
+.root:not(:hover):not(:has(:focus-visible)):not(:has([aria-expanded="true"])) {
 	--nav-icon-size: 1.75rem;
 }
 
@@ -34,9 +42,28 @@
 	display: flex;
 	flex-direction: column;
 	align-items: stretch;
-	gap: 0.5rem;
 	width: 100%;
 	min-width: 0;
+}
+
+/* Fills whatever vertical room is left after navButtonList and the footer, shrinking instead of growing the rail past the viewport; navButtonList itself never scrolls. */
+.navScrollArea {
+	display: flex;
+	flex-direction: column;
+	flex: 1 1 auto;
+	min-height: 0;
+	width: 100%;
+	min-width: 0;
+}
+
+.navScrollAreaInner {
+	flex: 1 1 auto;
+	min-height: 0;
+	overflow-y: auto;
+	overflow-x: hidden;
+	overscroll-behavior: contain;
+	/* Firefox thin scrollbar - the rail is narrow, a default-width one would eat into it. */
+	scrollbar-width: thin;
 }
 
 .navButtonList > * {
@@ -72,17 +99,14 @@
 	text-decoration: none;
 }
 
-/* justify-content/padding-inline/no-underline for these buttons all come
-   from variant="nav" and the shared base class now — nothing left to add
-   here except externalLinkList's deliberate underline, which is the one
-   real deviation from the no-underline default. */
+/* Everything else comes from variant="nav" now - just externalLinkList's deliberate underline left to add here. */
 .externalLinkList :global(.btn) {
 	text-decoration-line: underline;
 	text-decoration-color: currentColor;
 	text-underline-offset: 0.18em;
 }
 
-.root:not(:hover):not(:has(:focus-visible)) .navItemContent {
+.root:not(:hover):not(:has(:focus-visible)):not(:has([aria-expanded="true"])) .navItemContent {
 	column-gap: 0;
 }
 
@@ -122,43 +146,43 @@
 }
 
 .peopleIcon {
-	mask-image: url("../../../components/theme/assets/people/groups.svg");
-	-webkit-mask-image: url("../../../components/theme/assets/people/groups.svg");
+	mask-image: url("../../../theme/assets/people/groups.svg");
+	-webkit-mask-image: url("../../../theme/assets/people/groups.svg");
 }
 
 .thursdayIcon {
-	mask-image: url("../../../components/theme/assets/thursday/today.svg");
-	-webkit-mask-image: url("../../../components/theme/assets/thursday/today.svg");
+	mask-image: url("../../../theme/assets/thursday/today.svg");
+	-webkit-mask-image: url("../../../theme/assets/thursday/today.svg");
 }
 
 .listIcon {
-	mask-image: url("../../../components/theme/assets/list/list.svg");
-	-webkit-mask-image: url("../../../components/theme/assets/list/list.svg");
+	mask-image: url("../../../theme/assets/list/list.svg");
+	-webkit-mask-image: url("../../../theme/assets/list/list.svg");
 }
 
 .individualIcon {
-	mask-image: url("../../../components/theme/assets/individual/person.svg");
-	-webkit-mask-image: url("../../../components/theme/assets/individual/person.svg");
+	mask-image: url("../../../theme/assets/individual/person.svg");
+	-webkit-mask-image: url("../../../theme/assets/individual/person.svg");
 }
 
 .linkIcon {
-	mask-image: url("../../../components/theme/assets/link/link.svg");
-	-webkit-mask-image: url("../../../components/theme/assets/link/link.svg");
+	mask-image: url("../../../theme/assets/link/link.svg");
+	-webkit-mask-image: url("../../../theme/assets/link/link.svg");
 }
 
 .moreVerticalIcon {
-	mask-image: url("../../../components/theme/assets/more-vertical/more_vert.svg");
-	-webkit-mask-image: url("../../../components/theme/assets/more-vertical/more_vert.svg");
+	mask-image: url("../../../theme/assets/more-vertical/more_vert.svg");
+	-webkit-mask-image: url("../../../theme/assets/more-vertical/more_vert.svg");
 }
 
 .darkModeIcon {
-	mask-image: url("../../../components/theme/assets/theme-switch/dark_mode.svg");
-	-webkit-mask-image: url("../../../components/theme/assets/theme-switch/dark_mode.svg");
+	mask-image: url("../../../theme/assets/theme-switch/dark_mode.svg");
+	-webkit-mask-image: url("../../../theme/assets/theme-switch/dark_mode.svg");
 }
 
 .lightModeIcon {
-	mask-image: url("../../../components/theme/assets/theme-switch/light_mode.svg");
-	-webkit-mask-image: url("../../../components/theme/assets/theme-switch/light_mode.svg");
+	mask-image: url("../../../theme/assets/theme-switch/light_mode.svg");
+	-webkit-mask-image: url("../../../theme/assets/theme-switch/light_mode.svg");
 }
 
 .navLabel {
@@ -173,7 +197,7 @@
 	white-space: nowrap;
 }
 
-.root:not(:hover):not(:has(:focus-visible)) .navLabel {
+.root:not(:hover):not(:has(:focus-visible)):not(:has([aria-expanded="true"])) .navLabel {
 	max-width: 0;
 	opacity: 0;
 }
@@ -185,7 +209,7 @@
 	gap: 0.5rem;
 	width: 100%;
 	min-width: 0;
-	color: var(--app-muted);
+	color: var(--app-label);
 	box-sizing: border-box;
 }
 
@@ -208,7 +232,8 @@
 }
 
 .root:hover .externalMarker,
-.root:has(:focus-visible) .externalMarker {
+.root:has(:focus-visible) .externalMarker,
+.root:has([aria-expanded="true"]) .externalMarker {
 	display: none;
 }
 
@@ -220,16 +245,22 @@
 	min-width: 0;
 }
 
-.root:not(:hover):not(:has(:focus-visible)) .externalLinkList {
+.root:not(:hover):not(:has(:focus-visible)):not(:has([aria-expanded="true"])) .externalLinkList {
 	display: none;
 }
 
 .themeNav {
 	width: 100%;
 	min-width: 0;
-	padding-block: 1rem;
-	border-top: 1px solid var(--app-border);
-	border-bottom: 1px solid var(--app-border);
+}
+
+.colorThemeNav {
+	flex: none;
+}
+
+/* Collapsed rail has no room for a second button next to ThemeSwitch's own icon - only show it once the rail expands on hover/focus (or its own popover is open, see .root:has([aria-expanded="true"]) above). */
+.root:not(:hover):not(:has(:focus-visible)):not(:has([aria-expanded="true"])) .colorThemeNav {
+	display: none;
 }
 
 @media (max-width: 768px) {

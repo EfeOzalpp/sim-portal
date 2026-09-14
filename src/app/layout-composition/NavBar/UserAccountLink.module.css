@@ -6,7 +6,7 @@
  * and the mobile slide-in panel override lives in MobileNavBar.module.css
  * (:global([class*="identity"]), matching this class by name).
  */
-:global([data-collapsible-nav]:not(:hover):not(:has(:focus-visible))) .identity {
+:global([data-collapsible-nav]:not(:hover):not(:has(:focus-visible)):not(:has([aria-expanded="true"]))) .identity {
 	max-width: 0;
 	opacity: 0;
 }

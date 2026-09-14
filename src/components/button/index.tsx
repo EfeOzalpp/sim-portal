@@ -6,8 +6,8 @@ import type {
 import Link from "next/link";
 import clsx from "clsx";
 import { buttonIconClassName, buttonVariants, type ButtonTone, type ButtonVariant } from "@/components/button/styles";
-import { MaskIcon } from "@/components/theme/MaskIcon";
-import type { IconName } from "@/components/theme/icons";
+import { MaskIcon } from "@/theme/MaskIcon";
+import type { IconName } from "@/theme/icons";
 
 export type { ButtonTone, ButtonVariant } from "@/components/button/styles";
 
@@ -18,7 +18,7 @@ interface SharedButtonProps {
 	tone?: ButtonTone;
 	fullWidth?: boolean;
 	className?: string;
-	/** A registered icon name (see components/theme/icons.ts). Sized automatically per variant. */
+	/** A registered icon name (see theme/icons.ts). Sized automatically per variant. */
 	icon?: IconName;
 	/** Which side of the text the icon renders on. Defaults to "start". */
 	iconPosition?: "start" | "end";
@@ -59,16 +59,18 @@ export function Button(props: ButtonProps) {
 	} = props;
 	const finalClassName = clsx(buttonVariants({ variant, tone, fullWidth }), className);
 	const iconElement = icon && <ButtonIcon icon={icon} variant={variant} />;
+	const shiftedChildren =
+		icon && variant === "action" ? <span className="inline-block translate-x-[0.625rem]">{children}</span> : children;
 	const content =
 		iconPosition === "end" ? (
 			<>
-				{children}
+				{shiftedChildren}
 				{iconElement}
 			</>
 		) : (
 			<>
 				{iconElement}
-				{children}
+				{shiftedChildren}
 			</>
 		);
 
@@ -77,12 +79,6 @@ export function Button(props: ButtonProps) {
 		// A plain <a> forces a full browser navigation - fine (required, even)
 		// for genuinely external links, but every internal one was silently
 		// doing a full page reload instead of a Next.js client-side transition:
-		// losing all React state, re-fetching everything, and along the way
-		// re-running the beforeInteractive theme-init script from scratch,
-		// which is what caused the light-mode flash on every "Add X" click and
-		// every sidebar nav click. Internal hrefs route through next/link
-		// instead; only genuinely external ones (target="_blank", or an
-		// absolute http(s) URL) still get a real <a>.
 		const isExternal = anchorProps.target === "_blank" || /^https?:\/\//.test(href);
 
 		if (disabled || isExternal) {

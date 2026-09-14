@@ -27,6 +27,9 @@ export const ACCOUNT_MODAL_PARAMS = {
 	edit: "accountEdit",
 } as const;
 
+// Same story - the SIM History link lives in the nav rail, present on every page.
+export const SIM_HISTORY_MODAL_PARAM = "simHistory";
+
 export type UserModalParam = (typeof USER_MODAL_PARAMS)[keyof typeof USER_MODAL_PARAMS];
 export type ThursdayModalParam = (typeof THURSDAY_MODAL_PARAMS)[keyof typeof THURSDAY_MODAL_PARAMS];
 export type SemesterModalParam = (typeof SEMESTER_MODAL_PARAMS)[keyof typeof SEMESTER_MODAL_PARAMS];

@@ -33,22 +33,30 @@ interface CollapseProps {
 	/** Item `value`s open by default. Every item can be open independently —
 	 * this always behaves like antd's Collapse did without `accordion` mode. */
 	defaultValue?: string[];
+	/** Controlled open values - omit for Collapse to manage its own (defaultValue still seeds it either way). Pass both this and onValueChange, or neither. */
+	value?: string[];
+	onValueChange?: (value: string[]) => void;
 	className?: string;
 }
 
-export function Collapse({ items, defaultValue, className }: CollapseProps) {
-	const [openValues, setOpenValues] = useState<Set<string>>(() => new Set(defaultValue));
+export function Collapse({ items, defaultValue, value, onValueChange, className }: CollapseProps) {
+	const [internalOpenValues, setInternalOpenValues] = useState<Set<string>>(() => new Set(defaultValue));
+	const isControlled = value !== undefined;
+	const openValues = isControlled ? new Set(value) : internalOpenValues;
 
-	function toggle(value: string) {
-		setOpenValues((current) => {
-			const next = new Set(current);
-			if (next.has(value)) {
-				next.delete(value);
-			} else {
-				next.add(value);
-			}
-			return next;
-		});
+	function toggle(itemValue: string) {
+		const next = new Set(openValues);
+		if (next.has(itemValue)) {
+			next.delete(itemValue);
+		} else {
+			next.add(itemValue);
+		}
+
+		if (isControlled) {
+			onValueChange?.(Array.from(next));
+		} else {
+			setInternalOpenValues(next);
+		}
 	}
 
 	return (

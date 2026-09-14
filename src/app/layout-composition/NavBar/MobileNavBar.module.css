@@ -40,11 +40,11 @@
 		width: 1.375rem;
 		height: 1.375rem;
 		background: currentColor;
-		mask-image: url("../../../components/theme/assets/menu/menu.svg");
+		mask-image: url("../../../theme/assets/menu/menu.svg");
 		mask-position: center;
 		mask-repeat: no-repeat;
 		mask-size: 1.375rem 1.375rem;
-		-webkit-mask-image: url("../../../components/theme/assets/menu/menu.svg");
+		-webkit-mask-image: url("../../../theme/assets/menu/menu.svg");
 		-webkit-mask-position: center;
 		-webkit-mask-repeat: no-repeat;
 		-webkit-mask-size: 1.375rem 1.375rem;
@@ -69,7 +69,7 @@
 		width: 80vw;
 		z-index: 60;
 		background: var(--app-surface);
-		border-right: 1px solid var(--app-border);
+		border-right: 1px solid var(--main-border);
 		transform: translateX(-100%);
 		transition: transform 220ms ease;
 		box-sizing: border-box;
@@ -101,7 +101,7 @@
 		grid-template-columns: 2.5rem 1fr 2.5rem;
 		align-items: center;
 		padding-block: 0.5rem;
-		border-bottom: 1px solid var(--app-border);
+		border-bottom: 1px solid var(--main-border);
 		margin-bottom: 0.5rem;
 	}
 
@@ -130,11 +130,11 @@
 		width: 1.375rem;
 		height: 1.375rem;
 		background: currentColor;
-		mask-image: url("../../../components/theme/assets/arrow/left.svg");
+		mask-image: url("../../../theme/assets/arrow/left.svg");
 		mask-position: center;
 		mask-repeat: no-repeat;
 		mask-size: 1.375rem 1.375rem;
-		-webkit-mask-image: url("../../../components/theme/assets/arrow/left.svg");
+		-webkit-mask-image: url("../../../theme/assets/arrow/left.svg");
 		-webkit-mask-position: center;
 		-webkit-mask-repeat: no-repeat;
 		-webkit-mask-size: 1.375rem 1.375rem;

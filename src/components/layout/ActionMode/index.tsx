@@ -80,15 +80,7 @@ export function ActionModeSurface({ children }: ActionModeSurfaceProps) {
 						className={styles.backdrop}
 						data-action-mode-backdrop
 						aria-hidden="true"
-						// pointer-events: auto (see the CSS) means this fixed,
-						// full-viewport div is what actually gets hit-tested under
-						// the cursor, so wheel scrolling over it needs to be
-						// forwarded by hand instead of relying on the browser to
-						// chain it to the real scroll container on its own. Which
-						// ancestor that is differs per page (usually <main>, but a
-						// page can make its own content div scroll instead - see
-						// [data-full-bleed-content] in app/layout.module.css), so
-						// this walks up looking for one instead of hardcoding it.
+						// pointer-events: auto makes this hit-tested over the real scroll container, so wheel scrolling needs forwarding by hand - walks up to find whichever ancestor actually scrolls.
 						onWheel={(event) => {
 							let node = event.currentTarget.parentElement;
 							while (node) {
@@ -107,9 +99,7 @@ export function ActionModeSurface({ children }: ActionModeSurfaceProps) {
 	);
 }
 
-// Narrowed to the native (non-anchor) branch of ButtonProps: every current
-// call site is a plain type="button", never an href link, and that union
-// otherwise doesn't play well with spreading unknown rest props onto <Button>.
+// Narrowed to the native (non-anchor) branch of ButtonProps - every call site is type="button", never an href link.
 interface ActionModeButtonProps extends Omit<NativeButtonProps, "onClick"> {
 	mode: ActionMode;
 	onClick?: NativeButtonProps["onClick"];
@@ -129,13 +119,7 @@ export function ActionModeButton({
 	const shellRef = useRef<HTMLSpanElement>(null);
 	const [portalRect, setPortalRect] = useState<DOMRect | null>(null);
 
-	// While active, this button needs to visually clear ActionMode's backdrop
-	// (z-[300]) - but it's nested inside [data-content-nav], which itself
-	// needs a lower z-index than that to stay correctly dimmed by the
-	// backdrop, and a descendant can never outrank where its own ancestor's
-	// stacking context sits, no matter its own z-index. Portaling a
-	// position-synced clone to document.body sidesteps that: the clone is a
-	// true sibling of the backdrop there, free to sit above it.
+	// While active, this button must clear ActionMode's backdrop, but its ancestor [data-content-nav] needs a lower z-index - portaling a position-synced clone to document.body sidesteps that.
 	useLayoutEffect(() => {
 		if (!isActive) {
 			setPortalRect(null);
@@ -165,17 +149,12 @@ export function ActionModeButton({
 	const buttonContent = (
 		<Button
 			{...props}
-			tone={tone ?? (isActive && isDelete ? "danger" : "default")}
+			tone={tone ?? (isDelete ? "danger" : "default")}
 			className={clsx(
 				className,
 				styles.actionButton,
-				// Signals "this button is destructive" on the ring regardless of
-				// whether delete-mode is currently toggled on - unlike `tone`
-				// above, which only turns the rest of the button red once active.
-				// Same value tone="danger" would already set once isActive is
-				// true, so this is a no-op then, not a conflict - just makes the
-				// warning visible on focus/press even before you've clicked in.
-				isDelete && "focus-visible:outline-[var(--tone-danger-border)]! active:outline-[var(--tone-danger-border)]!",
+				// Actually in delete mode (not just hovered) - keep the bg/border tint on, not just the text.
+				isActive && isDelete && "border-[var(--action-delete-border)]! bg-[var(--action-delete-bg)]!",
 			)}
 			aria-pressed={isActive}
 			onClick={(event) => {
@@ -203,8 +182,7 @@ export function ActionModeButton({
 				className={styles.actionButtonShell}
 				data-action-mode-button={mode}
 				data-action-mode-active={isActive ? "true" : undefined}
-				// Hidden rather than removed while portaled out, so it keeps its
-				// layout space in the manage bar and stays there to be re-measured.
+				// Hidden, not removed, while portaled out - keeps its layout space in the manage bar for re-measuring.
 				style={portalRect ? { visibility: "hidden" } : undefined}
 			>
 				{buttonContent}

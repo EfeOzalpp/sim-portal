@@ -27,7 +27,7 @@ function waitForImagesToLoad(timeoutMs = 5000) {
 	return Promise.race([allSettled, new Promise((resolve) => setTimeout(resolve, timeoutMs))]);
 }
 
-export default function PrintLink({ label = "Print" }: PrintLinkProps) {
+export default function PrintLink({ label = "Save as PDF" }: PrintLinkProps) {
 	const [isPreparing, setIsPreparing] = useState(false);
 
 	async function handlePrint() {
@@ -56,10 +56,11 @@ export default function PrintLink({ label = "Print" }: PrintLinkProps) {
 	return (
 		<Button
 			type="button"
-			variant="link"
+			variant="text"
 			icon="download/download.svg"
 			disabled={isPreparing}
 			onClick={handlePrint}
+			className="pl-2!"
 		>
 			{isPreparing ? "Preparing..." : label}
 		</Button>

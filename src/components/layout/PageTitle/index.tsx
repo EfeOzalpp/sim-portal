@@ -1,24 +1,28 @@
-const titleTextShadow = [
-	"0 0 0.65rem var(--brand-accent)",
-	"0 0 1.15rem var(--brand-accent)",
-	"0 0 1.85rem var(--brand-accent)",
-].join(", ");
+import type { ReactNode } from "react";
+import clsx from "clsx";
 
 interface PageTitleProps {
 	title: string;
-	filter?: string | null;
+	// The page's primary semester Select (variant="title"), after the title text - see select/styles.ts.
+	filterControl?: ReactNode;
+	// For a page with no NavContent (e.g. /semester): the grid-driven left inset other pages get for free from NavContent's own column doesn't apply here, so this lines the title up with the content below it directly.
+	contentClassName?: string;
+	// Width of the box wrapping filterControl - defaults to what the Select variant="title" pages need.
+	filterControlClassName?: string;
 }
 
-export default function PageTitle({ title, filter }: PageTitleProps) {
+export default function PageTitle({ title, filterControl, contentClassName, filterControlClassName = "w-72 min-w-0 shrink-0" }: PageTitleProps) {
 	return (
 		<div
-			className="flex items-center justify-center px-6 py-3 text-center text-[var(--app-title)] print:hidden"
-			style={{ background: "var(--accent-color, var(--brand-accent))" }}
+			className="items-center px-6 py-3 text-[var(--app-title)] print:hidden"
 			data-page-title
 		>
-			<h2 className="m-0 leading-tight" style={{ textShadow: titleTextShadow }}>
-				{filter ? `${title}, ${filter}` : title}
-			</h2>
+			<div data-page-title-content className={clsx("flex min-w-0 flex-wrap items-center gap-x-5 gap-y-1", contentClassName)}>
+				<h2 className="m-0 min-w-0 leading-tight">
+					{title}
+				</h2>
+				{filterControl && <div className={filterControlClassName}>{filterControl}</div>}
+			</div>
 		</div>
 	);
 }

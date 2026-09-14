@@ -11,12 +11,7 @@
 	background: var(--scrim);
 	border: 0;
 	cursor: default;
-	/* auto (not none): clicks on non-target content are already stopped by
-	   ActionModeSurface's capture-phase handler regardless of this, but that
-	   only covers clicks - without this, a dimmed card underneath could still
-	   show its own :hover state through the scrim. The portaled active
-	   button and highlighted targets sit above this in z-index, so normal
-	   hit-testing already routes hover/clicks to them directly either way. */
+	/* auto, not none - without this a dimmed card underneath could still show its own :hover state through the scrim. */
 	pointer-events: auto;
 }
 
@@ -43,6 +38,7 @@
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
+	gap: 0.375rem;
 	width: 100%;
 	min-width: 0;
 }
@@ -50,9 +46,10 @@
 .actionButtonIcon {
 	position: absolute;
 	left: 0;
+	top: 50%;
+	transform: translateY(-50%);
 	width: 1rem;
 	height: 1rem;
-	opacity: 0;
 	background: currentColor;
 	mask-position: center;
 	mask-repeat: no-repeat;
@@ -62,18 +59,14 @@
 	-webkit-mask-size: contain;
 }
 
-.actionButtonShell[data-action-mode-active="true"] .actionButtonIcon {
-	opacity: 1;
-}
-
 .editIcon {
-	mask-image: url("../../theme/assets/edit/edit.svg");
-	-webkit-mask-image: url("../../theme/assets/edit/edit.svg");
+	mask-image: url("../../../theme/assets/edit/edit.svg");
+	-webkit-mask-image: url("../../../theme/assets/edit/edit.svg");
 }
 
 .deleteIcon {
-	mask-image: url("../../theme/assets/delete/delete.svg");
-	-webkit-mask-image: url("../../theme/assets/delete/delete.svg");
+	mask-image: url("../../../theme/assets/delete/delete.svg");
+	-webkit-mask-image: url("../../../theme/assets/delete/delete.svg");
 }
 
 .actionButtonText {
@@ -81,17 +74,7 @@
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
-}
-
-@media (max-width: 768px) {
-	:global([data-mobile-content-bar]) .actionButtonShell[data-action-mode-active="true"] .actionButtonContent {
-		gap: 0.5rem;
-		justify-content: flex-start;
-	}
-
-	:global([data-mobile-content-bar]) .actionButtonShell[data-action-mode-active="true"] .actionButtonIcon {
-		display: none;
-	}
+	transform: translateX(0.625rem);
 }
 
 .surface[data-action-mode="edit-users"] :global([data-action-mode-target="user-card"]),
@@ -114,21 +97,7 @@
 	}
 }
 
-/* Continuous left-to-right sweep (not hover-only) for as long as the card
-   is a target, as a ::after painted in front of the card rather than a
-   background-image on the target itself: thursday-card and semester-card
-   each put their own opaque background on a NESTED child
-   (ProductionsCollapse's Collapse, SemesterCard's <article>), which fully
-   hides anything painted underneath it on the target element itself - a
-   background-image there is invisible, occluded by that child's own
-   background-color. Painting in front instead works the same way
-   regardless of where a card's own background actually lives.
-   mix-blend-mode: soft-light (not a flat translucent color) + z-index: 1,
-   well below each card's own z-[5] edit/delete icon overlay, so this reads
-   as a darker hue passing over the surface instead of a stripe that covers
-   the card's own text as it sweeps across it.
-   border-radius matches rounded-xl (0.75rem) - user-card, thursday-card,
-   and semester-card all render (or wrap) a rounded-xl surface. */
+/* Continuous sweep as a ::after painted in front of the card, not a background-image on the target - some targets put their own opaque bg on a nested child, which would occlude it. mix-blend-mode: soft-light so it reads as a darker hue, not a stripe over the text. */
 .surface[data-action-mode="edit-users"] :global([data-action-mode-target="user-card"])::after,
 .surface[data-action-mode="delete-users"] :global([data-action-mode-target="user-card"])::after,
 .surface[data-action-mode="edit-thursdays"] :global([data-action-mode-target="thursday-card"])::after,
@@ -142,12 +111,7 @@
 	pointer-events: none;
 	border-radius: 0.75rem;
 	mix-blend-mode: soft-light;
-	/* rgba(0,0,0,...), not var(--nav-button-bg-hover) - that token is a
-	   near-white highlight in light mode, so soft-light blended against it
-	   barely registered instead of reading as a darker hue passing over
-	   the card. Flat black at this alpha, blended with soft-light, darkens
-	   the surface clearly without going opaque enough to swallow the text
-	   under it (soft-light preserves detail rather than covering it). */
+	/* rgba(0,0,0,...), not var(--nav-button-bg-hover) - that token is near-white in light mode and barely registered blended with soft-light. */
 	background-image: linear-gradient(100deg, transparent 15%, rgba(0, 0, 0, 0.55) 50%, transparent 85%);
 	background-repeat: no-repeat;
 	background-size: 300% 100%;
@@ -162,12 +126,7 @@
 	z-index: 1;
 	pointer-events: none;
 	mix-blend-mode: soft-light;
-	/* rgba(0,0,0,...), not var(--nav-button-bg-hover) - that token is a
-	   near-white highlight in light mode, so soft-light blended against it
-	   barely registered instead of reading as a darker hue passing over
-	   the card. Flat black at this alpha, blended with soft-light, darkens
-	   the surface clearly without going opaque enough to swallow the text
-	   under it (soft-light preserves detail rather than covering it). */
+	/* rgba(0,0,0,...), not var(--nav-button-bg-hover) - that token is near-white in light mode and barely registered blended with soft-light. */
 	background-image: linear-gradient(100deg, transparent 15%, rgba(0, 0, 0, 0.55) 50%, transparent 85%);
 	background-repeat: no-repeat;
 	background-size: 300% 100%;
@@ -192,23 +151,23 @@
 }
 
 .surface[data-action-mode="delete-users"] :global([data-user-action-overlay]) {
-	--user-card-action-icon: url("../../theme/assets/delete/delete.svg");
+	--user-card-action-icon: url("../../../theme/assets/delete/delete.svg");
 }
 
 .surface[data-action-mode="edit-users"] :global([data-user-action-overlay]) {
-	--user-card-action-icon: url("../../theme/assets/edit/edit.svg");
+	--user-card-action-icon: url("../../../theme/assets/edit/edit.svg");
 }
 
 .surface[data-action-mode="edit-semesters"] :global([data-semester-action-overlay]) {
-	--semester-card-action-icon: url("../../theme/assets/edit/edit.svg");
+	--semester-card-action-icon: url("../../../theme/assets/edit/edit.svg");
 }
 
 .surface[data-action-mode="delete-thursdays"] :global([data-thursday-action-overlay]) {
-	--thursday-card-action-icon: url("../../theme/assets/delete/delete.svg");
+	--thursday-card-action-icon: url("../../../theme/assets/delete/delete.svg");
 }
 
 .surface[data-action-mode="delete-semesters"] :global([data-semester-action-overlay]) {
-	--semester-card-action-icon: url("../../theme/assets/delete/delete.svg");
+	--semester-card-action-icon: url("../../../theme/assets/delete/delete.svg");
 }
 
 .surface[data-action-mode="edit-users"] :global([data-action-mode-target="user-card"]:hover [data-user-action-overlay] > span),

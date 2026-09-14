@@ -34,7 +34,7 @@ export default function Welcome() {
 						</p>
 					</div>
 				) : (
-					<p className="m-0 leading-normal text-[var(--app-muted)]">
+					<p className="m-0 leading-normal text-[var(--app-label)]">
 						This is a private website for the students and faculty of{" "}
 						<b className="text-[var(--app-text)]">Studio for Interrelated Media (SIM)</b> department of the{" "}
 						<b className="text-[var(--app-text)]">Massachusetts College of Art and Design</b>. Please login with your MassArt account to continue.
@@ -42,7 +42,7 @@ export default function Welcome() {
 				)}
 				<LoginButton />
 				{!isAccessDenied && (
-					<p className="m-0 text-sm text-[var(--app-muted)]">
+					<p className="m-0 text-sm text-[var(--app-label)]">
 						<i>If you cannot login with your MassArt account, contact the SIM faculty for help.</i>
 					</p>
 				)}

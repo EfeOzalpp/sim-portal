@@ -58,18 +58,18 @@ export default function UserAccountLink({ user }: UserAccountLinkProps) {
 	return (
 		<Link
 			href={href}
-			className="box-border grid w-full min-w-0 grid-cols-[var(--nav-rail-content-width)_minmax(0,1fr)] items-center gap-2 overflow-hidden rounded-xl py-2 text-inherit no-underline hover:bg-[var(--app-subtle)]"
+			className="box-border grid w-full min-w-0 grid-cols-[var(--nav-rail-content-width)_minmax(0,1fr)] items-center gap-2 overflow-hidden rounded-xl py-2 text-inherit no-underline hover:bg-[var(--nav-hover-bg)]"
 			aria-label={`Open profile for ${displayName}`}
 		>
 			<span
-				className="is-body grid h-[var(--nav-account-avatar-size)] w-[var(--nav-account-avatar-size)] place-items-center justify-self-center rounded-full bg-[var(--app-theme)] leading-none text-white"
+				className="is-body grid h-[var(--nav-account-avatar-size)] w-[var(--nav-account-avatar-size)] place-items-center justify-self-center rounded-full bg-[var(--profile-indicator)] leading-none text-[var(--nav-active-text)]"
 				aria-hidden="true"
 			>
 				{getInitials(displayName)}
 			</span>
 			<span className={clsx(styles.identity, "flex max-w-[12rem] min-w-0 flex-col overflow-hidden opacity-100")}>
 				<span className="is-body overflow-hidden text-ellipsis whitespace-nowrap text-[var(--app-text)]">{displayName}</span>
-				<span className="is-body overflow-hidden text-ellipsis whitespace-nowrap text-[var(--app-muted)]">{formatRole(user.role)}</span>
+				<span className="is-body overflow-hidden text-ellipsis whitespace-nowrap text-[var(--app-label)]">{formatRole(user.role)}</span>
 			</span>
 		</Link>
 	);

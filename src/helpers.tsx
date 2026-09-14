@@ -57,25 +57,31 @@ export function normalizeThursdayName(name?: string | null): string {
 
 // Common wrapper for form submissions to handle Next.js redirects and standardized action results
 export async function handleFormAction<T>(
-	actionPromise: () => Promise<ActionResult<T> | T | void>, 
-	setError: (error: string | null) => void, 
-	defaultErrorMessage: string = "An error occurred."
+	actionPromise: () => Promise<ActionResult<T> | T | void>,
+	setError: (error: string | null) => void,
+	defaultErrorMessage: string = "An error occurred.",
+	// A successful submit here means the server action redirected (see the
+	// NEXT_REDIRECT branch below) - there's no normal return value to react
+	// to, so a caller that wants to fire a toast on success passes it here
+	// instead, called right before the redirect error is forwarded.
+	onRedirectSuccess?: () => void,
 ): Promise<ActionResult<T> | T | void> {
 	try {
 		setError(null);
 		const result = await actionPromise();
-		
+
 		if (result && typeof result === "object" && "success" in result && result.success === false) {
 			setError(result.error || defaultErrorMessage);
 			return result;
 		}
-		
+
 		return result;
 	} catch (err: unknown) {
 		// Forward Next.js redirect errors so they can be handled by the framework
 		if (err instanceof Error) {
 			const errorWithDigest = err as Error & { digest?: string };
 			if (err.message === "NEXT_REDIRECT" || (errorWithDigest.digest && typeof errorWithDigest.digest === "string" && errorWithDigest.digest.includes("NEXT_REDIRECT"))) {
+				onRedirectSuccess?.();
 				throw err;
 			}
 			setError(err.message || defaultErrorMessage);

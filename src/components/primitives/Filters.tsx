@@ -4,14 +4,14 @@ import { useURLFilter } from "@/hooks/useURLFilter";
 import { Input, InputProps } from "@/components/input";
 import { Select, SingleSelectProps } from "@/components/select";
 import { inputIconClassName } from "@/components/input/styles";
-import { MaskIcon } from "@/components/theme/MaskIcon";
+import { MaskIcon } from "@/theme/MaskIcon";
 import { LoadingOutlined } from "@ant-design/icons";
 
 interface FilterInputProps extends Omit<InputProps, "value" | "onChange"> {
 	query?: string;
 }
 
-export function FilterInput({ query = "search", placeholder = "Search", className, ...props }: FilterInputProps) {
+export function FilterInput({ query = "search", placeholder = "Search", className, allowClear = true, suffix, ...props }: FilterInputProps) {
 	const { value, isPending, handleChange } = useURLFilter(query, 500);
 
 	return (
@@ -21,9 +21,9 @@ export function FilterInput({ query = "search", placeholder = "Search", classNam
 			value={value || ""}
 			placeholder={placeholder}
 			onChange={(e) => handleChange(e.target.value)}
-			allowClear
+			allowClear={allowClear}
 			prefix={<MaskIcon icon="search/search.svg" className={inputIconClassName} />}
-			suffix={isPending ? <LoadingOutlined spin /> : null}
+			suffix={suffix !== undefined ? suffix : isPending ? <LoadingOutlined spin /> : null}
 		/>
 	);
 }

@@ -4,9 +4,7 @@
 	display: none;
 }
 
-/* Never part of the printed output, regardless of what the max-width query
-   below evaluates to under print (browsers are inconsistent about what
-   "viewport width" means for a printed page). */
+/* Never part of the printed output, regardless of the max-width query below (print viewport width is inconsistent across browsers). */
 @media print {
 	.root {
 		display: none !important;
@@ -22,7 +20,7 @@
 		z-index: 40;
 		align-self: start;
 		background: var(--app-surface);
-		border-bottom: 1px solid var(--app-border);
+		border-bottom: 1px solid var(--main-border);
 		box-sizing: border-box;
 		width: 100%;
 	}
@@ -46,7 +44,7 @@
 		gap: 0.5rem;
 		padding: 0.5rem 1rem;
 		border: none;
-		border-right: 1px solid var(--app-border);
+		border-right: 1px solid var(--main-border);
 		background: transparent;
 		cursor: pointer;
 		letter-spacing: 0.04em;
@@ -83,13 +81,13 @@
 	}
 
 	.searchIcon {
-		mask-image: url("../../theme/assets/search/search.svg");
-		-webkit-mask-image: url("../../theme/assets/search/search.svg");
+		mask-image: url("../../../theme/assets/search/search.svg");
+		-webkit-mask-image: url("../../../theme/assets/search/search.svg");
 	}
 
 	.manageIcon {
-		mask-image: url("../../theme/assets/edit/edit.svg");
-		-webkit-mask-image: url("../../theme/assets/edit/edit.svg");
+		mask-image: url("../../../theme/assets/edit/edit.svg");
+		-webkit-mask-image: url("../../../theme/assets/edit/edit.svg");
 	}
 
 	/* Manage popup: fixed, drops below the toggle bar (same pattern as filter popup) */
@@ -97,8 +95,8 @@
 		display: flex;
 		flex-direction: column;
 		background: var(--app-surface);
-		border-top: 1px solid var(--app-border);
-		border-bottom: 2px solid var(--app-border);
+		border-top: 1px solid var(--main-border);
+		border-bottom: 2px solid var(--main-border);
 		box-sizing: border-box;
 	}
 
@@ -143,10 +141,10 @@
 		width: 100%;
 		padding: 0.5rem;
 		border: none;
-		border-top: 1px solid var(--app-border);
+		border-top: 1px solid var(--main-border);
 		background: transparent;
 		cursor: pointer;
-		color: var(--app-muted);
+		color: var(--app-label);
 	}
 
 	.closeBarBtn:hover {
@@ -159,11 +157,11 @@
 		width: 1.375rem;
 		height: 1.375rem;
 		background: currentColor;
-		mask-image: url("../../theme/assets/arrow/up.svg");
+		mask-image: url("../../../theme/assets/arrow/up.svg");
 		mask-position: center;
 		mask-repeat: no-repeat;
 		mask-size: 1.375rem 1.375rem;
-		-webkit-mask-image: url("../../theme/assets/arrow/up.svg");
+		-webkit-mask-image: url("../../../theme/assets/arrow/up.svg");
 		-webkit-mask-position: center;
 		-webkit-mask-repeat: no-repeat;
 		-webkit-mask-size: 1.375rem 1.375rem;
@@ -173,8 +171,8 @@
 		display: flex;
 		flex-direction: column;
 		background: var(--app-surface);
-		border-top: 1px solid var(--app-border);
-		border-bottom: 2px solid var(--app-border);
+		border-top: 1px solid var(--main-border);
+		border-bottom: 2px solid var(--main-border);
 		box-sizing: border-box;
 	}
 

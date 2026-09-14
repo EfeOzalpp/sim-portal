@@ -42,14 +42,13 @@ export default function NavContent({
 }: NavContentProps) {
 	const hasMobile = !!(filterContent || mobileManageContent);
 
-	// Build the desktop sidebar end content from structured props when provided,
-	// otherwise fall back to the free-form `end` prop for backward compat.
+	// Structured props when provided, otherwise the free-form `end` prop for backward compat.
 	const desktopEnd = (filterContent || manageContent || printContent) ? (
 		<>
 			{filterContent && (
 				<div className={clsx(styles.navSection, "px-4")}>
 					<div className="flex flex-col gap-2">
-						{filterLabel && <span className="ui-label">{filterLabel}</span>}
+						{filterLabel && <span className="ui-label pl-1">{filterLabel}</span>}
 						<div className={styles.navSectionControls}>{filterContent}</div>
 					</div>
 				</div>
@@ -57,7 +56,7 @@ export default function NavContent({
 			{manageContent && (
 				<div className={clsx(styles.navSection, "px-4")}>
 					<div className="flex flex-col gap-2">
-						<span className="ui-label">{manageLabel}</span>
+						<span className="ui-label pl-1">{manageLabel}</span>
 						<div className={clsx(styles.navSectionControls, styles.navSectionControlsManage)}>{manageContent}</div>
 					</div>
 				</div>
@@ -65,7 +64,7 @@ export default function NavContent({
 			{printContent && (
 				<div className={clsx(styles.navSection, "px-4")}>
 					<div className="flex flex-col gap-2">
-						<span className="ui-label">{printLabel}</span>
+						<span className="ui-label pl-1">{printLabel}</span>
 						<div className={styles.navSectionControls}>{printContent}</div>
 					</div>
 				</div>
