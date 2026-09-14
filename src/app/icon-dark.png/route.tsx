@@ -19,7 +19,7 @@ export async function GET() {
 					display: "flex",
 					alignItems: "center",
 					justifyContent: "center",
-					color: "#acd1aa",
+					color: "#ffffff",
 					fontSize: 44,
 					top: "-3px",
 					fontWeight: 700,

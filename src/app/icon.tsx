@@ -5,10 +5,28 @@ import { ImageResponse } from "next/og";
 // background: browsers/search engines apply their own crop (Google's SERP
 // UI circles it, iOS squircles it, etc.) - baking in our own circle here
 // would double-crop against theirs.
-export const size = { width: 16, height: 16 };
-export const contentType = "image/png";
+//
+// Multiple sizes, not just one - a single 16x16 raster gets scaled by the
+// browser for every other pixel size it actually needs (higher-DPI screens,
+// browser zoom, Windows taskbar pinning, etc.), and scaling a bitmap that
+// small up or down reads as the icon's size/crispness visibly shifting as
+// zoom changes. Rendering each size natively avoids any of that scaling.
+const iconSizes = [16, 32, 48];
 
-export default function Icon() {
+export function generateImageMetadata() {
+	return iconSizes.map((size) => ({
+		id: String(size),
+		size: { width: size, height: size },
+		contentType: "image/png",
+	}));
+}
+
+export default function Icon({ id }: { id: string }) {
+	const size = Number(id);
+	// Same proportions as the original 16px version (44px glyph, -3px nudge),
+	// scaled up so the glyph reads the same way at every size.
+	const scale = size / 16;
+
 	return new ImageResponse(
 		(
 			<div
@@ -18,9 +36,9 @@ export default function Icon() {
 					display: "flex",
 					alignItems: "center",
 					justifyContent: "center",
-					color: "#7dbb7a",
-					fontSize: 44,
-					top: "-3px",
+					color: "#000000",
+					fontSize: 44 * scale,
+					top: -3 * scale,
 					fontWeight: 700,
 					fontFamily: "sans-serif",
 					letterSpacing: "-0.03em",
@@ -30,6 +48,6 @@ export default function Icon() {
 				s
 			</div>
 		),
-		{ ...size },
+		{ width: size, height: size },
 	);
 }
