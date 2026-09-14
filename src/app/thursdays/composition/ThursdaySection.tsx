@@ -4,6 +4,7 @@
 import { Input } from "@/components/input";
 import { DatePicker } from "@/components/datepicker";
 import { Select } from "@/components/select";
+import { FieldError } from "@/components/field-error";
 
 // Composition
 import { fieldStackClassName } from "@/app/thursdays/composition/thursdayFormClasses";
@@ -54,7 +55,7 @@ export default function ThursdaySection({
                   status={fieldState.error ? "error" : ""}
                 />
                 {fieldState.error && (
-                  <span className="ui-note">{fieldState.error.message}</span>
+                  <FieldError>{fieldState.error.message}</FieldError>
                 )}
               </>
             )}
@@ -82,7 +83,7 @@ export default function ThursdaySection({
                 status={fieldState.error ? "error" : ""}
               />
               {fieldState.error && (
-                <span className="ui-note">{fieldState.error.message}</span>
+                <FieldError>{fieldState.error.message}</FieldError>
               )}
             </>
           )}

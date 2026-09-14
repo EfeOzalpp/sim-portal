@@ -7,10 +7,10 @@ import {
 	inputIconClassName,
 	inputWrapperVariants,
 } from "@/components/input/styles";
-import { MaskIcon } from "@/components/theme/MaskIcon";
+import { MaskIcon } from "@/theme/MaskIcon";
 
 interface SharedInputProps {
-	status?: "error" | "";
+	status?: "error" | "warning" | "";
 	className?: string;
 }
 
@@ -46,7 +46,7 @@ export function Input({
 	ref,
 	...props
 }: InputProps) {
-	const error = status === "error";
+	const cvaStatus = status || "none";
 	const hasAffix = !!(prefix || suffix || allowClear);
 	const inputRef = useRef<HTMLInputElement>(null);
 
@@ -74,13 +74,13 @@ export function Input({
 				ref={mergeRefs(inputRef, ref)}
 				value={value}
 				onChange={onChange}
-				className={clsx(inputFieldVariants({ error }), className)}
+				className={clsx(inputFieldVariants({ status: cvaStatus }), className)}
 			/>
 		);
 	}
 
 	return (
-		<span className={inputWrapperVariants({ error })}>
+		<span className={inputWrapperVariants({ status: cvaStatus })}>
 			{prefix}
 			<input
 				{...props}
@@ -111,13 +111,11 @@ export interface TextAreaProps
 }
 
 export function TextArea({ status, className, ref, ...props }: TextAreaProps) {
-	const error = status === "error";
-
 	return (
 		<textarea
 			{...props}
 			ref={ref}
-			className={clsx(inputFieldVariants({ error }), "resize-y", className)}
+			className={clsx(inputFieldVariants({ status: status || "none" }), "resize-y", className)}
 		/>
 	);
 }

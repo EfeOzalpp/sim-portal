@@ -1,7 +1,7 @@
 "use client";
 
 // React & Next.js
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 // Actions
 import { UserInput } from "@/actions/schemas";
@@ -12,8 +12,11 @@ import { Alert } from "@/components/alert";
 import { Select } from "@/components/select";
 import { Button } from "@/components/button";
 import ModalPopup from "@/components/modal";
+import { useModalCloseGuard } from "@/components/modal/CloseGuard";
+import { FieldError } from "@/components/field-error";
 import ConfirmDelete from "@/components/confirm-delete";
 import { confirmDeleteDialogClassName } from "@/components/confirm-delete/styles";
+import { useToast } from "@/components/toast";
 
 // Composition
 import { transformUserFromAPI } from "@/app/users/composition/user.transformers";
@@ -42,14 +45,6 @@ function getSemesterNameOptions(currentValues: string[] = []) {
   return [...extraOptions, ...options];
 }
 
-function getSemesterNameIndex(value?: string) {
-  const match = value?.match(/^(SP|FA)(\d{2})$/i);
-  if (!match) return 0;
-
-  const termOffset = match[1].toUpperCase() === "FA" ? 1 : 0;
-  return Number(match[2]) * 2 + termOffset;
-}
-
 // Prefer whichever semester actually matches today over semesters[0]
 // (newest by code) - production keeps future semesters pre-created for
 // planning ahead, and those would otherwise always outrank the real
@@ -63,37 +58,6 @@ function getDefaultSemester(semesters: any[]) {
     id: currentSemester?.id ?? semesters[0]?.id ?? null,
     code: formatSemesterCode(currentSemester?.name) || currentCode,
   };
-}
-
-function getRangeEndpoints(selectedCodes: string[] = []) {
-  const selectedIndexes = selectedCodes
-    .map((code) => getSemesterNameIndex(code))
-    .filter((index) => index >= 0);
-
-  if (selectedIndexes.length === 0) {
-    return { startCode: undefined, endCode: undefined };
-  }
-
-  const options = getSemesterNameOptions();
-  return {
-    startCode: options[Math.min(...selectedIndexes)]?.value,
-    endCode: options[Math.max(...selectedIndexes)]?.value,
-  };
-}
-
-function getSemesterCodesInRange(startCode: string | undefined, endCode: string | undefined) {
-  if (!startCode && !endCode) return [];
-  if (!startCode) return [endCode!];
-  if (!endCode) return [startCode];
-
-  const startIndex = getSemesterNameIndex(startCode);
-  const endIndex = getSemesterNameIndex(endCode);
-  const firstIndex = Math.min(startIndex, endIndex);
-  const lastIndex = Math.max(startIndex, endIndex);
-
-  return getSemesterNameOptions()
-    .slice(firstIndex, lastIndex + 1)
-    .map((option) => option.value);
 }
 
 interface UserFormProps {
@@ -128,22 +92,32 @@ export default function UserForm({
   const {
     control,
     handleSubmit,
-    formState: { isSubmitting },
+    trigger,
+    formState: { isSubmitting, isDirty, isValid },
   } = useForm<UserInput>({
     defaultValues: initialValues as any,
+    mode: "onChange",
   });
+
+  useEffect(() => {
+    trigger();
+  }, [trigger]);
 
   const [error, setError] = useState<string | null>(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const semesterOptions = getSemesterNameOptions(initialValues.semesterCodes);
+  const toast = useToast();
 
   const handleFormSubmit = async (data: UserInput) => {
     await handleFormAction(
       () => onSubmit(data),
       setError,
       "An error occurred while saving the user.",
+      () => toast.success(user ? "Changes saved" : "User created"),
     );
   };
+
+  useModalCloseGuard(isDirty && !isSubmitting, isValid, () => handleSubmit(handleFormSubmit)());
 
   return (
     <form onSubmit={handleSubmit(handleFormSubmit)}>
@@ -158,9 +132,9 @@ export default function UserForm({
           />
         )}
 
-        <div className="flex w-full flex-col gap-4">
+        <div className="flex w-full flex-col gap-6">
           <div>
-            <span className="ui-label mb-2 block">
+            <span className="ui-label mb-2 block pl-1">
               Photo
             </span>
             <Controller
@@ -173,56 +147,55 @@ export default function UserForm({
                 />
               )}
             />
-            <span className="ui-note mt-1 block">
+            <span className="ui-note mt-3 mb-2 block">
               {isCurrentUserAdmin
                 ? <>You can upload high resolution photos up to 8MB.<br />They will be automatically downsized.</>
                 : "Contact SIM faculty to change your photo."}
             </span>
           </div>
 
+          <div className="grid grid-cols-2 gap-4 max-[600px]:grid-cols-1">
+            <div>
+              <span className="ui-label mb-2 block pl-1">
+                Full Name *
+              </span>
+              <Controller
+                control={control}
+                name="name"
+                rules={{ required: "Name is required" }}
+                render={({ field, fieldState }) => (
+                  <>
+                    <Input
+                      {...field}
+                      placeholder="Enter name"
+                      status={fieldState.error ? "error" : ""}
+                    />
+                    {fieldState.error && (
+                      <FieldError>{fieldState.error.message}</FieldError>
+                    )}
+                  </>
+                )}
+              />
+            </div>
+
+            <div>
+              <span className="ui-label mb-2 block pl-1">
+                Pronouns
+              </span>
+              <Controller
+                control={control}
+                name="pronouns"
+                render={({ field }) => (
+                  <Input {...field} placeholder="E.g. they/them" />
+                )}
+              />
+            </div>
+          </div>
+
           {isCurrentUserAdmin && (
             <div className="grid w-full grid-cols-[minmax(0,1fr)_minmax(0,1fr)] gap-4 max-[600px]:grid-cols-1">
               <div className="min-w-0">
-                <span className="ui-label mb-2 block">
-                  Semesters Enrolled
-                </span>
-                <Controller
-                  control={control}
-                  name="semesterCodes"
-                  render={({ field }) => {
-                    const { startCode, endCode } = getRangeEndpoints(field.value);
-
-                    return (
-                      <div className="grid w-full grid-cols-[minmax(0,1fr)_min-content_minmax(0,1fr)] items-center gap-x-4">
-                        <Select
-                          inModal
-                          value={startCode}
-                          placeholder="From"
-                          searchable
-                          options={semesterOptions}
-                          onChange={(value) => {
-                            field.onChange(getSemesterCodesInRange(value, endCode));
-                          }}
-                        />
-                        <span className="justify-self-center whitespace-nowrap text-[0.9rem] leading-none font-bold text-[var(--app-muted)]">to</span>
-                        <Select
-                          inModal
-                          value={endCode}
-                          placeholder="To"
-                          searchable
-                          options={semesterOptions}
-                          onChange={(value) => {
-                            field.onChange(getSemesterCodesInRange(startCode, value));
-                          }}
-                        />
-                      </div>
-                    );
-                  }}
-                />
-              </div>
-
-              <div className="min-w-0">
-                <span className="ui-label mb-2 block">Role</span>
+                <span className="ui-label mb-2 block pl-1">Role</span>
                 <Controller
                   control={control}
                   name="role"
@@ -239,49 +212,39 @@ export default function UserForm({
                   )}
                 />
               </div>
+
+              <div className="min-w-0">
+                <span className="ui-label mb-2 block pl-1">
+                  Semesters Enrolled
+                </span>
+                <Controller
+                  control={control}
+                  name="semesterCodes"
+                  render={({ field }) => (
+                    // A real multi-select, not a From/To range - a contiguous
+                    // range can't represent a student taking a semester off
+                    // and coming back, since it always fills in everything
+                    // between the two endpoints.
+                    <Select
+                      inModal
+                      mode="multiple"
+                      value={field.value ?? []}
+                      searchable
+                      placeholder="Select semesters"
+                      options={semesterOptions}
+                      onChange={(value) => field.onChange(value)}
+                      scrollToValueOnOpen={getCurrentSemesterCode()}
+                    />
+                  )}
+                />
+              </div>
             </div>
           )}
         </div>
 
         <div className="grid grid-cols-2 gap-4 max-[600px]:w-full max-[600px]:grid-cols-1">
           <div>
-            <span className="ui-label mb-2 block">
-              Full Name *
-            </span>
-            <Controller
-              control={control}
-              name="name"
-              rules={{ required: "Name is required" }}
-              render={({ field, fieldState }) => (
-                <>
-                  <Input
-                    {...field}
-                    placeholder="Enter name"
-                    status={fieldState.error ? "error" : ""}
-                  />
-                  {fieldState.error && (
-                    <span className="text-[var(--tone-danger-text)]">{fieldState.error.message}</span>
-                  )}
-                </>
-              )}
-            />
-          </div>
-
-          <div>
-            <span className="ui-label mb-2 block">
-              Pronouns
-            </span>
-            <Controller
-              control={control}
-              name="pronouns"
-              render={({ field }) => (
-                <Input {...field} placeholder="e.g. they/them" />
-              )}
-            />
-          </div>
-
-          <div>
-            <span className="ui-label mb-2 block">
+            <span className="ui-label mb-2 block pl-1">
               Email Address *
             </span>
             <Controller
@@ -300,7 +263,7 @@ export default function UserForm({
                     {...field}
                     placeholder="email@example.com"
                     disabled={!isCurrentUserAdmin && user}
-                    status={fieldState.error ? "error" : ""}
+                    status={fieldState.error ? (fieldState.error.type === "pattern" ? "warning" : "error") : ""}
                   />
                   {!isCurrentUserAdmin && user && (
                     <span className="ui-note mt-1 block">
@@ -308,7 +271,9 @@ export default function UserForm({
                     </span>
                   )}
                   {fieldState.error && (
-                    <span className="text-[var(--tone-danger-text)]">{fieldState.error.message}</span>
+                    <FieldError tone={fieldState.error.type === "pattern" ? "warning" : "error"}>
+                      {fieldState.error.message}
+                    </FieldError>
                   )}
                 </>
               )}
@@ -316,7 +281,7 @@ export default function UserForm({
           </div>
 
           <div>
-            <span className="ui-label mb-2 block">
+            <span className="ui-label mb-2 block pl-1">
               Contact & Links
             </span>
             <Controller
@@ -335,7 +300,7 @@ export default function UserForm({
         </div>
 
         <div className="w-full">
-          <span className="ui-label mb-2 block">
+          <span className="ui-label mb-2 block pl-1">
             About
           </span>
           <Controller

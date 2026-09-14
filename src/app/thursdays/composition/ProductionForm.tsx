@@ -10,6 +10,7 @@ import { BasicUser } from "@/actions/schemas";
 import { Input } from "@/components/input";
 import { Select } from "@/components/select";
 import { Button } from "@/components/button";
+import { FieldError } from "@/components/field-error";
 
 // Composition
 import PresentationsField from "@/app/thursdays/composition/PresentationsField";
@@ -79,7 +80,7 @@ export default function ProductionForm({
                   status={fieldState.error ? "error" : ""}
                 />
                 {fieldState.error && (
-                  <span className="ui-note">{fieldState.error.message}</span>
+                  <FieldError>{fieldState.error.message}</FieldError>
                 )}
               </>
             )}
@@ -102,7 +103,7 @@ export default function ProductionForm({
                   status={fieldState.error ? "error" : ""}
                 />
                 {fieldState.error && (
-                  <span className="ui-note">{fieldState.error.message}</span>
+                  <FieldError>{fieldState.error.message}</FieldError>
                 )}
               </>
             )}

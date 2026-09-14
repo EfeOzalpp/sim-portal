@@ -4,47 +4,50 @@ import { cva } from "class-variance-authority";
 const fieldBase = [
 	"input-field w-full min-w-0 rounded-xl bg-[var(--input-bg)] text-[var(--input-text)]",
 	"border border-[var(--input-border)]",
-	"px-2 py-[0.325rem]",
+	"px-2 py-2.5",
 	"font-sans text-base",
 	"placeholder:text-[var(--input-placeholder)]",
 	"transition",
 	"hover:border-[var(--input-border-hover)] hover:bg-[var(--input-bg-hover)] hover:shadow-[var(--input-hover-shadow)]",
 	"focus:border-[var(--input-border-hover)] focus:shadow-[var(--input-hover-shadow)]",
-	"focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--app-theme)]",
+	// Blue, not green - Input never appears in the nav rail, so there's no nav-green case to preserve here.
+	"focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)]",
 	"disabled:cursor-not-allowed disabled:opacity-60",
 ];
 
-// A standalone input/textarea with no prefix/suffix content; `error` swaps in the danger-tone border.
+// A standalone input/textarea with no prefix/suffix content; `status` swaps in the danger/warning-tone border.
 export const inputFieldVariants = cva(fieldBase, {
 	variants: {
-		error: {
-			true: "border-[var(--input-error-border)]",
-			false: "",
+		status: {
+			error: "border-[var(--input-error-border)]",
+			warning: "border-[var(--tone-warning-border)]",
+			none: "",
 		},
 	},
-	defaultVariants: { error: false },
+	defaultVariants: { status: "none" },
 });
 
-// The wrapper around an input that has a prefix/suffix (e.g. a search icon), styled to read as one field; `error` swaps in the danger-tone border.
+// The wrapper around an input that has a prefix/suffix (e.g. a search icon), styled to read as one field; `status` swaps in the danger/warning-tone border.
 export const inputWrapperVariants = cva(
 	[
 		"input-affix-wrapper inline-flex w-full min-w-0 items-center gap-2",
 		"rounded-xl bg-[var(--input-bg)] text-[var(--input-text)]",
 		"border border-[var(--input-border)]",
-		"px-3 py-2",
+		"px-3 py-2.5",
 		"transition",
 		"hover:border-[var(--input-border-hover)] hover:bg-[var(--input-bg-hover)] hover:shadow-[var(--input-hover-shadow)]",
 		"focus-within:border-[var(--input-border-hover)] focus-within:shadow-[var(--input-hover-shadow)]",
-		"focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-[var(--app-theme)]",
+		"focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-[var(--focus-ring)]",
 	],
 	{
 		variants: {
-			error: {
-				true: "border-[var(--input-error-border)]",
-				false: "",
+			status: {
+				error: "border-[var(--input-error-border)]",
+				warning: "border-[var(--tone-warning-border)]",
+				none: "",
 			},
 		},
-		defaultVariants: { error: false },
+		defaultVariants: { status: "none" },
 	},
 );
 
@@ -61,8 +64,7 @@ export const inputClearButtonClassName = [
 	"border-none bg-transparent p-0 text-[var(--input-icon)] hover:text-[var(--input-text)]",
 ].join(" ");
 
-// Sizing/color only — pair with <MaskIcon> for the actual icon (see
-// components/theme/icons.ts for why a dynamic icon can't be a Tailwind class).
+// Sizing/color only - pair with <MaskIcon> for the actual icon.
 export const inputIconClassName = [
 	"h-5 w-5 flex-none bg-[var(--input-icon)]",
 	"[mask-position:center] [mask-repeat:no-repeat] [mask-size:contain]",

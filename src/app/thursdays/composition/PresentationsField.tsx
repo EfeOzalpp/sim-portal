@@ -13,6 +13,7 @@ import { Collapse } from "@/components/collapse";
 import { Button } from "@/components/button";
 import ConfirmDelete from "@/components/confirm-delete";
 import ModalPopup from "@/components/modal";
+import { FieldError } from "@/components/field-error";
 import { confirmDeleteDialogClassName } from "@/components/confirm-delete/styles";
 
 // Composition
@@ -96,7 +97,7 @@ export default function PresentationsField({
       </div>
 
       {fields.length === 0 ? (
-        <p className="my-6 text-center text-sm leading-normal text-[var(--app-muted)] italic">
+        <p className="my-6 text-center text-sm leading-normal text-[var(--app-label)] italic">
           No presentations yet.
         </p>
       ) : (
@@ -156,7 +157,7 @@ export default function PresentationsField({
                             status={fieldState.error ? "error" : ""}
                           />
                           {fieldState.error && (
-                            <span className="ui-note">{fieldState.error.message}</span>
+                            <FieldError>{fieldState.error.message}</FieldError>
                           )}
                         </>
                       )}

@@ -1,7 +1,7 @@
 "use client";
 
 // React & Next.js
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 // Actions
 import {
@@ -14,6 +14,8 @@ import { ActionResult } from "@/actions/utilities";
 // Components
 import { Alert } from "@/components/alert";
 import { Button } from "@/components/button";
+import { useModalCloseGuard } from "@/components/modal/CloseGuard";
+import { useToast } from "@/components/toast";
 
 // Composition
 import {
@@ -69,12 +71,19 @@ export default function ThursdayForm({
   const {
     control,
     handleSubmit,
-    formState: { isSubmitting },
+    trigger,
+    formState: { isSubmitting, isDirty, isValid },
   } = useForm<ThursdayFormValues>({
     defaultValues: initialValues as any,
+    mode: "onChange",
   });
 
+  useEffect(() => {
+    trigger();
+  }, [trigger]);
+
   const [error, setError] = useState<string | null>(null);
+  const toast = useToast();
 
   const handleFormSubmit = async (data: ThursdayFormValues) => {
     const payload = transformThursdayPayload(data);
@@ -82,8 +91,11 @@ export default function ThursdayForm({
       () => onSubmit(payload),
       setError,
       "An error occurred while saving Day.",
+      () => toast.success(defaultValues ? "Changes saved" : "Day created"),
     );
   };
+
+  useModalCloseGuard(isDirty && !isSubmitting, isValid, () => handleSubmit(handleFormSubmit)());
 
   return (
     <form onSubmit={handleSubmit(handleFormSubmit)} className="flex h-full flex-col">
