@@ -184,6 +184,19 @@ export async function getFilteredUsers(rawFilters: any) {
 			semester: Array.isArray(validatedFilters.semester) ? validatedFilters.semester[0] : validatedFilters.semester,
 		};
 
+		// role: kept as a list (not collapsed to one value like the others above) -
+		// it's a checkbox popover, not a single-value filter. Values are
+		// validated against ROLES rather than trusted as-is, same as any other
+		// raw querystring input. An empty list means unfiltered.
+		const rawRoles = Array.isArray(validatedFilters.role)
+			? validatedFilters.role
+			: validatedFilters.role
+				? [validatedFilters.role]
+				: [];
+		const validRoles = new Set<string>(Object.values(ROLES));
+		const roleValues = rawRoles.filter((role): role is string => validRoles.has(role));
+		const roleQuery: Prisma.UserWhereInput = roleValues.length > 0 ? { role: { in: roleValues as any } } : {};
+
 		let semesterQuery: Prisma.UserWhereInput = {};
 
 		if (filters.semesterId && !isAllFilter(filters.semesterId)) {
@@ -211,7 +224,7 @@ export async function getFilteredUsers(rawFilters: any) {
 		return await prisma.user.findMany({
 			where: {
 				OR: [{ name: { contains: userSearch, mode: "insensitive" } }],
-				AND: semesterQuery,
+				AND: { ...semesterQuery, ...roleQuery },
 			},
 			orderBy: {
 				name: "asc",
@@ -221,6 +234,7 @@ export async function getFilteredUsers(rawFilters: any) {
 				name: true,
 				image: true,
 				role: true,
+				pronouns: true,
 			},
 		});
 	});

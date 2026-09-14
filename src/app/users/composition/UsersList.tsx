@@ -9,7 +9,7 @@ export default async function UsersList({ filters }: { filters: any }) {
 	const users = result.success ? result.data : [];
 
 	if (users.length < 1) {
-		return <div className="p-4 text-[var(--app-muted)]">There are no results for User {filters?.user}</div>;
+		return <div className="p-4 text-[var(--app-label)]">There are no results for User {filters?.user}</div>;
 	}
 
 	return <UserCardGrid users={users} />;

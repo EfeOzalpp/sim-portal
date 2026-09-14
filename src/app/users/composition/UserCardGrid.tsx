@@ -16,20 +16,18 @@ import { USER_MODAL_PARAMS, type UserModalParam } from "@/constants/modal-params
 import type { User } from "@prisma/client";
 
 interface UserCardGridProps {
-	users: Pick<User, "id" | "name" | "image" | "role">[];
+	users: Pick<User, "id" | "name" | "image" | "role" | "pronouns">[];
 }
 
 const BATCH_SIZE = 30;
 
-// Grid: auto-filling columns, centered when they don't fill a row. Every
-// direct child (each UserCard) gets its sizing/border/background pushed down
-// from here instead of repeating it per-card. print: overrides force a fixed
-// 10-column printable roster in physical units, white regardless of theme.
+// Grid: auto-filling columns, centered when they don't fill a row. [&>*]:rounded-lg/border below target Block's own wrapper <div>, not UserCard's <a> - it always renders one. print: forces a fixed 10-column printable roster.
 const gridClassName = [
-	"grid grid-cols-[repeat(auto-fill,minmax(10rem,1fr))] justify-center gap-2 bg-[var(--app-surface)]",
-	"[&>*]:min-w-0 [&>*]:w-full [&>*]:rounded-xl [&>*]:border-solid [&>*]:border-[var(--app-border)] [&>*]:bg-[var(--app-secondary)] [&>*]:border",
+	// No bg here - the page's own wrapper div (users/page.tsx) covers the content area regardless of how sparse this grid is.
+	"grid grid-cols-[repeat(auto-fill,minmax(10rem,1fr))] justify-center gap-4",
+	"[&>*]:min-w-0 [&>*]:w-full [&>*]:rounded-lg [&>*]:bg-[var(--elevated-surface)]",
 	"print:grid-cols-[repeat(10,minmax(0,1fr))] print:justify-stretch print:gap-[0.06in] print:bg-white print:text-black",
-	"print:[&>*]:break-inside-avoid print:[&>*]:border-[#ccc]! print:[&>*]:bg-white! print:[&>*]:[page-break-inside:avoid]",
+	"print:[&>*]:break-inside-avoid print:[&>*]:border print:[&>*]:border-[#ccc]! print:[&>*]:bg-white! print:[&>*]:[page-break-inside:avoid]",
 	"print:[&_a]:text-inherit print:[&_a]:no-underline",
 ].join(" ");
 
@@ -41,15 +39,12 @@ export default function UserCardGrid({ users }: UserCardGridProps) {
 	const [visibleCount, setVisibleCount] = useState(BATCH_SIZE);
 	const sentinelRef = useRef<HTMLDivElement>(null);
 
-	// Reset back to the first batch whenever the underlying list changes
-	// (e.g. a different semester/search filter selected), so switching
-	// filters doesn't start out showing a stale count from the last list.
+	// Reset to the first batch whenever the underlying list changes, so switching filters doesn't start with a stale count.
 	useEffect(() => {
 		setVisibleCount(BATCH_SIZE);
 	}, [users]);
 
-	// Reveal the next batch once the sentinel gets within ~800px of the
-	// viewport, well ahead of it actually being visible.
+	// Reveal the next batch once the sentinel gets within ~800px of the viewport.
 	useEffect(() => {
 		const sentinel = sentinelRef.current;
 		if (!sentinel) return;
@@ -67,9 +62,7 @@ export default function UserCardGrid({ users }: UserCardGridProps) {
 		return () => observer.disconnect();
 	}, [users.length]);
 
-	// This grid has dedicated print: styling (a 10-column printable roster),
-	// so printing must include every user, not just whichever batch happened
-	// to be mounted at the time.
+	// Printing must include every user, not just whichever batch happened to be mounted.
 	useEffect(() => {
 		function handleBeforePrint() {
 			setVisibleCount(users.length);
@@ -101,6 +94,10 @@ export default function UserCardGrid({ users }: UserCardGridProps) {
 							if (activeMode === ACTION_MODES.editUsers) {
 								event.preventDefault();
 								openUserModal(user.id, USER_MODAL_PARAMS.edit);
+								// Exiting edit mode itself happens once the modal's real content
+								// actually mounts (ExitEditModeOnMount, inside its Suspense
+								// boundary in page.tsx) - not here, so it doesn't turn off before
+								// the modal is visible.
 								return;
 							}
 

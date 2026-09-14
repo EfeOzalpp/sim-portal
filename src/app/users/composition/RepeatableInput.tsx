@@ -5,8 +5,8 @@ import { Input, InputProps } from "@/components/input";
 
 // Helpers
 import clsx from "clsx";
-import addIcon from "@/components/theme/assets/add/add.svg";
-import deleteIcon from "@/components/theme/assets/delete/delete.svg";
+import addIcon from "@/theme/assets/add/add.svg";
+import deleteIcon from "@/theme/assets/delete/delete.svg";
 
 interface RepeatableInputProps extends Omit<InputProps, "value" | "onChange"> {
 	value?: string[];
@@ -50,6 +50,14 @@ export default function RepeatableInput({
 				const isFirst = index === 0;
 				const icon = isFirst ? addIcon : deleteIcon;
 				const iconUrl = typeof icon === "string" ? icon : icon.src;
+				// Add matches the input chevron's own color/weight (bg-[var(--input-icon)])
+				// directly, rather than currentColor - delete reuses the same red as
+				// the "Delete Users" nav button (--action-delete-text isn't really
+				// ActionMode-only, it's just the well-tuned delete-semantic red).
+				const iconColorClassName = isFirst ? "bg-[var(--input-icon)]" : "bg-[var(--action-delete-text)]";
+					// Delete's hover border matches its own icon red instead of the
+					// neutral input-border-hover every other icon button uses.
+					const hoverBorderClassName = isFirst ? "hover:border-[var(--input-border-hover)]" : "hover:border-[var(--action-delete-text)]";
 
 				return (
 					<div
@@ -67,12 +75,18 @@ export default function RepeatableInput({
 						/>
 						<button
 							type="button"
-							className="m-0 inline-grid h-9 w-9 cursor-pointer place-items-center self-center rounded-xl border-solid border-[var(--input-border)] bg-transparent p-0 text-[var(--input-icon)] border hover:border-[var(--input-border-hover)] hover:bg-[var(--input-bg-hover)] hover:text-[var(--input-text)] hover:shadow-[var(--input-hover-shadow)]"
+							className={clsx(
+								"m-0 inline-grid h-9 w-9 cursor-pointer place-items-center self-center rounded-xl border-solid border-[var(--input-border)] bg-[var(--btn-default-bg)] p-0 text-[var(--input-icon)] border hover:bg-[var(--input-bg-hover)] hover:text-[var(--input-text)] hover:shadow-[var(--input-hover-shadow)]",
+								hoverBorderClassName,
+							)}
 							aria-label={isFirst ? addLabel : deleteLabel}
 							onClick={isFirst ? addRow : () => deleteRow(index)}
 						>
 							<span
-								className="h-3.5 w-3.5 bg-current [mask-position:center] [mask-repeat:no-repeat] [mask-size:contain]"
+								className={clsx(
+									"h-4 w-4 [mask-position:center] [mask-repeat:no-repeat] [mask-size:contain]",
+									iconColorClassName,
+								)}
 								style={{
 									maskImage: `url(${iconUrl})`,
 									WebkitMaskImage: `url(${iconUrl})`,

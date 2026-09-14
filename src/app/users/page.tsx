@@ -2,7 +2,7 @@
 import { Suspense } from "react";
 
 // Actions
-import { getAllSemesters } from "@/actions/semesters";
+import { getSemesterOptions } from "@/actions/semesters";
 
 // Components
 import { FilterInput } from "@/components/primitives/Filters";
@@ -11,12 +11,15 @@ import NavContent from "@/components/layout/NavContent";
 import PageTitle from "@/components/layout/PageTitle";
 import PrintLink from "@/components/primitives/PrintLink";
 import { Button } from "@/components/button";
-import { ActionModeButton, ActionModeSurface } from "@/components/layout/ActionMode";
 import RouteModalPopup from "@/components/modal/RouteModalPopup";
+import ModalContentFallback from "@/components/modal/ModalContentFallback";
 import { confirmDeleteDialogClassName } from "@/components/confirm-delete/styles";
+import { ActionModeButton, ActionModeSurface } from "@/components/layout/ActionMode"; 
 
 // Composition
 import UsersList from "@/app/users/composition/UsersList";
+import RoleFilterPopover from "@/app/users/composition/RoleFilterPopover";
+import ExitEditModeOnMount from "@/app/users/composition/ExitEditModeOnMount";
 
 // Helpers
 import { ALL_SEMESTERS_VALUE, formatSemesterCode, getSelectedSemester, getSelectedSemesterId, isAllSemestersValue } from "@/components/domain/filters/semester-filter";
@@ -25,20 +28,16 @@ import { USER_MODAL_PARAMS, type UserModalParam } from "@/constants/modal-params
 import { isAdminRole } from "@/constants/roles";
 import { auth } from "@/authentication";
 
-// These modals are loaded with a conditional `await import()` inside the page
-// body below, instead of a static top-level import. Each one drags in
-// react-hook-form + zod + antd Upload/Form, and they define inline
-// "use server" actions, so they must stay plain Server Components — next/dynamic
-// (built on React.lazy, meant for Client Components) is not usable here. A
-// conditional import() still gets its own chunk, only evaluated when the
-// matching URL param is actually present, so a plain /users visit doesn't
-// compile all four just to render the grid.
+// Loaded with a conditional `await import()` inside the page body, not a static top-level import - these define inline "use server" actions, so next/dynamic (Client Components only) isn't usable here.
 
 interface UsersProps {
 	searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
 const userModalParams = new Set<string>(Object.values(USER_MODAL_PARAMS));
+
+// Fixed height (not min-h) so it's identical in the Suspense fallback and the loaded form - a floor alone can't cap the taller state.
+const userFormDialogClassName = "w-[min(44rem,100%)] h-[calc(100dvh-3rem)] max-[768px]:h-dvh";
 
 function getSingleParam(value: string | string[] | undefined) {
 	return Array.isArray(value) ? value[0] : value;
@@ -94,9 +93,9 @@ function getUsersModalHref(
 
 export default async function UsersPage({ searchParams }: UsersProps) {
 	const filters = await searchParams;
-	const semestersResult = await getAllSemesters();
+	// getSemesterOptions and auth are independent - run them in parallel, not one after another.
+	const [semestersResult, session] = await Promise.all([getSemesterOptions(), auth()]);
 	const semesters = semestersResult.success ? semestersResult.data : [];
-	const session = await auth();
 	const isAdmin = isAdminRole(session?.user?.role);
 	const selectedSemesterId = getSelectedSemesterId(filters, semesters);
 	const selectedSemester = getSelectedSemester(filters, semesters);
@@ -129,20 +128,25 @@ export default async function UsersPage({ searchParams }: UsersProps) {
 
 	return (
 		<>
-			<PageTitle title="People" filter={currentFilterLabel} />
+			<PageTitle
+				title="People"
+				filterControl={<SemesterFilterSelect semesters={semesters} defaultValue={selectedSemesterId} variant="title" />}
+			/>
 			<ActionModeSurface>
 				<NavContent
 					filterContent={
-						<>
-							<SemesterFilterSelect semesters={semesters} defaultValue={selectedSemesterId} />
-							<FilterInput query={"user"} placeholder="Search user" />
-						</>
+						<div className="flex items-center gap-2">
+							<RoleFilterPopover />
+							<div className="min-w-0 flex-1 [&_.input-affix-wrapper]:bg-[var(--action-input-bg)]!">
+								<FilterInput query={"user"} placeholder="Search" />
+							</div>
+						</div>
 					}
-					filterLabel="Filter & Search"
+					filterLabel="Filter"
 					manageContent={
 						isAdmin ? (
 							<>
-								<Button href={getUsersModalHref(filters, USER_MODAL_PARAMS.add, "1")} variant="action">
+								<Button href={getUsersModalHref(filters, USER_MODAL_PARAMS.add, "1")} variant="action" tone="success" icon="add/add.svg">
 									Add User
 								</Button>
 								<ActionModeButton type="button" variant="action" mode={ACTION_MODES.editUsers} >
@@ -154,11 +158,11 @@ export default async function UsersPage({ searchParams }: UsersProps) {
 							</>
 						) : null
 					}
-					manageLabel="Manage People"
+					manageLabel="Manage"
 					mobileManageContent={
 						isAdmin ? (
 							<>
-								<Button href={getUsersModalHref(filters, USER_MODAL_PARAMS.add, "1")} variant="action">
+								<Button href={getUsersModalHref(filters, USER_MODAL_PARAMS.add, "1")} variant="action" tone="success" icon="add/add.svg">
 									Add
 								</Button>
 								<ActionModeButton type="button" variant="action" mode={ACTION_MODES.editUsers} >
@@ -173,9 +177,9 @@ export default async function UsersPage({ searchParams }: UsersProps) {
 					// has label but is already defaulted to export in upstream
 					printContent={<PrintLink />}
 				/>
-				<div className="px-2 print:px-0">
-					{/* PageTitle (which normally shows this same label) is print:hidden,
-					    so this is the only place the current filter reaches the printed page. */}
+				{/* bg lives here, not on UserCardGrid's grid element - a grid's own background only covers its actual tracks, leaving a sparse grid partly transparent. */}
+				<div className="bg-[image:var(--app-user-surface)] pr-6 pl-9 pt-9! pb-9 min-[769px]:rounded-tr-[0.5rem] print:px-0 print:pt-0 print:pb-0 print:bg-transparent">
+					{/* PageTitle is print:hidden, so this is the only place the current filter reaches the printed page. */}
 					<div className="mb-[0.15in] hidden font-sans text-[9pt] font-bold tracking-[0.06em] text-black uppercase print:block">
 						{currentFilterLabel}
 					</div>
@@ -184,13 +188,18 @@ export default async function UsersPage({ searchParams }: UsersProps) {
 					</Suspense>
 				</div>
 				{showEditModal && EditUserFormContent && (
-					<RouteModalPopup key={editUserId} paramName={USER_MODAL_PARAMS.edit} title="Edit User">
-						<EditUserFormContent userId={editUserId!} showDangerZone={false} />
+					<RouteModalPopup key={editUserId} paramName={USER_MODAL_PARAMS.edit} title="Edit User" dialogClassName={userFormDialogClassName}>
+						<ExitEditModeOnMount />
+						<Suspense fallback={<ModalContentFallback />}>
+							<EditUserFormContent userId={editUserId!} showDangerZone={false} />
+						</Suspense>
 					</RouteModalPopup>
 				)}
 				{showAddModal && AddUserFormContent && (
-					<RouteModalPopup key="add-user" paramName={USER_MODAL_PARAMS.add} title="Add User">
-						<AddUserFormContent />
+					<RouteModalPopup key="add-user" paramName={USER_MODAL_PARAMS.add} title="Add User" dialogClassName={userFormDialogClassName}>
+						<Suspense fallback={<ModalContentFallback />}>
+							<AddUserFormContent />
+						</Suspense>
 					</RouteModalPopup>
 				)}
 				{showProfileModal && PersonProfileModal && (

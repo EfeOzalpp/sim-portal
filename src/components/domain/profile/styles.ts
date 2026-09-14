@@ -1,2 +1,1 @@
-// Fixed width for the user-profile ModalPopup dialog.
-export const userProfileDialogClassName = "w-[min(46rem,100%)]";
+export const userProfileDialogClassName = "w-[min(44rem,100%)] h-[calc(100dvh-3rem)] max-[768px]:h-dvh";

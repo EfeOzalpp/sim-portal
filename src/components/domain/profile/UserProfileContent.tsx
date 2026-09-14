@@ -21,7 +21,7 @@ export default async function UserProfileContent({
 	userId,
 	editHref,
 }: UserProfileContentProps) {
-	const { user: sessionUser } = await getAuthSession();
+	const { user: sessionUser, isAdmin } = await getAuthSession();
 	if (!sessionUser) return null;
 
 	const user = await getProfileUser(userId);
@@ -31,6 +31,7 @@ export default async function UserProfileContent({
 		<UserProfileView
 			user={user}
 			isCurrentUser={isCurrentUser}
+			isAdmin={isAdmin}
 			editHref={editHref || `/users?editUserId=${user.id}`}
 		/>
 	);

@@ -1,157 +1,181 @@
+import clsx from "clsx";
 import PresentationCard from "@/components/domain/productions/PresentationCard";
 import ProductionSummaryCard from "@/components/domain/productions/ProductionSummaryCard";
 import FaceImage from "@/components/primitives/FaceImage";
+import AboutText from "@/components/domain/profile/AboutText";
+import SemesterTimeline from "@/components/domain/profile/SemesterTimeline";
 import { logOut } from "@/actions/auth";
 import { getDisplayUserLinks, getUserLinkHref } from "@/actions/user-links";
+import { groupSemesterRanges } from "@/components/domain/filters/semester-filter";
 import { Button } from "@/components/button";
+
+function getEmailLabel(email: string) {
+	const domain = email.split("@")[1]?.toLowerCase() ?? "";
+
+	if (domain.endsWith("massart.edu")) return "Massart Email";
+	if (domain.endsWith("gmail.com")) return "Gmail";
+	if (domain.endsWith("hotmail.com")) return "Hotmail";
+	return "Email";
+}
+
+function getTruncatedEmail(email: string) {
+	if (email.length <= 21) return email;
+	return `${email.slice(0, 21)}..`;
+}
 
 interface UserProfileViewProps {
 	user: any;
 	isCurrentUser?: boolean;
+	/** Admins can edit anyone's profile, not just their own - see the footer row below. */
+	isAdmin?: boolean;
 	editHref?: string;
 }
 
 export default function UserProfileView({
 	user,
 	isCurrentUser = false,
+	isAdmin = false,
 	editHref,
 }: UserProfileViewProps) {
 	const roleLabel = user.role.charAt(0) + user.role.slice(1).toLowerCase();
+	const semesterRanges = groupSemesterRanges((user.semesters || []).map((semester: any) => semester.name));
 	const links = getDisplayUserLinks(user.link);
 	const pronouns = user.pronouns?.trim();
 	const about = user.about?.trim();
+	const canEdit = isCurrentUser || isAdmin;
+	const hasProductions = (user.productions?.length ?? 0) > 0;
+	const hasPresentations = (user.presentations?.length ?? 0) > 0;
 
 	return (
-		<div className="grid w-full min-w-0 grid-cols-[minmax(10rem,13rem)_minmax(0,1fr)] gap-4 max-[767px]:grid-cols-1">
-			<aside className="flex min-w-0 flex-col gap-4">
-				<div className="relative aspect-[3/4] w-full overflow-hidden rounded-xl border-solid border-[var(--app-border)] border">
-					<FaceImage
-						imagePath={user.image}
-						alt={`${user.name}'s image`}
-						sizes="(max-width: 767px) calc(100vw - 2rem), 13rem"
-						className="object-cover object-top"
-					/>
-				</div>
-				<div className="self-start rounded-md border-solid border-[var(--app-border)] bg-[var(--app-card-label-bg)] px-2 py-1 font-sans text-[0.6875rem] leading-tight font-semibold text-[var(--app-muted)] uppercase border">
-					{roleLabel}
-				</div>
-				<div className="flex min-w-0 flex-col gap-1">
-					<span className="ui-label block">Email</span>
-					<a
-						href={`mailto:${user.email}`}
-						className="break-words text-[var(--app-text)] no-underline decoration-current underline-offset-[0.14em] hover:text-[var(--brand-color)]"
-					>
-						{user.email}
-					</a>
-				</div>
-				<div className="flex min-w-0 flex-col gap-1">
-					<span className="ui-label block">Contact & Links</span>
-					<div className="flex min-w-0 flex-col gap-1 leading-normal text-[var(--app-text)]">
-						{links.length > 0 ? (
-							links.map((link, index) => {
-								const href = getUserLinkHref(link);
-								const linkKey = `${link}-${index}`;
+		<div className="flex min-h-full flex-col">
+			<div className="grid w-full min-w-0 grid-cols-[minmax(10rem,13rem)_minmax(0,1fr)] gap-4 max-[767px]:grid-cols-1">
+				<aside className="flex min-w-0 flex-col gap-4">
+					<div className="relative aspect-[3/4] w-full overflow-hidden rounded-lg border-solid border-[var(--modal-border)] border">
+						<FaceImage
+							imagePath={user.image}
+							alt={`${user.name}'s image`}
+							sizes="(max-width: 767px) calc(100vw - 2rem), 13rem"
+							className="object-cover object-top"
+						/>
+					</div>
+					<div className="ml-2 self-start rounded-md border-solid border-[var(--input-border-hover)] bg-[var(--label-bg)] px-2 py-1 font-sans text-xs leading-tight font-semibold text-[var(--label-text)] uppercase border">
+						{roleLabel}
+					</div>
+					<SemesterTimeline items={semesterRanges} />
+					<div className="ml-2 flex min-w-0 flex-col gap-1">
+						<span className="ui-label block">{getEmailLabel(user.email)}</span>
+						<a
+							href={`mailto:${user.email}`}
+							className="break-words text-[var(--app-text)] no-underline decoration-current underline-offset-[0.14em] hover:text-[var(--brand-color)]"
+						>
+							{getTruncatedEmail(user.email)}
+						</a>
+					</div>
+					{links.length > 0 && (
+						<div className="ml-2 flex min-w-0 flex-col gap-1">
+							<span className="ui-label block">Links</span>
+							<div className="flex min-w-0 flex-col gap-1 leading-normal text-[var(--app-text)]">
+								{links.map((link, index) => {
+									const href = getUserLinkHref(link);
+									const linkKey = `${link}-${index}`;
 
-								return href ? (
-									<a
-										key={linkKey}
-										href={href}
-										target="_blank"
-										rel="noopener noreferrer"
-										className="break-words text-[var(--app-text)] decoration-current underline-offset-[0.14em] hover:text-[var(--brand-color)]"
-									>
-										{link}
-									</a>
-								) : (
-									<span key={linkKey} className="break-words text-[var(--app-text)]">
-										{link}
-									</span>
-								);
-							})
-						) : (
-							<span className="ui-note">
-								{isCurrentUser
-									? "You have not added contact links yet."
-									: "No contact links yet."}
-							</span>
-						)}
-					</div>
-				</div>
-			</aside>
-			<section className="flex min-w-0 flex-col gap-4">
-				<div className="flex flex-col gap-1 [&_h2]:m-0">
-					<div className="flex min-w-0 items-center justify-between gap-2 max-[767px]:flex-col max-[767px]:items-start">
-						<h2 className="min-w-0">{user.name}</h2>
-					</div>
-					{pronouns && (
-						<div className="text-xl leading-normal text-[var(--app-muted)]">
-							{pronouns}
+									return href ? (
+										<a
+											key={linkKey}
+											href={href}
+											target="_blank"
+											rel="noopener noreferrer"
+											className="break-words text-[var(--app-text)] decoration-current underline-offset-[0.14em] hover:text-[var(--brand-color)]"
+										>
+											{link}
+										</a>
+									) : (
+										<span key={linkKey} className="break-words text-[var(--app-text)]">
+											{link}
+										</span>
+									);
+								})}
+							</div>
 						</div>
 					)}
-				</div>
-				<div className="flex min-w-0 flex-col gap-1">
-					<h3 className="m-0 text-xl">About</h3>
-					<div className="flex min-w-0 flex-col gap-1 leading-normal text-[var(--app-text)]">
-						{about ? (
-							about
-						) : (
-							<span className="ui-note">
-								{isCurrentUser
-									? "You have not written an about yet."
-									: "This user has not written an about yet."}
-							</span>
+				</aside>
+				<section className="flex min-w-0 flex-col gap-4">
+					<div className="flex flex-col gap-1 [&_h2]:m-0">
+						<div className="flex min-w-0 items-center justify-between gap-2 max-[767px]:flex-col max-[767px]:items-start">
+							<h2 className="min-w-0">{user.name}</h2>
+						</div>
+						{pronouns && (
+							<div className="text-xl leading-normal text-[var(--subtle-text)]">
+								{pronouns}
+							</div>
 						)}
 					</div>
-				</div>
-				<div className="flex min-w-0 flex-col gap-1 pb-2">
-					<h3 className="m-0 text-xl">Productions</h3>
-					<div className="flex flex-col gap-2 [&>*]:m-0">
-						{(user.productions?.length ?? 0) > 0 ? (
-							user.productions?.map((production: any) => (
-								<ProductionSummaryCard
-									key={production.id}
-									production={production}
-								/>
-							))
-						) : (
-							<span className="ui-note">
-								{isCurrentUser
-									? "You have not been credited on any productions yet."
-									: "This user has not been credited on any productions yet."}
-							</span>
-						)}
+					<div className="flex min-w-0 flex-col gap-1">
+						<span className="ui-label block">About</span>
+						<div className="flex min-w-0 flex-col gap-1 leading-normal break-words text-[var(--app-text)]">
+							{about ? (
+								<AboutText text={about} />
+							) : (
+								<span className="ui-note">
+									{isCurrentUser
+										? "You have not written an about yet."
+										: "This user has not written an about yet."}
+								</span>
+							)}
+						</div>
 					</div>
-				</div>
-				<div className="flex min-w-0 flex-col gap-1 pb-2">
-					<h3 className="m-0 text-xl">Presentations</h3>
-					<div className="flex flex-col gap-2 [&>*]:m-0">
-						{(user.presentations?.length ?? 0) > 0 ? (
-							user.presentations?.map((presentation: any) => (
-								<PresentationCard
-									key={presentation.id}
-									presentation={presentation}
-									isUserProfile={true}
-								/>
-							))
-						) : (
-							<span className="ui-note">
-								{isCurrentUser
-									? "You have not made any presentations yet."
-									: "This user has not made any presentations yet."}
-							</span>
-						)}
+					<div className="flex min-w-0 flex-col gap-1 pb-2">
+						<h3 className={clsx("m-0 text-xl", hasProductions ? "pl-2" : "text-[var(--content-muted)]")}>Productions</h3>
+						<div className="flex flex-col gap-2 [&>*]:m-0">
+							{hasProductions ? (
+								user.productions?.map((production: any) => (
+									<ProductionSummaryCard
+										key={production.id}
+										production={production}
+									/>
+								))
+							) : (
+								<span className="ui-note">
+									{isCurrentUser
+										? "You have not been credited on any productions yet."
+										: "This user has not been credited on any productions yet."}
+								</span>
+							)}
+						</div>
 					</div>
-				</div>
-			</section>
-			{isCurrentUser && (
-				<div className="col-[1/-1] flex flex-row items-center gap-2 border-t border-t-[var(--app-border)] pt-4 [&_form]:m-0">
-					<form action={logOut}>
-						<Button type="submit" tone="danger">
-							Log Out
-						</Button>
-					</form>
+					<div className="flex min-w-0 flex-col gap-1 pb-2">
+						<h3 className={clsx("m-0 text-xl", hasPresentations ? "pl-2" : "text-[var(--content-muted)]")}>Presentations</h3>
+						<div className="flex flex-col gap-2 [&>*]:m-0">
+							{hasPresentations ? (
+								user.presentations?.map((presentation: any) => (
+									<PresentationCard
+										key={presentation.id}
+										presentation={presentation}
+										isUserProfile={true}
+									/>
+								))
+							) : (
+								<span className="ui-note">
+									{isCurrentUser
+										? "You have not made any presentations yet."
+										: "This user has not made any presentations yet."}
+								</span>
+							)}
+						</div>
+					</div>
+				</section>
+			</div>
+			{canEdit && (
+				<div className="sticky -bottom-4 mt-auto -mx-4 -mb-4 flex flex-row items-center gap-2 bg-[linear-gradient(to_bottom,transparent,var(--app-gray-surface)_50%)] px-4 pt-6 pb-4 [&_form]:m-0">
+					{isCurrentUser && (
+						<form action={logOut}>
+							<Button type="submit" tone="danger">
+								Log Out
+							</Button>
+						</form>
+					)}
 					{editHref && (
-						<Button href={editHref} variant="action">
+						<Button href={editHref} variant="action" className="ml-auto">
 							Edit Profile
 						</Button>
 					)}
