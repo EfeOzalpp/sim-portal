@@ -13,6 +13,7 @@ html[data-theme] .input-theme-surface .ant-picker {
 
 html[data-theme] .ant-picker {
 	width: 100%;
+	padding-block: 0.625rem;
 }
 
 html[data-theme] .ant-picker:not(.ant-picker-disabled):hover,
@@ -21,7 +22,7 @@ html[data-theme] .input-theme-surface .ant-picker:hover {
 }
 
 html[data-theme] .ant-picker-range .ant-picker-active-bar {
-	background: var(--brand-color);
+	background: var(--select-checkbox-active-text);
 }
 
 html[data-theme] .ant-picker.ant-picker-range .ant-picker-separator,
@@ -54,12 +55,43 @@ html[data-theme] .ant-picker-header {
 html[data-theme] .ant-picker-header button,
 html[data-theme] .ant-picker-content th,
 html[data-theme] .ant-picker-cell {
-	color: var(--app-muted);
+	color: var(--subtle-text);
 }
 
-html[data-theme] .ant-picker-cell-in-view .ant-picker-cell-inner:hover,
-html[data-theme] .ant-picker-cell-in-view.ant-picker-cell-today .ant-picker-cell-inner::before {
+html[data-theme] .ant-picker-header-prev-btn:hover,
+html[data-theme] .ant-picker-header-next-btn:hover,
+html[data-theme] .ant-picker-header-super-prev-btn:hover,
+html[data-theme] .ant-picker-header-super-next-btn:hover {
+	color: var(--select-checkbox-active-text);
+}
+
+html[data-theme] .ant-picker-prev-icon,
+html[data-theme] .ant-picker-next-icon,
+html[data-theme] .ant-picker-super-prev-icon,
+html[data-theme] .ant-picker-super-next-icon {
+	width: 8px;
+	height: 8px;
+}
+
+html[data-theme] .ant-picker-prev-icon::before,
+html[data-theme] .ant-picker-next-icon::before,
+html[data-theme] .ant-picker-super-prev-icon::before,
+html[data-theme] .ant-picker-super-next-icon::before,
+html[data-theme] .ant-picker-super-prev-icon::after,
+html[data-theme] .ant-picker-super-next-icon::after {
+	width: 8px;
+	height: 8px;
+	border-block-start-width: 2px;
+	border-inline-start-width: 2px;
+}
+
+html[data-theme] .ant-picker-cell-in-view .ant-picker-cell-inner:hover {
 	border-color: var(--input-border-hover);
+}
+
+html[data-theme] .ant-picker-cell-in-view.ant-picker-cell-today .ant-picker-cell-inner::before {
+	border-color: transparent;
+	background-color: var(--nav-button-bg-hover);
 }
 
 html[data-theme] .ant-picker-now-btn {
@@ -73,20 +105,19 @@ html[data-theme] .ant-picker-now-btn:hover {
 }
 
 html[data-theme] .ant-picker-ok .ant-btn-primary {
-	background: var(--tone-success-bg);
-	border-color: var(--tone-success-border);
-	color: var(--tone-success-text);
+	background: var(--select-active-bg);
+	border-color: var(--select-active-border);
+	color: var(--select-active-text);
 	box-shadow: none;
 }
 
 html[data-theme] .ant-picker-ok .ant-btn-primary:not(:disabled):hover {
-	background: #ccebd8;
-	border-color: #a8d3ba;
-	color: var(--tone-success-text);
+	background: var(--select-active-bg);
+	border-color: var(--select-active-border);
+	color: var(--select-active-text);
+	filter: brightness(0.95);
 }
 
 html[data-theme="dark"] .ant-picker-ok .ant-btn-primary:not(:disabled):hover {
-	background: #59855e;
-	border-color: #659872;
-	color: var(--tone-success-text);
+	filter: brightness(1.15);
 }
