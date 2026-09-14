@@ -4,14 +4,18 @@ import { ReactNode, useCallback, useEffect, useId, useState } from "react";
 import clsx from "clsx";
 import { Button } from "@/components/button";
 import { createPortal } from "react-dom";
-import closeIcon from "@/components/theme/assets/close/close.svg";
+import closeIcon from "@/theme/assets/close/close.svg";
+import { ModalCloseGuardProvider, type ModalCloseGuardState } from "@/components/modal/CloseGuard";
 import {
 	modalBackdropClassName,
 	modalBodyClassName,
+	modalCloseButtonClassName,
+	modalCloseGuardActionsClassName,
+	modalCloseGuardOverlayClassName,
 	modalCloseIconClassName,
 	modalDialogClassName,
 	modalDialogDefaultWidthClassName,
-	modalHeaderButtonClassName,
+	modalHeaderClassName,
 	modalTitleClassName,
 } from "@/components/modal/styles";
 
@@ -38,6 +42,8 @@ export default function ModalPopup({
 }: ModalPopupProps) {
 	const [internalOpen, setInternalOpen] = useState(defaultOpen);
 	const [isMounted, setIsMounted] = useState(false);
+	const [guardState, setGuardState] = useState<ModalCloseGuardState | null>(null);
+	const [showCloseGuard, setShowCloseGuard] = useState(false);
 	const titleId = useId();
 	const isControlled = open !== undefined;
 	const isOpen = isControlled ? open : internalOpen;
@@ -52,9 +58,27 @@ export default function ModalPopup({
 		[isControlled, onOpenChange],
 	);
 
+	// A backdrop click goes through here - the header's own "x" always closes
+	// directly, no guard, since that's a deliberate "I'm done" click rather
+	// than an easy-to-fat-finger click just outside the dialog.
+	function requestClose() {
+		if (guardState?.isDirty) {
+			setShowCloseGuard(true);
+			return;
+		}
+
+		setIsOpen(false);
+	}
+
 	useEffect(() => {
 		setIsMounted(true);
 	}, []);
+
+	useEffect(() => {
+		if (!isOpen) {
+			setShowCloseGuard(false);
+		}
+	}, [isOpen]);
 
 	useEffect(() => {
 		if (!isOpen) {
@@ -99,7 +123,7 @@ export default function ModalPopup({
 			onTouchMove={(event) => event.stopPropagation()}
 			onClick={(event) => {
 				if (event.target === event.currentTarget) {
-					setIsOpen(false);
+					requestClose();
 				}
 			}}
 		>
@@ -109,27 +133,59 @@ export default function ModalPopup({
 				aria-modal="true"
 				aria-labelledby={titleId}
 			>
-				<button
-					type="button"
-					className={modalHeaderButtonClassName}
-					onClick={() => setIsOpen(false)}
-					aria-label="Close modal"
-				>
+				<div className={modalHeaderClassName}>
 					<span id={titleId} className={modalTitleClassName}>
 						{title}
 					</span>
-					<span
-						className={modalCloseIconClassName}
-						style={{
-							maskImage: `url(${typeof closeIcon === "string" ? closeIcon : closeIcon.src})`,
-							WebkitMaskImage: `url(${typeof closeIcon === "string" ? closeIcon : closeIcon.src})`,
-						}}
-						aria-hidden="true"
-					/>
-				</button>
-				<div className={modalBodyClassName}>
-					{children}
+					<button
+						type="button"
+						className={modalCloseButtonClassName}
+						onClick={() => setIsOpen(false)}
+						aria-label="Close modal"
+					>
+						<span
+							className={modalCloseIconClassName}
+							style={{
+								maskImage: `url(${typeof closeIcon === "string" ? closeIcon : closeIcon.src})`,
+								WebkitMaskImage: `url(${typeof closeIcon === "string" ? closeIcon : closeIcon.src})`,
+							}}
+							aria-hidden="true"
+						/>
+					</button>
 				</div>
+				<div className={modalBodyClassName}>
+					<ModalCloseGuardProvider value={setGuardState}>
+						{children}
+					</ModalCloseGuardProvider>
+				</div>
+				{showCloseGuard && (
+					<div className={modalCloseGuardOverlayClassName}>
+						<div className={modalCloseGuardActionsClassName}>
+							<Button type="button" onClick={() => setShowCloseGuard(false)}>
+								Keep Editing
+							</Button>
+							{guardState?.canSave && (
+								<Button
+									type="button"
+									tone="success"
+									onClick={() => {
+										setShowCloseGuard(false);
+										guardState.onSave();
+									}}
+								>
+									Save Changes
+								</Button>
+							)}
+							<Button
+								type="button"
+								tone="danger"
+								onClick={() => setIsOpen(false)}
+							>
+								Exit View
+							</Button>
+						</div>
+					</div>
+				)}
 			</section>
 		</div>
 	);
