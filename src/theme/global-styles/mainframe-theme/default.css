@@ -32,13 +32,18 @@ html[data-color-theme="default"][data-theme="light"] {
 	/* action nav area */
 	--action-item-bg: #eef4fb;
 	--action-input-bg: #f4f8fc;
+
+	/* Individual Performance table's sticky header - opaque (not derived from
+	   transparency/blur, which doesn't render reliably across browsers), own
+	   blue tint matching this theme instead of a neutral gray. */
+	--app-ind-progress-solid: linear-gradient(180deg, #f5f9fd 0%, #e9f1fa 100%);
 }
 
 html[data-color-theme="default"][data-theme="dark"] {
 	--app-theme: #7db5d8;
 
 	--app-icon: rgb(244, 244, 244, 0.8);
-	--app-label: rgb(224, 232, 240, 0.8);
+	--app-label: rgba(245, 250, 255, 0.9);
 
 	--brand-color: rgba(242, 242, 242, 0.95);
 	--profile-indicator: #b7ddff;
@@ -66,6 +71,9 @@ html[data-color-theme="default"][data-theme="dark"] {
 	--nav-active-text: #000000;
 
 	/* action nav area */
-	--action-item-bg: rgb(82, 79, 79);
+	--action-item-bg: rgb(79, 80, 82);
 	--action-input-bg: rgba(126, 123, 121, 0.75);
+
+	/* Individual Performance table's sticky header - see the light block's note above. */
+	--app-ind-progress-solid: linear-gradient(175deg, #566a7d 0%, #526577 100%);
 }

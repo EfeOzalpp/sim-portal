@@ -4,8 +4,6 @@
   /* Theme-invariant */
   --scrim: rgba(0, 0, 0, 0.5);
   --app-card-action-icon: #ffffff;
-  /* lines */
-  --lines-color: gray;
 }
 
 html[data-theme="light"] {
@@ -20,11 +18,18 @@ html[data-theme="light"] {
   
   /* modal bg */
   --app-gray-surface: #f5f5f5;
+  /* secondary surface in a modal */
+  --app-subtle: #ececec;
+  /* secondary surface contained borders (not the border of secondary surface itself) */
+  --app-subtle-item-border: #d8d8d8;
+  --app-subtle-2: #e0e0e0;
 
   /* checker pattern */
-  --checker-bg: rgba(220, 224, 234, 0.4);
-  --checker-bg-hover: rgba(220, 224, 234, 0.6);
-  
+  --checker-bg: rgba(128, 128, 128, 0.14);
+  --checker-bg-hover: rgba(128, 128, 128, 0.22);
+  --checker-bg-2: rgba(128, 128, 128, 0.06);
+  --checker-bg-hover-2: rgba(128, 128, 128, 0.12);
+
   /* elevated surface */
   --elevated-surface: rgb(252, 252, 252);
   --elevated-surface-hover: rgb(239, 239, 239);
@@ -37,6 +42,7 @@ html[data-theme="light"] {
   
   /* label */
   --label-bg: #f1f1f1;
+  --label-border: #dcdcdc;
   --label-text: #555555;
 
   /* lines */
@@ -44,12 +50,14 @@ html[data-theme="light"] {
   
   /* text */
   --app-text: #000000;
+  --subtle-text: #2b2b2b;
   --content-muted: #7a7a7a;
   --scrollbar-thumb: rgba(0, 0, 0, 0.15);
   --scrollbar-thumb-hover: rgba(0, 0, 0, 0.1);
 
   /* Border colors */
   --card-border: #dbdee2;
+  --subtle-border: #e5e5e6;
   --modal-border: #e1e3e7;
   --button-border: #e1e3e7;
 
@@ -65,12 +73,15 @@ html[data-theme="light"] {
   --content-shadow: 0 0 14px rgba(0, 0, 0, 0.2);
 
   /* Semantic tones */
-  --tone-success-border: #b7dcc0;
+  --tone-success-border: #b7dcc000;
   --tone-success-bg: #dcf2e0;
   --tone-success-text: #143821;
 
-  --tone-danger-border: #e4baba;
+  --tone-danger-border: #e4baba00;
   --tone-danger-bg: #f7dddd;
+  /* for button */
+  --tone-danger-btn-text: #2e0f0f;
+  /* text */
   --tone-danger-text: #421717;
 
   --tone-warning-border: #e3c98a;
@@ -98,6 +109,10 @@ html[data-theme="light"] {
   --select-active-text: #56a1e7;
   --select-checkbox-active-text: #56a1e7;
   --select-checkbox-active-bg: #56a1e7;
+  /* A muted version of select-active-bg, just for the selected-tag pill's own background - keeps that one item quieter than the rest of the blue-selected family. */
+  --select-tag-bg: #dbe4ec;
+  /* Dark enough to read against the light select-tag-bg above. */
+  --select-tag-text: #25415a;
 
   /* Action area - Button, Select hover, GradeEditorModal, CloseButton, etc. */
   --btn-default-bg: #ffffff;
@@ -123,21 +138,42 @@ html[data-theme="dark"] {
   color-scheme: dark;
 
   /* Surfaces & text - app-surface: NavContent only. app-*-surface (user/ind-progress/thursdays/semesters): each page's own content area. app-gray-surface: expanded nav rail + modals. */
-  --app-surface: linear-gradient(180deg, rgba(19, 19, 19, 0.75) 0%, rgba(19, 19, 19, 0.9) 100%);
+  --app-surface: linear-gradient(180deg, rgba(19, 19, 19, 0.65) 0%, rgba(19, 19, 19, 0.9) 100%);
   
   /* users page */
-  --app-user-surface: linear-gradient(180deg, rgba(31, 31, 31, 0.55) 0%, rgba(31, 31, 31, 0.8) 100%);
+  --app-user-surface: linear-gradient(180deg, rgba(31, 31, 31, 0.45) 0%, rgba(31, 31, 31, 0.8) 100%);
+    /* user page card border */
+    --card-border: #6d7278;
 
-  --app-ind-progress-surface: #26282b;
-  --app-thursdays-surface: #1f2124;
-  --app-semesters-surface: #1f2124;
+  /* individual progress page */
+  --app-ind-progress-surface: rgba(49, 49, 49, 0.7);
+    /* used for the table border */
+    --subtle-border: rgba(76, 76, 76, 0.55);
+
+  /* thursdays page */
+  --app-thursdays-surface: rgba(19, 19, 19, 0.75);
+    /* checker pattern */
+    --checker-bg: rgba(101, 101, 101, 0.35);
+    --checker-bg-hover: rgba(119, 119, 119, 0.35);
+    --checker-bg-2: rgba(101, 101, 101, 0.15);
+    --checker-bg-hover-2: rgba(119, 119, 119, 0.22);
+
+  /* semester page */
+  --app-semesters-surface: rgb(31, 33, 36, 0.99);
+
+  /* lines */
+  --lines-color: rgb(78, 78, 78);
 
   /* modal bg */
   --app-gray-surface: #1b1b1b;
-
-  /* checker pattern */
-  --checker-bg: #45454c4d;
-  --checker-bg-hover: #2d2d32;
+    /* modal's border */
+    --modal-border: #262626;
+    /* secondary surface in a modal */
+    --app-subtle: #232323;
+      /* secondary surface contained borders (not the border of secondary surface itself) */
+      --app-subtle-item-border: rgb(72, 72, 72);
+      /* third surface in a modal */
+      --app-subtle-2: #2d2d2d;
 
   /* elevated surface */
   --elevated-surface: #2b2b2f;
@@ -145,44 +181,39 @@ html[data-theme="dark"] {
   --elevated-surface-border: rgba(188, 188, 188, 0.2);
 
   /* elevated surface (no border) */
-  --elevated-surface-2: #2b2b2f;
-  --elevated-surface-hover-2: #36363a;
-
-  /* label */
-  --label-bg: #2b2b2b;
-  --label-text: #c5c5c5;
-
-  /* dark-only - no light counterpart yet */
-  --app-subtle: #272728;
+  --elevated-surface-2: #4f4f4f38;
+  --elevated-surface-hover-2: #77777738;
 
   /* text */
   --app-text: #ffffff;
-  --subtle-text: #f3f3f3;
+  --subtle-text: #e7e7e7;
   --content-muted: #c1c1c1;
+    /* label */
+    --label-bg: #3f3f3f;
+    --label-border: #343434;
+    --label-text: #e5e5e5;
+
+  /* scrollbar */
   --scrollbar-thumb: rgba(255, 255, 255, 0.2);
   --scrollbar-thumb-hover: rgba(255, 255, 255, 0.4);
 
-  /* Border colors - see the light theme's copy of this note. */
-  --subtle-border: #464748;
-  --card-border: #6d7278;
-
-  --modal-border: #2e2e2e;
-
-  --input-error-border: #b36a6a;
-
+  /* focused border color */
   --focus-ring: #ffffff;
 
-  /* Same shadow as the light theme's, just the other grayscale end - white, not black. */
+  /* shadow */
   --content-shadow: 0 0 18px rgba(255, 255, 255, 0.25);
 
   /* Semantic tones */
-  --tone-success-border: #548a69;
-  --tone-success-bg: #4c7154;
+  --tone-success-border: #60997a00;
+  --tone-success-bg: #5a8562;
   --tone-success-text: #eefcf2;
 
-  --tone-danger-border: #6f4747;
-  --tone-danger-bg: #462d2d;
-  --tone-danger-text: #fff0f0;
+  --tone-danger-border: #74535300;
+  --tone-danger-bg: #634444;
+    /* for button */
+    --tone-danger-btn-text: #ffefef;
+    /* text */
+    --tone-danger-text: #edc1c1;
 
   --tone-warning-border: #a08a4a;
   --tone-warning-bg: #564a29;
@@ -198,7 +229,11 @@ html[data-theme="dark"] {
 
   --input-placeholder: #f4f4f4;
   --input-icon: #ffffff;
+   
+  /* for all inputs */
+  --input-error-border: #b36a6a;
 
+  /* dropdown variant */
   --input-dropdown-border: #b2b2b2;
   --input-dropdown-bg: #3a3a3a;
 
@@ -209,33 +244,32 @@ html[data-theme="dark"] {
   /* Select area */
   --select-bg: #3a3a3a;
   --select-bg-hover: #4a4a4a;
-  /* blue, not gray/muddy-slate. */
-  --select-active-border: #425975;
+
+  /* blue selectors */
   --select-active-bg: rgb(182, 218, 235);
-  /* Clean sky-blue, hue pulled down from the last attempt's ~205deg (read as periwinkle/purple at that lightness) to ~203deg at lower L - reads as unambiguous blue. */
   --select-active-text: #2b343e;
   --select-checkbox-active-text: #cbebff;
   --select-checkbox-active-bg: #cbebff;
+    /* A muted version of select-active-bg, just for the selected-tag pill's own background. */
+    --select-tag-text: #ffffff;
+    --select-tag-bg: rgb(97, 97, 97);
+    --select-active-border: rgb(76, 76, 76);
 
-  /* Action area, its hover styles are handled via brightness in Tailwind */
-
-  /* Neutral gray, not the green this was - light's own --btn-default-bg is plain white, no hue at all, and a green button clashes against the grayscale modal surface it often sits on. */
+  /* Action area, note: its hover styles are handled via brightness in Tailwind */
   --btn-default-bg: rgb(57, 58, 60);
   /* button borders */
   --button-border: #404040;
   --modal-button-border: #383838;
-
-  /* Translucent white wash, not a solid gray - lightens whatever dark surface it sits on (Select's dropdown, CloseButton, GradeEditorModal's grade buttons), same role as light's near-white rgba. */
-  --nav-button-bg-hover: rgba(255, 255, 255, 0.15);
-  --modal-button-bg-hover: #3a3a40;
-
-  /* NavContent's own "Add"/"Delete" action buttons - see the light theme's copy of this note. Bg darkened further (same hue, lower L) - it's only ever shown at /50 opacity on hover or full-strength on press/active, so it reads as a wash either way. */
-  --action-add-border: #598064;
-  --action-add-bg: #b4efac;
-  --action-add-text: #d5fddb;
-  --action-delete-border: #8a5f5f;
-  --action-delete-bg: #ce7373;
-  --action-delete-text: #ffb5b5;
+    /* Translucent white wash, not a solid gray - lightens whatever dark surface it sits on (Select's dropdown, CloseButton, GradeEditorModal's grade buttons), same role as light's near-white rgba. */
+    --nav-button-bg-hover: rgba(255, 255, 255, 0.15);
+    --modal-button-bg-hover: #3a3a40;
+    /* NavContent's own "Add"/"Delete" action buttons - see the light theme's copy of this note. Bg darkened further (same hue, lower L) - it's only ever shown at /50 opacity on hover or full-strength on press/active, so it reads as a wash either way. */
+    --action-add-border: #629771;
+    --action-add-bg: #b4efac;
+    --action-add-text: #d5fddb;
+    --action-delete-border: #a46767;
+    --action-delete-bg: #d37878;
+    --action-delete-text: #ffcccc;
 }
 
   /* Radix's Select.Viewport injects its own <style> tag that force-hides the native scrollbar - !important since that tag can land after this stylesheet. */
