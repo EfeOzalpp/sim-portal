@@ -18,6 +18,12 @@ const nextConfig: NextConfig = {
 	turbopack: {
 		root: __dirname,
 	},
+	experimental: {
+		// Default is 1mb - too small for the 8mb images store.ts allows through.
+		serverActions: {
+			bodySizeLimit: "4mb",
+		},
+	},
 	images: {
 		remotePatterns: imageRemotePatterns,
 		formats: ["image/webp"],

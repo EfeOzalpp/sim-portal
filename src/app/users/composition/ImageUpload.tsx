@@ -7,7 +7,7 @@ interface ImageUploadProps {
 	currentImagePath?: string;
 }
 
-const MAX_SIZE_MB = 8;
+const MAX_SIZE_MB = 3.5;
 const ACCEPTED_TYPES = ["image/jpeg", "image/png", "image/webp"];
 
 export default function ImageUpload({ onChange, currentImagePath = "/face.jpg" }: ImageUploadProps) {

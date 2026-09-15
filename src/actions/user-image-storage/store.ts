@@ -6,7 +6,11 @@ import "server-only";
 import { createHash } from "node:crypto";
 import { mkdir, writeFile } from "node:fs/promises";
 
-const MAX_IMAGE_BYTES = 8 * 1024 * 1024;
+// A bit under next.config.ts's serverActions.bodySizeLimit (4mb) - leaves
+// room for request-encoding overhead, so this friendly message is what
+// actually fires for an oversized image instead of Next's generic
+// "Body exceeded" one.
+const MAX_IMAGE_BYTES = 3.5 * 1024 * 1024;
 const IMAGE_FORMATS = {
 	jpeg: { extension: "jpg", contentType: "image/jpeg" },
 	png: { extension: "png", contentType: "image/png" },
@@ -61,7 +65,7 @@ export async function storeUserImage(file: File): Promise<StoredUserImage> {
 	}
 
 	if (buffer.length > MAX_IMAGE_BYTES) {
-		throw new Error("Images must be smaller than 8 MB.");
+		throw new Error("Images must be smaller than 3.5 MB.");
 	}
 
 	const format = detectImageFormat(buffer);
