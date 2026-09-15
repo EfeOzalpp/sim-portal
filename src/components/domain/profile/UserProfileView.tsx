@@ -58,7 +58,7 @@ export default function UserProfileView({
 							className="object-cover object-top"
 						/>
 					</div>
-					<div className="ml-2 self-start rounded-md border-solid border-[var(--input-border-hover)] bg-[var(--label-bg)] px-2 py-1 font-sans text-xs leading-tight font-semibold text-[var(--label-text)] uppercase border">
+					<div className="ml-2 self-start rounded-md border-solid border-[var(--label-border)] bg-[var(--label-bg)] px-2 py-1 font-sans text-xs leading-tight font-semibold text-[var(--label-text)] uppercase border">
 						{roleLabel}
 					</div>
 					<SemesterTimeline items={semesterRanges} />
@@ -110,7 +110,7 @@ export default function UserProfileView({
 							</div>
 						)}
 					</div>
-					<div className="flex min-w-0 flex-col gap-1">
+					<div className="flex min-w-0 flex-col gap-1 pb-2">
 						<span className="ui-label block">About</span>
 						<div className="flex min-w-0 flex-col gap-1 leading-normal break-words text-[var(--app-text)]">
 							{about ? (
@@ -124,7 +124,7 @@ export default function UserProfileView({
 							)}
 						</div>
 					</div>
-					<div className="flex min-w-0 flex-col gap-1 pb-2">
+					<div className="flex min-w-0 flex-col gap-1 pb-4">
 						<h3 className={clsx("m-0 text-xl", hasProductions ? "pl-2" : "text-[var(--content-muted)]")}>Productions</h3>
 						<div className="flex flex-col gap-2 [&>*]:m-0">
 							{hasProductions ? (

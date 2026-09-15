@@ -21,11 +21,11 @@ export default function ProductionSummaryCard({ production }: ProductionSummaryC
     : null;
 
   return (
-    <div className="flex w-full flex-col gap-2 rounded-xl border border-solid border-[var(--elevated-surface-border)] bg-[var(--elevated-surface)] p-4 pt-5">
+    <div className="flex w-full flex-col gap-2 rounded-xl bg-[var(--app-subtle)] p-4 pt-5">
       <SemesterBadge name={semesterName} />
       <div className="font-bold">{production.name}</div>
       {(production.location || formattedDate) && (
-        <div className="flex w-full flex-row flex-wrap items-center gap-x-4 gap-y-2 [&_div]:m-0">
+        <div className="flex w-full flex-row flex-wrap items-center gap-x-4 gap-y-2 text-[var(--subtle-text)] [&_div]:m-0">
           {production.location && (
             <div className="flex items-center gap-1.5">
               <MaskIcon icon="location/location.svg" className={metaIconClassName} />

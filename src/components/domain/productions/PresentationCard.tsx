@@ -87,7 +87,7 @@ export default function PresentationCard({
   }
 
   return (
-    <div className="flex w-full flex-col gap-2 rounded-xl border border-solid border-[var(--elevated-surface-border)] bg-[var(--elevated-surface)] p-4 pt-5">
+    <div className="flex w-full flex-col gap-2 rounded-xl bg-[var(--app-subtle)] p-4 pt-5">
       <SemesterBadge name={semesterName} />
       <div className="font-bold">{presentation.name}</div>
       <div className="flex w-full flex-row flex-wrap items-baseline gap-x-4 gap-y-2 [&_div]:m-0">

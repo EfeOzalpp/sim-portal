@@ -3,7 +3,7 @@ interface SemesterTimelineProps {
 }
 
 const badgeClassName =
-	"self-start rounded-md border-solid border-[var(--input-border-hover)] bg-[var(--label-bg)] px-2 py-1 font-sans text-xs leading-tight font-semibold text-[var(--label-text)] uppercase border";
+	"self-start rounded-md border-solid border-[var(--label-border)] bg-[var(--label-bg)] px-2 py-1 font-sans text-xs leading-tight font-semibold text-[var(--label-text)] uppercase border";
 
 const lineClassName = "absolute left-1/2 w-px -translate-x-1/2 bg-[var(--lines-color)]";
 
@@ -29,10 +29,6 @@ export default function SemesterTimeline({ items }: SemesterTimelineProps) {
 							)}
 							<span
 								className="absolute top-1/2 left-1/2 h-px w-2 -translate-y-1/2 bg-[var(--lines-color)]"
-								aria-hidden="true"
-							/>
-							<span
-								className="absolute top-1/2 left-1/2 h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[var(--lines-color)]"
 								aria-hidden="true"
 							/>
 						</div>

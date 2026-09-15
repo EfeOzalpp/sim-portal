@@ -13,7 +13,7 @@ export default function SemesterBadge({ name }: SemesterBadgeProps) {
   if (!name) return null;
 
   return (
-    <div className="self-start rounded-md border border-solid border-[var(--card-border)] bg-[var(--label-bg)] px-2 py-1 font-sans text-xs leading-tight font-semibold text-[var(--label-text)] uppercase">
+    <div className="self-start rounded-md border border-solid border-[var(--label-border)] bg-[var(--label-bg)] px-2 py-1 font-sans text-xs leading-tight font-semibold text-[var(--label-text)] uppercase">
       {formatSemesterCode(name)}
     </div>
   );
