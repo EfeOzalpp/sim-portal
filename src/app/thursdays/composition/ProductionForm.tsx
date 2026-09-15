@@ -21,7 +21,7 @@ import {
 } from "@/app/thursdays/composition/thursdayFormClasses";
 
 // Helpers
-import { Controller } from "react-hook-form";
+import { Controller, useFormState } from "react-hook-form";
 import { isStaffRole } from "@/constants/roles";
 import { formatSemesterCode, getCurrentSemesterCode, normalizeSemesterCode } from "@/components/domain/filters/semester-filter";
 
@@ -63,6 +63,12 @@ export default function ProductionForm({
     currentSemester?.id ?? semesters[0]?.id ?? null,
   );
 
+  // Errors shouldn't appear the instant the modal opens (the mount-time
+  // trigger() that keeps Save's isValid check accurate validates every
+  // field right away) - only once the field's been touched, or a submit's
+  // actually been attempted.
+  const { isSubmitted } = useFormState({ control });
+
   return (
     <div className="flex w-full flex-col gap-6">
       <div className="grid grid-cols-1 gap-6 min-[601px]:grid-cols-2">
@@ -72,18 +78,21 @@ export default function ProductionForm({
             control={control}
             name={`productions.${productionIndex}.name`}
             rules={{ required: "Production name is required" }}
-            render={({ field, fieldState }) => (
-              <>
-                <Input
-                  {...field}
-                  placeholder="Enter production name"
-                  status={fieldState.error ? "error" : ""}
-                />
-                {fieldState.error && (
-                  <FieldError>{fieldState.error.message}</FieldError>
-                )}
-              </>
-            )}
+            render={({ field, fieldState }) => {
+              const showError = Boolean(fieldState.error) && (fieldState.isTouched || isSubmitted);
+              return (
+                <>
+                  <Input
+                    {...field}
+                    placeholder="Enter production name"
+                    status={showError ? "error" : ""}
+                  />
+                  {showError && (
+                    <FieldError>{fieldState.error!.message}</FieldError>
+                  )}
+                </>
+              );
+            }}
           />
         </div>
 
@@ -93,20 +102,23 @@ export default function ProductionForm({
             control={control}
             name={`productions.${productionIndex}.location`}
             rules={{ required: "Location is required" }}
-            render={({ field, fieldState }) => (
-              <>
-                <Select
-                  inModal
-                  {...field}
-                  placeholder="Select location"
-                  options={LOCATIONS}
-                  status={fieldState.error ? "error" : ""}
-                />
-                {fieldState.error && (
-                  <FieldError>{fieldState.error.message}</FieldError>
-                )}
-              </>
-            )}
+            render={({ field, fieldState }) => {
+              const showError = Boolean(fieldState.error) && (fieldState.isTouched || isSubmitted);
+              return (
+                <>
+                  <Select
+                    inModal
+                    {...field}
+                    placeholder="Select location"
+                    options={LOCATIONS}
+                    status={showError ? "error" : ""}
+                  />
+                  {showError && (
+                    <FieldError>{fieldState.error!.message}</FieldError>
+                  )}
+                </>
+              );
+            }}
           />
         </div>
       </div>

@@ -32,7 +32,7 @@ import {
 } from "@/app/thursdays/composition/thursdayFormClasses";
 
 // Helpers
-import { Controller, useFieldArray, useWatch } from "react-hook-form";
+import { Controller, useFieldArray, useFormState, useWatch } from "react-hook-form";
 import { isStudentRole } from "@/constants/roles";
 import { formatSemesterCode, getCurrentSemesterCode, normalizeSemesterCode } from "@/components/domain/filters/semester-filter";
 
@@ -77,6 +77,12 @@ export default function PresentationsField({
   const [semesterFilterId, setSemesterFilterId] = useState<string | null>(
     currentSemester?.id ?? semesters[0]?.id ?? null,
   );
+
+  // Errors shouldn't appear the instant the modal opens (the mount-time
+  // trigger() that keeps Save's isValid check accurate validates every
+  // field right away) - only once the field's been touched, or a submit's
+  // actually been attempted.
+  const { isSubmitted } = useFormState({ control });
 
   return (
     <div>
@@ -149,18 +155,21 @@ export default function PresentationsField({
                       control={control}
                       name={`productions.${productionIndex}.presentations.${pIndex}.name`}
                       rules={{ required: "Presentation name is required" }}
-                      render={({ field, fieldState }) => (
-                        <>
-                          <Input
-                            {...field}
-                            placeholder="Enter presentation name"
-                            status={fieldState.error ? "error" : ""}
-                          />
-                          {fieldState.error && (
-                            <FieldError>{fieldState.error.message}</FieldError>
-                          )}
-                        </>
-                      )}
+                      render={({ field, fieldState }) => {
+                        const showError = Boolean(fieldState.error) && (fieldState.isTouched || isSubmitted);
+                        return (
+                          <>
+                            <Input
+                              {...field}
+                              placeholder="Enter presentation name"
+                              status={showError ? "error" : ""}
+                            />
+                            {showError && (
+                              <FieldError>{fieldState.error!.message}</FieldError>
+                            )}
+                          </>
+                        );
+                      }}
                     />
                   </div>
 

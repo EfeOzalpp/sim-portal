@@ -93,7 +93,7 @@ export default function UserForm({
     control,
     handleSubmit,
     trigger,
-    formState: { isSubmitting, isDirty, isValid },
+    formState: { isSubmitting, isDirty, isValid, isSubmitted },
   } = useForm<UserInput>({
     defaultValues: initialValues as any,
     mode: "onChange",
@@ -163,18 +163,21 @@ export default function UserForm({
                 control={control}
                 name="name"
                 rules={{ required: "Name is required" }}
-                render={({ field, fieldState }) => (
-                  <>
-                    <Input
-                      {...field}
-                      placeholder="Enter name"
-                      status={fieldState.error ? "error" : ""}
-                    />
-                    {fieldState.error && (
-                      <FieldError>{fieldState.error.message}</FieldError>
-                    )}
-                  </>
-                )}
+                render={({ field, fieldState }) => {
+                  const showError = Boolean(fieldState.error) && (fieldState.isTouched || isSubmitted);
+                  return (
+                    <>
+                      <Input
+                        {...field}
+                        placeholder="Enter name"
+                        status={showError ? "error" : ""}
+                      />
+                      {showError && (
+                        <FieldError>{fieldState.error!.message}</FieldError>
+                      )}
+                    </>
+                  );
+                }}
               />
             </div>
 
@@ -257,26 +260,29 @@ export default function UserForm({
                   message: "Invalid email address",
                 },
               }}
-              render={({ field, fieldState }) => (
+              render={({ field, fieldState }) => {
+                const showError = Boolean(fieldState.error) && (fieldState.isTouched || isSubmitted);
+                return (
                 <>
                   <Input
                     {...field}
                     placeholder="email@example.com"
                     disabled={!isCurrentUserAdmin && user}
-                    status={fieldState.error ? (fieldState.error.type === "pattern" ? "warning" : "error") : ""}
+                    status={showError ? (fieldState.error!.type === "pattern" ? "warning" : "error") : ""}
                   />
                   {!isCurrentUserAdmin && user && (
                     <span className="ui-note mt-1 block">
                       Contact SIM faculty to change your email.
                     </span>
                   )}
-                  {fieldState.error && (
-                    <FieldError tone={fieldState.error.type === "pattern" ? "warning" : "error"}>
-                      {fieldState.error.message}
+                  {showError && (
+                    <FieldError tone={fieldState.error!.type === "pattern" ? "warning" : "error"}>
+                      {fieldState.error!.message}
                     </FieldError>
                   )}
                 </>
-              )}
+                );
+              }}
             />
           </div>
 
