@@ -147,16 +147,16 @@ export const selectEmptyClassName = "px-2 py-4 text-center text-sm text-[var(--a
 // text-[0.6875rem] - the bigger h-4 w-4 "x" (selectTagRemoveClassName) made
 // that read too small next to it.
 export const selectTagClassName = [
-	"inline-flex h-6 max-w-full items-center gap-1 rounded-md",
+	"inline-flex h-8 max-w-full items-center gap-1 rounded-md",
 	"border-solid border border-[var(--select-active-border)]",
-	"bg-[var(--select-active-bg)] px-2",
-	"text-sm leading-tight font-semibold text-[var(--select-active-text)] uppercase",
+	"bg-[var(--select-tag-bg)] px-2",
+	"text-sm leading-tight font-semibold text-[var(--select-tag-text)] uppercase",
 ].join(" ");
 
 // The "x" on a selected-option tag, removing it from the selection - same
 // color and size as RepeatableInput's +/- icons (--input-icon, h-4 w-4), not
 // the dimmer, smaller --input-tag-icon/h-3 w-3 this used before.
-export const selectTagRemoveClassName = "inline-grid h-4 w-4 flex-none place-items-center text-[var(--select-active-text)] hover:opacity-70";
+export const selectTagRemoveClassName = "inline-grid h-4 w-4 flex-none place-items-center text-[var(--select-tag-text)] hover:opacity-70";
 
 // The checkbox indicating selection in a multi-select row - accent-color, not
 // a checked-bg on the row itself, so it's the one and only "selected" cue there.

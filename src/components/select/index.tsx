@@ -292,10 +292,18 @@ function MultiSelectImpl({
 				<button
 					type="button"
 					disabled={disabled}
-					// pl-2! over selectTriggerVariants' own px-3 - only this (MultiSelectImpl,
-					// shared by every mode="multiple" Select) needs less left padding; the
-					// tag chips already carry their own left inset, unlike single-select's plain text.
-					className={clsx(selectTriggerVariants({ error }), "group min-h-9 flex-wrap pl-2!", className)}
+					// py-1.5! over selectTriggerVariants' own py-2.5 - the h-8 tag chips are
+					// already taller than a single-select's own text line, so the shared
+					// py-2.5 on top of that made this trigger visibly taller than its
+					// single-select siblings. pl-2! only kicks in once there's a chip to
+					// account for (it carries its own left inset, unlike plain text) -
+					// empty, it keeps the same px-3 a single-select's placeholder gets.
+					className={clsx(
+						selectTriggerVariants({ error }),
+						"group min-h-12 flex-wrap py-1.5!",
+						selectedOptions.length > 0 && "pl-2!",
+						className,
+					)}
 				>
 					{selectedOptions.length === 0 ? (
 						<span className={selectPlaceholderClassName}>{placeholder ?? "Select..."}</span>
