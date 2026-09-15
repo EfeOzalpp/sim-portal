@@ -113,6 +113,30 @@ export function formatSemesterName(name?: string | null) {
 	return `${season} ${year}`;
 }
 
+// The calendar year a semester code lands in - "FA30"/"SP24" -> 2030/2024.
+// Used to anchor a date picker's initial panel on that year instead of
+// wherever it opens by default, when no date is picked yet.
+export function getSemesterYear(value?: string | null): number | null {
+	const code = normalizeSemesterCode(value);
+	if (!code) return null;
+
+	return 2000 + Number(code.slice(2));
+}
+
+// A sensible default Date Range for a freshly-picked semester code, before
+// anyone's touched the picker themselves - Spring runs Jan 15 - May 15, Fall
+// runs Sep 3 - Dec 20, of that code's year. Still just a starting point -
+// nothing stops it being changed afterward.
+export function getDefaultSemesterDateRange(value?: string | null): [string, string] | null {
+	const code = normalizeSemesterCode(value);
+	const year = getSemesterYear(code);
+	if (!code || !year) return null;
+
+	return code.startsWith("SP")
+		? [`${year}-01-15`, `${year}-05-15`]
+		: [`${year}-09-03`, `${year}-12-20`];
+}
+
 // Matching: falls back to null so unrecognized values don't pass as codes.
 export function normalizeSemesterCode(value?: string | null) {
 	if (!value) return null;

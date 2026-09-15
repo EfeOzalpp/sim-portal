@@ -434,15 +434,22 @@ export async function editSemester(data: { id: string, name: string, users: stri
 					orphanByDate.set(getDateKey(thursday.date), thursday);
 				}
 
-				const emptyOutOfRangeThursdays: any[] = [];
+				// Out-of-range Thursdays get reused (date/name reassigned to a new
+				// slot) rather than left behind, whether or not they already
+				// have real productions/presentations - those stay attached to
+				// the Thursday's id and just come along for the move. Order
+				// matches their original date order, so week N's content lands
+				// on the new range's week N.
+				const outOfRangeThursdays: typeof existingThursdays = [];
 				for (const thursday of existingThursdays) {
 					const dateKey = getDateKey(thursday.date);
-					if (!desiredDateStrings.includes(dateKey) && (await isEmptyOrPlaceholderThursday(thursday))) {
-						emptyOutOfRangeThursdays.push(thursday);
+					if (!desiredDateStrings.includes(dateKey)) {
+						outOfRangeThursdays.push(thursday);
 					}
 				}
 
-				const reusableThursdays = [...emptyOutOfRangeThursdays];
+				const reusableThursdays = [...outOfRangeThursdays];
+				const reusedIds = new Set<string>();
 
 				for (let index = 0; index < desiredDates.length; index++) {
 					const desiredDate = desiredDates[index];
@@ -470,13 +477,14 @@ export async function editSemester(data: { id: string, name: string, users: stri
 							},
 						});
 					} else if (reusableThursdays.length > 0) {
-						const reusable = reusableThursdays.shift();
+						const reusable = reusableThursdays.shift()!;
+						reusedIds.add(reusable.id);
 						await tx.thursday.update({
 							where: { id: reusable.id },
 							data: {
 								date: desiredDate,
 								name: desiredName,
-								...(defaultProductions ? { productions: defaultProductions } : {}),
+								...(defaultProductions && (reusable.productions?.length ?? 0) === 0 ? { productions: defaultProductions } : {}),
 							},
 						});
 					} else {
@@ -491,10 +499,11 @@ export async function editSemester(data: { id: string, name: string, users: stri
 					}
 				}
 
-				// Handle cleanup of out-of-range thursdays
-				for (const thursday of existingThursdays) {
-					const dateKey = getDateKey(thursday.date);
-					if (!desiredDateStrings.includes(dateKey)) {
+				// Cleanup only catches out-of-range Thursdays that weren't
+				// reused above - leftovers from the new range being shorter
+				// than the old one.
+				for (const thursday of outOfRangeThursdays) {
+					if (!reusedIds.has(thursday.id)) {
 						if (await isEmptyOrPlaceholderThursday(thursday)) {
 							await tx.thursday.delete({ where: { id: thursday.id } });
 						} else {

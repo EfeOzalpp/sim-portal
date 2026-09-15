@@ -1,7 +1,7 @@
 "use client";
 
 // React & Next.js
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import clsx from "clsx";
 
 // Actions
@@ -30,9 +30,10 @@ import {
 } from "@/app/semester/composition/semester.transformers";
 
 // Helpers
-import { useForm, Controller } from "react-hook-form";
+import dayjs from "dayjs";
+import { useForm, useWatch, Controller } from "react-hook-form";
 import { handleFormAction } from "@/helpers";
-import { formatSemesterCode, getCurrentSemesterCode, normalizeSemesterCode, semesterOrdinal } from "@/components/domain/filters/semester-filter";
+import { formatSemesterCode, getCurrentSemesterCode, getDefaultSemesterDateRange, getSemesterYear, normalizeSemesterCode, semesterOrdinal } from "@/components/domain/filters/semester-filter";
 
 // Sentinel for the semester filter's own "show everyone" option - distinct
 // from ALL_SEMESTERS_VALUE (the page-level filter's sentinel), since this is
@@ -204,7 +205,8 @@ export default function SemesterForm({
     control,
     handleSubmit,
     trigger,
-    formState: { isSubmitting, isDirty, isValid },
+    setValue,
+    formState: { isSubmitting, isDirty, isValid, isSubmitted },
   } = useForm<SemesterFormValues>({
     defaultValues: initialValues as any,
     mode: "onChange",
@@ -213,6 +215,50 @@ export default function SemesterForm({
   useEffect(() => {
     trigger();
   }, [trigger]);
+
+  // Anchors the Date Range picker's initial panel on the selected semester's
+  // own year instead of wherever it opens by default - picking a range for
+  // FA30 should start the calendar looking at 2030, not today.
+  const nameValue = useWatch({ control, name: "name" });
+  const datesValue = useWatch({ control, name: "dates" });
+  const datesTargetYear = getSemesterYear(nameValue);
+
+  // Follows the Name field, but only while Dates is still "ours" - empty,
+  // or exactly what we last auto-filled. The moment it's something else
+  // (hand-adjusted, or an existing semester's real Thursdays), further Name
+  // changes leave it alone instead of clobbering it.
+  const lastAutoDates = useRef<[string, string] | null>(null);
+  const isFirstNameSync = useRef(true);
+  useEffect(() => {
+    if (isFirstNameSync.current) {
+      isFirstNameSync.current = false;
+      return;
+    }
+
+    const defaultRange = getDefaultSemesterDateRange(nameValue);
+    if (!defaultRange) return;
+
+    const currentRange: [string, string] | null =
+      datesValue?.[0] && datesValue?.[1]
+        ? [dayjs(datesValue[0]).format("YYYY-MM-DD"), dayjs(datesValue[1]).format("YYYY-MM-DD")]
+        : null;
+
+    const stillOurs =
+      !currentRange ||
+      (lastAutoDates.current !== null &&
+        currentRange[0] === lastAutoDates.current[0] &&
+        currentRange[1] === lastAutoDates.current[1]);
+    if (!stillOurs) return;
+
+    setValue("dates", [dayjs(defaultRange[0]), dayjs(defaultRange[1])] as any, {
+      shouldDirty: true,
+      shouldValidate: true,
+    });
+    lastAutoDates.current = defaultRange;
+    // datesValue deliberately excluded - this only reacts to Name changing,
+    // reading whatever Dates currently holds at that moment.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [nameValue, setValue]);
 
   const [error, setError] = useState<string | null>(null);
   const toast = useToast();
@@ -265,6 +311,16 @@ export default function SemesterForm({
           />
         )}
         <div className="flex flex-1 flex-col gap-8 pt-4">
+          {!semester && (
+            <p className="ui-note m-0 -mb-4 flex items-center gap-1.5">
+              <MaskIcon
+                icon="info/info.svg"
+                className="h-[1.375rem] w-[1.375rem] shrink-0 bg-current [mask-position:center] [mask-repeat:no-repeat] [mask-size:contain]"
+              />
+              <span>Tip: select a name first and the date will auto-fill.</span>
+            </p>
+          )}
+
           <div className="grid w-full grid-cols-[max-content_minmax(0,1fr)] gap-4 max-[600px]:grid-cols-1">
             <div className="flex w-40 flex-col gap-2 max-[600px]:w-full">
               <span className="ui-label m-0 block pl-1">Name *</span>
@@ -274,6 +330,7 @@ export default function SemesterForm({
                 rules={{ required: "Semester name is required" }}
                 render={({ field, fieldState }) => {
                   const nameOptions = getSemesterNameOptions(field.value, takenSemesterCodes);
+                  const showError = Boolean(fieldState.error) && (fieldState.isTouched || isSubmitted);
                   return (
                     <>
                       <Select
@@ -282,12 +339,12 @@ export default function SemesterForm({
                         value={field.value || undefined}
                         searchable
                         placeholder="E.g. SP24"
-                        status={fieldState.error ? "error" : ""}
+                        status={showError ? "error" : ""}
                         options={nameOptions}
                         scrollToValueOnOpen={getClosestOptionValue(nameOptions, getCurrentSemesterCode())}
                       />
-                      {fieldState.error && (
-                        <FieldError>{fieldState.error.message}</FieldError>
+                      {showError && (
+                        <FieldError>{fieldState.error!.message}</FieldError>
                       )}
                     </>
                   );
@@ -303,18 +360,29 @@ export default function SemesterForm({
                 rules={{
                   validate: (value) => (value?.[0] && value?.[1] ? true : "Date range is required"),
                 }}
-                render={({ field, fieldState }) => (
-                  <>
-                    <RangePicker
-                      {...field}
-                      style={{ width: "100%" }}
-                      status={fieldState.error ? "error" : ""}
-                    />
-                    {fieldState.error && (
-                      <FieldError>{fieldState.error.message}</FieldError>
-                    )}
-                  </>
-                )}
+                render={({ field, fieldState }) => {
+                  const hasRealDates = Boolean(field.value?.[0] && field.value?.[1]);
+                  const showError = Boolean(fieldState.error) && (fieldState.isTouched || isSubmitted);
+
+                  return (
+                    <>
+                      <RangePicker
+                        {...field}
+                        key={!hasRealDates && datesTargetYear ? datesTargetYear : "fixed"}
+                        defaultPickerValue={
+                          !hasRealDates && datesTargetYear
+                            ? [dayjs().year(datesTargetYear), dayjs().year(datesTargetYear)]
+                            : undefined
+                        }
+                        style={{ width: "100%" }}
+                        status={showError ? "error" : ""}
+                      />
+                      {showError && (
+                        <FieldError>{fieldState.error!.message}</FieldError>
+                      )}
+                    </>
+                  );
+                }}
               />
             </div>
           </div>
@@ -343,7 +411,7 @@ export default function SemesterForm({
 
                 return (
                   <>
-                    <div className="mb-2 flex items-end justify-between gap-4 max-[600px]:flex-col max-[600px]:items-stretch">
+                    <div className="mb-3 flex items-end justify-between gap-4 max-[600px]:flex-col max-[600px]:items-stretch">
                       <span className="ui-label m-0 block pl-1">Enrollment</span>
                       <div className="flex flex-wrap items-center gap-2">
                         {semesters.length > 0 && (
@@ -373,7 +441,6 @@ export default function SemesterForm({
                         </Button>
                         <Button
                           type="button"
-                          tone="danger"
                           className="whitespace-nowrap"
                           onClick={() => field.onChange([])}
                         >
@@ -387,7 +454,7 @@ export default function SemesterForm({
                       mode="multiple"
                       searchable
                       maxTagCount={12}
-                      placeholder="Search and select users..."
+                      placeholder="Select users"
                       options={roleFilteredSelectableUsers.map((u) => ({ value: u.id, label: u.name ?? "Unnamed User" }))}
                       filterExtra={<EnrollmentRoleFilter value={roleFilter} onChange={setRoleFilter} />}
                     />
