@@ -82,7 +82,7 @@ export default async function IndividualPage({ searchParams }: IndividualPagePro
 							<FilterInput query="user" placeholder="Search" />
 						</div>
 					}
-					filterLabel="Search People"
+					filterLabel=""
 					manageContent={
 						<>
 							<ActionModeButton type="button" variant="action" mode={ACTION_MODES.editGrades}>
@@ -100,7 +100,7 @@ export default async function IndividualPage({ searchParams }: IndividualPagePro
 							</div>
 						</>
 					}
-					manageLabel="Manage Grades"
+					manageLabel=""
 					mobileManageContent={
 						<>
 							<ActionModeButton type="button" variant="action" mode={ACTION_MODES.editGrades}>

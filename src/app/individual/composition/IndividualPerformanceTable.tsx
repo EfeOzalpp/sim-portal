@@ -248,7 +248,7 @@ export default function IndividualPerformanceTable({ users = [], isAllSemesters 
 									</td>
 									<td>
 										{productions.length === 0 ? (
-											<span className="ui-note">No current productions</span>
+											<span className="ui-note block text-center">-</span>
 										) : (
 											<div className={styles.section}>
 												<ItemList>
@@ -267,7 +267,7 @@ export default function IndividualPerformanceTable({ users = [], isAllSemesters 
 									</td>
 									<td>
 										{!hasPreMid && !hasPostMid ? (
-											<span className="ui-note">No current presentations</span>
+											<span className="ui-note block text-center">-</span>
 										) : (
 											<>
 												{hasPreMid && (
@@ -327,9 +327,9 @@ export default function IndividualPerformanceTable({ users = [], isAllSemesters 
 														</span>
 													))}
 												</div>
-											) : (
-												<span className="ui-note">No grades yet</span>
-											)}
+											) : activeMode !== ACTION_MODES.editGrades ? (
+												<span className="ui-note block flex-1 text-center">-</span>
+											) : null}
 											<span className={styles.gradeEditOverlay} data-grade-action-overlay aria-hidden="true">
 												<span className={styles.gradeEditIcon} />
 											</span>
