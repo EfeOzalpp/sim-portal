@@ -21,8 +21,8 @@ export function generateImageMetadata() {
 	}));
 }
 
-export default function Icon({ id }: { id: string }) {
-	const size = Number(id);
+export default async function Icon({ id }: { id: Promise<string> | string }) {
+	const size = Number(await id);
 	// Same proportions as the original 16px version (44px glyph, -3px nudge),
 	// scaled up so the glyph reads the same way at every size.
 	const scale = size / 16;
@@ -37,8 +37,8 @@ export default function Icon({ id }: { id: string }) {
 					alignItems: "center",
 					justifyContent: "center",
 					color: "#000000",
-					fontSize: 44 * scale,
-					top: -3 * scale,
+					fontSize: `${44 * scale}px`,
+					top: `${-3 * scale}px`,
 					fontWeight: 700,
 					fontFamily: "sans-serif",
 					letterSpacing: "-0.03em",

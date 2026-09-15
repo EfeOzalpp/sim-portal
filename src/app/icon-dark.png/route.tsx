@@ -20,7 +20,7 @@ export async function GET() {
 					alignItems: "center",
 					justifyContent: "center",
 					color: "#ffffff",
-					fontSize: 44,
+					fontSize: "44px",
 					top: "-3px",
 					fontWeight: 700,
 					fontFamily: "sans-serif",
