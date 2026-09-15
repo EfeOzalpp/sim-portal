@@ -56,7 +56,7 @@ export default function NavContent({
 			{manageContent && (
 				<div className={clsx(styles.navSection, "px-4")}>
 					<div className="flex flex-col gap-2">
-						<span className="ui-label pl-1">{manageLabel}</span>
+						{manageLabel && <span className="ui-label pl-1">{manageLabel}</span>}
 						<div className={clsx(styles.navSectionControls, styles.navSectionControlsManage)}>{manageContent}</div>
 					</div>
 				</div>

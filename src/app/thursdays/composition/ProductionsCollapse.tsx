@@ -142,14 +142,14 @@ export default function ProductionsCollapse({ productions, checker, isFirst, isL
           !isLast && "[&:has([data-state=open])]:mb-2",
           isFirst && "[&:not(:has([data-state=open]))]:rounded-t-xl",
           isLast && "[&:not(:has([data-state=open]))]:rounded-b-xl",
-          checker ? "bg-[var(--checker-bg)]" : "bg-[var(--elevated-surface)]",
+          checker ? "bg-[var(--checker-bg)]" : "bg-[var(--checker-bg-2)]",
         )}
         items={productions.map((p, pIndex) => ({
           value: p.id,
           itemClassName: pIndex > 0 ? "border-t border-t-[var(--card-border)]" : "",
           headerClassName: clsx(
             "items-center text-[var(--app-text)] transition-[background] duration-150",
-            checker ? "hover:bg-[var(--checker-bg-hover)]" : "hover:bg-[var(--app-card-bg-hover)]",
+            checker ? "hover:bg-[var(--checker-bg-hover)]" : "hover:bg-[var(--checker-bg-hover-2)]",
           ),
           triggerClassName: "px-4 py-5",
           contentClassName: "px-4 pt-3 pb-4 text-[var(--app-text)]",

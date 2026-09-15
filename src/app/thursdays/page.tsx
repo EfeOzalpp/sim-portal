@@ -151,7 +151,7 @@ export default async function Thursdays({ searchParams }: ThursdaysProps) {
               <FilterInput query={"thursdays"} placeholder="Search" />
             </div>
           }
-          filterLabel="Search Thursdays"
+          filterLabel=""
           manageContent={
             isAdmin ? (
               <>
@@ -165,7 +165,7 @@ export default async function Thursdays({ searchParams }: ThursdaysProps) {
               </>
             ) : null
           }
-          manageLabel="Manage Thursdays"
+          manageLabel="Manage"
           mobileManageContent={
             isAdmin ? (
               <>
