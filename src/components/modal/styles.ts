@@ -38,9 +38,11 @@ export const modalCloseIconClassName =
 // flex-basis:0 still respects a flex item's own min-content floor.
 export const modalBodyClassName = "input-theme-surface min-h-0 flex-1 overflow-auto p-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden";
 
-// Dims the dialog (not just the backdrop behind it) once a backdrop click is caught with unsaved changes pending.
+// Dims the dialog (not just the backdrop behind it) once a backdrop click is caught with unsaved changes pending -
+// a gradient rather than a flat scrim, so it reads as the action row's own footer fading up into the content
+// above it rather than a hard-edged box dropped on top.
 export const modalCloseGuardOverlayClassName =
-	"absolute inset-0 z-10 flex items-end justify-center rounded-[0.5rem] bg-[var(--scrim)] p-6";
+	"absolute inset-0 z-10 flex items-end justify-center rounded-[0.5rem] bg-[linear-gradient(to_top,var(--app-gray-surface)_120px,transparent_340px)] p-6";
 
 // The "keep editing / save changes / exit view" row itself.
 export const modalCloseGuardActionsClassName = "flex flex-wrap items-center justify-center gap-2";
