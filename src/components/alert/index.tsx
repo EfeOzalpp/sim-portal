@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import clsx from "clsx";
+import { MaskIcon } from "@/theme/MaskIcon";
 import {
 	alertCloseButtonClassName,
 	alertDescriptionClassName,
@@ -18,19 +19,11 @@ interface AlertProps {
 	className?: string;
 }
 
+const maskIconClassName = "h-full w-full bg-current [mask-position:center] [mask-repeat:no-repeat] [mask-size:contain]";
+
 const icons: Record<AlertTone, ReactNode> = {
-	success: (
-		<svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-			<circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.5" />
-			<path d="M8 12.5L10.5 15L16 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-		</svg>
-	),
-	danger: (
-		<svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-			<circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.5" />
-			<path d="M9 9L15 15M15 9L9 15" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-		</svg>
-	),
+	success: <MaskIcon icon="success/success.svg" className={maskIconClassName} />,
+	danger: <MaskIcon icon="error/error.svg" className={maskIconClassName} />,
 	warning: (
 		<svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
 			<path d="M12 3L22 20H2L12 3Z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />

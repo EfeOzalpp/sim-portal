@@ -39,8 +39,8 @@ type AnchorButtonProps = SharedButtonProps &
 
 export type ButtonProps = NativeButtonProps | AnchorButtonProps;
 
-function ButtonIcon({ icon, variant }: { icon: IconName; variant: ButtonVariant }) {
-	return <MaskIcon icon={icon} className={buttonIconClassName(variant)} />;
+function ButtonIcon({ icon, variant, iconPosition }: { icon: IconName; variant: ButtonVariant; iconPosition: "start" | "end" }) {
+	return <MaskIcon icon={icon} className={buttonIconClassName(variant, iconPosition)} />;
 }
 
 export function Button(props: ButtonProps) {
@@ -58,9 +58,17 @@ export function Button(props: ButtonProps) {
 		...elementProps
 	} = props;
 	const finalClassName = clsx(buttonVariants({ variant, tone, fullWidth }), className);
-	const iconElement = icon && <ButtonIcon icon={icon} variant={variant} />;
+	const iconElement = icon && <ButtonIcon icon={icon} variant={variant} iconPosition={iconPosition} />;
+	// Only iconPosition="start" pins the icon absolutely (see
+	// buttonIconClassName) - the text needs a matching shift to clear it.
+	// "end" has no absolute icon to work around; it just flows normally
+	// after the text via the button's own gap-2, no shift needed.
 	const shiftedChildren =
-		icon && variant === "action" ? <span className="inline-block translate-x-[0.625rem]">{children}</span> : children;
+		icon && variant === "action" && iconPosition === "start" ? (
+			<span className="inline-block translate-x-[0.625rem]">{children}</span>
+		) : (
+			children
+		);
 	const content =
 		iconPosition === "end" ? (
 			<>

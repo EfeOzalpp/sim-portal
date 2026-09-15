@@ -46,7 +46,7 @@ export const buttonVariants = cva(
 				success:
 					"tone-success border-[var(--tone-success-border)] bg-[var(--tone-success-bg)] text-[var(--tone-success-text)] focus-visible:outline-[var(--tone-success-border)] active:outline-[var(--tone-success-border)]",
 				danger:
-					"tone-danger border-[var(--tone-danger-border)] bg-[var(--tone-danger-bg)] text-[var(--tone-danger-text)] focus-visible:outline-[var(--tone-danger-border)] active:outline-[var(--tone-danger-border)]",
+					"tone-danger border-[var(--tone-danger-border)] bg-[var(--tone-danger-bg)] text-[var(--tone-danger-btn-text)] focus-visible:outline-[var(--tone-danger-border)] active:outline-[var(--tone-danger-border)]",
 			},
 			fullWidth: {
 				true: "w-full",
@@ -103,12 +103,17 @@ const iconSizeByVariant: Record<ButtonVariant, string> = {
 	text: "h-4 w-4",
 };
 
-// Sizing/color for a button's leading icon, keyed off the button's own variant.
-export function buttonIconClassName(variant: ButtonVariant) {
+// Sizing/color for a button's icon, keyed off the button's own variant.
+// "action" + iconPosition="start" pins the icon to a fixed left offset (so
+// it stays column-aligned across sibling buttons with different text
+// lengths, e.g. a row of Edit/Delete/Add) and lets the text center
+// independently around it. iconPosition="end" has no such row to align
+// against, so it just flows normally after the text instead.
+export function buttonIconClassName(variant: ButtonVariant, iconPosition: "start" | "end" = "start") {
 	return [
 		iconSizeByVariant[variant],
 		"flex-none bg-current [mask-position:center] [mask-repeat:no-repeat] [mask-size:contain]",
-		variant === "action" && "absolute left-3 top-1/2 -translate-y-1/2",
+		variant === "action" && iconPosition === "start" && "absolute left-3 top-1/2 -translate-y-1/2",
 	]
 		.filter(Boolean)
 		.join(" ");

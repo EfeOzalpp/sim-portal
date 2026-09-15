@@ -18,11 +18,14 @@ export const alertVariants = cva(
 	},
 );
 
-// The leading status icon, shown when `showIcon` is set.
-export const alertIconClassName = "h-[1.375rem] w-[1.375rem] flex-none";
+// The leading status icon, shown when `showIcon` is set. grid/place-items-center
+// isn't just for centering - it's what makes the icon's own h-full/w-full
+// actually apply: a plain <span> child of a non-flex/grid parent stays
+// display:inline, and inline elements ignore explicit height/width entirely.
+export const alertIconClassName = "grid h-[1.375rem] w-[1.375rem] flex-none place-items-center";
 
 // The message text itself.
-export const alertDescriptionClassName = "min-w-0 flex-1 text-sm leading-normal";
+export const alertDescriptionClassName = "is-body min-w-0 flex-1";
 
 // The dismiss ("x") button, shown when `closable` is set.
 export const alertCloseButtonClassName = [
