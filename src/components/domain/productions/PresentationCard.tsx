@@ -1,11 +1,13 @@
-import { Button } from "@/components/button";
+import Link from "next/link";
 import PersonLink from "@/components/domain/profile/PersonLink";
 import SemesterBadge from "@/components/domain/productions/SemesterBadge";
 import { formatNiceListFromArray } from "@/helpers";
 import { MaskIcon } from "@/theme/MaskIcon";
 import { Prisma } from "@prisma/client";
+import { formatShortMonthDayYear } from "@/constants/date-format";
 
 const metaIconClassName = "h-4 w-4 flex-none bg-[var(--app-text)] [mask-position:center] [mask-repeat:no-repeat] [mask-size:contain]";
+const viewArrowIconClassName = "h-4 w-4 flex-none bg-[var(--app-text)] [mask-position:center] [mask-repeat:no-repeat] [mask-size:contain]";
 
 type PresentationWithPresenters = Prisma.PresentationGetPayload<{
   include: {
@@ -59,9 +61,7 @@ export default function PresentationCard({
   const thursdayId = (presentation as any).production?.thursday_id;
   const semesterName = (presentation as any).production?.thursday?.semester?.name;
   const thursdayDate = (presentation as any).production?.thursday?.date;
-  const formattedDate = thursdayDate
-    ? new Date(thursdayDate).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
-    : null;
+  const formattedDate = formatShortMonthDayYear(thursdayDate);
 
   if (!isUserProfile) {
     return (
@@ -73,12 +73,12 @@ export default function PresentationCard({
           {presentation.about !== "" ? (
             <div><i>{presentation.about}</i></div>
           ) : null}
-          <div className="flex flex-col gap-1">
-            <b>Presenters</b>
+          <div className="flex flex-col gap-[0.4rem]">
+            <span className="ui-label">Presenters</span>
             {authors.length > 0 ? (
-              <div className="flex flex-wrap gap-x-1 gap-y-0">{formatNiceListFromArray(authors)}</div>
+              <div className="mt-1 flex flex-wrap gap-x-1 gap-y-0">{formatNiceListFromArray(authors)}</div>
             ) : (
-              <div>No one is credited yet.</div>
+              <div className="mt-1">No one is credited yet.</div>
             )}
           </div>
         </div>
@@ -86,33 +86,51 @@ export default function PresentationCard({
     );
   }
 
-  return (
-    <div className="flex w-full flex-col gap-2 rounded-xl bg-[var(--app-subtle)] p-4 pt-5">
+  const cardContent = (
+    <>
       <SemesterBadge name={semesterName} />
-      <div className="font-bold">{presentation.name}</div>
-      <div className="flex w-full flex-row flex-wrap items-baseline gap-x-4 gap-y-2 [&_div]:m-0">
+      <h4 className="m-0">{presentation.name}</h4>
+      <div className="mt-1 flex w-full flex-row flex-wrap items-baseline gap-x-4 gap-y-2 [&_div]:m-0">
         {presentation.about !== "" ? (
           <div><i>{presentation.about}</i></div>
         ) : null}
         {authors.length > 0 ? (
-          <div className="flex flex-wrap gap-x-1 gap-y-0">{formatNiceListFromArray(authors)}</div>
+          <div className="flex items-center gap-1.5 text-[var(--subtle-text)]">
+            <MaskIcon icon="person/person.svg" className={metaIconClassName} />
+            <div className="flex flex-wrap gap-x-1 gap-y-0">{formatNiceListFromArray(authors)}</div>
+          </div>
         ) : (
           <div>No one is credited as an author of this presentation yet.</div>
         )}
       </div>
       {formattedDate && (
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-1.5 text-[var(--subtle-text)]">
           <MaskIcon icon="day/day.svg" className={metaIconClassName} />
           {formattedDate}
         </div>
       )}
       {thursdayId && (
-        <div className="flex w-full justify-end">
-          <Button href={`/thursdays/${thursdayId}`} variant="action" icon="view/forward.svg" iconPosition="end">
-            View
-          </Button>
+        <div className="absolute top-1/2 right-4 flex -translate-y-1/2 opacity-0 transition-opacity group-hover:opacity-100">
+          <MaskIcon icon="view/forward.svg" className={viewArrowIconClassName} />
         </div>
       )}
+    </>
+  );
+
+  if (thursdayId) {
+    return (
+      <Link
+        href={`/thursdays/${thursdayId}`}
+        className="group relative flex w-full flex-col gap-2 rounded-xl bg-[var(--app-subtle)] p-4 text-inherit no-underline hover:brightness-95 dark:hover:brightness-125"
+      >
+        {cardContent}
+      </Link>
+    );
+  }
+
+  return (
+    <div className="relative flex w-full flex-col gap-2 rounded-xl bg-[var(--app-subtle)] p-4">
+      {cardContent}
     </div>
   );
 }
