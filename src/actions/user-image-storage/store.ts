@@ -4,7 +4,7 @@ import { getStorageDirectory, getStoredImageDestination, PUBLIC_IMAGE_PREFIX } f
 // Helpers
 import "server-only";
 import { createHash } from "node:crypto";
-import { mkdir, writeFile } from "node:fs/promises";
+import { chmod, mkdir, writeFile } from "node:fs/promises";
 
 // Under next.config.ts's serverActions.bodySizeLimit (5mb) - leaves room for
 // request-encoding overhead, so this friendly message is what actually fires
@@ -87,6 +87,8 @@ export async function storeUserImage(file: File): Promise<StoredUserImage> {
 			throw error;
 		}
 	}
+
+	await chmod(destination, 0o644);
 
 	return {
 		publicPath: `${PUBLIC_IMAGE_PREFIX}/${fileName}`,
