@@ -38,7 +38,7 @@ export default function ConfirmDelete({
 	itemName,
 	itemType = "item",
 	warningText,
-	confirmLabel = "Confirm Delete",
+	confirmLabel = "Confirm delete",
 	pendingLabel = "Deleting...",
 	errorMessage = "An error occurred while deleting.",
 	successMessage,

@@ -69,7 +69,7 @@
 }
 
 .navSection:first-child {
-	padding-block-start: calc(1.5rem * 2);
+	padding-block-start: calc(1.5rem * 2 + 0.75rem);
 }
 
 .navSection:not(:first-child) {

@@ -1,10 +1,12 @@
 import { useRef, type InputHTMLAttributes, type ReactNode, type Ref, type TextareaHTMLAttributes } from "react";
 import clsx from "clsx";
+import { LoadingOutlined } from "@ant-design/icons";
 import {
 	inputBareClassName,
 	inputClearButtonClassName,
 	inputFieldVariants,
 	inputIconClassName,
+	inputSpinnerClassName,
 	inputWrapperVariants,
 } from "@/components/input/styles";
 import { MaskIcon } from "@/theme/MaskIcon";
@@ -14,15 +16,23 @@ interface SharedInputProps {
 	className?: string;
 }
 
+// The two right-hand-side behaviors are mutually exclusive by construction -
+// "clearable" (an "x" once there's a value, or a spinner while `loading`) and
+// "filter" (embeds `filterTrigger` instead) can't both be active on the same
+// input, since they're one `mode` field rather than independent props.
+export type InputMode = "clearable" | "filter";
+
 export interface InputProps
 	extends SharedInputProps,
-		Omit<InputHTMLAttributes<HTMLInputElement>, keyof SharedInputProps | "prefix" | "suffix"> {
+		Omit<InputHTMLAttributes<HTMLInputElement>, keyof SharedInputProps | "prefix"> {
 	/** Rendered inside the field's border, before the value. */
 	prefix?: ReactNode;
-	/** Rendered inside the field's border, after the value. */
-	suffix?: ReactNode;
-	/** Shows a clear button once there's a value; requires a controlled value + onChange. */
-	allowClear?: boolean;
+	/** Picks what (if anything) renders inside the field's border, after the value - see InputMode. */
+	mode?: InputMode;
+	/** mode="clearable" only - shows a spinner in place of the "x" while true. */
+	loading?: boolean;
+	/** mode="filter" only - the trigger rendered on the field's right edge. */
+	filterTrigger?: ReactNode;
 	ref?: Ref<HTMLInputElement>;
 }
 
@@ -39,15 +49,16 @@ export function Input({
 	status,
 	className,
 	prefix,
-	suffix,
-	allowClear,
+	mode,
+	loading,
+	filterTrigger,
 	value,
 	onChange,
 	ref,
 	...props
 }: InputProps) {
 	const cvaStatus = status || "none";
-	const hasAffix = !!(prefix || suffix || allowClear);
+	const hasAffix = !!(prefix || mode);
 	const inputRef = useRef<HTMLInputElement>(null);
 
 	// Clears by actually driving the DOM input — through the native value
@@ -89,17 +100,25 @@ export function Input({
 				onChange={onChange}
 				className={clsx(inputBareClassName, className)}
 			/>
-			{allowClear && !!value && (
-				<button
-					type="button"
-					className={inputClearButtonClassName}
-					aria-label="Clear"
-					onClick={clear}
-				>
-					<MaskIcon icon="close/close.svg" className={inputIconClassName} />
-				</button>
+			{mode === "clearable" && (
+				loading ? (
+					<span className={inputSpinnerClassName}>
+						<LoadingOutlined spin />
+					</span>
+				) : (
+					!!value && (
+						<button
+							type="button"
+							className={inputClearButtonClassName}
+							aria-label="Clear"
+							onClick={clear}
+						>
+							<MaskIcon icon="close/close.svg" className={inputIconClassName} />
+						</button>
+					)
+				)
 			)}
-			{suffix}
+			{mode === "filter" && filterTrigger}
 		</span>
 	);
 }

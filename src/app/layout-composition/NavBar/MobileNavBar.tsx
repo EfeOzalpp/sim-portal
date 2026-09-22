@@ -41,7 +41,7 @@ export default function MobileNavBar({ isAdmin, user }: MobileNavBarProps) {
 				>
 					<span className={styles.menuIconAsset} aria-hidden="true" />
 				</button>
-				<span className="text-2xl leading-tight font-bold font-heading text-[var(--brand-color)]">SIM</span>
+				<span className="text-2xl leading-tight font-bold tracking-wide font-heading text-[var(--brand-color)]">SIM</span>
 			</div>
 
 			{isOpen && (
@@ -59,7 +59,7 @@ export default function MobileNavBar({ isAdmin, user }: MobileNavBarProps) {
 			>
 				<div className={styles.panelInner}>
 					<div className={styles.panelHeader}>
-						<span className="col-start-2 text-center text-2xl leading-tight font-bold font-heading text-[var(--brand-color)]">SIM</span>
+						<span className="col-start-2 text-center text-2xl leading-tight font-bold tracking-wide font-heading text-[var(--brand-color)]">SIM</span>
 						<button
 							className={styles.closeButton}
 							onClick={() => setIsOpen(false)}
@@ -77,7 +77,7 @@ export default function MobileNavBar({ isAdmin, user }: MobileNavBarProps) {
 							)}
 							<NavButtonLink href="/thursdays" label="Thursdays" iconClassName={navStyles.thursdayIcon} />
 							{isAdmin && (
-								<NavButtonLink href="/semester" label="Semesters" iconClassName={navStyles.listIcon} />
+								<NavButtonLink href="/semester" label="Semesters" iconClassName={navStyles.semestersIcon} />
 							)}
 						</div>
 					</div>

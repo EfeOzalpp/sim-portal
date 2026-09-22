@@ -7,23 +7,22 @@ export const buttonVariants = cva(
 		"rounded-md border border-solid",
 		"px-3 py-2",
 		"font-sans no-underline",
-		"hover:brightness-95 dark:hover:brightness-125 active:brightness-90 dark:active:brightness-150",
 		"focus-visible:outline-2 focus-visible:outline-offset-2",
 		"active:outline-2 active:outline-offset-2",
-		"disabled:cursor-not-allowed disabled:opacity-60 aria-disabled:cursor-not-allowed aria-disabled:opacity-60",
+		// Washed out/lighter in light mode, dimmer/darker in dark mode.
+		"disabled:cursor-not-allowed disabled:brightness-110 dark:disabled:brightness-75",
+		"aria-disabled:cursor-not-allowed aria-disabled:brightness-110 dark:aria-disabled:brightness-75",
 	],
 	{
 		variants: {
 			variant: {
-				default: ["border-[var(--button-border)] bg-[var(--btn-default-bg)] text-[var(--app-text)]"],
+				default: ["border-[var(--button-border)] bg-[var(--button-bg)] text-[var(--button-text)] hover:border-[var(--button-border-hover)] hover:bg-[var(--button-bg-hover)] hover:text-[var(--button-text-hover)]"],
 				nav: [
 					"btn-nav justify-start border-transparent bg-transparent px-0! font-normal",
 					// --nav-hover-bg/--nav-active-bg: the green nav-area theme, not the shared gray --nav-button-bg-hover/-active.
 					"text-[var(--app-icon)] hover:bg-[var(--nav-hover-bg)]",
 					// !important: hover: and aria-[current=page]: are equal specificity, or hovering the current page would lose its active color.
 					"aria-[current=page]:bg-[var(--nav-active-bg)]! aria-[current=page]:font-semibold aria-[current=page]:text-[var(--nav-active-text)]",
-					// Resets the base hover:brightness filter for the current-page item, otherwise it still visibly shifts on hover.
-					"aria-[current=page]:hover:brightness-100",
 					// Green focus/active ring, !important over tone="default"'s equal-specificity blue ring.
 					"focus-visible:outline-[var(--app-theme)]! active:outline-[var(--app-theme)]!",
 					// Negative offset, not the base outline-offset-2 - NavBar.module.css's
@@ -31,56 +30,60 @@ export const buttonVariants = cva(
 					// one unit), which clips a ring rendered outside the button. Inside, it can't be.
 					"focus-visible:outline-offset-[-2px]! active:outline-offset-[-2px]!",
 				],
-				action: ["btn-action relative border-[var(--button-border)] bg-[var(--action-item-bg)] text-[var(--app-text)]"],
+				action: ["btn-action relative border-[var(--button-border)] bg-[var(--button-bg)] text-[var(--button-text)] hover:border-[var(--button-border-hover)] hover:bg-[var(--button-bg-hover)] hover:text-[var(--button-text-hover)]"],
 				// Rounded icon+text pill (e.g. PrintLink) - a real bordered/filled button, not the plain inline `text` link below.
-				link: ["btn-link rounded-full! border-[var(--button-border)] bg-[var(--action-item-bg)] text-[var(--app-text)]"],
+				link: ["btn-link rounded-full! border-[var(--button-border)] bg-[var(--button-bg)] text-[var(--button-text)] hover:border-[var(--button-border-hover)] hover:bg-[var(--button-bg-hover)] hover:text-[var(--button-text-hover)]"],
 				// Plain inline text link, no box - for a small call-to-action sitting inline with surrounding content.
 				text: [
 					"btn-text min-h-0! justify-start border-transparent bg-transparent p-0! font-normal",
 					"text-inherit hover:text-[var(--brand-color)] hover:underline hover:underline-offset-[0.14em]",
+				],
+				// Square, icon-only trigger (filter/theme popovers, card hover actions,
+				// a lone print/add button) - a fixed h-9 w-9 grid cell, not a text row,
+				// so it opts out of every base flex/padding/radius utility that assumes
+				// text content (! forces the override - see the "link" variant's own
+				// rounded-full! for the same technique against the same base rule).
+				icon: [
+					"inline-grid! h-9 w-9 flex-none place-items-center! gap-0! rounded-lg! border border-solid p-0!",
+					"border-[var(--button-border)] bg-[var(--button-bg)] text-[var(--button-text)] hover:border-[var(--button-border-hover)] hover:bg-[var(--button-bg-hover)] hover:text-[var(--button-text-hover)]",
 				],
 			},
 			tone: {
 				// Blue - the modal/NavContent/generic focus ring; variant="nav" overrides back to green above.
 				default: "focus-visible:outline-[var(--focus-ring)] active:outline-[var(--focus-ring)]",
 				success:
-					"tone-success border-[var(--tone-success-border)] bg-[var(--tone-success-bg)] text-[var(--tone-success-text)] focus-visible:outline-[var(--tone-success-border)] active:outline-[var(--tone-success-border)]",
+					"tone-success border-transparent bg-[var(--tone-success-bg)] text-[var(--tone-success-text)] focus-visible:outline-transparent active:outline-transparent",
 				danger:
-					"tone-danger border-[var(--tone-danger-border)] bg-[var(--tone-danger-bg)] text-[var(--tone-danger-btn-text)] focus-visible:outline-[var(--tone-danger-border)] active:outline-[var(--tone-danger-border)]",
+					"tone-danger border-transparent bg-[var(--tone-danger-bg)] text-[var(--tone-danger-btn-text)] focus-visible:outline-transparent active:outline-transparent",
 			},
 			fullWidth: {
 				true: "w-full",
 				false: "",
 			},
 		},
-		// NavContent's manage-bar isn't a real modal, so its own Add/Delete
-		// buttons stay subtle: text/icon (currentColor) carry the tint always;
-		// bg/border stay neutral (variant="action"'s own look) at rest, a
-		// lighter (/50 opacity) wash on hover, and the full-strength color once
-		// actually pressed or - for delete - in delete mode (ActionModeButton's
-		// own isActive override, same full-strength tokens). The unconditional
-		// border-/bg-[var(--button-border|btn-default-bg)]! here isn't
-		// decorative - tone.success/tone.danger above set their own bold bg
-		// unconditionally too, with no hover:/active: prefix, so without this
-		// override the plain (higher-specificity-losing but still-matching)
-		// base rule would keep winning at rest. `!` on all of these forces them
-		// over variant/tone's own border/bg/text, which would otherwise tie on
-		// specificity and let stylesheet order decide the winner.
+		// for page action icons
 		compoundVariants: [
 			{
 				variant: "action",
-				tone: "default",
-				class: "hover:bg-black/10! dark:hover:bg-white/40! hover:brightness-100! dark:hover:brightness-100!",
-			},
-			{
-				variant: "action",
 				tone: "success",
-				class: "border-[var(--button-border)]! bg-[var(--action-item-bg)]! text-[var(--action-add-text)]! hover:border-[var(--action-add-border)]/50! hover:bg-[var(--action-add-bg)]/50! active:border-[var(--action-add-border)]! active:bg-[var(--action-add-bg)]! focus-visible:outline-[var(--action-add-border)]! active:outline-[var(--action-add-border)]! hover:brightness-98! dark:hover:brightness-105! active:brightness-97! dark:active:brightness-97!",
+				class: "border-[var(--button-border)]! bg-[var(--button-bg)]! text-[var(--action-add-text)]! hover:border-[var(--action-add-border)]/50! hover:bg-[var(--action-add-bg)]/50! active:border-[var(--action-add-border)]! active:bg-[var(--action-add-bg)]! focus-visible:outline-[var(--action-add-border)]! active:outline-[var(--action-add-border)]!",
 			},
 			{
 				variant: "action",
 				tone: "danger",
-				class: "border-[var(--button-border)]! bg-[var(--action-item-bg)]! text-[var(--action-delete-text)]! hover:border-[var(--action-delete-border)]/50! hover:bg-[var(--action-delete-bg)]/50! active:border-[var(--action-delete-border)]! active:bg-[var(--action-delete-bg)]! focus-visible:outline-[var(--action-delete-border)]! active:outline-[var(--action-delete-border)]! hover:brightness-98! dark:hover:brightness-105! active:brightness-97! dark:active:brightness-97!",
+				class: "border-[var(--button-border)]! bg-[var(--button-bg)]! text-[var(--action-delete-text)]! hover:border-[var(--action-delete-border-hover)]! hover:bg-[var(--action-delete-bg-hover)]/50! hover:text-[var(--action-delete-text-hover)]! active:border-[var(--action-delete-border)]! active:bg-[var(--action-delete-bg-hover)]! focus-visible:outline-[var(--action-delete-border)]! active:outline-[var(--action-delete-border)]!",
+			},
+			// Unlike action+danger above, this one IS colored (text) at rest - these
+			// are card hover-reveal buttons, already hidden until hovered. Border/bg
+			// still wait for hover though, same as action+danger's own gating.
+			// hover:bg goes through --button-bg-hover (not a hardcoded
+			// --action-delete-bg-hover) so a card overlay context can scope it to
+			// its own --button-delete-overlay-bg-hover, same mechanism the rest-state
+			// bg above already uses via --button-bg.
+			{
+				variant: "icon",
+				tone: "danger",
+				class: "border-[var(--button-border)]! bg-[var(--button-bg)]! text-[var(--action-delete-text)]! hover:border-[var(--action-delete-border-hover)]! hover:bg-[var(--button-bg-hover)]! hover:text-[var(--action-delete-text-hover)]!",
 			},
 		],
 		defaultVariants: {
@@ -101,7 +104,13 @@ const iconSizeByVariant: Record<ButtonVariant, string> = {
 	action: "h-5 w-5",
 	link: "h-5 w-5",
 	text: "h-4 w-4",
+	icon: "h-4 w-4",
 };
+
+// For a lone auto-width button (icon+text composed as plain children, not
+// Button's own `icon` prop) - buttonIconClassName's absolute positioning
+// below only looks right for a column of same-width action buttons.
+export const actionButtonIconClassName = "h-4 w-4 flex-none bg-current [mask-position:center] [mask-repeat:no-repeat] [mask-size:contain]";
 
 // Sizing/color for a button's icon, keyed off the button's own variant.
 // "action" + iconPosition="start" pins the icon to a fixed left offset (so

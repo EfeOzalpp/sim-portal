@@ -1,79 +1,90 @@
 /* Color theme: Default */
 
 html[data-color-theme="default"][data-theme="light"] {
-	/* Brand + app-shell background (layout.tsx's appShellClassName) */
-	--app-theme: #56a1e7;
+	/* The Master Anchor for the outer app shell cake layer */
+	--app-theme: #c6e3ff;
 
-	--app-icon: #4b4b4b;
-	--app-label: #575757;
+	/* The Cohesive Gradient Matrix */
+	--app-bg: linear-gradient(
+		90deg, 
+		var(--app-theme) 0%, 
+		hsl(from var(--app-theme) h s l) 38%, 
+		var(--app-theme) 100%
+	);
 
-	--brand-color: #5d5d6c;
-	--profile-indicator: rgb(119, 176, 234);
-	--app-title: #4d4d5b;
+	/* Main-frame scrollbar tracking */
+	--main-scrollbar-thumb: hsl(from var(--app-theme) h calc(s * 0.8) calc(l * 0.85));
 
-	--main-border: #e1e3e7;
-	--main-border-2: #dbe4f7;
+	/* Main border */
+	--main-border: hsl(from var(--app-theme) h calc(s * 0.6) calc(l * 0.90));
+	
+	/* Utility Elements */
+	--app-icon: hsl(from var(--app-theme) h calc(s * 0.4) calc(l * 0.4));
+	--brand-color: hsl(from var(--app-theme) h calc(s * 0.7) calc(l * 0.5));
+	--app-title: hsl(from var(--app-theme) h calc(s * 0.7) calc(l * 0.5));
 
-	--app-bg: linear-gradient(90deg, #e5effa 0%, #e5f2ff 36%, #bcc6e6 60%);
+	/* Profile Badge Framework */
+	--profile-indicator: hsl(from var(--app-theme) h calc(s * 0.7) calc(l * 0.7));
+	--profile-indicator-text: hsl(from var(--app-theme) h calc(s * 1.1) calc(l * 1.09));
 
-	/* Select's variant="title" - the modal's own blue (--select-active-border/-bg), not a separate hue. */
-	--green-select-bg: #7aade4;
-	--green-text: #f2f9ff;
-	--green-select-bg-hover: #68a4e5;
-	--green-select-bg-active: #6692c1;
-	--green-select-bg-active-hover: #5a82ab;
-	--green-select-border: #b8c1c8;
+	/* Nav area */
+	--nav-active-bg: hsl(from var(--app-theme) h calc(s * 0.6) calc(l * 0.7));
+	--nav-hover-bg: hsl(from var(--app-theme) h calc(s * 0.1) calc(l * 1.05));
+	--nav-active-text: hsl(from var(--app-theme) h calc(s * 1.1) calc(l * 1.09));
 
-	/* Nav-area - blue wash, same hue as --select-active-bg/-border below. */
-	--nav-hover-bg: #e8f4fd;
-	--nav-active-bg: #77aae0;
-	--nav-active-text: #ffffff;
+	/* Select's variant="title" */
+	--green-select-bg: hsl(from var(--app-theme) h calc(s * 0.6) calc(l * 0.7));
+	--green-select-bg-hover: hsl(from var(--green-select-bg) h s calc(l * 0.94));
+	--green-text: hsl(from var(--app-theme) h calc(s * 1.1) calc(l * 1.09));
 
-	/* action nav area */
-	--action-item-bg: #eef4fb;
-	--action-input-bg: #f4f8fc;
+	--green-input-filter-hover-bg: hsl(from var(--green-select-bg-hover) h s calc(l * 0.96));
 
-	/* Individual Performance table's sticky header - opaque (not derived from
-	   transparency/blur, which doesn't render reliably across browsers), own
-	   blue tint matching this theme instead of a neutral gray. */
-	--app-ind-progress-solid: linear-gradient(180deg, #f5f9fd 0%, #e9f1fa 100%);
+	/* Theme-colored checkbox tokens */ 
+	--green-bg: hsl(from var(--page-color, #f1f5f9) 220 calc(s * 0.4) calc(l * 0.96));
+	--green-active-bg: hsl(from var(--page-color, #f1f5f9) 220 calc(s * 2) calc(l * 0.8));
+	--green-hover: hsl(from var(--green-bg) h s calc(l * 0.94));
+	--green-border-checkbox: hsl(from var(--green-bg) h calc(s * 1.2) calc(l * 0.70));
+	--green-active-checkbox: hsl(from var(--green-bg) h calc(s * 1.2) calc(l * 0.1));
 }
 
+
 html[data-color-theme="default"][data-theme="dark"] {
-	--app-theme: #7db5d8;
 
-	--app-icon: rgb(244, 244, 244, 0.8);
-	--app-label: rgba(245, 250, 255, 0.9);
+	--app-theme: rgb(69, 99, 143);
 
-	--brand-color: rgba(242, 242, 242, 0.95);
-	--profile-indicator: #b7ddff;
-	--app-title: #ffffff;
+	/* main bg */
+	--app-bg: linear-gradient(90deg, var(--app-theme) 0%, hsl(from var(--app-theme) h s l) 38%, var(--app-theme) 100%);
 
-	--main-border: rgba(162, 182, 197, 0.65);
-	--main-border-2: rgba(198, 202, 204, 0.25);
+	/* main-frame scrollbar */
+	--main-scrollbar-thumb: hsl(from var(--app-theme) h calc(s * 0.8) calc(l * 1));
 
-	--app-bg: linear-gradient(90deg, #476286 0%, #96abbf 36%, #404962 72%);
+	/* main border */
+	--main-border: hsl(from var(--app-theme) h calc(s * 1) calc(l * 1.6));
+	
+	/* stuff */
+	--app-icon: hsl(from var(--app-theme) h calc(s * 0.2) calc(l * 2.2));
+	--brand-color: hsl(from var(--app-theme) h calc(s * 2.05) calc(l * 2.2));
+	--app-title: hsl(from var(--app-theme) h calc(s * 2.05) calc(l * 2.2));
 
-	/* Select's variant="title" - matching light, the modal's own blue. */
-	--green-select-bg: #c7e3f3;
-	--green-select-border: #e4f0ff;
+	--profile-indicator: hsl(from var(--app-theme) h calc(s * 2) calc(l * 2));
+	--profile-indicator-text: hsl(from var(--app-theme) h calc(s * 5) calc(l * 0.4));
 
-	--green-text: rgb(0, 0, 0);
+	/* nav area */
+	--nav-active-bg: hsl(from var(--app-theme) h calc(s * 2.05) calc(l * 1.95));
+	--nav-hover-bg: hsl(from var(--app-theme) h calc(s * 0.1) calc(l * 0.4));
+	--nav-active-text: hsl(from var(--app-theme) h calc(s * 5) calc(l * 0.4));
 
-	--green-select-bg-hover: rgb(198, 233, 255);
+	/* Select's variant="title */
+	--green-select-bg: hsl(from var(--app-theme) h calc(s * 2.05) calc(l * 1.95));
+	--green-select-bg-hover: hsl(from var(--green-select-bg) h calc(s * 0.9) calc(l * 1.03));
+	--green-text: hsl(from var(--app-theme) h calc(s * 5) calc(l * 0.4));
 
-	--green-select-bg-active: #b6e4ff;
-	--green-select-bg-active-hover: #95bad1;
+	--green-input-filter-hover-bg: hsl(from var(--green-select-bg-hover) h calc(s * 1) calc(l * 0.9));
 
-	/* Nav-area - matching light, the modal's own blue. */
-	--nav-active-bg: #b0e2ff;
-	--nav-hover-bg: rgba(103, 128, 157, 0.35);
-	--nav-active-text: #000000;
-
-	/* action nav area */
-	--action-item-bg: rgb(79, 80, 82);
-	--action-input-bg: rgba(126, 123, 121, 0.75);
-
-	/* Individual Performance table's sticky header - see the light block's note above. */
-	--app-ind-progress-solid: linear-gradient(175deg, #566a7d 0%, #526577 100%);
+	/* theme colored select (used for checkboxes in pages) */ 
+	--green-bg: hsl(from var(--page-color) 220 calc(s * 1.2) calc(l * 5.4));
+	--green-active-bg: hsl(from var(--page-color) 220 calc(s * 5.4) calc(l * 5.4));
+	--green-hover: hsl(from var(--green-bg) h s calc(l * 0.9));
+	--green-border-checkbox: hsl(from var(--green-bg) h calc(s * 0.5) calc(l * 0.5));
+	--green-active-checkbox: hsl(from var(--green-bg) h s calc(l * 5.2));
 }

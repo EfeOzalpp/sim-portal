@@ -144,7 +144,7 @@
 		border-top: 1px solid var(--main-border);
 		background: transparent;
 		cursor: pointer;
-		color: var(--app-label);
+		color: var(--label-text);
 	}
 
 	.closeBarBtn:hover {

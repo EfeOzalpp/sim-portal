@@ -13,6 +13,7 @@ html[data-theme] .input-theme-surface .ant-picker {
 
 html[data-theme] .ant-picker {
 	width: 100%;
+	min-height: 3rem;
 	padding-block: 0.625rem;
 }
 
@@ -21,8 +22,29 @@ html[data-theme] .input-theme-surface .ant-picker:hover {
 	box-shadow: var(--input-hover-shadow);
 }
 
+/* Same disabled convention as Input/Button - same colors as enabled (see
+   colorBorderDisabled etc. in styles.ts), dimmed via opacity here instead of
+   antd's own disabled palette (which otherwise overrides this to 1). */
+html[data-theme] .ant-picker-disabled {
+	opacity: 0.6;
+}
+
+/* Same reactive treatment as Select's own chevron (selectChevronVariants) -
+   dim at rest, full-emphasis once the panel's actually open. Specificity
+   alone (2 classes + html[data-theme]) clears antd's own unscoped .ant-picker
+   .ant-picker-suffix rule but stays under its status-error/-warning
+   overrides (.ant-picker-status-error ... .ant-picker-suffix, 4 classes),
+   so those still win and don't need excluding here. */
+html[data-theme] .ant-picker-suffix {
+	color: var(--modal-chevron-color, var(--input-icon));
+}
+
+html[data-theme] .ant-picker-focused .ant-picker-suffix {
+	color: var(--modal-chevron-active-color, var(--input-icon));
+}
+
 html[data-theme] .ant-picker-range .ant-picker-active-bar {
-	background: var(--select-checkbox-active-text);
+	background: var(--select-checkbox-active-bg);
 }
 
 html[data-theme] .ant-picker.ant-picker-range .ant-picker-separator,
@@ -39,17 +61,23 @@ html[data-theme] .input-theme-surface .ant-picker.ant-picker-range .ant-picker-s
 	opacity: 0.75;
 }
 
+/* --input-modal-dropdown-bg/-text: same tokens Select's own dropdown uses
+   when inModal (see selectContentInModalClassName) - DatePicker only ever
+   renders inside a modal in this app, so it can take them unconditionally
+   instead of needing its own inModal prop. Falls back to --input-dropdown-bg/
+   --input-text (this popover's old, always-light look) wherever the -modal-
+   tokens aren't defined (light theme). */
 html[data-theme] .ant-picker-panel-container {
-	background: var(--input-dropdown-bg);
+	background: var(--input-modal-dropdown-bg, var(--input-dropdown-bg));
 	border: 1px solid var(--input-border);
 	border-radius: 12px;
 }
 
 html[data-theme] .ant-picker-panel,
 html[data-theme] .ant-picker-header {
-	background: var(--input-dropdown-bg);
+	background: var(--input-modal-dropdown-bg, var(--input-dropdown-bg));
 	border-color: var(--input-border);
-	color: var(--input-text);
+	color: var(--input-modal-dropdown-text, var(--input-text));
 }
 
 html[data-theme] .ant-picker-header button,
@@ -62,7 +90,7 @@ html[data-theme] .ant-picker-header-prev-btn:hover,
 html[data-theme] .ant-picker-header-next-btn:hover,
 html[data-theme] .ant-picker-header-super-prev-btn:hover,
 html[data-theme] .ant-picker-header-super-next-btn:hover {
-	color: var(--select-checkbox-active-text);
+	color: var(--select-checkbox-active-bg);
 }
 
 html[data-theme] .ant-picker-prev-icon,

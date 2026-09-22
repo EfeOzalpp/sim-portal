@@ -62,14 +62,14 @@ export default function UserAccountLink({ user }: UserAccountLinkProps) {
 			aria-label={`Open profile for ${displayName}`}
 		>
 			<span
-				className="is-body grid h-[var(--nav-account-avatar-size)] w-[var(--nav-account-avatar-size)] place-items-center justify-self-center rounded-full bg-[var(--profile-indicator)] leading-none text-[var(--nav-active-text)]"
+				className="is-body grid h-[var(--nav-account-avatar-size)] w-[var(--nav-account-avatar-size)] place-items-center justify-self-center rounded-full bg-[var(--profile-indicator)] leading-none font-semibold text-[var(--profile-indicator-text)]"
 				aria-hidden="true"
 			>
 				{getInitials(displayName)}
 			</span>
 			<span className={clsx(styles.identity, "flex max-w-[12rem] min-w-0 flex-col overflow-hidden opacity-100")}>
 				<span className="is-body overflow-hidden text-ellipsis whitespace-nowrap text-[var(--app-text)]">{displayName}</span>
-				<span className="is-body overflow-hidden text-ellipsis whitespace-nowrap text-[var(--app-label)]">{formatRole(user.role)}</span>
+				<span className="is-body overflow-hidden text-ellipsis whitespace-nowrap text-[var(--label-text)]">{formatRole(user.role)}</span>
 			</span>
 		</Link>
 	);

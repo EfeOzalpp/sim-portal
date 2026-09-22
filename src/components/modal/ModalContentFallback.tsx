@@ -8,7 +8,7 @@ import { LoadingOutlined } from "@ant-design/icons";
 // own "use client" boundary is what keeps it safe to use from a page.tsx.
 export default function ModalContentFallback() {
 	return (
-		<div className="grid h-full place-items-center p-10 text-[var(--app-label)]">
+		<div className="grid h-full place-items-center p-10 text-[var(--label-text)]">
 			<LoadingOutlined spin style={{ fontSize: "1.5rem" }} />
 		</div>
 	);

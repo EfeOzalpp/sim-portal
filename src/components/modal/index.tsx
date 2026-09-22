@@ -134,9 +134,9 @@ export default function ModalPopup({
 				aria-labelledby={titleId}
 			>
 				<div className={modalHeaderClassName}>
-					<span id={titleId} className={modalTitleClassName}>
+					<h3 id={titleId} className={modalTitleClassName}>
 						{title}
-					</span>
+					</h3>
 					<button
 						type="button"
 						className={modalCloseButtonClassName}
@@ -159,7 +159,14 @@ export default function ModalPopup({
 					</ModalCloseGuardProvider>
 				</div>
 				{showCloseGuard && (
-					<div className={modalCloseGuardOverlayClassName}>
+					<div
+						className={modalCloseGuardOverlayClassName}
+						onClick={(event) => {
+							if (event.target === event.currentTarget) {
+								setShowCloseGuard(false);
+							}
+						}}
+					>
 						<div className={modalCloseGuardActionsClassName}>
 							<Button type="button" onClick={() => setShowCloseGuard(false)}>
 								Keep Editing
@@ -173,7 +180,7 @@ export default function ModalPopup({
 										guardState.onSave();
 									}}
 								>
-									Save Changes
+									Save changes
 								</Button>
 							)}
 							<Button

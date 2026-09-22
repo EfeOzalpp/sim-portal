@@ -14,7 +14,11 @@ interface PageTitleProps {
 export default function PageTitle({ title, filterControl, contentClassName, filterControlClassName = "w-72 min-w-0 shrink-0" }: PageTitleProps) {
 	return (
 		<div
-			className="items-center px-6 py-3 text-[var(--app-title)] print:hidden"
+			// !: layout.module.css's `.contentDivider > [data-page-title] { display: flex; }`
+			// is unconditional (no @media print), and its class+attribute selector
+			// outranks a plain single-class utility - without !, display:flex wins
+			// over print:hidden's display:none every time, regardless of the media query.
+			className="items-center px-6 py-3 text-[var(--app-title)] print:hidden!"
 			data-page-title
 		>
 			<div data-page-title-content className={clsx("flex min-w-0 flex-wrap items-center gap-x-5 gap-y-1", contentClassName)}>

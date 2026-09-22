@@ -47,30 +47,30 @@ const lightValues: DatePickerThemeValues = {
 	hoverBorder: "#c7c7c7", // = --input-border-hover
 	focusShadow: "var(--input-hover-shadow)",
 	error: "#d36b6b", // = --input-error-border
-	primary: "#56a1e7", // = --select-checkbox-active-text - a plain accent shown directly on the calendar surface, not paired with a light pill bg
+	primary: "#56a1e7", // = --select-checkbox-active-bg - a plain accent shown directly on the calendar surface, not paired with a light pill bg
 	primarySolidText: "#ffffff",
 	rangeBackground: "#d9ebfa", // = --select-active-bg
-	link: "#56a1e7", // = --select-checkbox-active-text
+	link: "#56a1e7", // = --select-checkbox-active-bg
 	linkHover: "#3d84cc", // darker shade of the above
 };
 
 const darkValues: DatePickerThemeValues = {
-	background: "#3a3a3a", // = --select-bg
-	elevatedBackground: "#3a3a3a", // = --input-dropdown-bg
-	border: "rgb(88, 88, 88)", // = --input-border
+	background: "rgba(54, 54, 54, 0.5)", // = --select-bg
+	elevatedBackground: "rgb(247, 247, 247)", // = --input-dropdown-bg
+	border: "rgba(54, 54, 54, 0.7)", // = --input-border
 	text: "#ffffff", // = --app-text
 	placeholder: "#f4f4f4", // = --input-placeholder
 	icon: "#ffffff", // = --input-icon
-	hoverBackground: "#4a4a4a", // = --select-bg-hover
-	hoverBorder: "#595959", // = --input-border-hover
+	hoverBackground: "rgba(54, 54, 54, 0.7)", // = --select-bg-hover
+	hoverBorder: "rgba(123, 123, 123, 0.8)", // = --input-border-hover
 	focusShadow: "var(--input-hover-shadow)",
 	error: "#b36a6a", // = --input-error-border
-	primary: "#cbebff", // = --select-checkbox-active-text - a plain accent shown directly on the calendar surface (dark), not paired with a light pill bg like --select-active-text now is
-	primarySolidText: "#0d2b45",
+	primary: "#87b4de", // = --select-checkbox-active-bg - a plain accent shown directly on the calendar surface (dark), not paired with a light pill bg like --select-active-text now is
+	primarySolidText: "#ffffff",
 	// Not --select-active-bg (now a pale pill bg meant for dark text) - an in-range day's number stays plain white text, so this needs to stay dark enough for that to read.
 	rangeBackground: "#49626e",
-	link: "#cbebff", // = --select-checkbox-active-text
-	linkHover: "#e0f3ff", // lighter shade of the above
+	link: "#87b4de", // = --select-checkbox-active-bg
+	linkHover: "#5d95e8", // = --select-checkbox-hovered-bg
 };
 
 // Maps one semantic value set (light or dark) onto the actual antd ConfigProvider token names.
@@ -81,7 +81,9 @@ function createDatePickerTheme(values: DatePickerThemeValues): ThemeConfig {
 		colorText: values.text,
 		colorTextPlaceholder: values.placeholder,
 		colorIcon: values.icon,
-		hoverBorderColor: values.hoverBorder,
+		// Border stays put on hover, same as Input/Select now do - only the
+		// active/focused border still changes, via activeBorderColor below.
+		hoverBorderColor: values.border,
 		activeBorderColor: values.hoverBorder,
 		colorError: values.error,
 		colorErrorBorderHover: values.error,
@@ -108,10 +110,20 @@ function createDatePickerTheme(values: DatePickerThemeValues): ThemeConfig {
 	return {
 		// DatePicker renders its internal "now" action as an antd link Button,
 		// which has no DatePicker-scoped token of its own — has to be a global
-		// link color instead.
+		// link color instead. colorBorderDisabled/colorBgContainerDisabled/
+		// colorTextDisabled are also global-only (no DatePicker-scoped
+		// equivalent) - left alone, antd derives them from its own generic
+		// neutral gray scale instead of this theme's own colors, which reads
+		// as a jarringly different border once disabled. Pinning them to the
+		// same values as enabled and letting datepicker-theme.css's own
+		// .ant-picker-disabled opacity do the dimming instead matches how
+		// Input/Button already signal disabled in this app.
 		token: {
 			colorLink: values.link,
 			colorLinkHover: values.linkHover,
+			colorBorderDisabled: values.border,
+			colorBgContainerDisabled: values.background,
+			colorTextDisabled: values.text,
 		},
 		components: {
 			DatePicker: datePickerToken,

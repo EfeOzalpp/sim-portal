@@ -65,7 +65,10 @@ export function Button(props: ButtonProps) {
 	// after the text via the button's own gap-2, no shift needed.
 	const shiftedChildren =
 		icon && variant === "action" && iconPosition === "start" ? (
-			<span className="inline-block translate-x-[0.625rem]">{children}</span>
+			// whitespace-nowrap - without it, a long enough label (e.g. "Add
+			// Thursday") wraps to two lines instead of the button just growing to
+			// fit it on one.
+			<span className="inline-block whitespace-nowrap translate-x-[0.625rem]">{children}</span>
 		) : (
 			children
 		);

@@ -48,7 +48,10 @@ const navDividerClassName = [
 
 const contentDividerClassName =
 	// No bg here - NavContent paints its own area, the gradient shows through the rest. min-[769px]:overflow-y-hidden since only the content column scrolls now, not <main>.
-	"grid h-full min-h-0 min-w-0 flex-[1_1_auto] grid-cols-[minmax(0,1fr)] grid-rows-[auto] content-start items-stretch overflow-auto overscroll-contain min-[769px]:grid-rows-[auto_minmax(0,1fr)] min-[769px]:overflow-x-hidden min-[769px]:overflow-y-hidden print:block! print:h-auto! print:overflow-visible!";
+	// [--scrollbar-thumb:...]: cascade-scoped, same mechanism as --button-bg/--input-bg -
+	// modals render outside <main> (portaled to <body>), so they never inherit this and
+	// keep the plain --scrollbar-thumb/-hover instead.
+	"grid h-full min-h-0 min-w-0 flex-[1_1_auto] grid-cols-[minmax(0,1fr)] grid-rows-[auto] content-start items-stretch overflow-auto overscroll-contain min-[769px]:grid-rows-[auto_minmax(0,1fr)] min-[769px]:overflow-x-hidden min-[769px]:overflow-y-hidden print:block! print:h-auto! print:overflow-visible! [--scrollbar-thumb:var(--main-scrollbar-thumb)] [--scrollbar-thumb-hover:var(--main-scrollbar-thumb-hover)]";
 
 // Global metadata for the application
 export const metadata: Metadata = {
@@ -68,7 +71,7 @@ const themeInitScript = `
       return;
     }
 
-    const theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    const theme = "light";
     document.documentElement.dataset.theme = theme;
     localStorage.setItem(key, theme);
   } catch {}

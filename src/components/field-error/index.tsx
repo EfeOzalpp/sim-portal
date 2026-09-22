@@ -1,6 +1,5 @@
 import type { ReactNode } from "react";
 import clsx from "clsx";
-import { MaskIcon } from "@/theme/MaskIcon";
 
 interface FieldErrorProps {
 	/** "error": the field is missing something it needs (required, etc). "warning": something was entered but doesn't look right (pattern, format, etc). */
@@ -13,16 +12,19 @@ const toneClassName = {
 	warning: "text-[var(--tone-warning-text)]",
 };
 
+// The label + FieldError row wrapper every field uses - min-h-5 matches
+// FieldError's own text-sm line-height (1.25rem), so the row holds that
+// height whether or not an error is actually mounted, and the input below
+// doesn't jump down the instant one appears.
+export const fieldLabelRowClassName = "flex min-h-5 items-baseline justify-between gap-3";
+
+// Sits beside its field's own label (same row, label left / this right), not
+// below the input - so this is just the message text, sized to pair with a
+// ui-label rather than body text.
 export function FieldError({ tone = "error", children }: FieldErrorProps) {
 	return (
-		<span className={clsx("flex items-center gap-1 pt-2 pl-1", toneClassName[tone])}>
-			{tone === "error" && (
-				<MaskIcon
-					icon="error/error.svg"
-					className="h-[1.375rem] w-[1.375rem] shrink-0 bg-current [mask-position:center] [mask-repeat:no-repeat] [mask-size:contain]"
-				/>
-			)}
-			<span>{children}</span>
+		<span className={clsx("text-sm italic", toneClassName[tone])}>
+			{children}
 		</span>
 	);
 }

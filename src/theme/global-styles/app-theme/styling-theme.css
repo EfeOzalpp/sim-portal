@@ -2,285 +2,512 @@
 
 :root {
   /* Theme-invariant */
-  --scrim: rgba(0, 0, 0, 0.5);
-  --app-card-action-icon: #ffffff;
+  --scrim: rgba(0, 0, 0, 0.25);
 }
 
 html[data-theme="light"] {
   color-scheme: light;
 
-  /* Surfaces & text - app-surface: NavContent only. app-*-surface (user/ind-progress/thursdays/semesters): each page's own content area. app-gray-surface: expanded nav rail + modals. */
-  --app-surface: rgba(255, 255, 255, 0.65);
-  --app-user-surface: #f0f0f0;
-  --app-ind-progress-surface: #ffffff;
-  --app-thursdays-surface: #fafafa;
-  --app-semesters-surface: #fafafa;
-  
-  /* modal bg */
-  --app-gray-surface: #f5f5f5;
-  /* secondary surface in a modal */
-  --app-subtle: #ececec;
-  /* secondary surface contained borders (not the border of secondary surface itself) */
-  --app-subtle-item-border: #d8d8d8;
-  --app-subtle-2: #e0e0e0;
-
-  /* checker pattern */
-  --checker-bg: rgba(128, 128, 128, 0.14);
-  --checker-bg-hover: rgba(128, 128, 128, 0.22);
-  --checker-bg-2: rgba(128, 128, 128, 0.06);
-  --checker-bg-hover-2: rgba(128, 128, 128, 0.12);
-
-  /* elevated surface */
-  --elevated-surface: rgb(252, 252, 252);
-  --elevated-surface-hover: rgb(239, 239, 239);
-  --elevated-surface-border: #dbdee2;
-
-  /* elevated surface (no border) */
-  --elevated-surface-2: rgb(252, 252, 252);
-  --elevated-surface-hover-2: rgb(239, 239, 239);
-  --app-card-bg-hover: rgb(239, 239, 239);
-  
-  /* label */
-  --label-bg: #f1f1f1;
-  --label-border: #dcdcdc;
-  --label-text: #555555;
-
-  /* lines */
-  --lines-color: rgb(164, 171, 180);
-  
+/* global */
+  /* focused border color */
+  --focus-ring: #697e92;
   /* text */
-  --app-text: #000000;
-  --subtle-text: #2b2b2b;
-  --content-muted: #7a7a7a;
-  --scrollbar-thumb: rgba(0, 0, 0, 0.15);
-  --scrollbar-thumb-hover: rgba(0, 0, 0, 0.1);
+  --app-text: #0e1217;
+  --subtle-text: #333f4e;
+  --content-muted: #64748b;
+    /* label */
+    --label-bg: #e2e8f0;
+    --label-border: #cbd5e1;
+    --label-text: var(--subtle-text);
 
-  /* Border colors */
-  --card-border: #dbdee2;
-  --subtle-border: #e5e5e6;
-  --modal-border: #e1e3e7;
-  --button-border: #e1e3e7;
-
-  --modal-button-border: #e1e3e7;
-  --input-border: #d4d4da;
-  --input-dropdown-border: #b0b0b0;
-  --input-border-hover: #c7c7c7;
-  --input-error-border: #d36b6b;
-
-  /* Button/Input focus-visible outline - not a "tone", so it's its own token rather than living under Semantic tones below. */
-  --focus-ring: #a8c8e8;
-  /* NavContent + the page content column's own drop shadow - plain black/white by design, not one of mainframe-theme/*.css's own tokens, so it stays the same regardless of which color theme is active. */
-  --content-shadow: 0 0 14px rgba(0, 0, 0, 0.2);
+  /* scrollbar */
+  --scrollbar-thumb: rgba(15, 23, 42, 0.15);
+  --scrollbar-thumb-hover: rgba(15, 23, 42, 0.35);
 
   /* Semantic tones */
-  --tone-success-border: #b7dcc000;
-  --tone-success-bg: #dcf2e0;
-  --tone-success-text: #143821;
+  --tone-success-bg: #dcfce7;
+  --tone-success-bg-hover: hsl(from var(--tone-success-bg) h s calc(l * 0.95));
+  --tone-success-text: #14532d;
+  --tone-success-text-hover: #166534;
 
-  --tone-danger-border: #e4baba00;
-  --tone-danger-bg: #f7dddd;
+  --tone-danger-bg: #fee2e2;
+  --tone-danger-bg-hover: hsl(from var(--tone-danger-bg) h s calc(l * 0.95));
+  --tone-danger-text: #991b1b;
+  --tone-danger-text-hover: #7f1d1d;
+
+  --tone-neutral-bg: rgba(226, 232, 240, 0.9);
+  --tone-neutral-text: var(--app-text);
+      /* shared */
+      --tones-close-hover: hsl(from var(--tone-neutral-bg) h s calc(l * 0.9));
+  
   /* for button */
-  --tone-danger-btn-text: #2e0f0f;
-  /* text */
-  --tone-danger-text: #421717;
+  --tone-danger-btn-text: var(--subtle-text);
 
-  --tone-warning-border: #e3c98a;
-  --tone-warning-bg: #f7e8c4;
-  --tone-warning-text: #4a3810;
+  --tone-warning-border: #eab308;
+  --tone-warning-bg: #fef9c3;
+  --tone-warning-text: #713f12;
 
-  /* Input & Select */
-  --input-bg: #ffffff;
-  --input-bg-hover: #ffffff;
+  /* secondary surface select dropdown variant */
+      /* dropdown variant input (used for select dropdown popover's search input) */
+      --input-dropdown-bg: rgb(36, 36, 36);
+      
+      --input-hover-shadow: 0 0 0 1px rgba(0, 0, 0, 0.16);
 
-  --input-text: var(--app-text);
-  --input-placeholder: #5a5a5a;
+      --input-area-input-bg: #454545;
+      --input-area-input-bg-hover: #5e5e5e;
+      --input-area-input-placeholder: #c5c5c5; 
+      --input-area-input-text: #ffffff;
 
-  --input-icon: #646464;
-  --input-dropdown-bg: #ffffff;
-  --input-hover-shadow: 0 0 0 1px rgba(0, 0, 0, 0.12);
-  --input-tag-text: #1f1f1f;
-  --input-tag-icon: #555555;
+      --input-dropdown-text: #ffffff;
+      --input-tag-text: #ffffff;
+      --input-tag-icon: #e3e3e3;
 
-  /* Select area - bg + the active/selected option row & tag chip */
-  --select-bg: #ffffff;
-  --select-bg-hover: #ffffff;
-  --select-active-border: #a8c8e8;
-  --select-active-bg: #d9ebfa;
-  --select-active-text: #56a1e7;
-  --select-checkbox-active-text: #56a1e7;
-  --select-checkbox-active-bg: #56a1e7;
-  /* A muted version of select-active-bg, just for the selected-tag pill's own background - keeps that one item quieter than the rest of the blue-selected family. */
-  --select-tag-bg: #dbe4ec;
-  /* Dark enough to read against the light select-tag-bg above. */
-  --select-tag-text: #25415a;
+      --input-area-selected-item-bg: var(--select-active-bg);
+      --input-area-hovered-item-bg: rgb(44, 48, 53);
+  
+  /* if includes a checkbox */
+  --select-checkbox-border: #94a3b8;
+  --select-checkbox-hovered-border: #64748b;
+  
+  --select-checkbox-active-bg: #3b82f6;
+  --select-checkbox-hovered-bg: #2563eb;
+  --selected-checkbox-text: #ffffff;
+  
+  /* scrollbar in dropdown */
+  --input-dropdown-scrollbar: #cbd5e1;
+  --input-dropdown-scrollbar-hover: #94a3b8;
 
-  /* Action area - Button, Select hover, GradeEditorModal, CloseButton, etc. */
-  --btn-default-bg: #ffffff;
-  --nav-button-bg-hover: rgba(238, 239, 244, 0.8);
-  /* nav-button-bg-hover is near-white - fine against Select/Input's own white-ish surfaces, but barely visible against the modal's own gray surface. This is tuned for that instead. */
-  --modal-button-bg-hover: #d9d9dc;
+    /* select variants title shared */
+    --green-select-bg-active: rgb(38, 38, 38);
+	  --green-select-bg-active-hover: rgb(46, 46, 46);
 
-  /* NavContent's own "Add"/"Delete" action buttons - subtler than tone-success/tone-danger, since that pair is for real modal CTAs and this area isn't a modal. */
-  --action-add-border: #6fae74;
-  --action-add-bg: #cdead1;
-  --action-add-text: #1e7a42;
-  --action-delete-border: #d98a8a;
-  --action-delete-bg: #f5c6c6;
-  --action-delete-text: #b83232;
+/* page */
+  /* highlight or shadow */
+  --content-shadow: 0 4px 24px rgba(15, 23, 42, 0.06);  
+  
+  /* master color */
+  --page-color: rgb(241, 245, 249);
 
-  /* Brand + app-shell background, nav-area green, and Select's variant="title"
-     green live in mainframe-theme/purple-green.css instead - gated by
-     [data-color-theme] alongside this file's own [data-theme]. */
+  /* page bg - srgb(36, 36, 44)Thursdays/Semester */
+    --page-bg: var(--page-color);
+    /* optional if an item has hover of the page-bg itself */
+    --page-bg-hover: hsl(from var(--page-bg) h s calc(l * 0.96));
+    /* individual progress items */
+    --app-ind-progress-surface: var(--page-color);
+
+      --app-ind-progress-surface-selected: hsl(from var(--page-color) h calc(s * 1) calc(l * 0.92));
+      --app-ind-progress-surface-hover: hsl(from var(--page-color) h calc(s * 1.05) calc(l * 0.96));
+
+      /* used for page borders where needed */ 
+      --main-border-3: hsl(from var(--page-color) h calc(s * 0.8) calc(l * 0.88));
+      --main-border-3-active: hsl(from var(--main-border-3) h calc(s * 1.2) calc(l * 0.4));
+
+      --main-border-4: hsl(from var(--page-color) h calc(s * 0.8) calc(l * 0.88));
+      --main-border-4-hover: hsl(from var(--main-border-4) h calc(s * 0.5) calc(l * 0.65));
+
+  /* add new item border */
+  --card-border: hsl(from var(--page-color) h calc(s * 0.2) calc(l * 0.82));
+  --card-border-hover: hsl(from var(--card-border) h s calc(l * 0.85)); 
+  
+  /* elevated surface */
+  --elevated-surface: #ffffff;
+  --elevated-surface-hover: hsl(from var(--elevated-surface) h s calc(l * 0.93));
+  --elevated-surface-border: hsl(from var(--page-color) h calc(s * 0.2) calc(l * 0.88));
+    /* elevated surface-1 label (colorful labels are handled elsewhere) */
+    --elevated-1-label-bg: hsl(from var(--elevated-surface) h 0.1 calc(l * 0.9));
+    --elevated-1-label-text: var(--app-text);
+
+  --elevated-surface-2: hsl(from var(--page-color) h calc(s * 0.4) calc(l * 0.97));
+  --elevated-surface-hover-2: hsl(from var(--elevated-surface-2) h s calc(l * 0.95));
+  --elevated-surface-border-2: hsl(from var(--page-color) h calc(s * 0.6) calc(l * 0.9));
+    /* elevated surface-2 label (colorful labels are handled elsewhere) */
+    --elevated-2-label-bg: hsl(from var(--elevated-surface-2) h 0.1 calc(l * 0.88));
+    --elevated-2-label-text: var(--subtle-text);
+
+  /* page based buttons */
+  --button-bg: hsl(from var(--page-color) h s calc(l * 1.05));
+  --button-bg-hover: hsl(from var(--button-bg) h s calc(l * 0.96));
+    /* button-text and text-hover + button-border and button-border-hover are shared in modal too */
+    --button-border: hsl(from var(--page-color) h s calc(l * 0.9));
+    --button-border-hover: hsl(from var(--button-border) h s calc(l * 0.85));
+    --button-text: hsl(from var(--page-color) h calc(s * 0.1) calc(l * 0.3));
+    --button-text-hover: hsl(from var(--page-color) h calc(s * 0.1) calc(l * 0.05));
+
+    /* delete button */
+    --action-delete-border-hover: #ef4444;
+    --action-delete-bg-hover: #fee2e2;
+    --action-delete-text: #dc2626;
+    --action-delete-text-hover: #991b1b;
+
+  /* button for page card overlays */
+  --button-overlay-bg: hsl(from var(--button-bg) h s calc(l * 0.96));
+    /* normal */
+    --button-overlay-bg-hover: hsl(from var(--button-bg-hover) h s calc(l * 0.92));
+    /* delete */
+    --button-delete-overlay-bg-hover: var(--action-delete-bg-hover);
+
+	/* nav area input */
+  --page-input-border: hsl(from var(--page-color) h s calc(l * 0.85));
+  --page-input-border-hover: hsl(from var(--page-input-border) h s calc(l * 0.75));
+  --page-input-text: var(--subtle-text);
+	--page-input-bg: #ffffff;
+  --page-input-bg-hover: hsl(from var(--page-color) h s calc(l * 1.05));
+    /* optional if search exists */
+    --page-input-search: #64748b;
+    --page-input-search-hover: #0f172a;
+    --page-input-search-hover-bg: hsl(from var(--button-bg-hover) h calc(s * 0.2) calc(l * 0.95));
+
+
+/* modal based */
+  --app-gray-surface: hsl(from var(--page-color) h calc(s * 0.2) calc(l * 1));
+    /* (optional= that it has an hover state */
+    --app-gray-surface-hover: hsl(from var(--app-gray-surface) h s calc(l * 0.95));
+  /* modal's border */
+  --modal-border: hsl(from var(--app-gray-surface) h s calc(l * 0.84));
+    /* shared across depths */
+      --input-text: var(--app-text);
+      --input-placeholder: #94a3b8;
+      --input-icon: #64748b;
+      --input-error-border: rgba(239, 68, 68, 0.6);
+      --input-border: rgba(148, 163, 184, 0.4);
+      
+    /* Select + Input active non-active chevron colors */
+      --modal-chevron-color: var(--content-muted);
+      --modal-chevron-active-color: var(--subtle-text);
+      
+    /* first surface depth styling */
+      /* Input & Select */
+      --input-bg: #ffffff;
+      --input-bg-hover: hsl(from var(--page-color) h s calc(l * 0.98));
+
+      /* Select area */
+      --select-bg: #ffffff;
+      --select-bg-hover: hsl(from var(--page-color) h s calc(l * 0.98));
+
+      /* button bg - border/text/text-hover stay the shared --button-* tokens at every depth */
+      --modal-button-bg: #ffffff;
+      --modal-button-bg-hover: hsl(from var(--page-color) h s calc(l * 0.94));
+
+      /* Select's dropdown popover when inModal */
+      --input-modal-dropdown-bg: #ffffff;
+      --input-modal-dropdown-text: var(--app-text);
+      --input-modal-area-input-bg: var(--input-bg-2);
+      --input-modal-area-input-bg-hover: var(--input-bg-hover-2);
+      --input-modal-area-input-placeholder: var(--content-muted);
+      --input-modal-area-input-text: var(--app-text);
+      --input-modal-area-hovered-item-bg: hsl(from var(--page-color) h s calc(l * 0.94));
+      --input-modal-dropdown-scrollbar: var(--scrollbar-thumb);
+      --input-modal-dropdown-scrollbar-hover: var(--scrollbar-thumb-hover);
+
+    /* secondary surface in a modal */
+    --app-subtle: hsl(from var(--app-gray-surface) h s calc(l * 0.96));
+      /* this surface depth input etc styling */
+        /* Input & Select */
+        --input-bg-2: #ffffff;
+        --input-border-2: rgba(148, 163, 184, 0.5);
+        
+        --input-bg-hover-2: hsl(from var(--page-color) h s calc(l * 0.98));
+        --input-border-hover-2: rgba(148, 163, 184, 0.7);
+
+        /* Select area */
+        --select-bg-2: #ffffff;
+        --select-bg-hover-2: hsl(from var(--page-color) h s calc(l * 0.98));
+
+        /* button bg */
+        --modal-button-bg-2: #ffffff;
+        --modal-button-bg-hover-2: hsl(from var(--page-color) h s calc(l * 0.94));
+
+          /* third surface in a modal-is border based */
+          --app-subtle-item-border: hsl(from var(--app-subtle) h s calc(l * 0.88));
+      
+          /* third surface in a modal-is bg based (use with caution only for small surfaces) (used in grade modal) */
+          --app-subtle-2: hsl(from var(--app-subtle) h s calc(l * 0.92));
+            /* optional if that surface has hover */
+            --app-subtle-2-hover: hsl(from var(--app-subtle-2) h s calc(l * 0.88));
+            /* if has active color: uses --select-active-bg from blue selectors */
+
+  /* selectors (used across all secondary surfaces) */
+  --select-active-bg: hsl(from var(--app-theme) h calc(s * 0.4) calc(l * 1.02));
+  --select-active-text: hsl(from var(--app-theme) h calc(s * 0.2) calc(l * 0.25));
+
+    /* for the selected-tag pill's own background. */
+    --select-tag-color: var(--subtle-text);
+    --select-tag-hover-color: var(--app-text);
+    --select-tag-bg: rgba(148, 163, 184, 0.15);
+    --select-tag-bg-hover: rgba(148, 163, 184, 0.25);
+
+  /* lines for the user profile modal */
+  --lines-color: #cbd5e1;
+
 }
 
 /* dark theme */
 html[data-theme="dark"] {
   color-scheme: dark;
 
-  /* Surfaces & text - app-surface: NavContent only. app-*-surface (user/ind-progress/thursdays/semesters): each page's own content area. app-gray-surface: expanded nav rail + modals. */
-  --app-surface: linear-gradient(180deg, rgba(19, 19, 19, 0.65) 0%, rgba(19, 19, 19, 0.9) 100%);
-  
-  /* users page */
-  --app-user-surface: linear-gradient(180deg, rgba(31, 31, 31, 0.45) 0%, rgba(31, 31, 31, 0.8) 100%);
-    /* user page card border */
-    --card-border: #6d7278;
-
-  /* individual progress page */
-  --app-ind-progress-surface: rgba(49, 49, 49, 0.7);
-    /* used for the table border */
-    --subtle-border: rgba(76, 76, 76, 0.55);
-
-  /* thursdays page */
-  --app-thursdays-surface: rgba(19, 19, 19, 0.75);
-    /* checker pattern */
-    --checker-bg: rgba(101, 101, 101, 0.35);
-    --checker-bg-hover: rgba(119, 119, 119, 0.35);
-    --checker-bg-2: rgba(101, 101, 101, 0.15);
-    --checker-bg-hover-2: rgba(119, 119, 119, 0.22);
-
-  /* semester page */
-  --app-semesters-surface: rgb(31, 33, 36, 0.99);
-
-  /* lines */
-  --lines-color: rgb(78, 78, 78);
-
-  /* modal bg */
-  --app-gray-surface: #1b1b1b;
-    /* modal's border */
-    --modal-border: #262626;
-    /* secondary surface in a modal */
-    --app-subtle: #232323;
-      /* secondary surface contained borders (not the border of secondary surface itself) */
-      --app-subtle-item-border: rgb(72, 72, 72);
-      /* third surface in a modal */
-      --app-subtle-2: #2d2d2d;
-
-  /* elevated surface */
-  --elevated-surface: #2b2b2f;
-  --elevated-surface-hover: #33333a;
-  --elevated-surface-border: rgba(188, 188, 188, 0.2);
-
-  /* elevated surface (no border) */
-  --elevated-surface-2: #4f4f4f38;
-  --elevated-surface-hover-2: #77777738;
-
+/* global */
+  /* focused border color */
+  --focus-ring: #ffffff;
   /* text */
   --app-text: #ffffff;
-  --subtle-text: #e7e7e7;
-  --content-muted: #c1c1c1;
+  --subtle-text: #dcdcdc;
+  --content-muted: #8e8e8e;
     /* label */
     --label-bg: #3f3f3f;
     --label-border: #343434;
-    --label-text: #e5e5e5;
+    --label-text: #efefef;
 
   /* scrollbar */
-  --scrollbar-thumb: rgba(255, 255, 255, 0.2);
-  --scrollbar-thumb-hover: rgba(255, 255, 255, 0.4);
-
-  /* focused border color */
-  --focus-ring: #ffffff;
-
-  /* shadow */
-  --content-shadow: 0 0 18px rgba(255, 255, 255, 0.25);
+  --scrollbar-thumb: rgba(255, 255, 255, 0.35);
+  --scrollbar-thumb-hover: rgba(255, 255, 255, 0.55);
 
   /* Semantic tones */
-  --tone-success-border: #60997a00;
   --tone-success-bg: #5a8562;
-  --tone-success-text: #eefcf2;
+  --tone-success-bg-hover: hsl(from var(--tone-success-bg) h s calc(l * 1.2));
+  --tone-success-text: var(--subtle-text);
+  --tone-success-text-hover: var(--app-text);
 
-  --tone-danger-border: #74535300;
   --tone-danger-bg: #634444;
-    /* for button */
-    --tone-danger-btn-text: #ffefef;
-    /* text */
-    --tone-danger-text: #edc1c1;
+  --tone-danger-bg-hover: hsl(from var(--tone-danger-bg) h s calc(l * 1.2));
+  --tone-danger-text: hsl(from var(--tone-danger-bg) h s calc(l * 2.1));
+  --tone-danger-text-hover: var(--app-text);
 
-  --tone-warning-border: #a08a4a;
-  --tone-warning-bg: #564a29;
-  --tone-warning-text: #fff8ea;
-
-  /* Input & Select */
-  --input-bg: #3a3a3a;
-  --input-bg-hover: #4a4a4a;
-  --input-text: var(--app-text);
+  --tone-neutral-bg: rgb(75, 77, 79, 0.65);
+  --tone-neutral-text: var(--app-text);
+      /* shared */
+      --tones-close-hover: hsl(from var(--tone-neutral-bg) h s calc(l * 1.1));
   
-  --input-border: rgb(88, 88, 88);
-  --input-border-hover: #595959;
+  /* for button */
+  --tone-danger-btn-text: var(--subtle-text);
 
-  --input-placeholder: #f4f4f4;
-  --input-icon: #ffffff;
-   
-  /* for all inputs */
-  --input-error-border: #b36a6a;
+  --tone-warning-border: #8a7245;
+  --tone-warning-bg: #6b5c35;
+  --tone-warning-text: var(--subtle-text);
 
-  /* dropdown variant */
-  --input-dropdown-border: #b2b2b2;
-  --input-dropdown-bg: #3a3a3a;
+  /* secondary surface select dropdown variant */
+      /* dropdown variant input (used for select dropdown popover's search input) */
+      --input-dropdown-bg: rgb(247, 247, 247);
+      
+      --input-hover-shadow: 0 0 0 1px rgba(255, 255, 255, 0.16);
 
-  --input-hover-shadow: 0 0 0 1px rgba(255, 255, 255, 0.16);
-  --input-tag-text: #f3f3f3;
-  --input-tag-icon: #d0d0d0;
+      --input-area-input-bg: #e3e3e3;
+      --input-area-input-bg-hover: #d3d3d3;
+      --input-area-input-placeholder: #848484; 
+      --input-area-input-text: #2b2b2b;
 
-  /* Select area */
-  --select-bg: #3a3a3a;
-  --select-bg-hover: #4a4a4a;
+      --input-dropdown-text: #2b2b2b;
+      --input-tag-text: #2b2b2b;
+      --input-tag-icon: #252525;
 
-  /* blue selectors */
-  --select-active-bg: rgb(182, 218, 235);
-  --select-active-text: #2b343e;
-  --select-checkbox-active-text: #cbebff;
-  --select-checkbox-active-bg: #cbebff;
-    /* A muted version of select-active-bg, just for the selected-tag pill's own background. */
-    --select-tag-text: #ffffff;
-    --select-tag-bg: rgb(97, 97, 97);
-    --select-active-border: rgb(76, 76, 76);
+      --input-area-selected-item-bg: var(--select-active-bg);
+      --input-area-hovered-item-bg: rgb(233, 233, 233);
+  
+  /* if includes a checkbox */
+  --select-checkbox-border: gray;
+  --select-checkbox-hovered-border: rgb(88, 88, 88);
+  
+  --select-checkbox-active-bg: #87b4de;
+  --select-checkbox-hovered-bg: #5d95e8;
+  --selected-checkbox-text: #000000;
+  
+  /* scrollbar in dropdown */
+  --input-dropdown-scrollbar: #2b2b2b;
+  --input-dropdown-scrollbar-hover: #383838;
 
-  /* Action area, note: its hover styles are handled via brightness in Tailwind */
-  --btn-default-bg: rgb(57, 58, 60);
-  /* button borders */
-  --button-border: #404040;
-  --modal-button-border: #383838;
-    /* Translucent white wash, not a solid gray - lightens whatever dark surface it sits on (Select's dropdown, CloseButton, GradeEditorModal's grade buttons), same role as light's near-white rgba. */
-    --nav-button-bg-hover: rgba(255, 255, 255, 0.15);
-    --modal-button-bg-hover: #3a3a40;
-    /* NavContent's own "Add"/"Delete" action buttons - see the light theme's copy of this note. Bg darkened further (same hue, lower L) - it's only ever shown at /50 opacity on hover or full-strength on press/active, so it reads as a wash either way. */
-    --action-add-border: #629771;
-    --action-add-bg: #b4efac;
-    --action-add-text: #d5fddb;
-    --action-delete-border: #a46767;
-    --action-delete-bg: #d37878;
-    --action-delete-text: #ffcccc;
+    /* select variants title shared */
+    --green-select-bg-active: #ffffff;
+	  --green-select-bg-active-hover: #f2f2f2;
+
+/* page */
+  /* highlight or shadow */
+  --content-shadow: 0 0 24px rgba(255, 255, 255, 0.15);  
+  
+  /* master color */
+  --page-color: rgb(29, 32, 34);
+
+  /* page bg - srgb(36, 36, 44)Thursdays/Semester */
+    --page-bg: var(--page-color);
+    /* optional if an item has hover of the page-bg itself */
+    --page-bg-hover: hsl(from var(--page-bg) h s calc(l * 1.2));
+    /* individual progress items */
+    --app-ind-progress-surface: var(--page-color);
+
+      --app-ind-progress-surface-selected: hsl(from var(--page-color) h calc(s * 1) calc(l * 1.2));
+      --app-ind-progress-surface-hover: hsl(from var(--page-color) h calc(s * 1.1) calc(l * 0.95));
+
+      /* used for page borders where needed */ 
+      --main-border-3: hsl(from var(--page-color) h calc(s * 1.2) calc(l * 1.4));
+      --main-border-3-active: hsl(from var(--main-border-3) h calc(s * 1.4) calc(l * 4));
+
+      --main-border-4: hsl(from var(--page-color) h calc(s * 1.2) calc(l * 1.4));
+      --main-border-4-hover: hsl(from var(--main-border-4) h calc(s * 0.8) calc(l * 2.2));
+
+  /* add new item border */
+  --card-border: hsl(from var(--page-color) h s calc(l * 1.9));
+  --card-border-hover: hsl(from var(--card-border) h s calc(l * 1.1)); 
+  
+  /* elevated surface */
+  --elevated-surface: hsl(from var(--page-color) h calc(s * 0.85) calc(l * 1.15));
+  --elevated-surface-hover: hsl(from var(--elevated-surface) h calc(s * 0.9) calc(l * 1.25));
+  --elevated-surface-border:hsl(from var(--page-color) h calc(s * 1.2) calc(l * 1.6));
+    /* elevated surface-1 label (colorful labels are handled elsewhere) */
+    --elevated-1-label-bg: hsl(from var(--elevated-surface-1) h 0.3 calc(l * 1.5));
+    --elevated-1-label-text: var(--app-text);
+
+  --elevated-surface-2: hsl(from var(--page-color) h calc(s * 0.55) calc(l * 1.65));
+  --elevated-surface-hover-2: hsl(from var(--elevated-surface-2) h s calc(l * 0.9));
+  --elevated-surface-border-2: hsl(from var(--page-color) h calc(s * 0.7) calc(l * 1.6));
+    /* elevated surface-2 label (colorful labels are handled elsewhere) */
+    --elevated-2-label-bg: hsl(from var(--elevated-surface-2) h 0.3 calc(l * 1.9));
+    --elevated-2-label-text: var(--subtle-text);
+
+  /* page based buttons */
+  --button-bg: hsl(from var(--page-color) h s calc(l * 1.2));
+  --button-bg-hover: hsl(from var(--button-bg) h s calc(l * 1.2));
+    /* button-text and text-hover + button-border and button-border-hover are shared in modal too */
+    --button-border: hsl(from var(--page-color) h s calc(l * 2));
+    --button-border-hover: hsl(from var(--button-border) h s calc(l * 1.2));
+    --button-text: #e9e9e9;
+    --button-text-hover: #ffffff;
+
+    /* delete button */
+    --action-delete-border-hover: hsl(from var(--button-border) 0 s calc(l * 1.3));
+    --action-delete-bg-hover: hsl(from var(--button-bg) 0 s calc(l * 1.25));
+    --action-delete-text: #ce8888;
+    --action-delete-text-hover: #ffffff;
+
+  /* button for page card overlays */
+  --button-overlay-bg: hsl(from var(--button-bg) h s calc(l * 1.3));
+    /* normal */
+    --button-overlay-bg-hover: hsl(from var(--button-bg-hover) h s calc(l * 1.5));
+    /* delete */
+    --button-delete-overlay-bg-hover: hsl(from var(--action-delete-bg-hover) h s calc(l * 1.5));
+
+	/* nav area input */
+  --page-input-border: hsl(from var(--page-color) h s calc(l * 2.2));
+  --page-input-border-hover: hsl(from var(--page-input-border) h s calc(l * 2));
+  --page-input-text: var(--subtle-text);
+	--page-input-bg: hsl(from var(--page-color) h s calc(l * 1.05));
+  --page-input-bg-hover: hsl(from var(--page-color) h s calc(l * 1.15));
+    /* optional if search exists */
+    --page-input-search: #e4e4e4;
+    --page-input-search-hover: #ffffff;
+    --page-input-search-hover-bg: hsl(from var(--button-bg-hover) h s calc(l * 1.1));
+
+
+/* modal based */
+  --app-gray-surface: hsl(from var(--page-color) h calc(s * 0.6) calc(l * 0.87));
+    /* (optional= that it has an hover state */
+    --app-gray-surface-hover: hsl(from var(--app-gray-surface) h s calc(l * 1.3));
+  /* modal's border */
+  --modal-border: hsl(from var(--app-gray-surface) h s calc(l * 1.3));
+    /* shared across depths */
+      --input-text: var(--app-text);
+      --input-placeholder: #f4f4f4;
+      --input-icon: #b7b7b7;
+      --input-error-border: rgb(179, 106, 106, 0.6);
+      --input-border: rgb(54, 54, 54, 0.7);
+      
+    /* Select + Input active non-active chevron colors */
+      --modal-chevron-color: var(--content-muted);
+      --modal-chevron-active-color: var(--subtle-text);
+      
+    /* first surface depth styling */
+      /* Input & Select */
+      --input-bg: rgba(54, 54, 54, 0.5);
+      --input-bg-hover: rgba(75, 75, 75, 0.5);
+
+      /* Select area */
+      --select-bg: rgba(54, 54, 54, 0.5);
+      --select-bg-hover: rgba(54, 54, 54, 0.7);
+
+      /* button bg - border/text/text-hover stay the shared --button-* tokens at every depth */
+      --modal-button-bg: rgb(57, 58, 60);
+      --modal-button-bg-hover: #3a3a40;
+
+      /* Select's dropdown popover when inModal */
+      --input-modal-dropdown-bg: hsl(from var(--app-subtle-2) h calc(s * 0.64) calc(l * 0.72));
+      --input-modal-dropdown-text: var(--app-text);
+      --input-modal-area-input-bg: var(--input-bg-2);
+      --input-modal-area-input-bg-hover: var(--input-bg-hover-2);
+      --input-modal-area-input-placeholder: var(--content-muted);
+      --input-modal-area-input-text: var(--app-text);
+      --input-modal-area-hovered-item-bg: hsl(from var(--app-subtle-2) h s calc(l * 1.35));
+      --input-modal-dropdown-scrollbar: var(--scrollbar-thumb);
+      --input-modal-dropdown-scrollbar-hover: var(--scrollbar-thumb-hover);
+
+    /* secondary surface in a modal */
+    --app-subtle: hsl(from var(--app-gray-surface) h s calc(l * 1.2));
+      /* this surface depth input etc styling */
+        /* Input & Select */
+        --input-bg-2: rgba(74, 74, 74, 0.5);
+        --input-border-2: rgb(74, 74, 74, 0.7);
+        
+        --input-bg-hover-2: rgba(92, 92, 92, 0.5);
+        --input-border-hover-2: rgb(92, 92, 92, 0.7);
+
+        /* Select area */
+        --select-bg-2: rgba(74, 74, 74, 0.5);
+        --select-bg-hover-2: rgba(74, 74, 74, 0.7);
+
+        /* button bg */
+        --modal-button-bg-2: rgb(77, 80, 84);
+        --modal-button-bg-hover-2: #3a3a40;
+
+          /* third surface in a modal-is border based */
+          --app-subtle-item-border: hsl(from var(--app-subtle) h s calc(l * 1.4));
+      
+          /* third surface in a modal-is bg based (use with caution only for small surfaces) (used in grade modal) */
+          --app-subtle-2: hsl(from var(--app-subtle) h s calc(l * 1.3));
+            /* optional if that surface has hover */
+            --app-subtle-2-hover: hsl(from var(--app-subtle-2) h s calc(l * 1.4));
+            /* if has active color: uses --select-active-bg from blue selectors */
+
+  /* selectors (used across all secondary surfaces) */
+  --select-active-bg: hsl(from var(--app-theme) h calc(s * 1.2) calc(l * 1.3));
+  --select-active-text: #f0f0f0;
+
+    /* for the selected-tag pill's own background. */
+    --select-tag-color: var(--subtle-text);
+    --select-tag-hover-color: var(--app-text);
+    --select-tag-bg: rgba(79, 79, 79, 0.5);
+    --select-tag-bg-hover: rgba(88, 88, 88, 0.6);
+
+  /* lines for the user profile modal */
+  --lines-color: rgb(67, 67, 67);
+
 }
 
-  /* Radix's Select.Viewport injects its own <style> tag that force-hides the native scrollbar - !important since that tag can land after this stylesheet. */
-[data-radix-select-viewport] {
+.select-viewport {
   scrollbar-width: thin !important;
   -ms-overflow-style: auto !important;
+  scrollbar-color: transparent transparent;
 }
 
-[data-radix-select-viewport]::-webkit-scrollbar {
+.select-viewport::-webkit-scrollbar {
   display: block !important;
   width: 0.5rem;
+}
+
+.select-viewport::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.select-viewport::-webkit-scrollbar-thumb {
+  background: transparent;
+  transition: background-color 150ms ease;
+}
+
+.select-viewport:hover {
+  scrollbar-color: var(--input-dropdown-scrollbar) transparent;
+}
+
+.select-viewport:hover::-webkit-scrollbar-thumb {
+  background: var(--input-dropdown-scrollbar);
+}
+
+.select-viewport:hover::-webkit-scrollbar-thumb:hover {
+  background: var(--input-dropdown-scrollbar-hover);
 }
 
 * {
@@ -306,7 +533,6 @@ html {
 
 *::-webkit-scrollbar-thumb {
   background: transparent;
-  border-radius: 9999px;
   transition: background-color 150ms ease;
 }
 

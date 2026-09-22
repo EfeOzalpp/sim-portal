@@ -8,7 +8,7 @@
 	display: flex;
 	flex-direction: column;
 	align-items: stretch;
-	gap: 1rem;
+	gap: 1.1rem;
 	/* Not 100% - the rail's own container (navDividerClassName, layout.tsx) is w-0 at desktop now
 	   (it no longer reserves space; the rail overlays instead), so a percentage here would resolve
 	   against that and collapse to nothing. --nav-rail-collapsed-width (layout-theme.css) instead -
@@ -99,13 +99,6 @@
 	text-decoration: none;
 }
 
-/* Everything else comes from variant="nav" now - just externalLinkList's deliberate underline left to add here. */
-.externalLinkList :global(.btn) {
-	text-decoration-line: underline;
-	text-decoration-color: currentColor;
-	text-underline-offset: 0.18em;
-}
-
 .root:not(:hover):not(:has(:focus-visible)):not(:has([aria-expanded="true"])) .navItemContent {
 	column-gap: 0;
 }
@@ -155,14 +148,14 @@
 	-webkit-mask-image: url("../../../theme/assets/thursday/today.svg");
 }
 
-.listIcon {
-	mask-image: url("../../../theme/assets/list/list.svg");
-	-webkit-mask-image: url("../../../theme/assets/list/list.svg");
+.semestersIcon {
+	mask-image: url("../../../theme/assets/semesters/semesters.svg");
+	-webkit-mask-image: url("../../../theme/assets/semesters/semesters.svg");
 }
 
 .individualIcon {
-	mask-image: url("../../../theme/assets/individual/person.svg");
-	-webkit-mask-image: url("../../../theme/assets/individual/person.svg");
+	mask-image: url("../../../theme/assets/school/school.svg");
+	-webkit-mask-image: url("../../../theme/assets/school/school.svg");
 }
 
 .linkIcon {
@@ -209,7 +202,7 @@
 	gap: 0.5rem;
 	width: 100%;
 	min-width: 0;
-	color: var(--app-label);
+	color: var(--label-text);
 	box-sizing: border-box;
 }
 
@@ -240,7 +233,6 @@
 .externalLinkList {
 	display: flex;
 	flex-direction: column;
-	gap: 0.5rem;
 	width: 100%;
 	min-width: 0;
 }

@@ -25,7 +25,7 @@
 
   [data-content-nav] .ui-label,
   [data-mobile-content-bar] .ui-label {
-    color: var(--app-label);
+    color: var(--label-text);
   }
 
   .ui-note {
@@ -36,7 +36,7 @@
   }
 
   p {
-    line-height: 1.2;
+    line-height: 1.3;
   }
 
   h1,
@@ -46,7 +46,7 @@
   h5,
   h6 {
     font-family: var(--font-heading);
-    line-height: 1.2;
+    line-height: 1.3;
   }
 
   h1 {
@@ -58,12 +58,13 @@
   h2 {
     font-size: 2rem;
     font-weight: 500;
-    letter-spacing: 1px;
+    letter-spacing: 0.8px;
   }
 
   h3 {
     font-size: 1.25rem;
     font-weight: 500;
+    letter-spacing: 0.4px;
   }
 
   h4,

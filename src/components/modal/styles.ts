@@ -6,6 +6,10 @@ export const modalBackdropClassName =
 export const modalDialogClassName = [
 	"relative box-border flex max-h-[calc(100dvh-3rem)] flex-col overflow-hidden rounded-[0.5rem] border-solid border-[var(--modal-border)]",
 	"bg-[var(--app-gray-surface)] text-[var(--app-text)] border",
+	// --button-border/-border-hover/-text/-text-hover are NOT re-scoped here - those 4 stay
+	// the same shared token everywhere (page buttons, every modal, every depth of layering
+	// inside one), only a button's bg needs to change per-surface for contrast.
+	"[--button-bg:var(--modal-button-bg)] [--button-bg-hover:var(--modal-button-bg-hover)] [--page-input-bg:var(--input-bg)] [--page-input-border:var(--input-border)] [--page-input-bg-hover:var(--input-bg-hover)]",
 	"max-[768px]:max-h-dvh max-[768px]:w-full max-[768px]:animate-[modal-slide-up_300ms_cubic-bezier(0.32,0.72,0,1)] max-[768px]:rounded-none max-[768px]:border-x-0 max-[768px]:border-b-0",
 ].join(" ");
 
@@ -20,12 +24,11 @@ export const modalHeaderClassName = [
 ].join(" ");
 
 // The title text inside modalHeaderClassName.
-export const modalTitleClassName =
-	"min-w-0 font-heading text-xl leading-tight font-bold tracking-[1px]";
+export const modalTitleClassName = "m-0 min-w-0";
 
 // The actual close button - the only clickable part of the header now.
 export const modalCloseButtonClassName =
-	"m-0 inline-grid h-9 w-9 flex-none cursor-pointer place-items-center rounded-lg border-0 bg-transparent text-[var(--app-text)] hover:bg-[var(--modal-button-bg-hover)]";
+	"m-0 inline-grid h-9 w-9 flex-none cursor-pointer place-items-center rounded-lg border-0 bg-transparent text-[var(--app-text)] hover:bg-[var(--app-gray-surface-hover)]";
 
 // The "x" icon inside modalCloseButtonClassName.
 export const modalCloseIconClassName =

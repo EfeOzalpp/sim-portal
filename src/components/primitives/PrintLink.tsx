@@ -1,10 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { Button } from "@/components/button";
+import { Button, type ButtonVariant } from "@/components/button";
+import { actionButtonIconClassName } from "@/components/button/styles";
+import { MaskIcon } from "@/theme/MaskIcon";
 
 interface PrintLinkProps {
 	label?: string;
+	// "action" (icon+text composed as plain children, not Button's own icon
+	// prop) - that prop's absolute-positioned icon + centered text exists for
+	// columns of same-purpose action buttons, wrong for a lone button like this.
+	variant?: ButtonVariant;
 }
 
 // Waits for every <img> currently on the page to finish loading (or fail -
@@ -27,7 +33,7 @@ function waitForImagesToLoad(timeoutMs = 5000) {
 	return Promise.race([allSettled, new Promise((resolve) => setTimeout(resolve, timeoutMs))]);
 }
 
-export default function PrintLink({ label = "Save as PDF" }: PrintLinkProps) {
+export default function PrintLink({ label = "Export pdf", variant = "text" }: PrintLinkProps) {
 	const [isPreparing, setIsPreparing] = useState(false);
 
 	async function handlePrint() {
@@ -56,12 +62,12 @@ export default function PrintLink({ label = "Save as PDF" }: PrintLinkProps) {
 	return (
 		<Button
 			type="button"
-			variant="text"
-			icon="download/download.svg"
+			variant={variant}
 			disabled={isPreparing}
 			onClick={handlePrint}
-			className="pl-2!"
+			className={variant === "text" ? "pl-2!" : undefined}
 		>
+			<MaskIcon icon="download/download.svg" className={actionButtonIconClassName} />
 			{isPreparing ? "Preparing..." : label}
 		</Button>
 	);

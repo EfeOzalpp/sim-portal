@@ -6,7 +6,7 @@
 // rather than "the page is loading."
 export default function Loading() {
 	return (
-		<div className="grid h-full min-h-0 place-items-center text-[var(--app-label)]">
+		<div className="grid h-full min-h-0 place-items-center text-[var(--label-text)]">
 			Loading...
 		</div>
 	);

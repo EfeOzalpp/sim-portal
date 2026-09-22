@@ -39,9 +39,9 @@ export default async function NavBar({ session: initialSession }: NavBarProps) {
 		<>
 			{/* Desktop nav: collapsible rail, hidden on mobile */}
 			<nav className={styles.root} aria-label="Primary navigation" data-collapsible-nav>
-				{/* Just a small mt-[0.8rem] nudge - matching PageTitle's height overlapped once the rail expands on hover. Desktop-only already, since .root is display: none below 769px. */}
-				<div className="m-0 mt-[0.8rem] flex min-h-5 shrink-0 items-center justify-center overflow-hidden font-heading text-2xl font-bold whitespace-nowrap leading-tight text-[var(--brand-color)]">SIM</div>
-				<div className="w-full min-w-0 shrink-0">
+				{/* Nudges the whole rail down a bit further than PageTitle's own height alone needs. Desktop-only already, since .root is display: none below 769px. Own row, not sharing People's - a shared row put People's active-state pill flush against the wordmark, and collapsing SIM at the narrow rail width left it invisible until hover. */}
+				<div className="m-0 mt-3.5 flex min-h-5 shrink-0 items-center justify-center overflow-hidden font-heading text-2xl font-bold tracking-wide whitespace-nowrap leading-tight text-[var(--brand-color)]">SIM</div>
+				<div className="mt-1 w-full min-w-0 shrink-0">
 					<div className={styles.navButtonList}>
 						<NavButtonLink href="/users" label="People" iconClassName={styles.peopleIcon} />
 						<AdminOnly>
@@ -49,7 +49,7 @@ export default async function NavBar({ session: initialSession }: NavBarProps) {
 						</AdminOnly>
 						<NavButtonLink href="/thursdays" label="Thursdays" iconClassName={styles.thursdayIcon} />
 						<AdminOnly>
-							<NavButtonLink href="/semester" label="Semesters" iconClassName={styles.listIcon} />
+							<NavButtonLink href="/semester" label="Semesters" iconClassName={styles.semestersIcon} />
 						</AdminOnly>
 					</div>
 				</div>

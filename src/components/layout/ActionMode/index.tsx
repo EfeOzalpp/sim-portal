@@ -1,11 +1,8 @@
 "use client";
 
-import clsx from "clsx";
-import { createContext, ReactNode, useContext, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { createPortal } from "react-dom";
-import { Button, NativeButtonProps } from "@/components/button";
+import { createContext, ReactNode, useContext, useMemo, useRef, useState } from "react";
 import styles from "@/components/layout/ActionMode/ActionMode.module.css";
-import { ACTION_MODES, DELETE_ACTION_MODES, type ActionMode } from "@/constants/action-modes";
+import { ACTION_MODES, type ActionMode } from "@/constants/action-modes";
 
 interface ActionModeContextValue {
 	activeMode: ActionMode | null;
@@ -126,115 +123,5 @@ export function ActionModeSurface({ children }: ActionModeSurfaceProps) {
 				{children}
 			</div>
 		</ActionModeContext.Provider>
-	);
-}
-
-// Narrowed to the native (non-anchor) branch of ButtonProps - every call site is type="button", never an href link.
-interface ActionModeButtonProps extends Omit<NativeButtonProps, "onClick"> {
-	mode: ActionMode;
-	onClick?: NativeButtonProps["onClick"];
-}
-
-export function ActionModeButton({
-	mode,
-	children,
-	className,
-	onClick,
-	tone,
-	...props
-}: ActionModeButtonProps) {
-	const { activeMode, setActiveMode } = useActionModeContext();
-	const isActive = activeMode === mode;
-	const isDelete = DELETE_ACTION_MODES.includes(mode);
-	const shellRef = useRef<HTMLSpanElement>(null);
-	const [portalRect, setPortalRect] = useState<DOMRect | null>(null);
-
-	// While active, this button must clear ActionMode's backdrop, but its ancestor [data-content-nav] needs a lower z-index - portaling a position-synced clone to document.body sidesteps that.
-	useLayoutEffect(() => {
-		if (!isActive) {
-			setPortalRect(null);
-			return;
-		}
-
-		function updateRect() {
-			if (shellRef.current) {
-				setPortalRect(shellRef.current.getBoundingClientRect());
-			}
-		}
-
-		updateRect();
-
-		window.addEventListener("resize", updateRect);
-		window.addEventListener("scroll", updateRect, true);
-		const observer = new ResizeObserver(updateRect);
-		if (shellRef.current) observer.observe(shellRef.current);
-
-		return () => {
-			window.removeEventListener("resize", updateRect);
-			window.removeEventListener("scroll", updateRect, true);
-			observer.disconnect();
-		};
-	}, [isActive]);
-
-	const buttonContent = (
-		<Button
-			{...props}
-			tone={tone ?? (isDelete ? "danger" : "default")}
-			className={clsx(
-				className,
-				styles.actionButton,
-				// Actually in delete mode (not just hovered) - keep the bg/border tint on, not just the text.
-				isActive && isDelete && "border-[var(--action-delete-border)]! bg-[var(--action-delete-bg)]!",
-			)}
-			aria-pressed={isActive}
-			onClick={(event) => {
-				onClick?.(event);
-
-				if (!event.defaultPrevented) {
-					setActiveMode(isActive ? null : mode);
-				}
-			}}
-		>
-			<span className={styles.actionButtonContent}>
-				<span
-					className={clsx(styles.actionButtonIcon, isDelete ? styles.deleteIcon : styles.editIcon)}
-					aria-hidden="true"
-				/>
-				<span className={styles.actionButtonText}>{children}</span>
-			</span>
-		</Button>
-	);
-
-	return (
-		<>
-			<span
-				ref={shellRef}
-				className={styles.actionButtonShell}
-				data-action-mode-button={mode}
-				data-action-mode-active={isActive ? "true" : undefined}
-				// Hidden, not removed, while portaled out - keeps its layout space in the manage bar for re-measuring.
-				style={portalRect ? { visibility: "hidden" } : undefined}
-			>
-				{buttonContent}
-			</span>
-			{portalRect &&
-				createPortal(
-					<span
-						className={styles.actionButtonShell}
-						data-action-mode-button={mode}
-						data-action-mode-active="true"
-						style={{
-							position: "fixed",
-							top: portalRect.top,
-							left: portalRect.left,
-							width: portalRect.width,
-							height: portalRect.height,
-						}}
-					>
-						{buttonContent}
-					</span>,
-					document.body,
-				)}
-		</>
 	);
 }

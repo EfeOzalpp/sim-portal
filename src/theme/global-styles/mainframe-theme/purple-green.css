@@ -5,7 +5,6 @@ html[data-color-theme="purple-green"][data-theme="light"] {
 	--app-theme: #cba8db;
 
 	--app-icon: #445841;
-	--app-label: #4d525e;
 
 	--brand-color: rgb(73, 131, 57);
 	--profile-indicator: #79ac55;
@@ -15,6 +14,10 @@ html[data-color-theme="purple-green"][data-theme="light"] {
 	--main-border-2: #c9cfdb;
 
 	--app-bg: linear-gradient(135deg, #dcbbeb 0%, #ffeeff 28%, #b5a8d4 70%);
+
+	/* main-frame scrollbar - same formula as default.css, computed off this theme's own --app-theme */
+	--main-scrollbar-thumb: hsl(from var(--app-theme) h calc(s * 0.6) calc(l * 1.3));
+	--main-scrollbar-thumb-hover: hsl(from var(--main-scrollbar-thumb) h s calc(l * 1.5));
 
 	/* Nav-area theme (green) - NavBar/MobileNavBar's variant="nav" buttons, all breakpoints. */
 	--nav-hover-bg: rgb(235, 246, 239);
@@ -29,16 +32,18 @@ html[data-color-theme="purple-green"][data-theme="light"] {
 	--green-select-bg-active-hover: #915e96;
 	--green-select-border: #d4aed4;
 
-	/* action nav area */
-	--action-item-bg: #eef5ec;
-	--action-input-bg: #f3f8f1;
+	/* Theme-colored checkbox tokens */
+	--green-bg: hsl(from var(--page-color, #f1f5f9) 220 calc(s * 0.4) calc(l * 0.96));
+	--green-active-bg: hsl(from var(--page-color, #f1f5f9) 220 calc(s * 1.2) calc(l * 0.50));
+	--green-hover: hsl(from var(--green-bg) h s calc(l * 0.94));
+	--green-border-checkbox: hsl(from var(--green-bg) h calc(s * 1.2) calc(l * 0.70));
+	--green-active-checkbox: hsl(from var(--green-bg) h calc(s * 1.2) calc(l * 0.2));
 }
 
 html[data-color-theme="purple-green"][data-theme="dark"] {
 	--app-theme: #49654f;
 
 	--app-icon: #fef5ff;
-	--app-label: #fff7ff;
 
 	--brand-color: #a5dcb2;
 	
@@ -49,6 +54,10 @@ html[data-color-theme="purple-green"][data-theme="dark"] {
 	--main-border-2: rgba(114, 94, 117, 0.6);
 
 	--app-bg: linear-gradient(135deg, #876a9a 0%, #b992c0 28%, #7068a9 70%);
+
+	/* main-frame scrollbar - same as default.css, not yet re-tuned for this theme */
+	--main-scrollbar-thumb: rgba(107, 142, 190, 0.35);
+	--main-scrollbar-thumb-hover: rgba(126, 146, 160, 0.55);
 
 	/* Select's variant="title" - green, matching light. */
 	--green-select-bg: #eac5f2;
@@ -63,7 +72,10 @@ html[data-color-theme="purple-green"][data-theme="dark"] {
 	--nav-active-bg: rgb(158, 207, 157);
 	--nav-active-text: #000000;
 
-	/* action nav area */
-	--action-item-bg: #313a2f;
-	--action-input-bg: #383f36;
+	/* Theme-colored checkbox tokens */
+	--green-bg: hsl(from var(--page-color) 220 calc(s * 1.2) calc(l * 5.4));
+	--green-active-bg: hsl(from var(--page-color) 220 calc(s * 5.4) calc(l * 5.4));
+	--green-hover: hsl(from var(--green-bg) h s calc(l * 0.9));
+	--green-border-checkbox: hsl(from var(--green-bg) h calc(s * 0.5) calc(l * 0.5));
+	--green-active-checkbox: hsl(from var(--green-bg) h s calc(l * 5.2));
 }

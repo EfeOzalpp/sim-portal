@@ -3,8 +3,8 @@
 import { useEffect, useState } from "react";
 import clsx from "clsx";
 import Popover from "@/components/popover";
+import Button from "@/components/button";
 import { selectItemVariants } from "@/components/select/styles";
-import { MaskIcon } from "@/theme/MaskIcon";
 
 type ColorTheme = "default" | "purple-green";
 
@@ -18,10 +18,6 @@ const colorThemeOptions: { id: ColorTheme; label: string }[] = [
 function readColorTheme(): ColorTheme {
 	return document.documentElement.dataset.colorTheme === "purple-green" ? "purple-green" : "default";
 }
-
-// Same small square icon-only trigger as RoleFilterPopover's.
-const triggerClassName =
-	"m-0 inline-grid h-9 w-9 flex-none cursor-pointer place-items-center rounded-xl border border-solid border-[var(--input-border)] bg-[var(--btn-default-bg)] p-0 text-[var(--input-icon)] hover:border-[var(--input-border-hover)] hover:bg-[var(--input-bg-hover)] hover:text-[var(--input-text)] hover:shadow-[var(--input-hover-shadow)]";
 
 const optionButtonClassName = "w-full border-0 bg-transparent text-left hover:bg-[var(--modal-button-bg-hover)]!";
 
@@ -66,13 +62,27 @@ export default function ColorThemePopover() {
 			onOpenChange={setOpen}
 			toggle
 			trigger={
-				<button type="button" className={triggerClassName} aria-label="Color theme">
-					<MaskIcon icon="color/brush.svg" className="h-4 w-4 bg-current [mask-position:center] [mask-repeat:no-repeat] [mask-size:contain]" />
-				</button>
+				<Button
+					variant="icon"
+					icon="color/brush.svg"
+					aria-label="Color theme"
+					// variant="icon" is shared with plain page buttons elsewhere
+					// (SemesterCardGrid/UserCard/GridViewPopover/ProductionsCollapse),
+					// so its own --button-* tokens are page-based by design - this is
+					// the one instance that lives in the nav rail, so it needs the
+					// same mainframe nav-area tokens ThemeSwitch (variant="nav") right
+					// next to it already uses, not the generic page-button colors.
+					// data-[state=open]: Radix's own Popover.Trigger sets this on the
+					// element asChild clones onto - no need to thread `open` through
+					// manually. Same --nav-active-bg/-text pair variant="nav" uses for
+					// aria-[current=page], so an open popover reads the same way an
+					// active nav link does.
+					className="border-transparent! bg-transparent! text-[var(--app-icon)]! hover:border-transparent! hover:bg-[var(--nav-hover-bg)]! hover:text-[var(--app-icon)]! focus-visible:outline-[var(--app-theme)]! active:outline-[var(--app-theme)]! data-[state=open]:bg-[var(--nav-active-bg)]! data-[state=open]:text-[var(--nav-active-text)]! data-[state=open]:hover:bg-[var(--nav-active-bg)]! data-[state=open]:hover:text-[var(--nav-active-text)]!"
+				/>
 			}
 		>
 			<div className="flex min-w-[10rem] flex-col gap-0.5">
-				<span className="ui-label block px-2 pb-1">Color</span>
+				<span className="ui-label block px-2 pt-0.5 pb-1">Color</span>
 				<div className="flex flex-col gap-0.5" role="listbox">
 					{colorThemeOptions.map((option) => (
 						<button

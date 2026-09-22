@@ -1,18 +1,20 @@
 "use client";
 
 import { useURLFilter } from "@/hooks/useURLFilter";
-import { Input, InputProps } from "@/components/input";
+import { Input, InputProps, type InputMode } from "@/components/input";
 import { Select, SingleSelectProps } from "@/components/select";
 import { inputIconClassName } from "@/components/input/styles";
 import { MaskIcon } from "@/theme/MaskIcon";
-import { LoadingOutlined } from "@ant-design/icons";
 
-interface FilterInputProps extends Omit<InputProps, "value" | "onChange"> {
+interface FilterInputProps extends Omit<InputProps, "value" | "onChange" | "loading" | "mode"> {
 	query?: string;
+	/** Defaults to "clearable" (an "x" once there's a value, or a spinner while the URL filter is pending). Pass "none" for a plain field with no right-hand behavior at all. */
+	mode?: InputMode | "none";
 }
 
-export function FilterInput({ query = "search", placeholder = "Search", className, allowClear = true, suffix, ...props }: FilterInputProps) {
+export function FilterInput({ query = "search", placeholder = "Search", className, mode = "clearable", filterTrigger, ...props }: FilterInputProps) {
 	const { value, isPending, handleChange } = useURLFilter(query, 500);
+	const resolvedMode = mode === "none" ? undefined : mode;
 
 	return (
 		<Input
@@ -21,9 +23,10 @@ export function FilterInput({ query = "search", placeholder = "Search", classNam
 			value={value || ""}
 			placeholder={placeholder}
 			onChange={(e) => handleChange(e.target.value)}
-			allowClear={allowClear}
+			mode={resolvedMode}
+			loading={resolvedMode === "clearable" ? isPending : undefined}
+			filterTrigger={resolvedMode === "filter" ? filterTrigger : undefined}
 			prefix={<MaskIcon icon="search/search.svg" className={inputIconClassName} />}
-			suffix={suffix !== undefined ? suffix : isPending ? <LoadingOutlined spin /> : null}
 		/>
 	);
 }

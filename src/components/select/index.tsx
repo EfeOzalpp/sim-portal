@@ -6,6 +6,7 @@ import { LoadingOutlined } from "@ant-design/icons";
 import clsx from "clsx";
 import { Input } from "@/components/input";
 import { inputIconClassName } from "@/components/input/styles";
+import { Button } from "@/components/button";
 import { MaskIcon } from "@/theme/MaskIcon";
 import {
 	selectChevronVariants,
@@ -14,14 +15,22 @@ import {
 	selectContentClassName,
 	selectContentInModalClassName,
 	selectEmptyClassName,
+	selectFilterableActionsClassName,
+	selectFilterableHeaderClassName,
+	selectFilterableLabelClassName,
 	selectIndicatorsClassName,
 	selectItemVariants,
 	selectOptionCheckboxClassName,
+	selectOptionCheckmarkClassName,
 	selectPlaceholderClassName,
 	selectSearchWrapperClassName,
-	selectSpinnerClassName,
+	selectSpinnerVariants,
 	selectTagClassName,
+	selectTagCommitButtonClassName,
+	selectTagCommitIconClassName,
+	selectTagDraftInputClassName,
 	selectTagRemoveClassName,
+	selectTagsBoxClassName,
 	selectTriggerVariants,
 	selectValueClassName,
 	selectViewportClassName,
@@ -56,7 +65,7 @@ export interface SingleSelectProps extends SharedSelectProps {
 	value?: string | null;
 	onChange?: (value: string | undefined) => void;
 	allowClear?: boolean;
-	/** Formats the trigger's own closed-state text differently from the dropdown option list's (e.g. "Semester: Fall 2026" on the trigger, still "FA26" in the list) - the list itself always shows option.label as-is. */
+	/** Formats the trigger's own closed-state text differently from the dropdown option list's (e.g. "Fall 2026 Semester" on the trigger, still "FA26" in the list) - the list itself always shows option.label as-is. */
 	formatSelectedLabel?: (option: SelectOption) => string;
 }
 
@@ -70,7 +79,29 @@ export interface MultiSelectProps extends SharedSelectProps {
 	filterExtra?: ReactNode;
 }
 
-export type SelectProps = SingleSelectProps | MultiSelectProps;
+export interface TagsSelectProps {
+	mode: "tags";
+	value?: string[];
+	onChange?: (value: string[]) => void;
+	placeholder?: string;
+	disabled?: boolean;
+	status?: "error" | "";
+	className?: string;
+	/** Tags beyond this count collapse into a "+N" pill. */
+	maxTagCount?: number;
+}
+
+export interface FilterableMultiSelectProps extends Omit<MultiSelectProps, "mode"> {
+	mode: "filterableMultiselect";
+	/** The header row's own label, above the trigger. */
+	label: string;
+	/** The header row's own filter control (e.g. a semester Select) - sits before Select all/Unselect all. */
+	headerFilter?: ReactNode;
+	/** ids "Select all" applies to - defaults to every option's value. Lets a caller scope bulk-select to a filtered subset (e.g. just this semester's members) without hiding the rest from the dropdown itself. */
+	selectAllValues?: string[];
+}
+
+export type SelectProps = SingleSelectProps | MultiSelectProps | TagsSelectProps | FilterableMultiSelectProps;
 
 function filterOptions(options: SelectOption[], search: string) {
 	if (!search) return options;
@@ -89,10 +120,13 @@ function SearchBox({
 	value,
 	onChange,
 	placeholder,
+	filterTrigger,
 }: {
 	value: string;
 	onChange: (next: string) => void;
 	placeholder?: string;
+	/** Renders on the field's own right edge via Input's mode="filter" - e.g. a role-filter popover - instead of sitting outside the field as a separate button. */
+	filterTrigger?: ReactNode;
 }) {
 	return (
 		<div className={selectSearchWrapperClassName}>
@@ -102,6 +136,8 @@ function SearchBox({
 				onKeyDown={stopTypingPropagation}
 				placeholder={placeholder ?? "Search"}
 				prefix={<MaskIcon icon="search/search.svg" className={inputIconClassName} />}
+				mode={filterTrigger ? "filter" : undefined}
+				filterTrigger={filterTrigger}
 				autoFocus
 			/>
 		</div>
@@ -167,7 +203,7 @@ function SingleSelectImpl({
 					</span>
 					<span className={selectIndicatorsClassName}>
 						{loading ? (
-							<span className={selectSpinnerClassName}>
+							<span className={selectSpinnerVariants({ variant })}>
 								<LoadingOutlined spin />
 							</span>
 						) : (
@@ -331,7 +367,7 @@ function MultiSelectImpl({
 					)}
 					<span className={selectIndicatorsClassName}>
 						{loading ? (
-							<span className={selectSpinnerClassName}>
+							<span className={selectSpinnerVariants({ variant: "default" })}>
 								<LoadingOutlined spin />
 							</span>
 						) : (
@@ -348,15 +384,8 @@ function MultiSelectImpl({
 					style={{ width: "var(--radix-popover-trigger-width)" }}
 					onCloseAutoFocus={(event) => event.preventDefault()}
 				>
-					{(searchable || filterExtra) && (
-						<div className="flex items-center">
-							{filterExtra && <div className="py-[0.333rem] pl-[0.333rem]">{filterExtra}</div>}
-							{searchable && (
-								<div className="min-w-0 flex-1">
-									<SearchBox value={search} onChange={setSearch} placeholder={searchPlaceholder} />
-								</div>
-							)}
-						</div>
+					{searchable && (
+						<SearchBox value={search} onChange={setSearch} placeholder={searchPlaceholder} filterTrigger={filterExtra} />
 					)}
 					<div ref={viewportRef} className={selectViewportClassName} role="listbox" aria-multiselectable="true">
 						{filtered.length === 0 ? (
@@ -381,14 +410,17 @@ function MultiSelectImpl({
 											}
 										}}
 									>
-										<input
-											type="checkbox"
-											checked={isSelected}
-											disabled={option.disabled}
-											readOnly
-											tabIndex={-1}
-											className={selectOptionCheckboxClassName}
-										/>
+										<span className="relative inline-flex h-4 w-4 flex-none">
+											<input
+												type="checkbox"
+												checked={isSelected}
+												disabled={option.disabled}
+												readOnly
+												tabIndex={-1}
+												className={selectOptionCheckboxClassName}
+											/>
+											{isSelected && <MaskIcon icon="check/check.svg" className={selectOptionCheckmarkClassName} />}
+										</span>
 										<span className="min-w-0 flex-1 truncate font-semibold">{option.label}</span>
 									</div>
 								);
@@ -401,9 +433,125 @@ function MultiSelectImpl({
 	);
 }
 
+function TagsSelectImpl({
+	value = [],
+	onChange,
+	placeholder,
+	disabled,
+	status,
+	className,
+	maxTagCount,
+}: TagsSelectProps) {
+	const [draft, setDraft] = useState("");
+	const error = status === "error";
+	const visibleTags = maxTagCount ? value.slice(0, maxTagCount) : value;
+	const overflowCount = value.length - visibleTags.length;
+
+	function commitDraft() {
+		const next = draft.trim();
+		if (next && !value.includes(next)) onChange?.([...value, next]);
+		setDraft("");
+	}
+
+	function removeTag(tag: string) {
+		onChange?.(value.filter((current) => current !== tag));
+	}
+
+	return (
+		<div
+			className={clsx(
+				selectTriggerVariants({ error }),
+				selectTagsBoxClassName,
+				value.length > 0 && "pl-2!",
+				disabled && "cursor-not-allowed! opacity-60",
+				className,
+			)}
+		>
+			{visibleTags.map((tag) => (
+				<span key={tag} className={selectTagClassName}>
+					<span className="min-w-0 truncate">{tag}</span>
+					<span
+						role="button"
+						tabIndex={-1}
+						className={selectTagRemoveClassName}
+						aria-label={`Remove ${tag}`}
+						onClick={() => !disabled && removeTag(tag)}
+					>
+						<span className={selectClearIconClassName} aria-hidden="true" />
+					</span>
+				</span>
+			))}
+			{overflowCount > 0 && <span className={selectTagClassName}>+{overflowCount} more</span>}
+			<input
+				type="text"
+				value={draft}
+				disabled={disabled}
+				onChange={(event) => setDraft(event.target.value)}
+				onKeyDown={(event) => {
+					if (event.key === "Enter") {
+						event.preventDefault();
+						commitDraft();
+					}
+				}}
+				placeholder={value.length === 0 ? (placeholder ?? "Type and press Enter...") : ""}
+				className={selectTagDraftInputClassName}
+			/>
+			<button
+				type="button"
+				tabIndex={-1}
+				disabled={disabled || !draft.trim()}
+				onClick={commitDraft}
+				aria-label="Add tag"
+				className={selectTagCommitButtonClassName}
+			>
+				<span className={selectTagCommitIconClassName} aria-hidden="true" />
+			</button>
+		</div>
+	);
+}
+
+function FilterableMultiSelectImpl({
+	mode: _mode,
+	label,
+	headerFilter,
+	selectAllValues,
+	options,
+	value = [],
+	onChange,
+	...multiSelectProps
+}: FilterableMultiSelectProps) {
+	const allValues = selectAllValues ?? options.map((option) => option.value);
+
+	return (
+		<div>
+			<div className={selectFilterableHeaderClassName}>
+				<span className={selectFilterableLabelClassName}>{label}</span>
+				<div className={selectFilterableActionsClassName}>
+					{headerFilter}
+					<Button type="button" className="whitespace-nowrap" onClick={() => onChange?.(allValues)}>
+						Select all
+					</Button>
+					<Button type="button" className="whitespace-nowrap" onClick={() => onChange?.([])}>
+						Unselect all
+					</Button>
+				</div>
+			</div>
+			<MultiSelectImpl {...multiSelectProps} mode="multiple" options={options} value={value} onChange={onChange} />
+		</div>
+	);
+}
+
 export function Select(props: SelectProps) {
 	if (props.mode === "multiple") {
 		return <MultiSelectImpl {...props} />;
+	}
+
+	if (props.mode === "tags") {
+		return <TagsSelectImpl {...props} />;
+	}
+
+	if (props.mode === "filterableMultiselect") {
+		return <FilterableMultiSelectImpl {...props} />;
 	}
 
 	return <SingleSelectImpl {...props} />;

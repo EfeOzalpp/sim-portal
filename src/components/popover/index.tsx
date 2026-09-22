@@ -83,6 +83,14 @@ export function Popover({
 					sideOffset={sideOffset}
 					className={clsx(popoverContentClassName, contentClassName)}
 					onCloseAutoFocus={(event) => event.preventDefault()}
+					// Radix auto-focuses Content itself on open by default - fine (good,
+					// even) for a click-opened popover, but for toggle's hover-dismiss
+					// polling above, that focus never leaves on its own (an element
+					// always "contains" itself), so isFocusedInside reads permanently
+					// true and the popover only ever closes via an actual outside
+					// click. Skip the auto-focus for toggle mode so hovering away
+					// actually lets the poll close it.
+					onOpenAutoFocus={toggle ? (event) => event.preventDefault() : undefined}
 				>
 					{children}
 				</RadixPopover.Content>

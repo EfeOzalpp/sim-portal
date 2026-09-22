@@ -8,7 +8,7 @@ import {
 	alertVariants,
 } from "@/components/alert/styles";
 
-export type AlertTone = "success" | "danger" | "warning";
+export type AlertTone = "success" | "danger" | "warning" | "neutral";
 
 interface AlertProps {
 	tone?: AlertTone;
@@ -31,6 +31,7 @@ const icons: Record<AlertTone, ReactNode> = {
 			<circle cx="12" cy="17" r="1" fill="currentColor" />
 		</svg>
 	),
+	neutral: <MaskIcon icon="info/info.svg" className={maskIconClassName} />,
 };
 
 export function Alert({
@@ -47,9 +48,9 @@ export function Alert({
 			<div className={alertDescriptionClassName}>{description}</div>
 			{closable && (
 				<button type="button" className={alertCloseButtonClassName} aria-label="Close" onClick={onClose}>
-					<svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-						<path d="M6 6L18 18M18 6L6 18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-					</svg>
+					<span className="grid h-4 w-4 place-items-center">
+						<MaskIcon icon="close/close.svg" className={maskIconClassName} />
+					</span>
 				</button>
 			)}
 		</div>
