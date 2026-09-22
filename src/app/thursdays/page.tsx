@@ -7,26 +7,33 @@ import { getSemesterOptions } from "@/actions/semesters";
 
 // Components
 import { Button } from "@/components/button";
-import NavContent from "@/components/layout/NavContent";
+import { actionButtonIconClassName } from "@/components/button/styles";
 import PageTitle from "@/components/layout/PageTitle";
 import { FilterInput } from "@/components/primitives/Filters";
+import PrintLink from "@/components/primitives/PrintLink";
 import SemesterFilterSelect from "@/components/domain/filters/SemesterFilterSelect";
-import { ActionModeButton, ActionModeSurface } from "@/components/layout/ActionMode";
+import { ActionModeSurface } from "@/components/layout/ActionMode";
 import RouteModalPopup from "@/components/modal/RouteModalPopup";
 import ModalContentFallback from "@/components/modal/ModalContentFallback";
-import ThursdayDetailContent, { thursdayDetailDialogClassName } from "@/components/domain/productions/ThursdayDetailContent";
+import ThursdayDetailContent, { ThursdayDetailTitle, thursdayDetailDialogClassName } from "@/components/domain/productions/ThursdayDetailContent";
 import PersonProfileModal from "@/components/domain/profile/PersonProfileModal";
 import { confirmDeleteDialogClassName } from "@/components/confirm-delete/styles";
+import { MaskIcon } from "@/theme/MaskIcon";
 
 // Composition
 import ThursdayCard from "@/app/thursdays/composition/ThursdayCard";
 import AddThursdayFormContent from "@/app/thursdays/add/AddThursdayFormContent";
 import EditThursdayFormContent from "@/app/thursdays/[id]/edit/EditThursdayFormContent";
 import ThursdayDeleteConfirmContent from "@/app/thursdays/composition/ThursdayDeleteConfirmContent";
+import { thursdayFormDialogClassName } from "@/app/thursdays/composition/ThursdayForm";
+import EditThursdaysButton from "@/app/thursdays/composition/EditThursdaysButton";
+import DeleteThursdaysButton from "@/app/thursdays/composition/DeleteThursdaysButton";
+import ThursdayViewTabs from "@/app/thursdays/composition/ThursdayViewTabs";
+import { SelectedThursdaysProvider } from "@/app/thursdays/composition/SelectedThursdaysProvider";
+import SelectedThursdaysCountLabel from "@/app/thursdays/composition/SelectedThursdaysCountLabel";
 
 // Helpers
 import { getSelectedSemesterId } from "@/components/domain/filters/semester-filter";
-import { ACTION_MODES } from "@/constants/action-modes";
 import { THURSDAY_MODAL_PARAMS, USER_MODAL_PARAMS, type ThursdayModalParam } from "@/constants/modal-params";
 import { isAdminRole } from "@/constants/roles";
 import { auth } from "@/authentication";
@@ -110,17 +117,19 @@ async function ThursdaysList({
   }
 
   return (
-    <>
-      <span className="ui-label m-0 mb-2 block pl-1">
-        {thursdays.length} Thursday Production{thursdays.length === 1 ? "" : "s"}
-      </span>
-      <div className="grid">
-        {thursdays.map((thursday: any, index: number) => (
-          <ThursdayCard key={thursday.id} thursday={thursday} isAdmin={isAdmin} checker={index % 2 === 0} isFirst={index === 0} isLast={index === thursdays.length - 1} />
-        ))}
-      </div>
-    </>
+    <div className="grid gap-2">
+      {thursdays.map((thursday: any, index: number) => (
+        <ThursdayCard key={thursday.id} thursday={thursday} isAdmin={isAdmin} isFirst={index === 0} isLast={index === thursdays.length - 1} />
+      ))}
+    </div>
   );
+}
+
+async function ThursdaySelectionTabs({ filters }: { filters: any }) {
+  const thursdaysResult = await getFilteredThursdays(filters);
+  const thursdayIds = thursdaysResult.success ? thursdaysResult.data.map((thursday: any) => thursday.id) : [];
+
+  return <ThursdayViewTabs thursdayIds={thursdayIds} />;
 }
 
 export default async function Thursdays({ searchParams }: ThursdaysProps) {
@@ -142,52 +151,47 @@ export default async function Thursdays({ searchParams }: ThursdaysProps) {
     <>
       <PageTitle
         title="Thursdays"
+        contentClassName="min-[769px]:ml-[calc(var(--nav-rail-collapsed-width)_+_12rem)]"
         filterControl={<SemesterFilterSelect semesters={semesters} defaultValue={selectedSemesterId} variant="title" />}
       />
       <ActionModeSurface>
-        <NavContent
-          filterContent={
-            <div className="[&_.input-affix-wrapper]:bg-[var(--action-input-bg)]!">
-              <FilterInput query={"thursdays"} placeholder="Search" />
+        <SelectedThursdaysProvider>
+        <div data-full-bleed-content className="flex h-full min-h-0 flex-col bg-[var(--page-bg)] min-[769px]:ml-[var(--nav-rail-collapsed-width)] min-[769px]:mr-2 min-[769px]:rounded-tl-[0.5rem] min-[769px]:rounded-tr-[0.5rem] min-[769px]:border min-[769px]:border-b-0 min-[769px]:border-solid min-[769px]:border-[var(--main-border)] min-[769px]:shadow-[var(--content-shadow)] print:bg-transparent">
+          <div className="flex flex-none flex-wrap items-center justify-between gap-6 overflow-hidden px-6 pt-6 pb-3 [scrollbar-gutter:stable] print:hidden">
+            <div className="flex items-center gap-2">
+              <div className="w-50 [--input-bg:var(--page-input-bg)] [--input-border:var(--page-input-border)] [--input-bg-hover:var(--page-input-bg-hover)] [--input-border-hover:var(--page-input-border-hover)] [--input-placeholder:var(--page-input-text)] [--input-icon:var(--page-input-search)]">
+                <FilterInput query="thursdays" placeholder="Search" />
+              </div>
+              {isAdmin && (
+                <Button href={getThursdaysModalHref(filters, THURSDAY_MODAL_PARAMS.add, "1")} variant="action">
+                  <MaskIcon icon="add/add.svg" className={actionButtonIconClassName} />
+                  Add thursday
+                </Button>
+              )}
             </div>
-          }
-          filterLabel=""
-          manageContent={
-            isAdmin ? (
-              <>
-                <Button href={getThursdaysModalHref(filters, THURSDAY_MODAL_PARAMS.add, "1")} variant="action" tone="success" icon="add/add.svg">Add Thursday</Button>
-                <ActionModeButton type="button" variant="action" mode={ACTION_MODES.editThursdays}>
-                  Edit Thursdays
-                </ActionModeButton>
-                <ActionModeButton type="button" variant="action" mode={ACTION_MODES.deleteThursdays}>
-                  Delete Thursdays
-                </ActionModeButton>
-              </>
-            ) : null
-          }
-          manageLabel="Manage"
-          mobileManageContent={
-            isAdmin ? (
-              <>
-                <Button href={getThursdaysModalHref(filters, THURSDAY_MODAL_PARAMS.add, "1")} variant="action" tone="success" icon="add/add.svg">Add</Button>
-                <ActionModeButton type="button" variant="action" mode={ACTION_MODES.editThursdays}>
-                  Edit
-                </ActionModeButton>
-                <ActionModeButton type="button" variant="action" mode={ACTION_MODES.deleteThursdays}>
-                  Del
-                </ActionModeButton>
-              </>
-            ) : null
-          }
-        />
-        {/* bg here, not on individual cards' own container - see users/page.tsx for the full explanation. */}
-        <div className="bg-[var(--app-thursdays-surface)] px-6 pt-9! pb-9! min-[769px]:rounded-tr-[0.5rem] min-[1025px]:pr-6 min-[1025px]:pl-9">
-          <Suspense
-            fallback={<div style={{ opacity: 0.5, padding: "1rem", background: "transparent" }}>Loading days...</div>}
-          >
-            <ThursdaysList filters={filters} isAdmin={isAdmin} semesters={semesters} />
+            <div className="flex flex-none items-center gap-2">
+              <SelectedThursdaysCountLabel />
+              <PrintLink label="Export selected" variant="action" />
+              {isAdmin && (
+                <>
+                  <EditThursdaysButton />
+                  <DeleteThursdaysButton />
+                </>
+              )}
+            </div>
+          </div>
+          <Suspense fallback={<ThursdayViewTabs thursdayIds={[]} />}>
+            <ThursdaySelectionTabs filters={filters} />
           </Suspense>
+          <div className="min-h-0 flex-1 overflow-y-auto px-6 [scrollbar-gutter:stable] print:overflow-visible print:px-0 print:pb-0">
+            <Suspense
+              fallback={<div style={{ opacity: 0.5, padding: "1rem", background: "transparent" }}>Loading days...</div>}
+            >
+              <ThursdaysList filters={filters} isAdmin={isAdmin} semesters={semesters} />
+            </Suspense>
+          </div>
         </div>
+        </SelectedThursdaysProvider>
         {profileUserId && (
           <PersonProfileModal key={profileUserId} profileUserId={profileUserId} />
         )}
@@ -196,7 +200,7 @@ export default async function Thursdays({ searchParams }: ThursdaysProps) {
             key="add-thursday"
             paramName={THURSDAY_MODAL_PARAMS.add}
             title="Add Thursday"
-            dialogClassName={thursdayDetailDialogClassName}
+            dialogClassName={thursdayFormDialogClassName}
           >
             <Suspense fallback={<ModalContentFallback />}>
               <AddThursdayFormContent />
@@ -208,7 +212,7 @@ export default async function Thursdays({ searchParams }: ThursdaysProps) {
             key={editThursdayId}
             paramName={THURSDAY_MODAL_PARAMS.edit}
             title="Edit Thursday"
-            dialogClassName={thursdayDetailDialogClassName}
+            dialogClassName={thursdayFormDialogClassName}
           >
             <Suspense fallback={<ModalContentFallback />}>
               <EditThursdayFormContent thursdayId={editThursdayId} />
@@ -234,7 +238,7 @@ export default async function Thursdays({ searchParams }: ThursdaysProps) {
           <RouteModalPopup
             key={thursdayId}
             paramName={THURSDAY_MODAL_PARAMS.view}
-            title="Thursday"
+            title={<ThursdayDetailTitle thursdayId={thursdayId} />}
             dialogClassName={thursdayDetailDialogClassName}
           >
             <Suspense fallback={<ModalContentFallback />}>

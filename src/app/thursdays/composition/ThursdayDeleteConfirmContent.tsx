@@ -44,7 +44,7 @@ export default async function ThursdayDeleteConfirmContent({
 		<ConfirmDelete
 			itemName={thursdayName}
 			itemType="Thursday"
-			confirmLabel="Delete Thursday"
+			confirmLabel="Delete thursday"
 			errorMessage="An error occurred while deleting the Thursday."
 			successMessage="Day deleted"
 			onConfirm={onConfirmDelete}

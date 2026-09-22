@@ -8,23 +8,26 @@ import { BasicUser } from "@/actions/schemas";
 
 // Components
 import { Collapse } from "@/components/collapse";
-import { Button } from "@/components/button";
 import ConfirmDelete from "@/components/confirm-delete";
 import ModalPopup from "@/components/modal";
 import { confirmDeleteDialogClassName } from "@/components/confirm-delete/styles";
+import { MaskIcon } from "@/theme/MaskIcon";
 
 // Composition
 import ProductionForm from "@/app/thursdays/composition/ProductionForm";
 import {
-  collapseBodyClassName,
-  collapseHeaderClassName,
+  addIconButtonClassName,
+  addIconClassName,
   collapseIconClassName,
-  collapseItemClassName,
   collapseLabelClassName,
-  collapseMetaClassName,
   collapseTitleTextClassName,
   collapseTriggerPaddingClassName,
-  iconButtonClassName,
+  deleteIconButtonClassName,
+  deleteIconClassName,
+  fieldLabelClassName,
+  productionBodyClassName,
+  productionHeaderClassName,
+  productionItemClassName,
   sectionHeaderClassName,
 } from "@/app/thursdays/composition/thursdayFormClasses";
 
@@ -48,11 +51,6 @@ export default function ProductionsSection({
   });
 
   const watchProductions = useWatch({ control, name: "productions" });
-  const thursdayDate = useWatch({ control, name: "date" });
-
-  const formattedDate = thursdayDate
-    ? new Date(thursdayDate).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
-    : null;
 
   const [pendingRemoveIndex, setPendingRemoveIndex] = useState<number | null>(null);
 
@@ -80,10 +78,11 @@ export default function ProductionsSection({
   return (
     <div>
       <div className={sectionHeaderClassName}>
-        <span className="ui-label m-0 block">Productions</span>
-        <Button
+        <span className={fieldLabelClassName}>Productions</span>
+        <button
           type="button"
-          variant="action"
+          className={addIconButtonClassName}
+          aria-label="Add production"
           onClick={() =>
             append({
               name: "",
@@ -93,12 +92,12 @@ export default function ProductionsSection({
             })
           }
         >
-          Add Production
-        </Button>
+          <MaskIcon icon="add/add.svg" className={addIconClassName} />
+        </button>
       </div>
 
       {fields.length === 0 ? (
-        <p className="my-6 text-center text-sm leading-normal text-[var(--app-label)] italic">
+        <p className="ui-note my-6 text-center">
           No productions yet.
         </p>
       ) : (
@@ -106,40 +105,33 @@ export default function ProductionsSection({
           defaultValue={fields.map((f: any) => f.id)}
           items={fields.map((field: any, pIndex) => {
             const name = watchProductions?.[pIndex]?.name;
-            const displayName = name || `Unnamed Production ${pIndex + 1}`;
             const trigger = (
               <span className={collapseLabelClassName}>
                 {/* Rotation reads the trigger's own data-state — Radix sets
                     data-state="open"/"closed" on it directly. */}
                 <span className={collapseIconClassName} aria-hidden="true" />
-                <span className={collapseTitleTextClassName}>{displayName}</span>
-                {formattedDate && <span className={collapseMetaClassName}>{formattedDate}</span>}
+                <span className={collapseTitleTextClassName}>{name}</span>
               </span>
             );
 
             return {
               value: field.id,
-              itemClassName: `${collapseItemClassName}${pIndex > 0 ? " mt-2" : ""}`,
-              headerClassName: collapseHeaderClassName,
+              itemClassName: `${productionItemClassName}${pIndex > 0 ? " mt-2" : ""}`,
+              headerClassName: productionHeaderClassName,
               triggerClassName: collapseTriggerPaddingClassName,
-              contentClassName: collapseBodyClassName,
+              contentClassName: productionBodyClassName,
               trigger,
               extra: (
                 <button
                   type="button"
-                  className={`${iconButtonClassName} self-center mr-4`}
+                  className={`${deleteIconButtonClassName} self-center mr-4`}
                   aria-label="Remove production"
                   onClick={(e) => {
                     e.stopPropagation();
                     setPendingRemoveIndex(pIndex);
                   }}
                 >
-                  <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                    <path
-                      d="M7 21C6.45 21 5.97917 20.8042 5.5875 20.4125C5.19583 20.0208 5 19.55 5 19V6H4V4H9V3H15V4H20V6H19V19C19 19.55 18.8042 20.0208 18.4125 20.4125C18.0208 20.8042 17.55 21 17 21H7ZM17 6H7V19H17V6ZM9 17H11V8H9V17ZM13 17H15V8H13V17Z"
-                      fill="currentColor"
-                    />
-                  </svg>
+                  <MaskIcon icon="delete/delete.svg" className={deleteIconClassName} />
                 </button>
               ),
               content: (
@@ -160,13 +152,13 @@ export default function ProductionsSection({
         onOpenChange={(open) => {
           if (!open) setPendingRemoveIndex(null);
         }}
-        title="Remove Production"
+        title="Remove production"
         dialogClassName={confirmDeleteDialogClassName}
       >
         <ConfirmDelete
           itemName="this production"
           itemType="production"
-          confirmLabel="Remove Production"
+          confirmLabel="Remove production"
           pendingLabel="Removing..."
           errorMessage="Could not remove the production."
           onConfirm={() => {

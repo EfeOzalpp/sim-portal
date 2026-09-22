@@ -2,6 +2,8 @@
 
 import { usePathname, useSearchParams } from "next/navigation";
 import { Button } from "@/components/button";
+import { actionButtonIconClassName } from "@/components/button/styles";
+import { MaskIcon } from "@/theme/MaskIcon";
 import { THURSDAY_MODAL_PARAMS } from "@/constants/modal-params";
 
 interface EditThursdayButtonProps {
@@ -28,7 +30,8 @@ export default function EditThursdayButton({ thursdayId, className }: EditThursd
 	params.set(THURSDAY_MODAL_PARAMS.edit, thursdayId);
 
 	return (
-		<Button href={`${pathname}?${params.toString()}`} variant="action" icon="edit/edit.svg" className={className}>
+		<Button href={`${pathname}?${params.toString()}`} variant="action" className={className}>
+			<MaskIcon icon="edit/edit.svg" className={actionButtonIconClassName} />
 			Edit
 		</Button>
 	);

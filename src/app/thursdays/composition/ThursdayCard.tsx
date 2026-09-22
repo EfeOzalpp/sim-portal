@@ -8,6 +8,7 @@ import ProductionsCollapse from "@/app/thursdays/composition/ProductionsCollapse
 import { auth } from "@/authentication";
 import { normalizeThursdayName } from "@/helpers";
 import { isAdminRole } from "@/constants/roles";
+import { formatShortMonthDay } from "@/constants/date-format";
 import { Prisma } from "@prisma/client";
 
 type ThursdayWithProductions = Prisma.ThursdayGetPayload<{
@@ -28,7 +29,6 @@ type ThursdayWithProductions = Prisma.ThursdayGetPayload<{
 interface ThursdayCardProps {
   thursday: ThursdayWithProductions;
   isAdmin?: boolean;
-  checker?: boolean;
   isFirst?: boolean;
   isLast?: boolean;
 }
@@ -36,7 +36,6 @@ interface ThursdayCardProps {
 export default async function ThursdayCard({
   thursday,
   isAdmin: initialIsAdmin,
-  checker,
   isFirst,
   isLast,
 }: ThursdayCardProps) {
@@ -45,16 +44,11 @@ export default async function ThursdayCard({
     const session = await auth();
     isAdmin = isAdminRole(session?.user?.role);
   }
-  const formattedDate = new Date(thursday.date).toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
+  const formattedDate = formatShortMonthDay(thursday.date);
   const thursdayName = normalizeThursdayName(thursday.name);
 
   return (
     <ProductionsCollapse
-      checker={checker}
       isFirst={isFirst}
       isLast={isLast}
       productions={[{
@@ -73,11 +67,10 @@ export default async function ThursdayCard({
                   productionIndex={index}
                   productionCount={thursday.productions.length}
                   isAdmin={isAdmin}
-                  hasOwnBackground={false}
                 />
               ))
             ) : (
-              <span className="text-[0.82rem] text-[var(--app-label)] italic">No current productions</span>
+              <span className="text-[0.82rem] text-[var(--label-text)] italic">No current productions</span>
             )}
           </>
         ),

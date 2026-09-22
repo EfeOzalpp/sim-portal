@@ -19,6 +19,7 @@ export function transformThursdayPayload(formData: any) {
         id: p.id,
         name: p.name,
         presenters: p.presenters || [],
+        tags: p.tags || [],
       })),
     })),
   };
@@ -51,6 +52,7 @@ export function transformThursdayFromAPI(apiData: any) {
         id: pres.id,
         name: pres.name,
         presenters: (pres.presenters || []).map((pr: any) => pr.id),
+        tags: pres.tags || [],
       })),
     })),
   };

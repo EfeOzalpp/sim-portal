@@ -28,6 +28,12 @@ import ProductionsSection from "@/app/thursdays/composition/ProductionsSection";
 // Helpers
 import { useForm } from "react-hook-form";
 import { handleFormAction } from "@/helpers";
+
+// Narrower than ThursdayDetailContent's thursdayDetailDialogClassName (52rem) -
+// that one's read-only layout (productions/presentations side by side) wants
+// the room, but this form is just stacked fields and doesn't, same as
+// users/page.tsx's own userFormDialogClassName (44rem).
+export const thursdayFormDialogClassName = "w-[min(44rem,100%)] h-dvh min-[769px]:h-auto";
 import { getCurrentSemesterCode, normalizeSemesterCode } from "@/components/domain/filters/semester-filter";
 
 interface ThursdayFormValues extends Omit<ThursdayInput, "date"> {
@@ -99,7 +105,7 @@ export default function ThursdayForm({
 
   return (
     <form onSubmit={handleSubmit(handleFormSubmit)} className="flex h-full flex-col">
-      <div className="flex flex-1 flex-col gap-[1.725rem]">
+      <div className="flex flex-1 flex-col gap-6">
         {error && (
           <Alert
             description={error}
@@ -119,8 +125,8 @@ export default function ThursdayForm({
           {isSubmitting
             ? "Saving..."
             : thursdayId
-              ? "Save Changes"
-              : "Create Day"}
+              ? "Save changes"
+              : "Create day"}
         </Button>
       </div>
     </form>

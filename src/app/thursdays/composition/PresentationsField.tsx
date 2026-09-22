@@ -10,24 +10,27 @@ import { BasicUser } from "@/actions/schemas";
 import { Input } from "@/components/input";
 import { Select } from "@/components/select";
 import { Collapse } from "@/components/collapse";
-import { Button } from "@/components/button";
 import ConfirmDelete from "@/components/confirm-delete";
 import ModalPopup from "@/components/modal";
-import { FieldError } from "@/components/field-error";
+import { FieldError, fieldLabelRowClassName } from "@/components/field-error";
 import { confirmDeleteDialogClassName } from "@/components/confirm-delete/styles";
+import { MaskIcon } from "@/theme/MaskIcon";
 
 // Composition
 import {
-  collapseBodyClassName,
-  collapseHeaderClassName,
+  addIconButtonClassName,
+  addIconClassName,
   collapseIconClassName,
-  collapseItemClassName,
   collapseLabelClassName,
-  collapseTitleTextClassName,
   collapseTriggerPaddingClassName,
+  deleteIconButtonClassName,
+  deleteIconClassName,
+  fieldLabelClassName,
   fieldStackClassName,
-  iconButtonClassName,
-  inlineActionsClassName,
+  presentationBodyClassName,
+  presentationHeaderClassName,
+  presentationItemClassName,
+  presentationTitleTextClassName,
   sectionHeaderClassName,
 } from "@/app/thursdays/composition/thursdayFormClasses";
 
@@ -87,23 +90,25 @@ export default function PresentationsField({
   return (
     <div>
       <div className={sectionHeaderClassName}>
-        <span className="ui-label m-0 block">Presentations</span>
-        <Button
+        <span className={fieldLabelClassName}>Presentations</span>
+        <button
           type="button"
-          variant="action"
+          className={addIconButtonClassName}
+          aria-label="Add presentation"
           onClick={() =>
             append({
               name: "",
               presenters: [],
+              tags: [],
             })
           }
         >
-          Add Presentation
-        </Button>
+          <MaskIcon icon="add/add.svg" className={addIconClassName} />
+        </button>
       </div>
 
       {fields.length === 0 ? (
-        <p className="my-6 text-center text-sm leading-normal text-[var(--app-label)] italic">
+        <p className="ui-note my-6 text-center">
           No presentations yet.
         </p>
       ) : (
@@ -116,41 +121,33 @@ export default function PresentationsField({
                     data-state="open"/"closed" on it directly, no isActive
                     render-prop needed. */}
                 <span className={collapseIconClassName} aria-hidden="true" />
-                <span className={collapseTitleTextClassName}>
-                  {name ? `Presentation ${pIndex + 1}: ${name}` : `Unnamed Presentation ${pIndex + 1}`}
-                </span>
+                <span className={presentationTitleTextClassName}>{name}</span>
               </span>
             );
 
             return {
               value: field.id,
-              itemClassName: `${collapseItemClassName}${pIndex > 0 ? " mt-2" : ""}`,
-              headerClassName: collapseHeaderClassName,
+              itemClassName: `${presentationItemClassName}${pIndex > 0 ? " mt-2" : ""}`,
+              headerClassName: presentationHeaderClassName,
               triggerClassName: collapseTriggerPaddingClassName,
-              contentClassName: collapseBodyClassName,
+              contentClassName: presentationBodyClassName,
               trigger,
               extra: (
                 <button
                   type="button"
-                  className={`${iconButtonClassName} self-center mr-4`}
+                  className={`${deleteIconButtonClassName} self-center mr-4`}
                   aria-label="Remove presentation"
                   onClick={(e) => {
                     e.stopPropagation();
                     setPendingRemoveIndex(pIndex);
                   }}
                 >
-                  <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                    <path
-                      d="M7 21C6.45 21 5.97917 20.8042 5.5875 20.4125C5.19583 20.0208 5 19.55 5 19V6H4V4H9V3H15V4H20V6H19V19C19 19.55 18.8042 20.0208 18.4125 20.4125C18.0208 20.8042 17.55 21 17 21H7ZM17 6H7V19H17V6ZM9 17H11V8H9V17ZM13 17H15V8H13V17Z"
-                      fill="currentColor"
-                    />
-                  </svg>
+                  <MaskIcon icon="delete/delete.svg" className={deleteIconClassName} />
                 </button>
               ),
               content: (
                 <div className="flex w-full flex-col gap-4">
                   <div className={fieldStackClassName}>
-                    <span className="ui-label m-0 block">Name *</span>
                     <Controller
                       control={control}
                       name={`productions.${productionIndex}.presentations.${pIndex}.name`}
@@ -159,14 +156,15 @@ export default function PresentationsField({
                         const showError = Boolean(fieldState.error) && (fieldState.isTouched || isSubmitted);
                         return (
                           <>
+                            <div className={fieldLabelRowClassName}>
+                              <span className={fieldLabelClassName}>Name *</span>
+                              {showError && <FieldError>{fieldState.error!.message}</FieldError>}
+                            </div>
                             <Input
                               {...field}
                               placeholder="Enter presentation name"
                               status={showError ? "error" : ""}
                             />
-                            {showError && (
-                              <FieldError>{fieldState.error!.message}</FieldError>
-                            )}
                           </>
                         );
                       }}
@@ -193,64 +191,62 @@ export default function PresentationsField({
                         );
 
                         return (
-                          <>
-                            <div className={sectionHeaderClassName}>
-                              <span className="ui-label m-0 block">Presenters</span>
-                              <div className={inlineActionsClassName}>
-                                {semesters.length > 0 && (
-                                  <Select
-                                    inModal
-                                    className="w-[5.5rem]!"
-                                    value={semesterFilterId ?? ALL_SEMESTERS_FILTER_VALUE}
-                                    onChange={(value) =>
-                                      setSemesterFilterId(value && value !== ALL_SEMESTERS_FILTER_VALUE ? value : null)
-                                    }
-                                    placeholder="Semester"
-                                    options={[
-                                      { value: ALL_SEMESTERS_FILTER_VALUE, label: "All" },
-                                      ...semesters.map((semester) => ({
-                                        value: semester.id,
-                                        label: formatSemesterCode(semester.name),
-                                      })),
-                                    ]}
-                                  />
-                                )}
-                                <Button
-                                  type="button"
-                                  className="whitespace-nowrap"
-                                  onClick={() => field.onChange(filteredStudentUsers.map((u) => u.id))}
-                                >
-                                  Select all
-                                </Button>
-                                <Button
-                                  type="button"
-                                  tone="danger"
-                                  className="whitespace-nowrap"
-                                  onClick={() => field.onChange([])}
-                                >
-                                  Unselect all
-                                </Button>
-                              </div>
-                            </div>
-                            <Select
-                              inModal
-                              {...field}
-                              mode="multiple"
-                              searchable
-                              maxTagCount={12}
-                              placeholder="Search and select presenters..."
-                              options={[
-                                ...studentUsers,
-                                ...users.filter(
-                                  (u) => selectedIds.has(u.id) && !isStudentRole((u as any).role)
-                                ),
-                              ]
-                                .sort((a, b) => (a.name ?? "").localeCompare(b.name ?? ""))
-                                .map((u) => ({ value: u.id, label: u.name ?? "Unnamed User" }))}
-                            />
-                          </>
+                          <Select
+                            inModal
+                            mode="filterableMultiselect"
+                            label="Presenters"
+                            {...field}
+                            searchable
+                            maxTagCount={12}
+                            placeholder="Search and select presenters..."
+                            selectAllValues={filteredStudentUsers.map((u) => u.id)}
+                            headerFilter={
+                              semesters.length > 0 && (
+                                <Select
+                                  inModal
+                                  className="w-[5.5rem]! min-h-9! py-1.5!"
+                                  value={semesterFilterId ?? ALL_SEMESTERS_FILTER_VALUE}
+                                  onChange={(value) =>
+                                    setSemesterFilterId(value && value !== ALL_SEMESTERS_FILTER_VALUE ? value : null)
+                                  }
+                                  placeholder="Semester"
+                                  options={[
+                                    { value: ALL_SEMESTERS_FILTER_VALUE, label: "All" },
+                                    ...semesters.map((semester) => ({
+                                      value: semester.id,
+                                      label: formatSemesterCode(semester.name),
+                                    })),
+                                  ]}
+                                />
+                              )
+                            }
+                            options={[
+                              ...studentUsers,
+                              ...users.filter(
+                                (u) => selectedIds.has(u.id) && !isStudentRole((u as any).role)
+                              ),
+                            ]
+                              .sort((a, b) => (a.name ?? "").localeCompare(b.name ?? ""))
+                              .map((u) => ({ value: u.id, label: u.name ?? "Unnamed User" }))}
+                          />
                         );
                       }}
+                    />
+                  </div>
+
+                  <div className={fieldStackClassName}>
+                    <span className={fieldLabelClassName}>Tags</span>
+                    <Controller
+                      control={control}
+                      name={`productions.${productionIndex}.presentations.${pIndex}.tags`}
+                      render={({ field }) => (
+                        <Select
+                          mode="tags"
+                          value={field.value ?? []}
+                          onChange={field.onChange}
+                          placeholder="Type a tag and press Enter..."
+                        />
+                      )}
                     />
                   </div>
                 </div>
@@ -265,13 +261,13 @@ export default function PresentationsField({
         onOpenChange={(open) => {
           if (!open) setPendingRemoveIndex(null);
         }}
-        title="Remove Presentation"
+        title="Remove presentation"
         dialogClassName={confirmDeleteDialogClassName}
       >
         <ConfirmDelete
           itemName="this presentation"
           itemType="presentation"
-          confirmLabel="Remove Presentation"
+          confirmLabel="Remove presentation"
           pendingLabel="Removing..."
           errorMessage="Could not remove the presentation."
           onConfirm={() => {

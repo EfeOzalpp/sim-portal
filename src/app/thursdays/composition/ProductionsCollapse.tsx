@@ -1,50 +1,22 @@
 "use client";
 
 // React & Next.js
-import { useRef, useState, type ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import clsx from "clsx";
 
 // Components
 import { Collapse } from "@/components/collapse";
 import { useActionMode } from "@/components/layout/ActionMode";
-import { MaskIcon } from "@/theme/MaskIcon";
+import { ThursdayCheckbox, useSelectedThursdays } from "@/app/thursdays/composition/SelectedThursdaysProvider";
 
 // Helpers
 import { ACTION_MODES } from "@/constants/action-modes";
 import { THURSDAY_MODAL_PARAMS, type ThursdayModalParam } from "@/constants/modal-params";
+import { getLabelColors } from "@/constants/labelColors";
 
 const chevronClassName =
   "h-5 w-5 flex-none bg-[var(--input-icon)] transition-transform duration-250 [mask-image:url(../assets/arrow/down.svg)] [mask-position:center] [mask-repeat:no-repeat] [mask-size:contain] [[data-state=open]_&]:rotate-180";
-
-// Same convention as RoleFilterPopover's trigger button.
-const printButtonClassName =
-  "m-0 inline-grid h-9 w-9 flex-none cursor-pointer place-items-center self-center rounded-xl border border-solid border-[var(--input-border)] bg-[var(--btn-default-bg)] p-0 text-[var(--input-icon)] hover:border-[var(--input-border-hover)] hover:bg-[var(--input-bg-hover)] hover:text-[var(--input-text)] hover:shadow-[var(--input-hover-shadow)]";
-
-// Marks every sibling along target's ancestor chain (up to <body>) with
-// data-print-hidden, so @media print's [data-print-hidden] rule (tailwind.css)
-// leaves only target's own subtree in the printed output - then clears those
-// marks again once print() returns.
-function printOnlyElement(target: HTMLElement) {
-  const marked: HTMLElement[] = [];
-  let node: HTMLElement | null = target;
-
-  while (node && node !== document.body) {
-    const parent: HTMLElement | null = node.parentElement;
-    if (parent) {
-      Array.from(parent.children).forEach((sibling) => {
-        if (sibling !== node && sibling instanceof HTMLElement) {
-          sibling.setAttribute("data-print-hidden", "true");
-          marked.push(sibling);
-        }
-      });
-    }
-    node = parent;
-  }
-
-  window.print();
-  marked.forEach((el) => el.removeAttribute("data-print-hidden"));
-}
 
 interface ProductionItem {
   id: string;
@@ -57,17 +29,29 @@ interface ProductionItem {
 
 interface ProductionsCollapseProps {
   productions: ProductionItem[];
-  checker?: boolean;
   isFirst?: boolean;
   isLast?: boolean;
 }
 
-export default function ProductionsCollapse({ productions, checker, isFirst, isLast }: ProductionsCollapseProps) {
+function DateLabel({ date, className }: { date: string; className?: string }) {
+  const colors = getLabelColors(date);
+
+  return (
+    <span
+      className={clsx("ui-label m-0 block w-fit rounded-md px-2 py-1 font-sans text-xs leading-tight font-semibold uppercase", className)}
+      style={{ backgroundColor: colors.bg, color: colors.text }}
+    >
+      {date}
+    </span>
+  );
+}
+
+export default function ProductionsCollapse({ productions, isFirst, isLast }: ProductionsCollapseProps) {
   const { activeMode } = useActionMode();
+  const { selectedThursdayIds, setSelectedThursdayIds } = useSelectedThursdays();
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const contentRefs = useRef<Map<string, HTMLDivElement | null>>(new Map());
   const [openValues, setOpenValues] = useState<string[]>([]);
 
   function openThursdayModal(thursdayId: string, modalParam: ThursdayModalParam) {
@@ -94,27 +78,16 @@ export default function ProductionsCollapse({ productions, checker, isFirst, isL
     return false;
   }
 
-  // Force the item open (if it isn't already) so its content actually exists
-  // to print, isolate just the productions inside it (not the trigger row's
-  // date/name/location) via printOnlyElement, then put the open state back.
-  async function handlePrintClick(productionId: string) {
-    const wasOpen = openValues.includes(productionId);
+  function toggleThursday(thursdayId: string) {
+    const next = new Set(selectedThursdayIds);
 
-    if (!wasOpen) {
-      setOpenValues((current) => [...current, productionId]);
-      await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
-    }
-
-    const contentEl = contentRefs.current.get(productionId);
-    if (contentEl) {
-      printOnlyElement(contentEl);
+    if (next.has(thursdayId)) {
+      next.delete(thursdayId);
     } else {
-      window.print();
+      next.add(thursdayId);
     }
 
-    if (!wasOpen) {
-      setOpenValues((current) => current.filter((value) => value !== productionId));
-    }
+    setSelectedThursdayIds(next);
   }
 
   return (
@@ -136,31 +109,43 @@ export default function ProductionsCollapse({ productions, checker, isFirst, isL
         value={openValues}
         onValueChange={setOpenValues}
         className={clsx(
-          "overflow-hidden text-[var(--app-text)]",
-          "[&:has([data-state=open])]:rounded-xl [&:has([data-state=open])]:border [&:has([data-state=open])]:border-solid [&:has([data-state=open])]:border-[var(--card-border)]",
-          !isFirst && "[&:has([data-state=open])]:mt-2",
-          !isLast && "[&:has([data-state=open])]:mb-2",
-          isFirst && "[&:not(:has([data-state=open]))]:rounded-t-xl",
-          isLast && "[&:not(:has([data-state=open]))]:rounded-b-xl",
-          checker ? "bg-[var(--checker-bg)]" : "bg-[var(--checker-bg-2)]",
+          "overflow-hidden rounded-xl bg-[var(--elevated-surface)] text-[var(--app-text)]",
         )}
         items={productions.map((p, pIndex) => ({
           value: p.id,
           itemClassName: pIndex > 0 ? "border-t border-t-[var(--card-border)]" : "",
           headerClassName: clsx(
-            "items-center text-[var(--app-text)] transition-[background] duration-150",
-            checker ? "hover:bg-[var(--checker-bg-hover)]" : "hover:bg-[var(--checker-bg-hover-2)]",
+            "group items-center text-[var(--app-text)] transition-[background] duration-150",
+            // --elevated-surface(-hover), not --app-gray-surface(-hover) - these
+            // rows are page content, not a modal; --app-gray-surface is scoped to
+            // modals/the expanded nav rail, and --elevated-surface is already
+            // this same collapse's own open-state background two lines up.
+            "hover:bg-[var(--elevated-surface-hover)]",
+            // border-b alone (not the all-sides border-solid/border-[color]
+            // utilities) - those set the border-style/border-color shorthand
+            // on every side, which turns on the browser's default ~3px
+            // border-width for the sides that were never explicitly zeroed.
+            "[[data-state=open]_&]:border-b [[data-state=open]_&]:border-b-[var(--modal-border)]",
           ),
           triggerClassName: "px-4 py-5",
           contentClassName: "px-4 pt-3 pb-4 text-[var(--app-text)]",
+          extra: (
+            <span className="order-first flex w-10 flex-none items-center justify-center self-stretch pl-4">
+              <ThursdayCheckbox
+                checked={selectedThursdayIds.has(p.id)}
+                ariaLabel={`Select ${p.name}`}
+                onChange={() => toggleThursday(p.id)}
+              />
+            </span>
+          ),
           trigger: (
             <>
               <span className="flex min-w-0 flex-1 items-center gap-3 min-[769px]:hidden">
                 <span className={chevronClassName} aria-hidden="true" />
                 <span className="flex min-w-0 flex-1 flex-col gap-2">
-                  {p.date && <span className="ui-label m-0 block w-fit">{p.date}</span>}
+                  {p.date && <DateLabel date={p.date} />}
                   <h3
-                    className="m-0 w-full truncate font-heading text-xl font-bold leading-tight text-[var(--app-text)]"
+                    className="m-0 w-full truncate text-[var(--app-text)]"
                     title={p.name}
                   >
                     {p.name}
@@ -170,13 +155,13 @@ export default function ProductionsCollapse({ productions, checker, isFirst, isL
                   )}
                 </span>
               </span>
-              <span className="hidden items-stretch gap-[0.85rem] self-stretch min-[769px]:inline-flex">
+              <span className="hidden min-w-0 flex-1 items-stretch gap-[0.85rem] self-stretch min-[769px]:inline-flex">
                 {p.date && (
-                  <span className="ui-label m-0 min-w-[5.5rem] shrink-0 self-center text-center">{p.date}</span>
+                  <DateLabel date={p.date} className="min-w-[5.5rem] shrink-0 self-center text-center" />
                 )}
                 <span className={`${chevronClassName} self-center`} aria-hidden="true" />
                 <h3
-                  className="m-0 w-48 shrink-0 self-center truncate font-heading text-xl font-bold leading-tight text-[var(--app-text)]"
+                  className="m-0 min-w-0 flex-1 self-center truncate text-[var(--app-text)]"
                   title={p.name}
                 >
                   {p.name}
@@ -190,24 +175,7 @@ export default function ProductionsCollapse({ productions, checker, isFirst, isL
               </span>
             </>
           ),
-          extra: (
-            <button
-              type="button"
-              className={clsx(printButtonClassName, "mr-4")}
-              aria-label="Print"
-              onClick={(event) => {
-                event.stopPropagation();
-                handlePrintClick(p.id);
-              }}
-            >
-              <MaskIcon icon="download/download.svg" className="h-4 w-4 bg-current [mask-position:center] [mask-repeat:no-repeat] [mask-size:contain]" />
-            </button>
-          ),
-          content: (
-            <div ref={(el) => { contentRefs.current.set(p.id, el); }}>
-              {p.content}
-            </div>
-          ),
+          content: p.content,
         }))}
       />
       <span

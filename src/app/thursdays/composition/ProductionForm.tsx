@@ -9,15 +9,13 @@ import { BasicUser } from "@/actions/schemas";
 // Components
 import { Input } from "@/components/input";
 import { Select } from "@/components/select";
-import { Button } from "@/components/button";
-import { FieldError } from "@/components/field-error";
+import { FieldError, fieldLabelRowClassName } from "@/components/field-error";
 
 // Composition
 import PresentationsField from "@/app/thursdays/composition/PresentationsField";
 import {
+  fieldLabelClassName,
   fieldStackClassName,
-  inlineActionsClassName,
-  sectionHeaderClassName,
 } from "@/app/thursdays/composition/thursdayFormClasses";
 
 // Helpers
@@ -71,9 +69,8 @@ export default function ProductionForm({
 
   return (
     <div className="flex w-full flex-col gap-6">
-      <div className="grid grid-cols-1 gap-6 min-[601px]:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 min-[601px]:grid-cols-2">
         <div className={fieldStackClassName}>
-          <span className="ui-label m-0 block">Name *</span>
           <Controller
             control={control}
             name={`productions.${productionIndex}.name`}
@@ -82,14 +79,15 @@ export default function ProductionForm({
               const showError = Boolean(fieldState.error) && (fieldState.isTouched || isSubmitted);
               return (
                 <>
+                  <div className={fieldLabelRowClassName}>
+                    <span className={fieldLabelClassName}>Name *</span>
+                    {showError && <FieldError>{fieldState.error!.message}</FieldError>}
+                  </div>
                   <Input
                     {...field}
                     placeholder="Enter production name"
                     status={showError ? "error" : ""}
                   />
-                  {showError && (
-                    <FieldError>{fieldState.error!.message}</FieldError>
-                  )}
                 </>
               );
             }}
@@ -97,7 +95,6 @@ export default function ProductionForm({
         </div>
 
         <div className={fieldStackClassName}>
-          <span className="ui-label m-0 block">Location *</span>
           <Controller
             control={control}
             name={`productions.${productionIndex}.location`}
@@ -106,6 +103,10 @@ export default function ProductionForm({
               const showError = Boolean(fieldState.error) && (fieldState.isTouched || isSubmitted);
               return (
                 <>
+                  <div className={fieldLabelRowClassName}>
+                    <span className={fieldLabelClassName}>Location *</span>
+                    {showError && <FieldError>{fieldState.error!.message}</FieldError>}
+                  </div>
                   <Select
                     inModal
                     {...field}
@@ -113,9 +114,6 @@ export default function ProductionForm({
                     options={LOCATIONS}
                     status={showError ? "error" : ""}
                   />
-                  {showError && (
-                    <FieldError>{fieldState.error!.message}</FieldError>
-                  )}
                 </>
               );
             }}
@@ -142,62 +140,44 @@ export default function ProductionForm({
             );
 
             return (
-              <>
-                <div className={sectionHeaderClassName}>
-                  <span className="ui-label m-0 block">Producers & Faculty</span>
-                  <div className={inlineActionsClassName}>
-                    {semesters.length > 0 && (
-                      <Select
-                        inModal
-                        className="w-[5.5rem]!"
-                        value={semesterFilterId ?? ALL_SEMESTERS_FILTER_VALUE}
-                        onChange={(value) =>
-                          setSemesterFilterId(value && value !== ALL_SEMESTERS_FILTER_VALUE ? value : null)
-                        }
-                        placeholder="Semester"
-                        options={[
-                          { value: ALL_SEMESTERS_FILTER_VALUE, label: "All" },
-                          ...semesters.map((semester) => ({
-                            value: semester.id,
-                            label: formatSemesterCode(semester.name),
-                          })),
-                        ]}
-                      />
-                    )}
-                    <Button
-                      type="button"
-                      className="whitespace-nowrap"
-                      onClick={() => field.onChange(filteredProducerUsers.map((u) => u.id))}
-                    >
-                      Select all
-                    </Button>
-                    <Button
-                      type="button"
-                      tone="danger"
-                      className="whitespace-nowrap"
-                      onClick={() => field.onChange([])}
-                    >
-                      Unselect all
-                    </Button>
-                  </div>
-                </div>
-                <Select
-                  inModal
-                  {...field}
-                  mode="multiple"
-                  searchable
-                  maxTagCount={12}
-                  placeholder="Search and select users..."
-                  options={[
-                    ...producerUsers,
-                    ...users.filter(
-                      (u) => selectedIds.has(u.id) && isStaffRole((u as any).role)
-                    ),
-                  ]
-                    .sort((a, b) => (a.name ?? "").localeCompare(b.name ?? ""))
-                    .map((u) => ({ value: u.id, label: u.name ?? "Unnamed User" }))}
-                />
-              </>
+              <Select
+                inModal
+                mode="filterableMultiselect"
+                label="Producers & Faculty"
+                {...field}
+                searchable
+                maxTagCount={12}
+                placeholder="Search and select users..."
+                selectAllValues={filteredProducerUsers.map((u) => u.id)}
+                headerFilter={
+                  semesters.length > 0 && (
+                    <Select
+                      inModal
+                      className="w-[5.5rem]! min-h-9! py-1.5!"
+                      value={semesterFilterId ?? ALL_SEMESTERS_FILTER_VALUE}
+                      onChange={(value) =>
+                        setSemesterFilterId(value && value !== ALL_SEMESTERS_FILTER_VALUE ? value : null)
+                      }
+                      placeholder="Semester"
+                      options={[
+                        { value: ALL_SEMESTERS_FILTER_VALUE, label: "All" },
+                        ...semesters.map((semester) => ({
+                          value: semester.id,
+                          label: formatSemesterCode(semester.name),
+                        })),
+                      ]}
+                    />
+                  )
+                }
+                options={[
+                  ...producerUsers,
+                  ...users.filter(
+                    (u) => selectedIds.has(u.id) && isStaffRole((u as any).role)
+                  ),
+                ]
+                  .sort((a, b) => (a.name ?? "").localeCompare(b.name ?? ""))
+                  .map((u) => ({ value: u.id, label: u.name ?? "Unnamed User" }))}
+              />
             );
           }}
         />
