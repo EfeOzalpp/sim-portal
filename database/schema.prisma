@@ -47,6 +47,7 @@ model Presentation {
   presenters    User[]
   production_id String?
   production    Production? @relation(fields: [production_id], references: [id], onDelete: Cascade)
+  tags String[] @default([])
 }
 
 // Production model representing a collection of presentations

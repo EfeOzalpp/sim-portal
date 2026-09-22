@@ -6,13 +6,14 @@ import { revalidatePath, unstable_noStore as noStore } from "next/cache";
 // Actions
 import { ensureAdmin } from "@/actions/auth";
 import { getAllSemesters as getAllSemestersUtil, action } from "@/actions/utilities";
-import { ThursdaySchema, ThursdayInput, ProductionInput, PresentationInput, FilterSchema } from "@/actions/schemas";
+import { ThursdaySchema, ThursdayInput, ProductionSchema, ProductionInput, PresentationInput, FilterSchema } from "@/actions/schemas";
 
 // Helpers
 import { prisma } from "@/database";
 import { isAllSemestersValue } from "@/constants/filters";
 import { getSelectedSemesterId } from "@/components/domain/filters/semester-filter";
 import { Prisma } from "@prisma/client";
+import { z } from "zod";
 
 export async function getAllSemesters() {
 	return await getAllSemestersUtil();
@@ -41,6 +42,7 @@ export async function getThursday(id: string) {
 								name: true,
 								about: true,
 								production_id: true,
+								tags: true,
 								presenters: { select: { id: true, name: true, image: true, role: true } }
 							}
 						}
@@ -153,6 +155,7 @@ export async function getFilteredThursdays(rawFilters: { semester?: string | str
 								name: true,
 								about: true,
 								production_id: true,
+								tags: true,
 								presenters: { select: { id: true, name: true, image: true, role: true } }
 							}
 						}
@@ -199,6 +202,12 @@ export async function updateThursdayWithProductions(data: ThursdayInput & { seme
 		}
 		const validatedFields = validation.data;
 
+		const productionsValidation = z.array(ProductionSchema).safeParse(data.productions);
+		if (!productionsValidation.success) {
+			throw new Error(productionsValidation.error.issues[0].message);
+		}
+		const validatedProductions = productionsValidation.data;
+
 		return await prisma.$transaction(async (tx) => {
 			await tx.thursday.update({
 				where: { id: validatedFields.id! },
@@ -215,7 +224,7 @@ export async function updateThursdayWithProductions(data: ThursdayInput & { seme
 			});
 			const existingProductionIds = existingProductions.map((p) => p.id);
 
-			const currentProductionIds = data.productions.map((p) => p.id).filter((id): id is string => !!id);
+			const currentProductionIds = validatedProductions.map((p) => p.id).filter((id): id is string => !!id);
 
 			// Delete productions no longer in the list
 			const productionsToDelete = existingProductionIds.filter((id) => !currentProductionIds.includes(id));
@@ -226,24 +235,30 @@ export async function updateThursdayWithProductions(data: ThursdayInput & { seme
 			}
 
 			// Handle new and existing productions
-			for (const p of data.productions) {
+			for (const p of validatedProductions) {
+				// id/thursday_id/producers/presentations all need relation-aware
+				// handling below - only the plain scalars (name, location, and any
+				// future field added to ProductionSchema) ride along via the spread.
+				const { id: _pId, thursday_id: _tId, producers, presentations, ...productionScalars } = p;
+
 				if (!p.id) {
 					await tx.production.create({
 						data: {
-							name: p.name,
-							location: p.location,
+							...productionScalars,
 							thursday: { connect: { id: validatedFields.id! } },
 							producers: {
-								connect: (p.producers || []).map((id: string) => ({ id })),
+								connect: (producers || []).map((id: string) => ({ id })),
 							},
 							presentations: {
-								create: (p.presentations || []).map((pres) => ({
-									name: pres.name,
-									about: pres.about || "",
-									presenters: {
-										connect: (pres.presenters || []).map((id: string) => ({ id })),
-									},
-								})),
+								create: (presentations || []).map((pres) => {
+									const { id: _presId, production_id: _prodId, presenters, ...presentationScalars } = pres;
+									return {
+										...presentationScalars,
+										presenters: {
+											connect: (presenters || []).map((id: string) => ({ id })),
+										},
+									};
+								}),
 							},
 						},
 					});
@@ -251,38 +266,38 @@ export async function updateThursdayWithProductions(data: ThursdayInput & { seme
 					await tx.production.update({
 						where: { id: p.id },
 						data: {
-							name: p.name,
-							location: p.location,
-							producers: { set: (p.producers || []).map((id: string) => ({ id })) },
+							...productionScalars,
+							producers: { set: (producers || []).map((id: string) => ({ id })) },
 						}
 					});
-					
-					const currentPresentationIds = (p.presentations || []).map((pres) => pres.id).filter((id): id is string => !!id);
-					
+
+					const currentPresentationIds = (presentations || []).map((pres) => pres.id).filter((id): id is string => !!id);
+
 					// Delete presentations
 					await tx.presentation.deleteMany({
-						where: { 
+						where: {
 							production_id: p.id,
 							id: { notIn: currentPresentationIds }
 						}
 					});
-					
-					for (const pres of (p.presentations || [])) {
+
+					for (const pres of (presentations || [])) {
+						const { id: _presId, production_id: _prodId, presenters, ...presentationScalars } = pres;
+
 						if (!pres.id) {
 							await tx.presentation.create({
 								data: {
-									name: pres.name,
-									about: pres.about || "",
+									...presentationScalars,
 									production: { connect: { id: p.id } },
-									presenters: { connect: (pres.presenters || []).map((id: string) => ({ id })) }
+									presenters: { connect: (presenters || []).map((id: string) => ({ id })) }
 								}
 							});
 						} else {
 							await tx.presentation.update({
 								where: { id: pres.id },
 								data: {
-									name: pres.name,
-									presenters: { set: (pres.presenters || []).map((id: string) => ({ id })) }
+									...presentationScalars,
+									presenters: { set: (presenters || []).map((id: string) => ({ id })) }
 								}
 							});
 						}
@@ -307,6 +322,12 @@ export async function createThursdayWithProductions(data: ThursdayInput & { seme
 		}
 		const validatedFields = validation.data;
 
+		const productionsValidation = z.array(ProductionSchema).safeParse(data.productions);
+		if (!productionsValidation.success) {
+			throw new Error(productionsValidation.error.issues[0].message);
+		}
+		const validatedProductions = productionsValidation.data;
+
 		let semesterId = data.semesterId || validatedFields.semester_id;
 		if (!semesterId) {
 			// Prefer whichever semester actually matches today over
@@ -328,23 +349,26 @@ export async function createThursdayWithProductions(data: ThursdayInput & { seme
 				},
 			});
 
-			for (const p of data.productions) {
+			for (const p of validatedProductions) {
+				const { id: _pId, thursday_id: _tId, producers, presentations, ...productionScalars } = p;
+
 				await tx.production.create({
 					data: {
-						name: p.name,
-						location: p.location,
+						...productionScalars,
 						thursday: { connect: { id: thursday.id } },
 						producers: {
-							connect: (p.producers || []).map((id: string) => ({ id })),
+							connect: (producers || []).map((id: string) => ({ id })),
 						},
 						presentations: {
-							create: (p.presentations || []).map((pres) => ({
-								name: pres.name,
-								about: pres.about || "",
-								presenters: {
-									connect: (pres.presenters || []).map((id: string) => ({ id })),
-								},
-							})),
+							create: (presentations || []).map((pres) => {
+								const { id: _presId, production_id: _prodId, presenters, ...presentationScalars } = pres;
+								return {
+									...presentationScalars,
+									presenters: {
+										connect: (presenters || []).map((id: string) => ({ id })),
+									},
+								};
+							}),
 						},
 					},
 				});

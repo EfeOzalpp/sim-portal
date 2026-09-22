@@ -210,6 +210,7 @@ export async function getIndividualSemesterData(
 			select: {
 				id: true,
 				name: true,
+				image: true,
 				semesters: {
 					orderBy: { name: "asc" },
 					select: { id: true, name: true },
@@ -246,6 +247,7 @@ export async function getIndividualSemesterData(
 			return {
 				id: user.id,
 				name: user.name,
+				image: user.image,
 				semesters: user.semesters.map((semester) => ({
 					...semester,
 					grade: gradesBySemester.get(semester.id) || null,

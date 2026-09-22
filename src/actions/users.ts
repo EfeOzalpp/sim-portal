@@ -171,18 +171,55 @@ export async function getAllUsers() {
 	});
 }
 
+// Shared by getFilteredUsers and getUserRoleCounts - the search+semester half
+// of the where clause, before role is layered on top (each caller handles
+// role differently: one filters by it, the other groups by it).
+async function getUserSearchAndSemesterWhere(rawFilters: any) {
+	const validation = FilterSchema.safeParse(rawFilters);
+	const validatedFilters = validation.success ? validation.data : {};
+
+	const filters = {
+		semesterId: Array.isArray(validatedFilters.semesterId) ? validatedFilters.semesterId[0] : validatedFilters.semesterId,
+		user: Array.isArray(validatedFilters.user) ? validatedFilters.user[0] : validatedFilters.user,
+		semester: Array.isArray(validatedFilters.semester) ? validatedFilters.semester[0] : validatedFilters.semester,
+	};
+
+	let semesterQuery: Prisma.UserWhereInput = {};
+
+	if (filters.semesterId && !isAllFilter(filters.semesterId)) {
+		semesterQuery = { semesters: { some: { id: filters.semesterId } } };
+	} else if (filters.semester && !isAllFilter(filters.semester)) {
+		// Fallback for legacy name-based filtering
+		semesterQuery = { semesters: { some: { name: { contains: filters.semester } } } };
+	} else if (!filters.semesterId && !filters.semester) {
+		// No explicit filter in the URL yet - default to whatever the
+		// page's own filter Select shows as pre-selected (the semester
+		// matching today's date, falling back to the newest one), not just
+		// "the newest semester" outright. Those can differ - e.g. a future
+		// semester already exists but has no members yet - and blindly
+		// querying the newest one made a fresh page load show "no
+		// results" even though the visible filter looked normal.
+		const semesters = await getAllSemestersUtil();
+		const defaultSemesterId = getSelectedSemesterId(rawFilters, semesters);
+		if (defaultSemesterId && !isAllSemestersValue(defaultSemesterId)) {
+			semesterQuery = { semesters: { some: { id: defaultSemesterId } } };
+		}
+	}
+
+	const userSearch = filters.user || "";
+
+	return {
+		OR: [{ name: { contains: userSearch, mode: "insensitive" as const } }],
+		AND: { ...semesterQuery },
+	} satisfies Prisma.UserWhereInput;
+}
+
 export async function getFilteredUsers(rawFilters: any) {
 	return await action(async () => {
 		noStore();
 
 		const validation = FilterSchema.safeParse(rawFilters);
 		const validatedFilters = validation.success ? validation.data : {};
-
-		const filters = {
-			semesterId: Array.isArray(validatedFilters.semesterId) ? validatedFilters.semesterId[0] : validatedFilters.semesterId,
-			user: Array.isArray(validatedFilters.user) ? validatedFilters.user[0] : validatedFilters.user,
-			semester: Array.isArray(validatedFilters.semester) ? validatedFilters.semester[0] : validatedFilters.semester,
-		};
 
 		// role: kept as a list (not collapsed to one value like the others above) -
 		// it's a checkbox popover, not a single-value filter. Values are
@@ -197,34 +234,12 @@ export async function getFilteredUsers(rawFilters: any) {
 		const roleValues = rawRoles.filter((role): role is string => validRoles.has(role));
 		const roleQuery: Prisma.UserWhereInput = roleValues.length > 0 ? { role: { in: roleValues as any } } : {};
 
-		let semesterQuery: Prisma.UserWhereInput = {};
-
-		if (filters.semesterId && !isAllFilter(filters.semesterId)) {
-			semesterQuery = { semesters: { some: { id: filters.semesterId } } };
-		} else if (filters.semester && !isAllFilter(filters.semester)) {
-			// Fallback for legacy name-based filtering
-			semesterQuery = { semesters: { some: { name: { contains: filters.semester } } } };
-		} else if (!filters.semesterId && !filters.semester) {
-			// No explicit filter in the URL yet - default to whatever the
-			// page's own filter Select shows as pre-selected (the semester
-			// matching today's date, falling back to the newest one), not just
-			// "the newest semester" outright. Those can differ - e.g. a future
-			// semester already exists but has no members yet - and blindly
-			// querying the newest one made a fresh page load show "no
-			// results" even though the visible filter looked normal.
-			const semesters = await getAllSemestersUtil();
-			const defaultSemesterId = getSelectedSemesterId(rawFilters, semesters);
-			if (defaultSemesterId && !isAllSemestersValue(defaultSemesterId)) {
-				semesterQuery = { semesters: { some: { id: defaultSemesterId } } };
-			}
-		}
-
-		const userSearch = filters.user || "";
+		const baseWhere = await getUserSearchAndSemesterWhere(rawFilters);
 
 		return await prisma.user.findMany({
 			where: {
-				OR: [{ name: { contains: userSearch, mode: "insensitive" } }],
-				AND: { ...semesterQuery, ...roleQuery },
+				...baseWhere,
+				AND: { ...baseWhere.AND, ...roleQuery },
 			},
 			orderBy: {
 				name: "asc",
@@ -237,6 +252,28 @@ export async function getFilteredUsers(rawFilters: any) {
 				pronouns: true,
 			},
 		});
+	});
+}
+
+// Counts per role for RoleFilterPopover - respects the same search+semester
+// filters getFilteredUsers does, but never the role filter itself (picking
+// "Student" shouldn't make every other role's count vanish from the list).
+export async function getUserRoleCounts(rawFilters: any) {
+	return await action(async () => {
+		noStore();
+
+		const where = await getUserSearchAndSemesterWhere(rawFilters);
+
+		const [total, grouped] = await Promise.all([
+			prisma.user.count({ where }),
+			prisma.user.groupBy({ by: ["role"], where, _count: true }),
+		]);
+
+		const counts: Record<string, number> = { all: total };
+		for (const role of Object.values(ROLES)) counts[role] = 0;
+		for (const group of grouped) counts[group.role] = group._count;
+
+		return counts;
 	});
 }
 

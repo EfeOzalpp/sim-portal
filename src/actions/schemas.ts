@@ -53,6 +53,7 @@ export const PresentationSchema = z.object({
 	about: z.string().optional(),
 	production_id: z.string().optional(),
 	presenters: z.array(z.string()).optional(),
+	tags: z.array(z.string()).optional()
 });
 
 export type PresentationInput = z.infer<typeof PresentationSchema>;
