@@ -3,9 +3,12 @@
 // React & Next.js
 import { MouseEvent, useEffect, useRef, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
 
 // Components
 import { useActionMode } from "@/components/layout/ActionMode";
+import { Button } from "@/components/button";
+import { MaskIcon } from "@/theme/MaskIcon";
 
 // Composition
 import UserCard from "@/app/users/composition/UserCard";
@@ -13,29 +16,57 @@ import UserCard from "@/app/users/composition/UserCard";
 // Helpers
 import { ACTION_MODES } from "@/constants/action-modes";
 import { USER_MODAL_PARAMS, type UserModalParam } from "@/constants/modal-params";
+import { CARDS_PER_ROW_KEY, DEFAULT_CARDS_PER_ROW } from "@/constants/filters";
 import type { User } from "@prisma/client";
 
 interface UserCardGridProps {
 	users: Pick<User, "id" | "name" | "image" | "role" | "pronouns">[];
+	isAdmin?: boolean;
+	addUserHref?: string;
+	searchTerm?: string;
+}
+
+function AddUserCard({ href }: { href: string }) {
+	return (
+		<div className="flex flex-col gap-2 overflow-hidden rounded-xl! border-2 border-dashed border-[var(--card-border)] bg-[var(--elevated-surface)]! p-2 hover:border-[var(--card-border-hover)] print:hidden">
+			{/* flex-1 */}
+			<Link
+				href={href}
+				className="flex flex-1 flex-col pt-4 items-center justify-center gap-2 rounded-lg text-[var(--label-text)] no-underline hover:bg-[var(--elevated-surface-hover)]! hover:text-[var(--app-text)]"
+			>
+				<MaskIcon icon="add/add.svg" className="h-4 w-4 bg-current [mask-position:center] [mask-repeat:no-repeat] [mask-size:contain]" />
+				<span className="ui-label">New user</span>
+			</Link>
+			{/* deliberately not flex-1 */}
+			<div className="flex flex-col justify-center border-t border-[var(--card-border)] pt-2">
+				<Button fullWidth className="border-transparent! bg-transparent! hover:bg-[var(--elevated-surface-hover)]!">
+					<MaskIcon icon="import/import.svg" className="h-4 w-4 flex-none bg-current [mask-position:center] [mask-repeat:no-repeat] [mask-size:contain]" />
+					Import
+				</Button>
+			</div>
+		</div>
+	);
 }
 
 const BATCH_SIZE = 30;
 
-// Grid: auto-filling columns, centered when they don't fill a row. [&>*]:rounded-lg/border below target Block's own wrapper <div>, not UserCard's <a> - it always renders one. print: forces a fixed 10-column printable roster.
+// grid-template-columns comes from GridViewPopover's own inline style below,
+// not a class - print always wants its own fixed 6 regardless of that
+// on-screen choice, and needs `!` here to actually beat an inline style.
 const gridClassName = [
-	// No bg here - the page's own wrapper div (users/page.tsx) covers the content area regardless of how sparse this grid is.
-	"grid grid-cols-[repeat(auto-fill,minmax(10rem,1fr))] justify-center gap-4",
+	"grid justify-center gap-4",
 	"[&>*]:min-w-0 [&>*]:w-full [&>*]:rounded-lg [&>*]:bg-[var(--elevated-surface)]",
-	"print:grid-cols-[repeat(10,minmax(0,1fr))] print:justify-stretch print:gap-[0.06in] print:bg-white print:text-black",
+	"print:grid-cols-[repeat(6,minmax(0,1fr))]! print:justify-stretch print:gap-[0.1in] print:bg-white print:text-black",
 	"print:[&>*]:break-inside-avoid print:[&>*]:border print:[&>*]:border-[#ccc]! print:[&>*]:bg-white! print:[&>*]:[page-break-inside:avoid]",
 	"print:[&_a]:text-inherit print:[&_a]:no-underline",
 ].join(" ");
 
-export default function UserCardGrid({ users }: UserCardGridProps) {
+export default function UserCardGrid({ users, isAdmin = false, addUserHref, searchTerm }: UserCardGridProps) {
 	const { activeMode } = useActionMode();
 	const router = useRouter();
 	const pathname = usePathname();
 	const searchParams = useSearchParams();
+	const cardsPerRow = Number(searchParams.get(CARDS_PER_ROW_KEY)) || DEFAULT_CARDS_PER_ROW;
 	const [visibleCount, setVisibleCount] = useState(BATCH_SIZE);
 	const sentinelRef = useRef<HTMLDivElement>(null);
 
@@ -85,7 +116,13 @@ export default function UserCardGrid({ users }: UserCardGridProps) {
 
 	return (
 		<>
-			<div className={gridClassName}>
+			<div className={gridClassName} style={{ gridTemplateColumns: `repeat(${cardsPerRow}, minmax(0, 1fr))` }}>
+				{isAdmin && addUserHref && <AddUserCard href={addUserHref} />}
+				{isAdmin && users.length < 1 && (
+					<div className="flex items-center justify-center p-4 text-center text-[var(--label-text)] print:hidden">
+						There are no results for User {searchTerm}
+					</div>
+				)}
 				{visibleUsers.map((user) => (
 					<UserCard
 						key={user.id}
@@ -118,6 +155,8 @@ export default function UserCardGrid({ users }: UserCardGridProps) {
 								openUserModal(user.id, USER_MODAL_PARAMS.profile);
 							}
 						}}
+						onEdit={isAdmin && !activeMode ? () => openUserModal(user.id, USER_MODAL_PARAMS.edit) : undefined}
+						onDelete={isAdmin && !activeMode ? () => openUserModal(user.id, USER_MODAL_PARAMS.delete) : undefined}
 					/>
 				))}
 			</div>

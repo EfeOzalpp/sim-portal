@@ -13,10 +13,11 @@ import { RangePicker } from "@/components/datepicker";
 import { Alert } from "@/components/alert";
 import { Select } from "@/components/select";
 import { selectItemVariants } from "@/components/select/styles";
+import { inputFilterTriggerClassName } from "@/components/input/styles";
 import { Button } from "@/components/button";
 import Popover from "@/components/popover";
 import { useModalCloseGuard } from "@/components/modal/CloseGuard";
-import { FieldError } from "@/components/field-error";
+import { FieldError, fieldLabelRowClassName } from "@/components/field-error";
 import { useToast } from "@/components/toast";
 import { MaskIcon } from "@/theme/MaskIcon";
 
@@ -94,12 +95,28 @@ const roleFilterOptions = [
   { value: ROLES.admin, label: "Admin" },
 ];
 
-const roleFilterTriggerClassName =
-  "m-0 inline-grid h-9 w-9 cursor-pointer place-items-center rounded-xl border border-solid border-[var(--input-border)] bg-[var(--action-item-bg)] p-0 text-[var(--input-icon)] hover:border-[var(--input-border-hover)] hover:bg-[var(--input-bg-hover)] hover:text-[var(--input-text)] hover:shadow-[var(--input-hover-shadow)]";
+// Same shape as RoleFilterPopover's own optionButtonClassName (the /users
+// page's search-field role filter) - justify-between + gap-3 leaves room for
+// a right-aligned count, and --modal-button-bg-hover is this popover's own
+// surface's hover token (same Popover shell either one renders through), not
+// selectItemVariants' own --input-area-hovered-item-bg (tuned for Select's dropdown).
+const roleFilterOptionButtonClassName = "flex w-full items-center justify-between gap-3 border-0 bg-transparent text-left hover:bg-[var(--modal-button-bg-hover)]!";
 
-const roleFilterOptionButtonClassName = "w-full border-0 bg-transparent text-left";
+// Muted at rest, matches the label's own --select-active-text once selected - same as RoleFilterPopover's own optionCountClassName.
+function roleFilterCountClassName(selected: boolean) {
+  return selected ? "text-[var(--select-active-text)]" : "text-[var(--content-muted)]";
+}
 
-function EnrollmentRoleFilter({ value, onChange }: { value: string | null; onChange: (next: string | null) => void }) {
+function EnrollmentRoleFilter({
+  value,
+  onChange,
+  counts,
+}: {
+  value: string | null;
+  onChange: (next: string | null) => void;
+  /** { all, STUDENT, STAFF, ADMIN } - respects the semester filter above, but never this role filter itself. */
+  counts?: Record<string, number>;
+}) {
   const [open, setOpen] = useState(false);
   const isAllSelected = value === null;
 
@@ -115,18 +132,18 @@ function EnrollmentRoleFilter({ value, onChange }: { value: string | null; onCha
 
   return (
     <Popover
-      align="start"
+      align="end"
       open={open}
       onOpenChange={setOpen}
       contentClassName="z-[320]!"
       trigger={
-        <button type="button" className={roleFilterTriggerClassName} aria-label="Filter by role">
+        <button type="button" className={inputFilterTriggerClassName} aria-label="Filter by role">
           <MaskIcon icon="filter/filter.svg" className="h-4 w-4 bg-current [mask-position:center] [mask-repeat:no-repeat] [mask-size:contain]" />
         </button>
       }
     >
       <div className="flex min-w-[9rem] flex-col gap-0.5">
-        <span className="ui-label block px-2 pb-1">Role Filter</span>
+        <span className="ui-label block px-2 pt-0.5 pb-1">Filter by role</span>
         <div className="flex flex-col gap-0.5" role="listbox">
           <button
             type="button"
@@ -135,7 +152,8 @@ function EnrollmentRoleFilter({ value, onChange }: { value: string | null; onCha
             onClick={selectAll}
             className={clsx(selectItemVariants({ selected: isAllSelected }), roleFilterOptionButtonClassName)}
           >
-            All
+            <span className={isAllSelected ? "text-[var(--select-active-text)]" : undefined}>All</span>
+            {counts && <span className={roleFilterCountClassName(isAllSelected)}>{counts.all}</span>}
           </button>
           {roleFilterOptions.map((option) => {
             const isSelected = value === option.value;
@@ -148,7 +166,8 @@ function EnrollmentRoleFilter({ value, onChange }: { value: string | null; onCha
                 onClick={() => selectRole(option.value)}
                 className={clsx(selectItemVariants({ selected: isSelected }), roleFilterOptionButtonClassName)}
               >
-                {option.label}
+                <span className={isSelected ? "text-[var(--select-active-text)]" : undefined}>{option.label}</span>
+                {counts && <span className={roleFilterCountClassName(isSelected)}>{counts[option.value]}</span>}
               </button>
             );
           })}
@@ -311,19 +330,8 @@ export default function SemesterForm({
           />
         )}
         <div className="flex flex-1 flex-col gap-8 pt-4">
-          {!semester && (
-            <p className="ui-note m-0 -mb-4 flex items-center gap-1.5">
-              <MaskIcon
-                icon="info/info.svg"
-                className="h-[1.375rem] w-[1.375rem] shrink-0 bg-current [mask-position:center] [mask-repeat:no-repeat] [mask-size:contain]"
-              />
-              <span>Tip: select a name first and the date will auto-fill.</span>
-            </p>
-          )}
-
           <div className="grid w-full grid-cols-[max-content_minmax(0,1fr)] gap-4 max-[600px]:grid-cols-1">
             <div className="flex w-40 flex-col gap-2 max-[600px]:w-full">
-              <span className="ui-label m-0 block pl-1">Name *</span>
               <Controller
                 control={control}
                 name="name"
@@ -333,6 +341,10 @@ export default function SemesterForm({
                   const showError = Boolean(fieldState.error) && (fieldState.isTouched || isSubmitted);
                   return (
                     <>
+                      <div className={clsx(fieldLabelRowClassName, "pl-1")}>
+                        <span className="ui-label m-0">Academic Term *</span>
+                        {showError && <FieldError>{fieldState.error!.message}</FieldError>}
+                      </div>
                       <Select
                         inModal
                         {...field}
@@ -343,9 +355,6 @@ export default function SemesterForm({
                         options={nameOptions}
                         scrollToValueOnOpen={getClosestOptionValue(nameOptions, getCurrentSemesterCode())}
                       />
-                      {showError && (
-                        <FieldError>{fieldState.error!.message}</FieldError>
-                      )}
                     </>
                   );
                 }}
@@ -353,7 +362,6 @@ export default function SemesterForm({
             </div>
 
             <div className="flex min-w-0 flex-col gap-2">
-              <span className="ui-label m-0 block pl-1">Date Range *</span>
               <Controller
                 control={control}
                 name="dates"
@@ -366,9 +374,15 @@ export default function SemesterForm({
 
                   return (
                     <>
+                      <div className={clsx(fieldLabelRowClassName, "pl-1")}>
+                        <span className="ui-label m-0">Date Range *</span>
+                        {showError && <FieldError>{fieldState.error!.message}</FieldError>}
+                      </div>
                       <RangePicker
                         {...field}
                         key={!hasRealDates && datesTargetYear ? datesTargetYear : "fixed"}
+                        disabled={!nameValue}
+                        placeholder={!nameValue ? ["Pick an academic term first", ""] : undefined}
                         defaultPickerValue={
                           !hasRealDates && datesTargetYear
                             ? [dayjs().year(datesTargetYear), dayjs().year(datesTargetYear)]
@@ -377,9 +391,6 @@ export default function SemesterForm({
                         style={{ width: "100%" }}
                         status={showError ? "error" : ""}
                       />
-                      {showError && (
-                        <FieldError>{fieldState.error!.message}</FieldError>
-                      )}
                     </>
                   );
                 }}
@@ -408,57 +419,47 @@ export default function SemesterForm({
                 const roleFilteredSelectableUsers = selectableUsers.filter(
                   (u) => roleFilter === null || u.role === roleFilter,
                 );
+                // Respects the semester filter (same pool "Select all" targets), but never the role filter itself - same rule RoleFilterPopover's own counts follow.
+                const roleCounts = {
+                  all: filteredSelectableUsers.length,
+                  [ROLES.student]: filteredSelectableUsers.filter((u) => u.role === ROLES.student).length,
+                  [ROLES.staff]: filteredSelectableUsers.filter((u) => u.role === ROLES.staff).length,
+                  [ROLES.admin]: filteredSelectableUsers.filter((u) => u.role === ROLES.admin).length,
+                };
 
                 return (
-                  <>
-                    <div className="mb-3 flex items-end justify-between gap-4 max-[600px]:flex-col max-[600px]:items-stretch">
-                      <span className="ui-label m-0 block pl-1">Enrollment</span>
-                      <div className="flex flex-wrap items-center gap-2">
-                        {semesters.length > 0 && (
-                          <Select
-                            inModal
-                            className="w-[5.5rem]! py-1.5!"
-                            value={semesterFilterId ?? ALL_SEMESTERS_FILTER_VALUE}
-                            onChange={(value) =>
-                              setSemesterFilterId(value && value !== ALL_SEMESTERS_FILTER_VALUE ? value : null)
-                            }
-                            placeholder="Semester"
-                            options={[
-                              { value: ALL_SEMESTERS_FILTER_VALUE, label: "All" },
-                              ...semesters.map((s) => ({
-                                value: s.id,
-                                label: formatSemesterCode(s.name),
-                              })),
-                            ]}
-                          />
-                        )}
-                        <Button
-                          type="button"
-                          className="whitespace-nowrap"
-                          onClick={() => field.onChange(filteredSelectableUsers.map((u) => u.id))}
-                        >
-                          Select all
-                        </Button>
-                        <Button
-                          type="button"
-                          className="whitespace-nowrap"
-                          onClick={() => field.onChange([])}
-                        >
-                          Unselect all
-                        </Button>
-                      </div>
-                    </div>
-                    <Select
-                      inModal
-                      {...field}
-                      mode="multiple"
-                      searchable
-                      maxTagCount={12}
-                      placeholder="Select users"
-                      options={roleFilteredSelectableUsers.map((u) => ({ value: u.id, label: u.name ?? "Unnamed User" }))}
-                      filterExtra={<EnrollmentRoleFilter value={roleFilter} onChange={setRoleFilter} />}
-                    />
-                  </>
+                  <Select
+                    inModal
+                    mode="filterableMultiselect"
+                    label="Enrollment"
+                    {...field}
+                    searchable
+                    maxTagCount={12}
+                    placeholder="Select users"
+                    selectAllValues={filteredSelectableUsers.map((u) => u.id)}
+                    headerFilter={
+                      semesters.length > 0 && (
+                        <Select
+                          inModal
+                          className="w-[5.5rem]! min-h-9! py-1.5!"
+                          value={semesterFilterId ?? ALL_SEMESTERS_FILTER_VALUE}
+                          onChange={(value) =>
+                            setSemesterFilterId(value && value !== ALL_SEMESTERS_FILTER_VALUE ? value : null)
+                          }
+                          placeholder="Semester"
+                          options={[
+                            { value: ALL_SEMESTERS_FILTER_VALUE, label: "All" },
+                            ...semesters.map((s) => ({
+                              value: s.id,
+                              label: formatSemesterCode(s.name),
+                            })),
+                          ]}
+                        />
+                      )
+                    }
+                    options={roleFilteredSelectableUsers.map((u) => ({ value: u.id, label: u.name ?? "Unnamed User" }))}
+                    filterExtra={<EnrollmentRoleFilter value={roleFilter} onChange={setRoleFilter} counts={roleCounts} />}
+                  />
                 );
               }}
             />
@@ -470,8 +471,8 @@ export default function SemesterForm({
           {isSubmitting
             ? "Saving..."
             : semester
-              ? "Save Changes"
-              : "Create Semester"}
+              ? "Save changes"
+              : "Create semester"}
         </Button>
         </div>
     </form>

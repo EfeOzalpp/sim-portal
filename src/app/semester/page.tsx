@@ -24,6 +24,11 @@ import { isAdminRole } from "@/constants/roles";
 import { auth } from "@/authentication";
 import { confirmDeleteDialogClassName } from "@/components/confirm-delete/styles";
 
+// Matches users/page.tsx's own userFormDialogClassName (44rem) - this form is
+// just stacked fields, same as that one, so it doesn't need the wider 52rem
+// ThursdayDetailContent's read-only layout uses.
+const semesterFormDialogClassName = "w-[min(44rem,100%)] max-[768px]:h-dvh";
+
 function getSortableOrdinal(semester: any) {
   const code = normalizeSemesterCode(semester.name);
   return code ? semesterOrdinal(code) : -Infinity;
@@ -139,19 +144,16 @@ export default async function SemesterPage({ searchParams }: SemesterPageProps) 
         contentClassName="min-[769px]:ml-[calc(var(--nav-rail-collapsed-width)_+_12rem)]"
         filterControlClassName="w-56 min-w-0 shrink-0"
         filterControl={
-          <div className="flex items-center gap-2">
-            <SemesterSortPopover />
-            <div className="min-w-0 flex-1 [&_.input-affix-wrapper]:border-[var(--green-select-border)] [&_.input-affix-wrapper]:bg-[var(--green-select-bg)] [&_.input-affix-wrapper:hover]:border-[var(--green-select-border)] [&_.input-affix-wrapper:hover]:bg-[var(--green-select-bg-hover)] [&_.input-affix-wrapper:focus-within]:border-[var(--green-select-border)] [&_input]:text-[var(--green-text)] [&_input]:placeholder:text-[var(--green-text)] [&_.input-affix-wrapper>span:first-child]:bg-[var(--green-text)]">
-              <FilterInput query="semesterSearch" placeholder="Search" allowClear={false} suffix={null} />
-            </div>
+          <div className="min-w-0 [&_.input-affix-wrapper]:border-[var(--green-select-border)] [&_.input-affix-wrapper]:bg-[var(--green-select-bg)] [&_.input-affix-wrapper:hover]:border-[var(--green-select-border)] [&_.input-affix-wrapper:hover]:bg-[var(--green-select-bg-hover)] [&_.input-affix-wrapper:focus-within]:border-[var(--green-select-border)] [&_input]:text-[var(--green-text)] [&_input]:placeholder:text-[var(--green-text)] [&_.input-affix-wrapper>span:first-child]:bg-[var(--green-text)]">
+            <FilterInput query="semesterSearch" placeholder="Search" mode="filter" filterTrigger={<SemesterSortPopover />} />
           </div>
         }
       />
       <div data-page-content>
         {/* bg here, not on individual cards' own container - see users/page.tsx for the full explanation. */}
-        <div className="bg-[var(--app-semesters-surface)] pr-6 pl-9 pt-9! pb-9 min-[769px]:ml-[var(--nav-rail-collapsed-width)] min-[769px]:mr-2 min-[769px]:rounded-tl-[0.5rem] min-[769px]:rounded-tr-[0.5rem] min-[769px]:border min-[769px]:border-b-0 min-[769px]:border-solid min-[769px]:border-[var(--main-border)] min-[769px]:shadow-[var(--content-shadow)]">
+        <div className="bg-[var(--page-bg)] p-6 min-[769px]:ml-[var(--nav-rail-collapsed-width)] min-[769px]:mr-2 min-[769px]:rounded-tl-[0.5rem] min-[769px]:rounded-tr-[0.5rem] min-[769px]:border min-[769px]:border-b-0 min-[769px]:border-solid min-[769px]:border-[var(--main-border)] min-[769px]:shadow-[var(--content-shadow)]">
           {semesterSearch && visibleSemesters.length === 0 && (
-            <p className="m-0 mb-4 text-[var(--app-label)]">No semesters found.</p>
+            <p className="m-0 mb-4 text-[var(--label-text)]">No semesters found.</p>
           )}
           <SemesterCardGrid
             semesters={visibleSemesters}
@@ -165,7 +167,7 @@ export default async function SemesterPage({ searchParams }: SemesterPageProps) 
             key="add-semester"
             paramName={SEMESTER_MODAL_PARAMS.add}
             title="New Semester"
-            dialogClassName="w-[min(52rem,100%)] max-[768px]:h-dvh"
+            dialogClassName={semesterFormDialogClassName}
           >
             <AddSemesterFormContent />
           </RouteModalPopup>
@@ -175,7 +177,7 @@ export default async function SemesterPage({ searchParams }: SemesterPageProps) 
             key={editSemesterId}
             paramName={SEMESTER_MODAL_PARAMS.edit}
             title="Edit Semester"
-            dialogClassName="w-[min(52rem,100%)] max-[768px]:h-dvh"
+            dialogClassName={semesterFormDialogClassName}
           >
             <EditSemesterFormContent semesterId={editSemesterId} />
           </RouteModalPopup>

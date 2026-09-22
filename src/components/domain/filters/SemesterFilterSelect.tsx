@@ -16,9 +16,9 @@ interface SemesterFilterSelectProps extends Omit<SingleSelectProps, "value" | "o
 	filterKey?: string;
 }
 
-// variant="title"'s closed-trigger text - "Semester: Fall 2026" - the dropdown list underneath still shows the short code.
+// variant="title"'s closed-trigger text - "Fall 2026 Semester" - the dropdown list underneath still shows the short code.
 function formatTitleSelectedLabel(option: { label: string }) {
-	return `Semester: ${formatSemesterName(option.label)}`;
+	return `${formatSemesterName(option.label)} Semester`;
 }
 
 export default function SemesterFilterSelect({

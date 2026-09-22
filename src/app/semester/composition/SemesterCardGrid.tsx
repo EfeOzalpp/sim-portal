@@ -1,17 +1,11 @@
 // Components
 import Link from "next/link";
+import Button from "@/components/button";
 import { MaskIcon } from "@/theme/MaskIcon";
 
 // Helpers
 import { formatSemesterCode } from "@/components/domain/filters/semester-filter";
 import { ROLES } from "@/constants/roles";
-
-// Same convention as RoleFilterPopover's trigger button.
-const iconButtonClassName =
-	"m-0 inline-grid h-9 w-9 cursor-pointer place-items-center rounded-xl border border-solid border-[var(--input-border)] bg-[var(--btn-default-bg)] p-0 text-[var(--input-icon)] no-underline hover:border-[var(--input-border-hover)] hover:bg-[var(--input-bg-hover)] hover:text-[var(--input-text)] hover:shadow-[var(--input-hover-shadow)]";
-const deleteIconButtonClassName =
-	"m-0 inline-grid h-9 w-9 cursor-pointer place-items-center rounded-xl border border-solid border-[var(--action-delete-border)] bg-[var(--btn-default-bg)] p-0 text-[var(--action-delete-text)] no-underline hover:bg-[var(--action-delete-bg)] hover:shadow-[var(--input-hover-shadow)]";
-const iconClassName = "h-4 w-4 bg-current [mask-position:center] [mask-repeat:no-repeat] [mask-size:contain]";
 
 function getEnrollmentParts(semester: any) {
 	const users: any[] = semester.users || [];
@@ -39,21 +33,17 @@ function SemesterCard({ semester, editHref, deleteHref }: SemesterCardProps) {
 	const showSemesterName = semester.name && semester.name !== semesterCode;
 
 	return (
-		<article className="group relative box-border flex min-h-36 flex-col gap-2 overflow-hidden rounded-xl bg-[var(--elevated-surface-2)] p-6 hover:bg-[var(--elevated-surface-hover-2)]">
-			<div className="absolute top-2 right-2 flex gap-1 opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100">
-				<Link href={editHref} className={iconButtonClassName} aria-label={`Edit ${semesterCode}`}>
-					<MaskIcon icon="edit/edit.svg" className={iconClassName} />
-				</Link>
-				<Link href={deleteHref} className={deleteIconButtonClassName} aria-label={`Delete ${semesterCode}`}>
-					<MaskIcon icon="delete/delete.svg" className={iconClassName} />
-				</Link>
+		<article className="group relative box-border flex min-h-36 flex-col gap-2 overflow-hidden rounded-xl border border-[var(--elevated-surface-border)] bg-[var(--elevated-surface)] p-6 hover:bg-[var(--elevated-surface-hover)]">
+			<div className="absolute top-2 right-2 flex gap-1 opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100 [--button-bg:var(--button-overlay-bg)] [--button-bg-hover:var(--button-overlay-bg-hover)]">
+				<Button variant="icon" href={editHref} icon="edit/edit.svg" aria-label={`Edit ${semesterCode}`} />
+				<Button variant="icon" tone="danger" href={deleteHref} icon="delete/delete.svg" aria-label={`Delete ${semesterCode}`} className="[--button-bg-hover:var(--button-delete-overlay-bg-hover)]" />
 			</div>
 			<div className="flex flex-col gap-2">
 				<h3 className="m-0 text-[var(--app-text)]">{semesterCode}</h3>
-				{showSemesterName && <p className="m-0 text-[var(--app-label)]">{semester.name}</p>}
+				{showSemesterName && <p className="m-0 text-[var(--label-text)]">{semester.name}</p>}
 				<div className="flex flex-col gap-0.5">
 					{getEnrollmentParts(semester).map((part) => (
-						<p key={part} className="ui-note m-0">{part}</p>
+						<p key={part} className="m-0 text-[var(--subtle-text)]">{part}</p>
 					))}
 				</div>
 			</div>
@@ -65,10 +55,10 @@ function AddSemesterCard({ href }: { href: string }) {
 	return (
 		<Link
 			href={href}
-			className="flex min-h-36 flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-[var(--card-border)] text-[var(--app-label)] no-underline hover:bg-[var(--app-card-bg-hover)] hover:text-[var(--app-text)]"
+			className="flex min-h-36 flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-[var(--card-border)] bg-[var(--elevated-surface)]! text-[var(--label-text)] no-underline hover:border-[var(--card-border-hover)] hover:bg-[var(--elevated-surface-hover)]! hover:text-[var(--app-text)]"
 		>
 			<MaskIcon icon="add/add.svg" className="h-6 w-6 bg-current [mask-position:center] [mask-repeat:no-repeat] [mask-size:contain]" />
-			<span className="font-semibold">New Semester</span>
+			<span className="font-semibold">New semester</span>
 		</Link>
 	);
 }

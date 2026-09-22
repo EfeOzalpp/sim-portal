@@ -76,7 +76,7 @@ export default function RepeatableInput({
 						<button
 							type="button"
 							className={clsx(
-								"m-0 inline-grid h-9 w-9 cursor-pointer place-items-center self-center rounded-xl border-solid border-[var(--input-border)] bg-[var(--btn-default-bg)] p-0 text-[var(--input-icon)] border hover:bg-[var(--input-bg-hover)] hover:text-[var(--input-text)] hover:shadow-[var(--input-hover-shadow)]",
+								"m-0 inline-grid h-9 w-9 cursor-pointer place-items-center self-center rounded-xl border-solid border-[var(--button-border)] bg-[var(--button-bg)] p-0 text-[var(--input-icon)] border hover:bg-[var(--button-bg-hover)]",
 								hoverBorderClassName,
 							)}
 							aria-label={isFirst ? addLabel : deleteLabel}

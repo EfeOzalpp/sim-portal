@@ -4,10 +4,12 @@ import ProductionSummaryCard from "@/components/domain/productions/ProductionSum
 import FaceImage from "@/components/primitives/FaceImage";
 import AboutText from "@/components/domain/profile/AboutText";
 import SemesterTimeline from "@/components/domain/profile/SemesterTimeline";
+import EmailHoverLink from "@/components/domain/profile/EmailHoverLink";
 import { logOut } from "@/actions/auth";
 import { getDisplayUserLinks, getUserLinkHref } from "@/actions/user-links";
 import { groupSemesterRanges } from "@/components/domain/filters/semester-filter";
 import { Button } from "@/components/button";
+import { getLabelColors } from "@/constants/labelColors";
 
 function getEmailLabel(email: string) {
 	const domain = email.split("@")[1]?.toLowerCase() ?? "";
@@ -38,6 +40,7 @@ export default function UserProfileView({
 	editHref,
 }: UserProfileViewProps) {
 	const roleLabel = user.role.charAt(0) + user.role.slice(1).toLowerCase();
+	const roleColors = getLabelColors(`role:${user.role}`);
 	const semesterRanges = groupSemesterRanges((user.semesters || []).map((semester: any) => semester.name));
 	const links = getDisplayUserLinks(user.link);
 	const pronouns = user.pronouns?.trim();
@@ -48,7 +51,7 @@ export default function UserProfileView({
 
 	return (
 		<div className="flex min-h-full flex-col">
-			<div className="grid w-full min-w-0 grid-cols-[minmax(10rem,13rem)_minmax(0,1fr)] gap-4 max-[767px]:grid-cols-1">
+			<div className="grid w-full min-w-0 grid-cols-[minmax(10rem,13rem)_minmax(0,1fr)] gap-6 max-[767px]:grid-cols-1">
 				<aside className="flex min-w-0 flex-col gap-4">
 					<div className="relative aspect-[3/4] w-full overflow-hidden rounded-lg border-solid border-[var(--modal-border)] border">
 						<FaceImage
@@ -58,21 +61,23 @@ export default function UserProfileView({
 							className="object-cover object-top"
 						/>
 					</div>
-					<div className="ml-2 self-start rounded-md border-solid border-[var(--label-border)] bg-[var(--label-bg)] px-2 py-1 font-sans text-xs leading-tight font-semibold text-[var(--label-text)] uppercase border">
+					<div
+						className="ml-2 self-start rounded-md px-2 py-1 font-sans text-xs leading-tight font-semibold uppercase"
+						style={{ backgroundColor: roleColors.bg, color: roleColors.text }}
+					>
 						{roleLabel}
 					</div>
 					<SemesterTimeline items={semesterRanges} />
-					<div className="ml-2 flex min-w-0 flex-col gap-1">
+					<div className="ml-2 flex min-w-0 flex-col gap-2">
 						<span className="ui-label block">{getEmailLabel(user.email)}</span>
-						<a
-							href={`mailto:${user.email}`}
+						<EmailHoverLink
+							email={user.email}
+							displayLabel={getTruncatedEmail(user.email)}
 							className="break-words text-[var(--app-text)] no-underline decoration-current underline-offset-[0.14em] hover:text-[var(--brand-color)]"
-						>
-							{getTruncatedEmail(user.email)}
-						</a>
+						/>
 					</div>
 					{links.length > 0 && (
-						<div className="ml-2 flex min-w-0 flex-col gap-1">
+						<div className="ml-2 flex min-w-0 flex-col gap-2">
 							<span className="ui-label block">Links</span>
 							<div className="flex min-w-0 flex-col gap-1 leading-normal text-[var(--app-text)]">
 								{links.map((link, index) => {
@@ -85,7 +90,7 @@ export default function UserProfileView({
 											href={href}
 											target="_blank"
 											rel="noopener noreferrer"
-											className="break-words text-[var(--app-text)] decoration-current underline-offset-[0.14em] hover:text-[var(--brand-color)]"
+											className="break-words text-[var(--app-text)] no-underline decoration-current underline-offset-[0.14em] hover:text-[var(--brand-color)]"
 										>
 											{link}
 										</a>
@@ -101,8 +106,8 @@ export default function UserProfileView({
 				</aside>
 				<section className="flex min-w-0 flex-col gap-4">
 					<div className="flex flex-col gap-1 [&_h2]:m-0">
-						<div className="flex min-w-0 items-center justify-between gap-2 max-[767px]:flex-col max-[767px]:items-start">
-							<h2 className="min-w-0">{user.name}</h2>
+						<div className="flex min-w-0 items-center justify-between gap-4 max-[767px]:flex-col max-[767px]:items-start">
+							<h2 className="min-w-0 pt-2">{user.name}</h2>
 						</div>
 						{pronouns && (
 							<div className="text-xl leading-normal text-[var(--subtle-text)]">
@@ -110,8 +115,8 @@ export default function UserProfileView({
 							</div>
 						)}
 					</div>
-					<div className="flex min-w-0 flex-col gap-1 pb-2">
-						<span className="ui-label block">About</span>
+					<div className="flex min-w-0 flex-col gap-2 pb-2">
+						<span className={clsx("ui-label block", !about && "text-[var(--content-muted)]")}>About</span>
 						<div className="flex min-w-0 flex-col gap-1 leading-normal break-words text-[var(--app-text)]">
 							{about ? (
 								<AboutText text={about} />
@@ -124,8 +129,8 @@ export default function UserProfileView({
 							)}
 						</div>
 					</div>
-					<div className="flex min-w-0 flex-col gap-1 pb-4">
-						<h3 className={clsx("m-0 text-xl", hasProductions ? "pl-2" : "text-[var(--content-muted)]")}>Productions</h3>
+					<div className={clsx("flex min-w-0 flex-col pb-4", hasProductions ? "gap-3" : "gap-2")}>
+						<span className={clsx("ui-label block", !hasProductions && "text-[var(--content-muted)]")}>Productions</span>
 						<div className="flex flex-col gap-2 [&>*]:m-0">
 							{hasProductions ? (
 								user.productions?.map((production: any) => (
@@ -143,8 +148,8 @@ export default function UserProfileView({
 							)}
 						</div>
 					</div>
-					<div className="flex min-w-0 flex-col gap-1 pb-2">
-						<h3 className={clsx("m-0 text-xl", hasPresentations ? "pl-2" : "text-[var(--content-muted)]")}>Presentations</h3>
+					<div className={clsx("flex min-w-0 flex-col pb-2", hasPresentations ? "gap-3" : "gap-2")}>
+						<span className={clsx("ui-label block", !hasPresentations && "text-[var(--content-muted)]")}>Presentations</span>
 						<div className="flex flex-col gap-2 [&>*]:m-0">
 							{hasPresentations ? (
 								user.presentations?.map((presentation: any) => (
@@ -167,17 +172,17 @@ export default function UserProfileView({
 			</div>
 			{canEdit && (
 				<div className="sticky -bottom-4 mt-auto -mx-4 -mb-4 flex flex-row items-center gap-2 bg-[linear-gradient(to_bottom,transparent,var(--app-gray-surface)_50%)] px-4 pt-6 pb-4 [&_form]:m-0">
+					{editHref && (
+						<Button href={editHref} variant="action" className="ml-auto">
+							Edit profile
+						</Button>
+					)}
 					{isCurrentUser && (
 						<form action={logOut}>
 							<Button type="submit" tone="danger">
-								Log Out
+								Log out
 							</Button>
 						</form>
-					)}
-					{editHref && (
-						<Button href={editHref} variant="action" className="ml-auto">
-							Edit Profile
-						</Button>
 					)}
 				</div>
 			)}

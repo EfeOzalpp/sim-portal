@@ -4,13 +4,19 @@ import { getFilteredUsers } from "@/actions/users";
 // Composition
 import UserCardGrid from "@/app/users/composition/UserCardGrid";
 
-export default async function UsersList({ filters }: { filters: any }) {
+interface UsersListProps {
+	filters: any;
+	isAdmin?: boolean;
+	addUserHref?: string;
+}
+
+export default async function UsersList({ filters, isAdmin = false, addUserHref }: UsersListProps) {
 	const result = await getFilteredUsers(filters);
 	const users = result.success ? result.data : [];
 
-	if (users.length < 1) {
-		return <div className="p-4 text-[var(--app-label)]">There are no results for User {filters?.user}</div>;
+	if (users.length < 1 && !isAdmin) {
+		return <div className="p-4 text-[var(--label-text)]">There are no results for User {filters?.user}</div>;
 	}
 
-	return <UserCardGrid users={users} />;
+	return <UserCardGrid users={users} isAdmin={isAdmin} addUserHref={addUserHref} searchTerm={filters?.user} />;
 }

@@ -3,28 +3,30 @@ import { Suspense } from "react";
 
 // Actions
 import { getSemesterOptions } from "@/actions/semesters";
+import { getUserRoleCounts } from "@/actions/users";
 
 // Components
 import { FilterInput } from "@/components/primitives/Filters";
 import SemesterFilterSelect from "@/components/domain/filters/SemesterFilterSelect";
-import NavContent from "@/components/layout/NavContent";
 import PageTitle from "@/components/layout/PageTitle";
 import PrintLink from "@/components/primitives/PrintLink";
-import { Button } from "@/components/button";
 import RouteModalPopup from "@/components/modal/RouteModalPopup";
 import ModalContentFallback from "@/components/modal/ModalContentFallback";
 import { confirmDeleteDialogClassName } from "@/components/confirm-delete/styles";
-import { ActionModeButton, ActionModeSurface } from "@/components/layout/ActionMode"; 
+import { ActionModeSurface } from "@/components/layout/ActionMode";
 
 // Composition
 import UsersList from "@/app/users/composition/UsersList";
 import RoleFilterPopover from "@/app/users/composition/RoleFilterPopover";
+import GridViewPopover from "@/app/users/composition/GridViewPopover";
 import ExitEditModeOnMount from "@/app/users/composition/ExitEditModeOnMount";
+import EditUsersButton from "@/app/users/composition/EditUsersButton";
+import DeleteUsersButton from "@/app/users/composition/DeleteUsersButton";
 
 // Helpers
-import { ALL_SEMESTERS_VALUE, formatSemesterCode, getSelectedSemester, getSelectedSemesterId, isAllSemestersValue } from "@/components/domain/filters/semester-filter";
-import { ACTION_MODES } from "@/constants/action-modes";
+import { getSelectedSemesterId } from "@/components/domain/filters/semester-filter";
 import { USER_MODAL_PARAMS, type UserModalParam } from "@/constants/modal-params";
+import { ROLE_FILTER_KEY } from "@/constants/filters";
 import { isAdminRole } from "@/constants/roles";
 import { auth } from "@/authentication";
 
@@ -93,15 +95,21 @@ function getUsersModalHref(
 
 export default async function UsersPage({ searchParams }: UsersProps) {
 	const filters = await searchParams;
-	// getSemesterOptions and auth are independent - run them in parallel, not one after another.
-	const [semestersResult, session] = await Promise.all([getSemesterOptions(), auth()]);
+	// getSemesterOptions, auth, and the role counts are independent - run them in parallel, not one after another.
+	const [semestersResult, session, roleCountsResult] = await Promise.all([
+		getSemesterOptions(),
+		auth(),
+		getUserRoleCounts(filters),
+	]);
 	const semesters = semestersResult.success ? semestersResult.data : [];
+	const roleCounts = roleCountsResult.success ? roleCountsResult.data : undefined;
 	const isAdmin = isAdminRole(session?.user?.role);
 	const selectedSemesterId = getSelectedSemesterId(filters, semesters);
-	const selectedSemester = getSelectedSemester(filters, semesters);
-	const currentFilterLabel = isAllSemestersValue(selectedSemesterId)
-		? ALL_SEMESTERS_VALUE
-		: formatSemesterCode(selectedSemester?.name || selectedSemesterId);
+	const roleFilter = getSingleParam(filters[ROLE_FILTER_KEY]);
+	// roleCounts never reflects the role filter itself (by design, so the
+	// popover can show every role's count at once) - the viewing count has to
+	// pick the right slice of it back out here instead.
+	const viewingCount = roleCounts ? (roleFilter ? roleCounts[roleFilter] : roleCounts.all) : undefined;
 	const editUserId = getSingleParam(filters[USER_MODAL_PARAMS.edit]);
 	const profileUserId = getSingleParam(filters[USER_MODAL_PARAMS.profile]);
 	const deleteUserId = getSingleParam(filters[USER_MODAL_PARAMS.delete]);
@@ -130,62 +138,40 @@ export default async function UsersPage({ searchParams }: UsersProps) {
 		<>
 			<PageTitle
 				title="People"
+				contentClassName="min-[769px]:ml-[calc(var(--nav-rail-collapsed-width)_+_12rem)]"
 				filterControl={<SemesterFilterSelect semesters={semesters} defaultValue={selectedSemesterId} variant="title" />}
 			/>
 			<ActionModeSurface>
-				<NavContent
-					filterContent={
+				<div data-full-bleed-content className="flex h-full min-h-0 flex-col bg-[var(--page-bg)] min-[769px]:ml-[var(--nav-rail-collapsed-width)] min-[769px]:mr-2 min-[769px]:rounded-tl-[0.5rem] min-[769px]:rounded-tr-[0.5rem] min-[769px]:border min-[769px]:border-b-0 min-[769px]:border-solid min-[769px]:border-[var(--main-border)] min-[769px]:shadow-[var(--content-shadow)] print:bg-transparent">
+					<div className="flex flex-none flex-wrap items-center justify-between gap-6 overflow-hidden px-6 pt-6 pb-3 [scrollbar-gutter:stable] print:hidden">
 						<div className="flex items-center gap-2">
-							<RoleFilterPopover />
-							<div className="min-w-0 flex-1 [&_.input-affix-wrapper]:bg-[var(--action-input-bg)]!">
-								<FilterInput query={"user"} placeholder="Search" />
+							<div className="w-50 [--input-bg:var(--page-input-bg)] [--input-border:var(--page-input-border)] [--input-bg-hover:var(--page-input-bg-hover)] [--input-border-hover:var(--page-input-border-hover)] [--input-placeholder:var(--page-input-text)] [--input-icon:var(--page-input-search)]">
+								<FilterInput query="user" placeholder="Search" mode="filter" filterTrigger={<RoleFilterPopover counts={roleCounts} />} />
 							</div>
+							<GridViewPopover />
 						</div>
-					}
-					filterLabel="Filter"
-					manageContent={
-						isAdmin ? (
-							<>
-								<Button href={getUsersModalHref(filters, USER_MODAL_PARAMS.add, "1")} variant="action" tone="success" icon="add/add.svg">
-									Add User
-								</Button>
-								<ActionModeButton type="button" variant="action" mode={ACTION_MODES.editUsers} >
-									Edit Users
-								</ActionModeButton>
-								<ActionModeButton type="button" variant="action" mode={ACTION_MODES.deleteUsers} >
-									Delete Users
-								</ActionModeButton>
-							</>
-						) : null
-					}
-					manageLabel="Manage"
-					mobileManageContent={
-						isAdmin ? (
-							<>
-								<Button href={getUsersModalHref(filters, USER_MODAL_PARAMS.add, "1")} variant="action" tone="success" icon="add/add.svg">
-									Add
-								</Button>
-								<ActionModeButton type="button" variant="action" mode={ACTION_MODES.editUsers} >
-									Edit
-								</ActionModeButton>
-								<ActionModeButton type="button" variant="action" mode={ACTION_MODES.deleteUsers} >
-									Del
-								</ActionModeButton>
-							</>
-						) : null
-					}
-					// has label but is already defaulted to export in upstream
-					printContent={<PrintLink />}
-				/>
-				{/* bg lives here, not on UserCardGrid's grid element - a grid's own background only covers its actual tracks, leaving a sparse grid partly transparent. */}
-				<div className="bg-[image:var(--app-user-surface)] pr-6 pl-9 pt-9! pb-9 min-[769px]:rounded-tr-[0.5rem] print:px-0 print:pt-0 print:pb-0 print:bg-transparent">
-					{/* PageTitle is print:hidden, so this is the only place the current filter reaches the printed page. */}
-					<div className="mb-[0.15in] hidden font-sans text-[9pt] font-bold tracking-[0.06em] text-black uppercase print:block">
-						{currentFilterLabel}
+						<div className="flex items-center gap-2">
+							{viewingCount !== undefined && (
+								<span className="text-sm text-[var(--label-text)]">{viewingCount} users</span>
+							)}
+							<PrintLink variant="action" />
+							{isAdmin && (
+								<>
+									<EditUsersButton />
+									<DeleteUsersButton />
+								</>
+							)}
+						</div>
 					</div>
-					<Suspense fallback={<div style={{ opacity: 0.5, padding: "1rem", background: "transparent" }}>Loading users...</div>}>
-						<UsersList filters={filters} />
-					</Suspense>
+					<div className="min-h-0 flex-1 overflow-y-auto px-6 [scrollbar-gutter:stable] print:overflow-visible print:px-0 print:pb-0">
+						<Suspense fallback={<div style={{ opacity: 0.5, padding: "1rem", background: "transparent" }}>Loading users...</div>}>
+							<UsersList
+								filters={filters}
+								isAdmin={isAdmin}
+								addUserHref={getUsersModalHref(filters, USER_MODAL_PARAMS.add, "1")}
+							/>
+						</Suspense>
+					</div>
 				</div>
 				{showEditModal && EditUserFormContent && (
 					<RouteModalPopup key={editUserId} paramName={USER_MODAL_PARAMS.edit} title="Edit User" dialogClassName={userFormDialogClassName}>

@@ -34,7 +34,7 @@ export default function SemesterTimeline({ items }: SemesterTimelineProps) {
 						</div>
 						<div className="flex py-1">
 							{item.startsWith("Break") ? (
-								<span className="ui-note">{item}</span>
+								<span className="ui-note text-[var(--subtle-text)]">{item}</span>
 							) : (
 								<div className={badgeClassName}>{item}</div>
 							)}

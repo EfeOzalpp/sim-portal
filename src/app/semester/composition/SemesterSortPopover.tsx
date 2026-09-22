@@ -17,8 +17,13 @@ const sortOptions: { value: SemesterSortValue; label: string; icon?: React.React
 	{ value: "enrollmentLow", label: "Enrollment (Low to High)", icon: <MaskIcon icon="view/forward.svg" className={clsx(arrowIconClassName, "rotate-90")} /> },
 ];
 
+// Sits inside the search Input's own border now (mode="filter"), not as a
+// separate bordered button next to it - same borderless p-2/-m-2 shape as
+// inputFilterTriggerClassName, colored to match this title bar's own green
+// input instead of the page-level --page-input-search family that trigger
+// style was built for.
 const triggerClassName =
-	"m-0 inline-grid h-9 w-9 cursor-pointer place-items-center rounded-xl border border-solid border-[var(--green-select-border)] bg-[var(--green-select-bg)] p-0 text-[var(--green-text)] hover:bg-[var(--green-select-bg-hover)]";
+	"inline-grid flex-none cursor-pointer appearance-none self-center place-items-center rounded-md p-2 -m-2 border-none bg-transparent leading-none text-[var(--green-text)] hover:bg-[var(--green-input-filter-hover-bg,var(--green-select-bg-hover))]";
 
 const optionButtonClassName = "w-full border-0 bg-transparent text-left hover:bg-[var(--modal-button-bg-hover)]!";
 
@@ -53,7 +58,7 @@ export default function SemesterSortPopover() {
 			}
 		>
 			<div className="flex min-w-[11rem] flex-col gap-0.5">
-				<span className="ui-label block px-2 pb-1">Sort By</span>
+				<span className="ui-label block px-2 pt-0.5 pb-1">Sort By</span>
 				<div className="flex flex-col gap-0.5" role="listbox">
 					{sortOptions.map((option) => {
 						const isSelected = currentSort === option.value;

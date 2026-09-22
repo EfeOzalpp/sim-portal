@@ -40,7 +40,7 @@ export default async function SemesterDeleteConfirmContent({
 			itemName={result.data.name}
 			itemType="semester"
 			warningText="This permanently removes the semester and all its associated days, productions, and presentations from the database."
-			confirmLabel="Delete Semester"
+			confirmLabel="Delete semester"
 			errorMessage="An error occurred while deleting the semester."
 			successMessage="Semester deleted"
 			onConfirm={onConfirmDelete}

@@ -41,7 +41,7 @@ export default async function UserDeleteConfirmContent({
 		<ConfirmDelete
 			itemName={user.name}
 			itemType="user"
-			confirmLabel="Delete User"
+			confirmLabel="Delete user"
 			errorMessage="An error occurred while deleting the user."
 			successMessage="User deleted"
 			onConfirm={onConfirmDelete}
