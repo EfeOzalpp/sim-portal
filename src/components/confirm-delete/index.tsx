@@ -12,6 +12,8 @@ interface ConfirmDeleteProps {
 	confirmLabel?: string;
 	pendingLabel?: string;
 	errorMessage?: string;
+	/** Removes an item from a parent form draft; persistence waits for that form's save. */
+	deferred?: boolean;
 	/** Shown as a danger-toned toast once the delete actually goes through. */
 	successMessage?: string;
 	onConfirm: () => Promise<any> | any;
@@ -41,6 +43,7 @@ export default function ConfirmDelete({
 	confirmLabel = "Confirm delete",
 	pendingLabel = "Deleting...",
 	errorMessage = "An error occurred while deleting.",
+	deferred = false,
 	successMessage,
 	onConfirm,
 	onConfirmed,
@@ -51,6 +54,8 @@ export default function ConfirmDelete({
 
 	async function handleSubmit(event: FormEvent<HTMLFormElement>) {
 		event.preventDefault();
+		// Portal events still bubble through React's tree to a parent edit form.
+		event.stopPropagation();
 		setError(null);
 		setIsSubmitting(true);
 
@@ -80,17 +85,19 @@ export default function ConfirmDelete({
 		<form className="flex flex-col gap-4 [&_p]:m-0" onSubmit={handleSubmit}>
 			<p>
 				<strong>
-					Are you sure you want to delete {itemName || `this ${itemType}`}?
+					Are you sure you want to {deferred ? "remove" : "delete"} {itemName || `this ${itemType}`}?
 				</strong>
 			</p>
 			{warningText && <p>{warningText}</p>}
-			<p className="ui-note">This action cannot be undone.</p>
+			<p className="ui-note">{deferred ? "This removal takes effect when you save changes." : "This action cannot be undone."}</p>
 			{error && <p className="text-[var(--tone-danger-text)]">{error}</p>}
-			<div className="grid grid-cols-[repeat(auto-fit,minmax(0,1fr))] gap-2 max-[480px]:grid-cols-1">
+			<div className="flex justify-start">
 				<Button
+					surface="modal"
 					type="submit"
-					tone="danger"
+					tone={deferred ? "default" : "danger"}
 					disabled={isSubmitting}
+					className="px-6!"
 				>
 					{isSubmitting ? pendingLabel : confirmLabel}
 				</Button>

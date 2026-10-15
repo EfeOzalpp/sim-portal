@@ -294,6 +294,7 @@ export default function PresentationsField({
         dialogClassName={confirmDeleteDialogClassName}
       >
         <ConfirmDelete
+          deferred
           itemName="this presentation"
           itemType="presentation"
           confirmLabel="Remove presentation"

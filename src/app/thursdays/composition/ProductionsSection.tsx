@@ -163,6 +163,7 @@ export default function ProductionsSection({
         dialogClassName={confirmDeleteDialogClassName}
       >
         <ConfirmDelete
+          deferred
           itemName="this production"
           itemType="production"
           confirmLabel="Remove production"
