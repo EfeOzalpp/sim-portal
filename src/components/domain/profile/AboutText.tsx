@@ -23,7 +23,7 @@ export default function AboutText({ text }: AboutTextProps) {
 				<button
 					type="button"
 					onClick={() => setExpanded(false)}
-					className="ui-note not-italic cursor-pointer border-0 bg-transparent p-0 hover:underline"
+					className="ui-note not-italic cursor-pointer border-0 bg-transparent p-0 text-[var(--inline-link)] underline underline-offset-[0.18em] hover:text-[var(--inline-link-hover)]"
 				>
 					Show less
 				</button>
@@ -36,14 +36,14 @@ export default function AboutText({ text }: AboutTextProps) {
 			<div className="relative w-full overflow-hidden" style={{ maxHeight: COLLAPSED_HEIGHT }}>
 				{text}
 				<div
-					className="pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-[linear-gradient(to_bottom,transparent,var(--app-gray-surface)_85%)]"
+					className="pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-[linear-gradient(to_bottom,transparent,var(--modal-surface)_85%)]"
 					aria-hidden="true"
 				/>
 			</div>
 			<button
 				type="button"
 				onClick={() => setExpanded(true)}
-				className="ui-note cursor-pointer border-0 bg-transparent p-0 hover:underline"
+				className="ui-note not-italic cursor-pointer border-0 bg-transparent p-0 text-[var(--inline-link)] underline underline-offset-[0.18em] hover:text-[var(--inline-link-hover)]"
 			>
 				Show more
 			</button>

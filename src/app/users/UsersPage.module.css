@@ -1,0 +1,12 @@
+@media (max-width: 768px) {
+	.scrollArea {
+		padding-top: 0.75rem;
+		padding-inline: 0.75rem;
+	}
+}
+
+@media print {
+	.scrollArea {
+		padding-top: 0;
+	}
+}

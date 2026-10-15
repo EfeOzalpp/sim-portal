@@ -49,11 +49,7 @@ export default function ImageUpload({ onChange, currentImagePath = "/face.jpg", 
 	}
 
 	return (
-		// Dashed, like SemesterCardGrid's "New Semester" add-card - same
-		// "drop something in here" language. p-2 keeps the actual photo/
-		// placeholder from running right up to that dashed edge, so it reads
-		// as a deliberate frame instead of the image just filling the box.
-		<label className="relative flex h-[7.5rem] w-[7.5rem] cursor-pointer items-center justify-center rounded-xl border-2 border-dashed border-[var(--card-border)] bg-[var(--app-subtle)] p-2 hover:border-[var(--card-border-hover)]">
+		<label className="relative flex h-[7.5rem] w-[7.5rem] cursor-pointer items-center justify-center overflow-hidden rounded-md bg-[var(--modal-tint,var(--modal-surface-2))] transition-colors hover:bg-[var(--modal-tint-hover,var(--modal-surface-2-hover))]">
 			<input
 				type="file"
 				accept="image/jpeg,image/png,image/webp"
@@ -61,7 +57,7 @@ export default function ImageUpload({ onChange, currentImagePath = "/face.jpg", 
 				onChange={handleFileChange}
 				disabled={isUploading}
 			/>
-			<div className="relative flex h-full w-full items-center justify-center overflow-hidden rounded-lg">
+			<div className="relative flex h-full w-full items-center justify-center overflow-hidden">
 				{isUploading && (
 					<span className="absolute inset-0 z-10 flex items-center justify-center bg-[var(--scrim)]" aria-hidden="true">
 						<LoadingOutlined spin style={{ fontSize: "1.5rem", color: "var(--app-theme)" }} />

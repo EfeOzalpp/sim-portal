@@ -31,6 +31,7 @@ import styles from "@/app/layout.module.css";
 // Helpers
 import { auth } from "@/authentication";
 import { isAdminRole } from "@/constants/roles";
+import { peopleGridInitScript } from "@/constants/people-grid";
 
 const appShellClassName =
 	"flex h-dvh min-h-0 flex-col overflow-hidden [background:var(--app-bg)] text-[var(--app-text)] print:block! print:h-auto! print:overflow-visible!";
@@ -104,6 +105,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 			<head>
 				<script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
 				<script dangerouslySetInnerHTML={{ __html: colorThemeInitScript }} />
+				<script dangerouslySetInnerHTML={{ __html: peopleGridInitScript }} />
 			</head>
 			{/* icon.tsx covers light mode/no dark support; this one only kicks in for a reported dark preference. */}
 			<link rel="icon" href="/icon-dark.png" media="(prefers-color-scheme: dark)" />

@@ -4,12 +4,13 @@ import ProductionSummaryCard from "@/components/domain/productions/ProductionSum
 import FaceImage from "@/components/primitives/FaceImage";
 import AboutText from "@/components/domain/profile/AboutText";
 import SemesterTimeline from "@/components/domain/profile/SemesterTimeline";
-import EmailHoverLink from "@/components/domain/profile/EmailHoverLink";
+import TruncatedHoverLink from "@/components/domain/profile/TruncatedHoverLink";
 import { logOut } from "@/actions/auth";
 import { getDisplayUserLinks, getUserLinkHref } from "@/actions/user-links";
 import { groupSemesterRanges } from "@/components/domain/filters/semester-filter";
 import { Button } from "@/components/button";
 import { getLabelColors } from "@/constants/labelColors";
+import styles from "@/components/domain/profile/UserProfileView.module.css";
 
 function getEmailLabel(email: string) {
 	const domain = email.split("@")[1]?.toLowerCase() ?? "";
@@ -18,11 +19,6 @@ function getEmailLabel(email: string) {
 	if (domain.endsWith("gmail.com")) return "Gmail";
 	if (domain.endsWith("hotmail.com")) return "Hotmail";
 	return "Email";
-}
-
-function getTruncatedEmail(email: string) {
-	if (email.length <= 21) return email;
-	return `${email.slice(0, 21)}..`;
 }
 
 interface UserProfileViewProps {
@@ -50,8 +46,8 @@ export default function UserProfileView({
 	const hasPresentations = (user.presentations?.length ?? 0) > 0;
 
 	return (
-		<div className="flex min-h-full flex-col">
-			<div className="grid w-full min-w-0 grid-cols-[minmax(10rem,13rem)_minmax(0,1fr)] gap-6 max-[767px]:grid-cols-1">
+		<div className={styles.root}>
+			<div className={styles.layout}>
 				<aside className="flex min-w-0 flex-col gap-4">
 					<div className="relative aspect-[3/4] w-full overflow-hidden rounded-lg border-solid border-[var(--modal-border)] border">
 						<FaceImage
@@ -62,18 +58,18 @@ export default function UserProfileView({
 						/>
 					</div>
 					<div
-						className="ml-2 self-start rounded-md px-2 py-1 font-sans text-xs leading-tight font-semibold uppercase"
-						style={{ backgroundColor: roleColors.bg, color: roleColors.text }}
+						className="ml-2 self-start border-0 border-b border-solid bg-transparent px-0 pb-0.5 font-sans text-xs leading-tight font-semibold uppercase"
+						style={{ borderBottomColor: roleColors.bg, color: roleColors.text }}
 					>
 						{roleLabel}
 					</div>
 					<SemesterTimeline items={semesterRanges} />
 					<div className="ml-2 flex min-w-0 flex-col gap-2">
 						<span className="ui-label block">{getEmailLabel(user.email)}</span>
-						<EmailHoverLink
-							email={user.email}
-							displayLabel={getTruncatedEmail(user.email)}
-							className="break-words text-[var(--app-text)] no-underline decoration-current underline-offset-[0.14em] hover:text-[var(--brand-color)]"
+						<TruncatedHoverLink
+							href={`mailto:${user.email}`}
+							text={user.email}
+							className="break-words text-[var(--app-text)] no-underline decoration-current underline-offset-[0.14em] hover:text-[var(--inline-link-hover)]"
 						/>
 					</div>
 					{links.length > 0 && (
@@ -85,15 +81,13 @@ export default function UserProfileView({
 									const linkKey = `${link}-${index}`;
 
 									return href ? (
-										<a
+										<TruncatedHoverLink
 											key={linkKey}
 											href={href}
-											target="_blank"
-											rel="noopener noreferrer"
-											className="break-words text-[var(--app-text)] no-underline decoration-current underline-offset-[0.14em] hover:text-[var(--brand-color)]"
-										>
-											{link}
-										</a>
+											text={link}
+											external
+											className="break-words text-[var(--app-text)] no-underline decoration-current underline-offset-[0.14em] hover:text-[var(--inline-link-hover)]"
+										/>
 									) : (
 										<span key={linkKey} className="break-words text-[var(--app-text)]">
 											{link}
@@ -106,8 +100,8 @@ export default function UserProfileView({
 				</aside>
 				<section className="flex min-w-0 flex-col gap-4">
 					<div className="flex flex-col gap-1 [&_h2]:m-0">
-						<div className="flex min-w-0 items-center justify-between gap-4 max-[767px]:flex-col max-[767px]:items-start">
-							<h2 className="min-w-0 pt-2">{user.name}</h2>
+						<div className={styles.header}>
+							<h2 className="min-w-0 pt-2 italic tracking-[0.05em]">{user.name}</h2>
 						</div>
 						{pronouns && (
 							<div className="text-xl leading-normal text-[var(--subtle-text)]">
@@ -129,7 +123,7 @@ export default function UserProfileView({
 							)}
 						</div>
 					</div>
-					<div className={clsx("flex min-w-0 flex-col pb-4", hasProductions ? "gap-3" : "gap-2")}>
+					<div className="flex min-w-0 flex-col gap-2 pb-4">
 						<span className={clsx("ui-label block", !hasProductions && "text-[var(--content-muted)]")}>Productions</span>
 						<div className="flex flex-col gap-2 [&>*]:m-0">
 							{hasProductions ? (
@@ -148,7 +142,7 @@ export default function UserProfileView({
 							)}
 						</div>
 					</div>
-					<div className={clsx("flex min-w-0 flex-col pb-2", hasPresentations ? "gap-3" : "gap-2")}>
+					<div className="flex min-w-0 flex-col gap-2 pb-2">
 						<span className={clsx("ui-label block", !hasPresentations && "text-[var(--content-muted)]")}>Presentations</span>
 						<div className="flex flex-col gap-2 [&>*]:m-0">
 							{hasPresentations ? (
@@ -171,15 +165,15 @@ export default function UserProfileView({
 				</section>
 			</div>
 			{canEdit && (
-				<div className="sticky -bottom-4 mt-auto -mx-4 -mb-4 flex flex-row items-center gap-2 bg-[linear-gradient(to_bottom,transparent,var(--app-gray-surface)_50%)] px-4 pt-6 pb-4 [&_form]:m-0">
+				<div className="pointer-events-none sticky -bottom-8 mt-auto -mx-4 -mb-8 flex flex-row items-center gap-2 bg-[linear-gradient(to_bottom,transparent,var(--modal-surface)_35%)] px-4 pt-3 pb-8 [&_form]:m-0 [&>*]:pointer-events-auto">
 					{editHref && (
-						<Button href={editHref} variant="action" className="ml-auto">
+						<Button surface="modal" href={editHref} variant="action" className="ml-auto">
 							Edit profile
 						</Button>
 					)}
 					{isCurrentUser && (
 						<form action={logOut}>
-							<Button type="submit" tone="danger">
+							<Button surface="modal" type="submit" tone="danger">
 								Log out
 							</Button>
 						</form>

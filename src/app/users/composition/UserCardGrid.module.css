@@ -1,0 +1,9 @@
+.root {
+	grid-template-columns: repeat(var(--people-grid-columns-desktop, var(--people-grid-default-desktop)), minmax(0, 1fr));
+}
+
+@media (max-width: 768px) {
+	.root {
+		grid-template-columns: repeat(var(--people-grid-columns-mobile, var(--people-grid-default-mobile)), minmax(0, 1fr));
+	}
+}

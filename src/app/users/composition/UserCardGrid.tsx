@@ -1,14 +1,11 @@
 "use client";
 
 // React & Next.js
-import { MouseEvent, useEffect, useRef, useState } from "react";
+import { MouseEvent, useEffect, useRef, useState, type CSSProperties } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import Link from "next/link";
 
 // Components
-import { useActionMode } from "@/components/layout/ActionMode";
-import { Button } from "@/components/button";
-import { MaskIcon } from "@/theme/MaskIcon";
+import { useOptionalActionMode } from "@/components/layout/ActionMode";
 
 // Composition
 import UserCard from "@/app/users/composition/UserCard";
@@ -16,57 +13,32 @@ import UserCard from "@/app/users/composition/UserCard";
 // Helpers
 import { ACTION_MODES } from "@/constants/action-modes";
 import { USER_MODAL_PARAMS, type UserModalParam } from "@/constants/modal-params";
-import { CARDS_PER_ROW_KEY, DEFAULT_CARDS_PER_ROW } from "@/constants/filters";
+import { PEOPLE_GRID_PREFERENCES } from "@/constants/people-grid";
+import styles from "@/app/users/composition/UserCardGrid.module.css";
 import type { User } from "@prisma/client";
 
 interface UserCardGridProps {
 	users: Pick<User, "id" | "name" | "image" | "role" | "pronouns">[];
 	isAdmin?: boolean;
-	addUserHref?: string;
 	searchTerm?: string;
 }
 
-function AddUserCard({ href }: { href: string }) {
-	return (
-		<div className="flex flex-col gap-2 overflow-hidden rounded-xl! border-2 border-dashed border-[var(--card-border)] bg-[var(--elevated-surface)]! p-2 hover:border-[var(--card-border-hover)] print:hidden">
-			{/* flex-1 */}
-			<Link
-				href={href}
-				className="flex flex-1 flex-col pt-4 items-center justify-center gap-2 rounded-lg text-[var(--label-text)] no-underline hover:bg-[var(--elevated-surface-hover)]! hover:text-[var(--app-text)]"
-			>
-				<MaskIcon icon="add/add.svg" className="h-4 w-4 bg-current [mask-position:center] [mask-repeat:no-repeat] [mask-size:contain]" />
-				<span className="ui-label">New user</span>
-			</Link>
-			{/* deliberately not flex-1 */}
-			<div className="flex flex-col justify-center border-t border-[var(--card-border)] pt-2">
-				<Button fullWidth className="border-transparent! bg-transparent! hover:bg-[var(--elevated-surface-hover)]!">
-					<MaskIcon icon="import/import.svg" className="h-4 w-4 flex-none bg-current [mask-position:center] [mask-repeat:no-repeat] [mask-size:contain]" />
-					Import
-				</Button>
-			</div>
-		</div>
-	);
-}
 
 const BATCH_SIZE = 30;
 
-// grid-template-columns comes from GridViewPopover's own inline style below,
-// not a class - print always wants its own fixed 6 regardless of that
-// on-screen choice, and needs `!` here to actually beat an inline style.
 const gridClassName = [
-	"grid justify-center gap-4",
-	"[&>*]:min-w-0 [&>*]:w-full [&>*]:rounded-lg [&>*]:bg-[var(--elevated-surface)]",
+	"grid justify-center gap-x-5 gap-y-7",
+	"[&>*]:min-w-0 [&>*]:w-full",
 	"print:grid-cols-[repeat(6,minmax(0,1fr))]! print:justify-stretch print:gap-[0.1in] print:bg-white print:text-black",
 	"print:[&>*]:break-inside-avoid print:[&>*]:border print:[&>*]:border-[#ccc]! print:[&>*]:bg-white! print:[&>*]:[page-break-inside:avoid]",
 	"print:[&_a]:text-inherit print:[&_a]:no-underline",
 ].join(" ");
 
-export default function UserCardGrid({ users, isAdmin = false, addUserHref, searchTerm }: UserCardGridProps) {
-	const { activeMode } = useActionMode();
+export default function UserCardGrid({ users, isAdmin = false, searchTerm }: UserCardGridProps) {
+	const { activeMode } = useOptionalActionMode();
 	const router = useRouter();
 	const pathname = usePathname();
 	const searchParams = useSearchParams();
-	const cardsPerRow = Number(searchParams.get(CARDS_PER_ROW_KEY)) || DEFAULT_CARDS_PER_ROW;
 	const [visibleCount, setVisibleCount] = useState(BATCH_SIZE);
 	const sentinelRef = useRef<HTMLDivElement>(null);
 
@@ -93,16 +65,6 @@ export default function UserCardGrid({ users, isAdmin = false, addUserHref, sear
 		return () => observer.disconnect();
 	}, [users.length]);
 
-	// Printing must include every user, not just whichever batch happened to be mounted.
-	useEffect(() => {
-		function handleBeforePrint() {
-			setVisibleCount(users.length);
-		}
-
-		window.addEventListener("beforeprint", handleBeforePrint);
-		return () => window.removeEventListener("beforeprint", handleBeforePrint);
-	}, [users.length]);
-
 	function openUserModal(userId: string, modalParam: UserModalParam) {
 		const params = new URLSearchParams(searchParams.toString());
 		params.delete(USER_MODAL_PARAMS.edit);
@@ -116,11 +78,13 @@ export default function UserCardGrid({ users, isAdmin = false, addUserHref, sear
 
 	return (
 		<>
-			<div className={gridClassName} style={{ gridTemplateColumns: `repeat(${cardsPerRow}, minmax(0, 1fr))` }}>
-				{isAdmin && addUserHref && <AddUserCard href={addUserHref} />}
+			<div className={`${styles.root} ${gridClassName}`} style={{
+				"--people-grid-default-desktop": PEOPLE_GRID_PREFERENCES.desktop.defaultValue,
+				"--people-grid-default-mobile": PEOPLE_GRID_PREFERENCES.mobile.defaultValue,
+			} as CSSProperties}>
 				{isAdmin && users.length < 1 && (
-					<div className="flex items-center justify-center p-4 text-center text-[var(--label-text)] print:hidden">
-						There are no results for User {searchTerm}
+					<div className="col-span-full flex items-center justify-center p-4 text-center text-[var(--label-text)] print:hidden">
+						{searchTerm ? `No people match “${searchTerm}”` : "No people to show"}
 					</div>
 				)}
 				{visibleUsers.map((user) => (

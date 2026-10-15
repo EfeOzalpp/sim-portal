@@ -17,6 +17,7 @@ import { FieldError, fieldLabelRowClassName } from "@/components/field-error";
 import ConfirmDelete from "@/components/confirm-delete";
 import { confirmDeleteDialogClassName } from "@/components/confirm-delete/styles";
 import { useToast } from "@/components/toast";
+import { InfoPopover } from "@/components/popover/InfoPopover";
 
 // Composition
 import { transformUserFromAPI } from "@/app/users/composition/user.transformers";
@@ -28,6 +29,8 @@ import { useForm, useWatch, Controller } from "react-hook-form";
 import { handleFormAction } from "@/helpers";
 import { formatSemesterCode, getCurrentSemesterCode, normalizeSemesterCode } from "@/components/domain/filters/semester-filter";
 import { ROLES } from "@/constants/roles";
+import clsx from "clsx";
+import styles from "@/app/users/composition/UserForm.module.css";
 
 const fieldStackClassName = "flex min-w-0 flex-col gap-2";
 const fieldLabelClassName = "ui-label m-0 block min-h-5 pl-1";
@@ -133,7 +136,7 @@ export default function UserForm({
 
   return (
     <form onSubmit={handleSubmit(handleFormSubmit)}>
-      <div className="flex w-full flex-col gap-6">
+      <div className={styles.form}>
         {error && (
           <Alert
             description={error}
@@ -144,11 +147,16 @@ export default function UserForm({
           />
         )}
 
-        <div className="flex w-full flex-col gap-6">
-          <div className={fieldStackClassName}>
-            <span className={fieldLabelClassName}>
-              Photo
-            </span>
+        <div className={styles.fields}>
+          <div className={clsx(fieldStackClassName, styles.fullRow)}>
+            <div className="flex h-5 items-center gap-1.5 pl-1">
+              <span className="ui-label m-0 [text-box:trim-both_cap_alphabetic]">Photo</span>
+              <InfoPopover label="Photo upload info" inModal>
+                {isCurrentUserAdmin
+                  ? "You can upload high resolution photos up to 8MB. They will be automatically downsized."
+                  : "Contact SIM faculty to change your photo."}
+              </InfoPopover>
+            </div>
             <Controller
               control={control}
               name="image"
@@ -160,54 +168,48 @@ export default function UserForm({
                 />
               )}
             />
-            <span className="ui-note mt-1 block text-[var(--subtle-text)]">
-              {isCurrentUserAdmin
-                ? <>You can upload high resolution photos up to 8MB.<br />They will be automatically downsized.</>
-                : "Contact SIM faculty to change your photo."}
-            </span>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 max-[600px]:grid-cols-1">
-            <div className={fieldStackClassName}>
-              <Controller
-                control={control}
-                name="name"
-                rules={{ required: "Name is required" }}
-                render={({ field, fieldState }) => {
-                  const showError = Boolean(fieldState.error) && (fieldState.isTouched || isSubmitted);
-                  return (
-                    <>
-                      <div className={userFieldLabelRowClassName}>
-                        <span className="ui-label m-0">Full Name *</span>
-                        {showError && <FieldError>{fieldState.error!.message}</FieldError>}
-                      </div>
-                      <Input
-                        {...field}
-                        placeholder="Enter name"
-                        status={showError ? "error" : ""}
-                      />
-                    </>
-                  );
-                }}
-              />
-            </div>
+          <div className={fieldStackClassName}>
+            <Controller
+              control={control}
+              name="name"
+              rules={{ required: "Name is required" }}
+              render={({ field, fieldState }) => {
+                const showError = Boolean(fieldState.error) && (fieldState.isTouched || isSubmitted);
+                return (
+                  <>
+                    <div className={userFieldLabelRowClassName}>
+                      <span className="ui-label m-0">Full Name *</span>
+                      {showError && <FieldError>{fieldState.error!.message}</FieldError>}
+                    </div>
+                    <Input
+                      variant="modal"
+                      {...field}
+                      placeholder="First and last"
+                      status={showError ? "error" : ""}
+                    />
+                  </>
+                );
+              }}
+            />
+          </div>
 
-            <div className={fieldStackClassName}>
-              <span className={fieldLabelClassName}>
-                Pronouns
-              </span>
-              <Controller
-                control={control}
-                name="pronouns"
-                render={({ field }) => (
-                  <Input {...field} placeholder="E.g. they/them" />
-                )}
-              />
-            </div>
+          <div className={fieldStackClassName}>
+            <span className={fieldLabelClassName}>
+              Pronouns
+            </span>
+            <Controller
+              control={control}
+              name="pronouns"
+              render={({ field }) => (
+                <Input {...field} variant="modal" placeholder="Add pronouns" />
+              )}
+            />
           </div>
 
           {isCurrentUserAdmin && (
-            <div className="grid w-full grid-cols-[minmax(0,1fr)_minmax(0,1fr)] gap-4 max-[600px]:grid-cols-1">
+            <>
               <div className={fieldStackClassName}>
                 <span className={fieldLabelClassName}>Role</span>
                 <Controller
@@ -244,7 +246,7 @@ export default function UserForm({
                       mode="multiple"
                       value={field.value ?? []}
                       searchable
-                      placeholder="Select semesters"
+                      placeholder="Choose semesters"
                       options={semesterOptions}
                       onChange={(value) => field.onChange(value)}
                       scrollToValueOnOpen={getCurrentSemesterCode()}
@@ -252,11 +254,9 @@ export default function UserForm({
                   )}
                 />
               </div>
-            </div>
+            </>
           )}
-        </div>
 
-        <div className="grid grid-cols-2 gap-4 max-[600px]:w-full max-[600px]:grid-cols-1">
           <div className={fieldStackClassName}>
             <Controller
               control={control}
@@ -281,13 +281,14 @@ export default function UserForm({
                     )}
                   </div>
                   <Input
+                    variant="modal"
                     {...field}
-                    placeholder="email@example.com"
+                    placeholder="name@massart.edu"
                     disabled={!isCurrentUserAdmin && user}
                     status={showError ? (fieldState.error!.type === "pattern" ? "warning" : "error") : ""}
                   />
                   {!isCurrentUserAdmin && user && (
-                    <span className="ui-note mt-1 block">
+                    <span className="ui-note mt-1 block pl-1">
                       Contact SIM faculty to change your email.
                     </span>
                   )}
@@ -306,39 +307,43 @@ export default function UserForm({
               name="links"
               render={({ field }) => (
                 <RepeatableInput
+                  variant="modal"
                   id="user-links"
                   value={field.value}
                   onChange={field.onChange}
-                  placeholder="Phone, https://... or @handle"
+                  placeholder="Link or @handle"
+                />
+              )}
+            />
+          </div>
+
+          <div className={clsx(fieldStackClassName, styles.fullRow)}>
+            <span className={fieldLabelClassName}>
+              About
+            </span>
+            <Controller
+              control={control}
+              name="about"
+              render={({ field }) => (
+                <TextArea
+                  variant="modal"
+                  {...field}
+                  rows={3}
+                  style={{ width: "100%" }}
+                  placeholder="Short bio"
                 />
               )}
             />
           </div>
         </div>
 
-        <div className={fieldStackClassName}>
-          <span className={fieldLabelClassName}>
-            About
-          </span>
-          <Controller
-            control={control}
-            name="about"
-            render={({ field }) => (
-              <TextArea
-                {...field}
-                rows={6}
-                style={{ width: "100%" }}
-                placeholder="Tell us about yourself..."
-              />
-            )}
-          />
+        <div className="flex justify-start">
+          <Button surface="modal" type="submit" disabled={isSubmitting} tone="cta" className="px-6!">
+            {isSubmitting
+              ? (hasNewImage ? "Loading image..." : "Saving...")
+              : user ? "Save changes" : "Create user"}
+          </Button>
         </div>
-
-        <Button type="submit" disabled={isSubmitting} tone="success" style={{ width: "100%" }}>
-          {isSubmitting
-            ? (hasNewImage ? "Loading image..." : "Saving...")
-            : user ? "Save changes" : "Create user"}
-        </Button>
 
         {user && isCurrentUserAdmin && onRemove && (
           <div
@@ -357,7 +362,7 @@ export default function UserForm({
                 keep their data in the database, go to the admin dashboard and
                 edit the semester instead.
               </p>
-              <Button onClick={() => setIsDeleteModalOpen(true)} tone="danger">
+              <Button surface="modal" onClick={() => setIsDeleteModalOpen(true)} tone="danger">
                 Permanently remove User {user.name}?
               </Button>
               <ModalPopup

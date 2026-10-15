@@ -1,8 +1,8 @@
 // React & Next.js
 import type { MouseEventHandler } from "react";
+import Link from "next/link";
 
 // Components
-import Block from "@/components/primitives/Block";
 import Button from "@/components/button";
 import FaceImage from "@/components/primitives/FaceImage";
 
@@ -20,16 +20,14 @@ export default function UserCard({ user, onClick, onEdit, onDelete }: UserCardPr
   const pronouns = user.pronouns?.trim();
 
   return (
-    <Block
-      as="a"
+    <Link
       href={`/users?profileUserId=${user.id}`}
-      className="group relative border border-[var(--elevated-surface-border)] block h-full w-full overflow-hidden rounded-lg bg-[var(--elevated-surface)] p-0 text-[var(--app-text)] no-underline print:border! print:border-[#222]! print:text-[#111] print:shadow-none! print:[transform:none]!"
+      className="group relative block h-full w-full rounded-md p-0 text-[var(--app-text)] no-underline print:border! print:border-[#222]! print:text-[#111] print:shadow-none! print:[transform:none]!"
       onClick={onClick}
       data-action-mode-target="user-card"
     >
-      {/* rounded-lg belongs here, not UserCardGrid's [&>*]:rounded-lg - that only reaches Block's wrapper <div>, which has no overflow-hidden to clip with. */}
-      <div className="relative flex h-full w-full flex-col overflow-hidden bg-[var(--elevated-surface)] group-hover:bg-[var(--elevated-surface-hover)] group-focus-visible:bg-[var(--elevated-surface-hover)]">
-        <div className="relative aspect-square w-full min-h-0 flex-1 overflow-hidden rounded-b-sm print:aspect-square print:h-auto print:flex-none print:border-b-0">
+      <div className="relative flex h-full w-full flex-col">
+        <div className="relative aspect-square w-full flex-none overflow-hidden rounded-md bg-[var(--elevated-surface)] transition-[filter] group-hover:brightness-110 group-focus-visible:brightness-110 print:h-auto print:rounded-none">
           <FaceImage
             imagePath={user.image}
             alt={`${user.name}'s face`}
@@ -38,22 +36,15 @@ export default function UserCard({ user, onClick, onEdit, onDelete }: UserCardPr
             loading="eager"
           />
         </div>
-        {/* min-h reserves the same 2-line height every card gets, pronouns or
-            not - otherwise the grid row stretches every card to match
-            whichever one's tallest, skewing the photo's own aspect ratio.
-            Without pronouns, the name centers into that reserved height
-            instead of an invisible second line pinning it to the top. */}
-        <div
-          className={`flex min-h-[3.25rem] min-w-0 flex-none flex-col ${pronouns ? "justify-start" : "justify-center"} items-start gap-1 pt-2.5 pr-2 pb-3.5 pl-4 text-left print:min-h-[0.3in] print:px-[0.08in] print:py-[0.06in]`}
-        >
+        <div className="flex h-[3.375rem] min-w-0 flex-none flex-col items-start justify-start gap-0 pt-1.5 pr-1 text-left print:h-auto print:min-h-[0.3in] print:px-[0.08in] print:py-[0.06in]">
           <p
-            className="m-0 w-full truncate font-medium text-[var(--app-text)] print:text-[6.5pt] print:leading-[1.1] print:text-[#111]!"
+            className="is-body m-0 w-full truncate font-medium text-[var(--app-text)] print:text-[6.5pt] print:leading-[1.1] print:text-[#111]!"
             title={user.name}
           >
             {user.name}
           </p>
           {pronouns && (
-            <p className="m-0 text-[var(--subtle-text)] print:text-[5.5pt] print:text-[#444]!">{pronouns}</p>
+            <p className="is-body m-0 text-[var(--subtle-text)] print:text-[5.5pt] print:text-[#444]!">{pronouns}</p>
           )}
         </div>
         <span
@@ -64,10 +55,11 @@ export default function UserCard({ user, onClick, onEdit, onDelete }: UserCardPr
           <span className="h-7 w-7 origin-center scale-100 bg-current [mask-image:var(--user-card-action-icon)] [mask-position:center] [mask-repeat:no-repeat] [mask-size:contain]" />
         </span>
         {(onEdit || onDelete) && (
-          <div className="absolute top-2 right-2 z-10 flex gap-1 opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100 print:hidden [--button-bg:var(--button-overlay-bg)] [--button-bg-hover:var(--button-overlay-bg-hover)]">
+          <div className="absolute top-2 right-2 z-10 flex gap-1 opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100 print:hidden [--page-icon-bg:var(--button-overlay-bg)] [--page-icon-shadow:var(--button-overlay-shadow)] [--page-icon-bg-hover:var(--button-overlay-bg-hover)]">
             {onEdit && (
               <Button
-                variant="icon"
+                surface="page"
+                variant="tool"
                 icon="edit/edit.svg"
                 aria-label={`Edit ${user.name}`}
                 onClick={(event) => {
@@ -79,11 +71,12 @@ export default function UserCard({ user, onClick, onEdit, onDelete }: UserCardPr
             )}
             {onDelete && (
               <Button
-                variant="icon"
+                surface="page"
+                variant="tool"
                 tone="danger"
                 icon="delete/delete.svg"
                 aria-label={`Delete ${user.name}`}
-                className="[--button-bg-hover:var(--button-delete-overlay-bg-hover)]"
+                className="[--page-icon-bg-hover:var(--button-delete-overlay-bg-hover)] [--button-danger-icon-text:var(--button-delete-overlay-text)]"
                 onClick={(event) => {
                   event.preventDefault();
                   event.stopPropagation();
@@ -94,6 +87,6 @@ export default function UserCard({ user, onClick, onEdit, onDelete }: UserCardPr
           </div>
         )}
       </div>
-    </Block>
+    </Link>
   );
 }

@@ -5,7 +5,8 @@ import { useState, useTransition } from "react";
 import clsx from "clsx";
 import Popover from "@/components/popover";
 import { selectItemVariants } from "@/components/select/styles";
-import { inputFilterTriggerClassName } from "@/components/input/styles";
+import { Button } from "@/components/button";
+import { actionButtonIconClassName } from "@/components/button/styles";
 import { MaskIcon } from "@/theme/MaskIcon";
 import { ROLES } from "@/constants/roles";
 import { ROLE_FILTER_KEY } from "@/constants/filters";
@@ -18,16 +19,12 @@ const roleOptions = [
 
 // selectItemVariants was built for Select's own <div> option rows, which never
 // carry a browser default border - a real <button> does, so it needs an
-// explicit reset here on top of it. Its own hover (--nav-button-bg-hover) is
-// tuned for Select's white dropdown surface - this popover sits on the same
-// gray surface a modal does, so its hover needs that token instead.
-const optionButtonClassName = "flex w-full items-center justify-between gap-3 border-0 bg-transparent text-left hover:bg-[var(--modal-button-bg-hover)]!";
+// explicit reset here on top of it. Its hover token is shared by Select
+// dropdowns and page popovers.
+const optionButtonClassName = "flex w-full items-center justify-between gap-3 border-0 bg-transparent text-left hover:bg-[var(--contrast-surface-hovered-item-bg)]!";
 
-// Muted at rest, matches the label's own --select-active-text once selected -
-// same token Select's own selected-option row uses, on both sides here
-// instead of the count staying gray while the label changes weight.
 function optionCountClassName(selected: boolean) {
-	return selected ? "text-[var(--select-active-text)]" : "text-[var(--content-muted)]";
+	return selected ? "text-[var(--select-active-text)]" : "text-inherit";
 }
 
 interface RoleFilterPopoverProps {
@@ -43,6 +40,7 @@ export default function RoleFilterPopover({ counts }: RoleFilterPopoverProps) {
 	const [, startTransition] = useTransition();
 	const selectedRoles = searchParams.getAll(ROLE_FILTER_KEY);
 	const isAllSelected = selectedRoles.length === 0;
+	const triggerLabel = isAllSelected ? "All roles" : (roleOptions.find((option) => option.value === selectedRoles[0])?.label ?? "All roles");
 
 	function applyRoles(nextRoles: string[]) {
 		const params = new URLSearchParams(searchParams.toString());
@@ -74,13 +72,14 @@ export default function RoleFilterPopover({ counts }: RoleFilterPopoverProps) {
 			open={open}
 			onOpenChange={setOpen}
 			trigger={
-				<button type="button" className={inputFilterTriggerClassName} aria-label="Filter by role">
-					<MaskIcon icon="filter/filter.svg" className="h-4 w-4 bg-current [mask-position:center] [mask-repeat:no-repeat] [mask-size:contain]" />
-				</button>
+				<Button surface="page" variant="action" type="button" className="group" aria-label={`Filter by role: ${triggerLabel}`}>
+					{triggerLabel}
+					<MaskIcon icon="arrow/up.svg" className={clsx(actionButtonIconClassName, "rotate-180 transition-transform duration-150 group-data-[state=open]:rotate-0")} />
+				</Button>
 			}
 		>
 			<div className="flex min-w-[9rem] flex-col gap-0.5">
-				<span className="ui-label block px-2 pt-0.5 pb-1">Filter by role</span>
+				<span className="ui-label block px-4 pt-0.5 pb-1">Filter by role</span>
 				<div className="flex flex-col gap-0.5" role="listbox">
 					<button
 						type="button"

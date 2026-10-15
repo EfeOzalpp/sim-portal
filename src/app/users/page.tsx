@@ -8,12 +8,17 @@ import { getUserRoleCounts } from "@/actions/users";
 // Components
 import { FilterInput } from "@/components/primitives/Filters";
 import SemesterFilterSelect from "@/components/domain/filters/SemesterFilterSelect";
-import PageTitle from "@/components/layout/PageTitle";
-import PrintLink from "@/components/primitives/PrintLink";
+import PageChrome from "@/components/layout/PageChrome/PageChrome";
+import PageBar from "@/components/layout/PageBar";
+import PageCard from "@/components/layout/PageCard";
+import PageChromeScrollArea from "@/components/layout/PageChrome/PageChromeScrollArea";
+import { Button } from "@/components/button";
+import { actionButtonIconClassName } from "@/components/button/styles";
+import { MaskIcon } from "@/theme/MaskIcon";
 import RouteModalPopup from "@/components/modal/RouteModalPopup";
 import ModalContentFallback from "@/components/modal/ModalContentFallback";
 import { confirmDeleteDialogClassName } from "@/components/confirm-delete/styles";
-import { ActionModeSurface } from "@/components/layout/ActionMode";
+import { ActionModePageContent, ActionModeProvider } from "@/components/layout/ActionMode";
 
 // Composition
 import UsersList from "@/app/users/composition/UsersList";
@@ -22,6 +27,7 @@ import GridViewPopover from "@/app/users/composition/GridViewPopover";
 import ExitEditModeOnMount from "@/app/users/composition/ExitEditModeOnMount";
 import EditUsersButton from "@/app/users/composition/EditUsersButton";
 import DeleteUsersButton from "@/app/users/composition/DeleteUsersButton";
+import styles from "@/app/users/UsersPage.module.css";
 
 // Helpers
 import { getSelectedSemesterId } from "@/components/domain/filters/semester-filter";
@@ -39,7 +45,7 @@ interface UsersProps {
 const userModalParams = new Set<string>(Object.values(USER_MODAL_PARAMS));
 
 // Fixed height (not min-h) so it's identical in the Suspense fallback and the loaded form - a floor alone can't cap the taller state.
-const userFormDialogClassName = "w-[min(44rem,100%)] h-[calc(100dvh-3rem)] max-[768px]:h-dvh";
+const userFormDialogClassName = "w-[min(42rem,100%)] max-[768px]:h-dvh";
 
 function getSingleParam(value: string | string[] | undefined) {
 	return Array.isArray(value) ? value[0] : value;
@@ -120,6 +126,7 @@ export default async function UsersPage({ searchParams }: UsersProps) {
 	const showAddModal = !!addUser && !editUserId && !profileUserId && !deleteUserId;
 	const showProfileModal = !!profileUserId && !editUserId;
 	const showDeleteModal = !!deleteUserId && !editUserId && !profileUserId;
+	const titleFilterControl = <SemesterFilterSelect semesters={semesters} defaultValue={selectedSemesterId} variant="title" />;
 
 	const EditUserFormContent = showEditModal
 		? (await import("@/app/users/[id]/edit/EditUserFormContent")).default
@@ -136,77 +143,79 @@ export default async function UsersPage({ searchParams }: UsersProps) {
 
 	return (
 		<>
-			<PageTitle
-				title="People"
-				contentClassName="min-[769px]:ml-[calc(var(--nav-rail-collapsed-width)_+_12rem)]"
-				filterControl={<SemesterFilterSelect semesters={semesters} defaultValue={selectedSemesterId} variant="title" />}
-			/>
-			<ActionModeSurface>
-				<div data-full-bleed-content className="flex h-full min-h-0 flex-col bg-[var(--page-bg)] min-[769px]:ml-[var(--nav-rail-collapsed-width)] min-[769px]:mr-2 min-[769px]:rounded-tl-[0.5rem] min-[769px]:rounded-tr-[0.5rem] min-[769px]:border min-[769px]:border-b-0 min-[769px]:border-solid min-[769px]:border-[var(--main-border)] min-[769px]:shadow-[var(--content-shadow)] print:bg-transparent">
-					<div className="flex flex-none flex-wrap items-center justify-between gap-6 overflow-hidden px-6 pt-6 pb-3 [scrollbar-gutter:stable] print:hidden">
-						<div className="flex items-center gap-2">
-							<div className="w-50 [--input-bg:var(--page-input-bg)] [--input-border:var(--page-input-border)] [--input-bg-hover:var(--page-input-bg-hover)] [--input-border-hover:var(--page-input-border-hover)] [--input-placeholder:var(--page-input-text)] [--input-icon:var(--page-input-search)]">
-								<FilterInput query="user" placeholder="Search" mode="filter" filterTrigger={<RoleFilterPopover counts={roleCounts} />} />
-							</div>
-							<GridViewPopover />
-						</div>
-						<div className="flex items-center gap-2">
-							{viewingCount !== undefined && (
-								<span className="text-sm text-[var(--label-text)]">{viewingCount} users</span>
-							)}
-							<PrintLink variant="action" />
-							{isAdmin && (
-								<>
-									<EditUsersButton />
-									<DeleteUsersButton />
-								</>
-							)}
-						</div>
-					</div>
-					<div className="min-h-0 flex-1 overflow-y-auto px-6 [scrollbar-gutter:stable] print:overflow-visible print:px-0 print:pb-0">
-						<Suspense fallback={<div style={{ opacity: 0.5, padding: "1rem", background: "transparent" }}>Loading users...</div>}>
-							<UsersList
-								filters={filters}
-								isAdmin={isAdmin}
-								addUserHref={getUsersModalHref(filters, USER_MODAL_PARAMS.add, "1")}
+			<div data-page-frame className="h-full min-h-0">
+				<ActionModeProvider>
+					<PageChrome
+						title="People"
+						scope={titleFilterControl}
+						search={<FilterInput variant="page" query="user" placeholder="Search" />}
+						trailingActions={isAdmin ? (
+							<>
+								<Button surface="page" href={getUsersModalHref(filters, USER_MODAL_PARAMS.add, "1")} variant="action" tone="cta">
+									<MaskIcon icon="add/add.svg" className={actionButtonIconClassName} />
+									New user
+								</Button>
+								<EditUsersButton />
+								<DeleteUsersButton />
+							</>
+						) : undefined}
+						tools={
+							<>
+								<GridViewPopover />
+								<RoleFilterPopover counts={roleCounts} />
+							</>
+						}
+						status={viewingCount !== undefined ? (
+							<span className="whitespace-nowrap text-sm font-semibold text-[var(--page-bar-label,var(--app-text))]">{viewingCount} people</span>
+						) : undefined}
+
+					/>
+					<ActionModePageContent>
+						<PageCard data-full-bleed-content className="flex h-full min-h-0 flex-col">
+							<PageBar />
+							<PageChromeScrollArea data-page-surface className={`${styles.scrollArea} min-h-0 flex-1 overflow-y-auto bg-[var(--page-bg)] p-6 print:overflow-visible print:bg-transparent print:px-0 print:pb-0`}>
+								<Suspense fallback={<div style={{ opacity: 0.5, padding: "1rem", background: "transparent" }}>Loading users...</div>}>
+									<UsersList
+										filters={filters}
+										isAdmin={isAdmin}
+									/>
+								</Suspense>
+							</PageChromeScrollArea>
+						</PageCard>
+					</ActionModePageContent>
+					{showEditModal && EditUserFormContent && (
+						<RouteModalPopup key={editUserId} paramName={USER_MODAL_PARAMS.edit} title="Edit User" dialogClassName={userFormDialogClassName}>
+							<ExitEditModeOnMount />
+							<Suspense fallback={<ModalContentFallback />}>
+								<EditUserFormContent userId={editUserId!} showDangerZone={false} />
+							</Suspense>
+						</RouteModalPopup>
+					)}
+					{showAddModal && AddUserFormContent && (
+						<RouteModalPopup key="add-user" paramName={USER_MODAL_PARAMS.add} title="New User" dialogClassName={userFormDialogClassName}>
+							<Suspense fallback={<ModalContentFallback />}>
+								<AddUserFormContent />
+							</Suspense>
+						</RouteModalPopup>
+					)}
+					{showProfileModal && PersonProfileModal && (
+						<PersonProfileModal key={profileUserId} profileUserId={profileUserId!} />
+					)}
+					{showDeleteModal && UserDeleteConfirmContent && (
+						<RouteModalPopup
+							key={deleteUserId}
+							paramName={USER_MODAL_PARAMS.delete}
+							title="Delete User"
+							dialogClassName={confirmDeleteDialogClassName}
+						>
+							<UserDeleteConfirmContent
+								userId={deleteUserId!}
+								returnHref={usersReturnHref}
 							/>
-						</Suspense>
-					</div>
-				</div>
-				{showEditModal && EditUserFormContent && (
-					<RouteModalPopup key={editUserId} paramName={USER_MODAL_PARAMS.edit} title="Edit User" dialogClassName={userFormDialogClassName}>
-						<ExitEditModeOnMount />
-						<Suspense fallback={<ModalContentFallback />}>
-							<EditUserFormContent userId={editUserId!} showDangerZone={false} />
-						</Suspense>
-					</RouteModalPopup>
-				)}
-				{showAddModal && AddUserFormContent && (
-					<RouteModalPopup key="add-user" paramName={USER_MODAL_PARAMS.add} title="Add User" dialogClassName={userFormDialogClassName}>
-						<Suspense fallback={<ModalContentFallback />}>
-							<AddUserFormContent />
-						</Suspense>
-					</RouteModalPopup>
-				)}
-				{showProfileModal && PersonProfileModal && (
-					<PersonProfileModal key={profileUserId} profileUserId={profileUserId!} />
-				)}
-				{showDeleteModal && UserDeleteConfirmContent && (
-					<RouteModalPopup
-						key={deleteUserId}
-						paramName={USER_MODAL_PARAMS.delete}
-						title="Delete User"
-						dialogClassName={confirmDeleteDialogClassName}
-					>
-						<UserDeleteConfirmContent
-							userId={deleteUserId!}
-							returnHref={usersReturnHref}
-						/>
-					</RouteModalPopup>
-				)}
-			</ActionModeSurface>
+						</RouteModalPopup>
+					)}
+				</ActionModeProvider>
+			</div>
 		</>
 	);
 }
-
-
