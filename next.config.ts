@@ -20,11 +20,11 @@ const nextConfig: NextConfig = {
 		root: __dirname,
 	},
 	experimental: {
-		// Default is 1mb - too small for the 4mb images store.ts allows. Set a
-		// bit above that (not exactly 4mb) so store.ts's own friendly size
-		// error is what a slightly-over-4mb request hits, not this generic one.
+		// Default is 1mb - too small for the 8mb images store.ts allows. Set a
+		// bit above that (not exactly 8mb) so store.ts's own friendly size
+		// error is what a slightly-over-8mb request hits, not this generic one.
 		serverActions: {
-			bodySizeLimit: "5mb",
+			bodySizeLimit: "9mb",
 		},
 	},
 	images: {

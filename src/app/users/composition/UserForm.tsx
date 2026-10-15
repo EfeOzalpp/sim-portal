@@ -162,7 +162,7 @@ export default function UserForm({
             />
             <span className="ui-note mt-1 block text-[var(--subtle-text)]">
               {isCurrentUserAdmin
-                ? <>You can upload high resolution photos up to 4MB.<br />They will be automatically downsized.</>
+                ? <>You can upload high resolution photos up to 8MB.<br />They will be automatically downsized.</>
                 : "Contact SIM faculty to change your photo."}
             </span>
           </div>

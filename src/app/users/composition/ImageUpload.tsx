@@ -13,7 +13,7 @@ interface ImageUploadProps {
 	isSubmitting?: boolean;
 }
 
-const MAX_SIZE_MB = 4;
+const MAX_SIZE_MB = 8;
 const ACCEPTED_TYPES = ["image/jpeg", "image/png", "image/webp"];
 
 export default function ImageUpload({ onChange, currentImagePath = "/face.jpg", isSubmitting = false }: ImageUploadProps) {
