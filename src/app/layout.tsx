@@ -1,5 +1,5 @@
 // React & Next.js
-import { Metadata } from "next";
+import { Metadata, type Viewport } from "next";
 
 // Global styles (side-effect only - order matters for cascade layers)
 import "@/theme/fonts/sour-gummy/sour-gummy.css";
@@ -51,9 +51,21 @@ const bodyDividerClassName =
 	"flex min-h-0 flex-[1_1_auto] flex-col items-stretch overflow-hidden";
 
 // Global metadata for the application
+export const viewport: Viewport = {
+	themeColor: "#ff7900",
+};
+
 export const metadata: Metadata = {
 	title: "Studio for Interrelated Media",
 	description: "Studio for Interrelated Media",
+	icons: {
+		icon: [
+			{ url: "/favicon.ico", sizes: "16x16 32x32 48x48", type: "image/x-icon" },
+			{ url: "/icons/icon-96.png", sizes: "96x96", type: "image/png" },
+		],
+		apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
+	},
+	manifest: "/site.webmanifest",
 };
 
 const themeInitScript = `
@@ -107,8 +119,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 				<script dangerouslySetInnerHTML={{ __html: colorThemeInitScript }} />
 				<script dangerouslySetInnerHTML={{ __html: peopleGridInitScript }} />
 			</head>
-			{/* icon.tsx covers light mode/no dark support; this one only kicks in for a reported dark preference. */}
-			<link rel="icon" href="/icon-dark.png" media="(prefers-color-scheme: dark)" />
 			<body className="m-0 h-full overflow-hidden print:h-auto print:overflow-visible">
 				<ToastProvider>
 					<ThemeStorageSync />
