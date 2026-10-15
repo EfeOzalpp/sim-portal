@@ -14,7 +14,7 @@ export default function SimHistoryContent() {
 					href="http://sim.massart.edu"
 					target="_blank"
 					rel="noreferrer"
-					className="text-[var(--app-text)] decoration-current underline-offset-[0.14em] hover:text-[var(--brand-color)]"
+					className="text-[var(--app-text)] decoration-current underline-offset-[0.14em] hover:text-[var(--inline-link-hover)]"
 				>
 					http://sim.massart.edu
 				</a>
@@ -47,7 +47,7 @@ export default function SimHistoryContent() {
 					href="https://web.archive.org/web/*/sim.massart.edu"
 					target="_blank"
 					rel="noreferrer"
-					className="text-[var(--app-text)] decoration-current underline-offset-[0.14em] hover:text-[var(--brand-color)]"
+					className="text-[var(--app-text)] decoration-current underline-offset-[0.14em] hover:text-[var(--inline-link-hover)]"
 				>
 					https://web.archive.org/web/*/sim.massart.edu
 				</a>
