@@ -42,10 +42,10 @@ function getDefaultSemesterDateRange(code: string): [Date, Date] {
 	const year = getSemesterYear(code);
 
 	if (code.startsWith("SP")) {
-		return [new Date(year, 0, 15), new Date(year, 4, 15)];
+		return [new Date(Date.UTC(year, 0, 15)), new Date(Date.UTC(year, 4, 15))];
 	}
 
-	return [new Date(year, 8, 1), new Date(year, 11, 20)];
+	return [new Date(Date.UTC(year, 8, 1)), new Date(Date.UTC(year, 11, 20))];
 }
 
 async function findOrCreateSemesterForCode(tx: Prisma.TransactionClient, code: string) {

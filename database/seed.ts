@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import pg from "pg";
+import { generateThursdayDates } from "../src/constants/semester-calendar";
 
 // Initialize database connection for seeding
 const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL });
@@ -9,28 +10,7 @@ const prisma = new PrismaClient({ adapter });
 
 // Generate a list of all Thursdays between two dates
 function generateSemesterThursdays(startDateStr: string, endDateStr: string) {
-  const startDate = new Date(startDateStr);
-  const endDate = new Date(endDateStr);
-
-  if (
-    Number.isNaN(startDate.getTime()) ||
-    Number.isNaN(endDate.getTime()) ||
-    startDate > endDate
-  ) {
-    return [];
-  }
-
-  const dates: Date[] = [];
-  let current = new Date(startDate);
-
-  while (current <= endDate) {
-    if (current.getDay() === 4) {
-      dates.push(new Date(current));
-    }
-    current.setDate(current.getDate() + 1);
-  }
-
-  return dates;
+  return generateThursdayDates([startDateStr, endDateStr]);
 }
 
 // Alternate between Big and Small production days for each Thursday

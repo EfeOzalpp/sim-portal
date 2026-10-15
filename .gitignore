@@ -5,6 +5,7 @@
 
 .vscode
 /database/backups/*.sql
+/database/backups/thursday-date-drill/
 /database/backups/user-images/
 /database/uploads/
 

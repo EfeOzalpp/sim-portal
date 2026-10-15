@@ -8,7 +8,7 @@ import { normalizeThursdayName } from "@/helpers";
 export function transformThursdayPayload(formData: any) {
   return {
     name: formData.name,
-    date: formData.date ? (dayjs.isDayjs(formData.date) ? formData.date.toISOString() : dayjs(formData.date).toISOString()) : null,
+    date: formData.date ? dayjs(formData.date).format("YYYY-MM-DD") : null,
     semesterId: formData.semesterId,
     productions: (formData.productions || []).map((production: any) => ({
       id: production.id,
@@ -41,7 +41,7 @@ export function transformThursdayFromAPI(apiData: any) {
 
   return {
     name: normalizeThursdayName(apiData.name),
-    date: apiData.date ? dayjs(apiData.date) : null,
+    date: apiData.date ? dayjs(new Date(apiData.date).toISOString().slice(0, 10)) : null,
     semesterId: apiData.semester_id || null,
     productions: (apiData.productions || []).map((p: any) => ({
       id: p.id,

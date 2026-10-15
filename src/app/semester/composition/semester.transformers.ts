@@ -11,7 +11,7 @@ export function getSemesterDateRange(semester: SemesterWithThursdays): [Dayjs | 
     .map((t) => new Date(t.date))
     .sort((a, b) => a.getTime() - b.getTime());
 
-  return [dayjs(sortedDates[0]), dayjs(sortedDates[sortedDates.length - 1])];
+  return [dayjs(sortedDates[0].toISOString().slice(0, 10)), dayjs(sortedDates[sortedDates.length - 1].toISOString().slice(0, 10))];
 }
 
 export const transformSemesterFromAPI = (semester: SemesterWithThursdays | null, usersFromCurrentSemester: any[] = []) => {
@@ -35,8 +35,8 @@ export const transformSemesterPayload = (formData: any): SemesterInput & { dates
   return {
     ...formData,
     dates: [
-      formData.dates?.[0]?.toISOString ? formData.dates[0].toISOString() : formData.dates?.[0],
-      formData.dates?.[1]?.toISOString ? formData.dates[1].toISOString() : formData.dates?.[1],
+      dayjs.isDayjs(formData.dates?.[0]) ? formData.dates[0].format("YYYY-MM-DD") : formData.dates?.[0],
+      dayjs.isDayjs(formData.dates?.[1]) ? formData.dates[1].format("YYYY-MM-DD") : formData.dates?.[1],
     ],
   };
 };

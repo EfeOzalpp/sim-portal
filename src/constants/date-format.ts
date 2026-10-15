@@ -6,7 +6,7 @@ export function formatShortMonthDay(date: Date | string | null | undefined) {
 	const parsed = new Date(date);
 	if (Number.isNaN(parsed.getTime())) return undefined;
 
-	return `${SHORT_MONTH_NAMES[parsed.getMonth()]} ${parsed.getDate()}`;
+	return `${SHORT_MONTH_NAMES[parsed.getUTCMonth()]} ${parsed.getUTCDate()}`;
 }
 
 export function formatShortMonthDayYear(date: Date | string | null | undefined) {
@@ -16,5 +16,5 @@ export function formatShortMonthDayYear(date: Date | string | null | undefined) 
 	const monthDay = formatShortMonthDay(parsed);
 	if (!monthDay) return undefined;
 
-	return `${monthDay}, ${parsed.getFullYear()}`;
+	return `${monthDay}, ${parsed.getUTCFullYear()}`;
 }

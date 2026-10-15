@@ -1,6 +1,7 @@
 import { prisma } from "@/database";
 import { Prisma } from "@prisma/client";
 import { normalizeSemesterCode } from "@/components/domain/filters/semester-filter";
+import { generateThursdayDates } from "@/constants/semester-calendar";
 
 // Sortable key from a semester's own code (SP/FA + year) - two "slots" per
 // year, Spring before Fall, so e.g. FA26 sorts just after SP26. Doesn't
@@ -74,28 +75,7 @@ export async function getSemesterOptions() {
 
 // Generate all Thursday dates within a given range
 export async function generateSemesterThursdays(dateRange: [string, string] | (string | Date)[]) {
-	if (!Array.isArray(dateRange) || dateRange.length !== 2) {
-		return [];
-	}
-
-	const startDate = new Date(dateRange[0]);
-	const endDate = new Date(dateRange[1]);
-
-	if (Number.isNaN(startDate.getTime()) || Number.isNaN(endDate.getTime()) || startDate > endDate) {
-		return [];
-	}
-
-	const dates: Date[] = [];
-	let current = new Date(startDate);
-
-	while (current <= endDate) {
-		if (current.getDay() === 4) {
-			dates.push(new Date(current));
-		}
-		current.setDate(current.getDate() + 1);
-	}
-
-	return dates;
+	return Array.isArray(dateRange) ? generateThursdayDates(dateRange) : [];
 }
 
 // Determine the name of a Thursday based on its position in the semester
