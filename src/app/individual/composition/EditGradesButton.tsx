@@ -12,9 +12,10 @@ export default function EditGradesButton() {
 
 	return (
 		<Button
+			surface="page"
 			type="button"
 			variant="action"
-			className="relative z-[260]"
+			tone="cta"
 			aria-pressed={isActive}
 			onClick={() => setActiveMode(isActive ? null : ACTION_MODES.editGrades)}
 		>

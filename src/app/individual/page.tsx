@@ -7,8 +7,9 @@ import { getSemesterOptions, getIndividualSemesterData } from "@/actions/semeste
 // Components
 import { FilterInput } from "@/components/primitives/Filters";
 import SemesterFilterSelect from "@/components/domain/filters/SemesterFilterSelect";
-import PageTitle from "@/components/layout/PageTitle";
-import PrintLink from "@/components/primitives/PrintLink";
+import PageChrome from "@/components/layout/PageChrome/PageChrome";
+import PageBar from "@/components/layout/PageBar";
+import PageCard from "@/components/layout/PageCard";
 import { ActionModeSurface } from "@/components/layout/ActionMode";
 import PersonProfileModal from "@/components/domain/profile/PersonProfileModal";
 import RouteModalPopup from "@/components/modal/RouteModalPopup";
@@ -20,7 +21,6 @@ import IndividualPerformanceTable from "@/app/individual/composition/IndividualP
 import { SelectedUsersProvider } from "@/app/individual/composition/SelectedUsersProvider";
 import SelectedCountLabel from "@/app/individual/composition/SelectedCountLabel";
 import ThursdayScopeFilterPopover from "@/app/individual/composition/ThursdayScopeFilterPopover";
-import ScopePill from "@/app/individual/composition/ScopePill";
 import EditThursdayFormContent from "@/app/thursdays/[id]/edit/EditThursdayFormContent";
 import { thursdayFormDialogClassName } from "@/app/thursdays/composition/ThursdayForm";
 
@@ -69,33 +69,26 @@ export default async function IndividualPage({ searchParams }: IndividualPagePro
 
 	return (
 		<>
-			<PageTitle
-				title="Student Progress"
-				contentClassName="min-[769px]:ml-[calc(var(--nav-rail-collapsed-width)_+_12rem)]"
-				filterControl={<SemesterFilterSelect semesters={semesters} defaultValue={semesterId} variant="title" />}
-			/>
 			<ActionModeSurface>
-				<div data-full-bleed-content className="flex h-full min-h-0 flex-col bg-[var(--app-ind-progress-surface)] min-[769px]:ml-[var(--nav-rail-collapsed-width)] min-[769px]:mr-2 min-[769px]:rounded-tl-[0.5rem] min-[769px]:rounded-tr-[0.5rem] min-[769px]:border min-[769px]:border-b-0 min-[769px]:border-solid min-[769px]:border-[var(--main-border)] min-[769px]:shadow-[var(--content-shadow)]">
+				<PageCard data-full-bleed-content className="flex h-full min-h-0 flex-col">
 					<SelectedUsersProvider>
-						<div className="flex flex-none flex-wrap items-center justify-between gap-6 px-6 pt-6 pb-3 print:hidden">
-							<div className="flex items-center gap-2">
-								<div className="w-50 [--input-bg:var(--page-input-bg)] [--input-border:var(--page-input-border)] [--input-bg-hover:var(--page-input-bg-hover)] [--input-border-hover:var(--page-input-border-hover)] [--input-placeholder:var(--page-input-text)] [--input-icon:var(--page-input-search)]">
-									<FilterInput
-										query="user"
-										placeholder="Search"
-										mode="filter"
-										filterTrigger={<ThursdayScopeFilterPopover currentSemesterId={semesterId ?? ALL_SEMESTERS_VALUE} />}
-									/>
-								</div>
-								{isAllScope && <ScopePill currentSemesterId={semesterId ?? ALL_SEMESTERS_VALUE} />}
-							</div>
-							<div className="flex items-center gap-2">
-								<SelectedCountLabel />
-								<PrintLink label="Export selected" variant="action" />
-								<EditGradesButton />
-							</div>
-						</div>
-						<div className="min-h-0 flex-1">
+						<PageChrome
+							title="Student Progress"
+							scope={<SemesterFilterSelect semesters={semesters} defaultValue={semesterId} variant="title" />}
+							search={
+								<FilterInput
+									variant="page"
+									query="user"
+									placeholder="Search"
+								/>
+							}
+							actions={<EditGradesButton />}
+							tools={<ThursdayScopeFilterPopover currentSemesterId={semesterId ?? ALL_SEMESTERS_VALUE} />}
+							status={<SelectedCountLabel />}
+
+						/>
+						<PageBar />
+						<div data-page-surface className="min-h-0 flex-1 bg-[var(--page-bg)]">
 							<IndividualPerformanceTable
 								users={semesterData?.users || []}
 								isAllScope={isAllScope}
@@ -104,7 +97,7 @@ export default async function IndividualPage({ searchParams }: IndividualPagePro
 							/>
 						</div>
 					</SelectedUsersProvider>
-				</div>
+				</PageCard>
 				{profileUserId && (
 					<PersonProfileModal key={profileUserId} profileUserId={profileUserId} />
 				)}

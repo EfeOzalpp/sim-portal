@@ -1,0 +1,45 @@
+.root {
+	container-type: inline-size;
+	display: flex;
+	flex-direction: column;
+	gap: 1.5rem;
+}
+
+.list {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
+	gap: 1rem 1.5rem;
+}
+
+.list > p {
+	grid-column: 1 / -1;
+}
+
+.row {
+	grid-column: 1 / -1;
+	display: grid;
+	grid-template-columns: subgrid;
+	align-items: center;
+	row-gap: 0.75rem;
+	background: var(--modal-surface-2);
+	padding: 1rem;
+}
+
+.grades {
+	display: flex;
+	min-width: 0;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: flex-start;
+	gap: 0.75rem;
+}
+
+@container (min-width: 32rem) {
+	.list {
+		grid-template-columns: minmax(8rem, max-content) minmax(0, 1fr);
+	}
+
+	.grades {
+		justify-content: flex-end;
+	}
+}

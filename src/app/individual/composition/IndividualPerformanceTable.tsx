@@ -8,7 +8,8 @@ import { updateUserSemesterGrades } from "@/actions/semesters";
 
 // Components
 import PersonLink from "@/components/domain/profile/PersonLink";
-import { useActionMode } from "@/components/layout/ActionMode";
+import { useOptionalActionMode } from "@/components/layout/ActionMode";
+import { usePageChrome } from "@/components/layout/PageChrome";
 import { MaskIcon } from "@/theme/MaskIcon";
 import FaceImage from "@/components/primitives/FaceImage";
 
@@ -56,9 +57,9 @@ interface IndividualPerformanceTableProps {
 	currentSemesterCode?: string;
 }
 
-const progressItemIconClassName = "h-4 w-4 flex-none bg-[var(--app-text)] [mask-position:center] [mask-repeat:no-repeat] [mask-size:contain]";
+const progressItemIconClassName = "h-5 w-5 flex-none bg-[var(--app-text)] [mask-position:center] [mask-repeat:no-repeat] [mask-size:contain]";
 const progressItemClassName = clsx(styles.progressItem, "no-underline");
-const progressLinkClassName = "ui-note cursor-pointer self-start border-0 bg-transparent p-0 text-[var(--subtle-text)]! hover:underline";
+const progressLinkClassName = "ui-note not-italic cursor-pointer self-start border-0 bg-transparent p-0 text-[var(--inline-link)] underline underline-offset-[0.18em] hover:text-[var(--inline-link-hover)]";
 
 // isAllScope: All-scope items span multiple semesters, so the semester code
 // shows up in the row (right after the date pill, before groupLabel/tags) -
@@ -88,15 +89,18 @@ function ProgressItem({ name, thursdayId, groupLabel, tags, semesterCode, meta, 
 					{meta && metaColors && (
 						<span
 							className={styles.progressMetaLabel}
-							style={{ backgroundColor: metaColors.bg, color: metaColors.text }}
+							style={{ borderBottomColor: metaColors.bg, color: metaColors.text }}
 						>
 							{meta}
 						</span>
 					)}
 					{semesterCode && (
-						<span className={styles.progressSemesterLabel}>
-							{semesterCode}
-						</span>
+						<>
+							{meta && <span className={styles.countText} aria-hidden="true">·</span>}
+							<span className={styles.progressSemesterLabel}>
+								{semesterCode}
+							</span>
+						</>
 					)}
 					{chips.map((chip, index) => (
 						<Fragment key={`${chip}-${index}`}>
@@ -137,47 +141,19 @@ interface ProgressListItem {
 	meta?: string;
 }
 
-function ProgressItemList({ items, groupLabel, printGrid = false }: { items: ProgressListItem[]; groupLabel?: string; printGrid?: boolean }) {
+function ProgressItemList({ items, groupLabel }: { items: ProgressListItem[]; groupLabel?: string }) {
 	const [expanded, setExpanded] = useState(false);
-	// Printing wants every item fully shown, not just "first + N more" - same
-	// beforeprint/afterprint pattern UserCardGrid uses for its own batching.
-	// Only reverts on afterprint if print is what expanded it, so a list the
-	// user already expanded by hand stays that way afterward.
-	const autoExpandedRef = useRef(false);
-
-	useEffect(() => {
-		function handleBeforePrint() {
-			setExpanded((current) => {
-				if (!current) autoExpandedRef.current = true;
-				return true;
-			});
-		}
-
-		function handleAfterPrint() {
-			if (autoExpandedRef.current) {
-				autoExpandedRef.current = false;
-				setExpanded(false);
-			}
-		}
-
-		window.addEventListener("beforeprint", handleBeforePrint);
-		window.addEventListener("afterprint", handleAfterPrint);
-		return () => {
-			window.removeEventListener("beforeprint", handleBeforePrint);
-			window.removeEventListener("afterprint", handleAfterPrint);
-		};
-	}, []);
 
 	if (items.length === 0) return null;
 
 	if (expanded) {
 		return (
-			<div className={clsx("flex flex-col gap-2", printGrid && "print:grid print:grid-cols-2 print:items-start print:gap-x-4 print:gap-y-2")}>
+			<div className={clsx(styles.expandedList, "flex flex-col")}>
 				{items.map((item) => (
 					<ProgressItem key={item.id} name={item.name} thursdayId={item.thursdayId} groupLabel={groupLabel} tags={item.tags} semesterCode={item.semesterCode} meta={item.meta} truncate={false} />
 				))}
-				<button type="button" onClick={() => setExpanded(false)} className={clsx(progressLinkClassName, "pl-1", "print:hidden")}>
-					Show less
+				<button type="button" onClick={() => setExpanded(false)} className={clsx(progressLinkClassName, "mt-2 pl-[0.85rem]", "print:hidden")}>
+					Less
 				</button>
 			</div>
 		);
@@ -191,12 +167,12 @@ function ProgressItemList({ items, groupLabel, printGrid = false }: { items: Pro
 			{/* Fixed width, always reserved (even with nothing to show) - so the
 			    card beside it (flex-1 in the CSS module) is always the same
 			    width whether or not this row actually has a "N more" to show. */}
-			<div className="mt-3 flex w-20 flex-none flex-col gap-0.5">
+			<div className="mt-3 flex w-[4.5rem] flex-none flex-col gap-0.5">
 				{rest.length > 0 && (
 					<>
-						<span>{rest.length} more</span>
-						<button type="button" onClick={() => setExpanded(true)} className={progressLinkClassName}>
-							Show more
+						<span className="text-[var(--subtle-text)]">{rest.length}+</span>
+						<button type="button" onClick={() => setExpanded(true)} className={progressLinkClassName} aria-label={`Show ${rest.length} more`}>
+							More
 						</button>
 					</>
 				)}
@@ -205,21 +181,10 @@ function ProgressItemList({ items, groupLabel, printGrid = false }: { items: Pro
 	);
 }
 
-const TABLE_MIN_WIDTH = 720;
-
 // Shared between the header table and the body table (see the render below)
 // so their columns line up exactly - table-layout: fixed makes both tables
 // honor these widths precisely instead of letting content nudge them apart.
-const COLUMN_WIDTHS = ["4%", "20%", "30%", "30%", "16%"];
-
-// Print drops the checkbox column entirely (see isPrinting below) rather
-// than hiding it via CSS - a display:none <td>/<th> is removed from the
-// table's box tree, which shifts every following cell into the wrong
-// <col>'s slot (col-to-cell association is positional). Not rendering it at
-// all keeps that association correct on both the header and body tables,
-// and this 4-wide array replaces COLUMN_WIDTHS above whenever isPrinting is
-// true, giving Presentations the most room and Grades the least.
-const PRINT_COLUMN_WIDTHS = ["20%", "42%", "30%", "8%"];
+const COLUMN_WIDTHS = ["4%", "17%", "34%", "27%", "18%"];
 
 // Not wired to anything yet - just the row-selection UI ahead of a later
 // "export only the checked people" feature.
@@ -235,11 +200,13 @@ const PRINT_COLUMN_WIDTHS = ["20%", "42%", "30%", "8%"];
 // "group" class on its <tr>) also shows the checkbox's hover state, not
 // only a direct hover over the checkbox itself.
 const checkboxInputClassName =
-	"h-4 w-4 cursor-pointer appearance-none rounded-xs border-2 border-solid border-[var(--green-border-checkbox)] bg-transparent group-hover:border-[var(--main-border-4-hover)]";
-const checkmarkClassName = "pointer-events-none absolute inset-0 h-4 w-4 bg-[var(--green-active-checkbox)] [mask-position:center] [mask-repeat:no-repeat] [mask-size:85%]";
+	"h-4 w-4 cursor-pointer appearance-none rounded-xs border-2 border-solid border-[var(--page-checkbox-border)] bg-transparent group-hover:border-[var(--page-checkbox-border-hover)]";
+const checkboxHitAreaClassName =
+	"relative inline-flex h-8 w-8 flex-none cursor-pointer items-center justify-center rounded-full transition-colors duration-150 hover:bg-[var(--page-checkbox-hover-bg)] focus-within:bg-[var(--page-checkbox-hover-bg)] active:bg-[var(--page-checkbox-checked-bg)] group-hover:bg-[var(--page-checkbox-hover-bg)] max-[768px]:h-10 max-[768px]:w-10";
+const checkmarkClassName = "pointer-events-none absolute inset-0 h-4 w-4 bg-[var(--page-checkbox-checkmark)] [mask-position:center] [mask-repeat:no-repeat] [mask-size:85%]";
 const checkedCheckboxStyle = {
-	backgroundColor: "var(--green-active-bg)",
-	borderColor: "var(--green-active-bg)",
+	backgroundColor: "var(--page-checkbox-checked-bg)",
+	borderColor: "var(--page-checkbox-checked-bg)",
 };
 
 function Checkbox({ checked, indeterminate = false, onChange, ariaLabel }: { checked: boolean; indeterminate?: boolean; onChange: () => void; ariaLabel: string }) {
@@ -250,21 +217,23 @@ function Checkbox({ checked, indeterminate = false, onChange, ariaLabel }: { che
 	}, [indeterminate]);
 
 	return (
-		<span className="relative inline-flex h-4 w-4 flex-none">
-			<input
-				ref={ref}
-				type="checkbox"
-				className={checkboxInputClassName}
-				checked={checked}
-				aria-label={ariaLabel}
-				style={checked ? checkedCheckboxStyle : undefined}
-				onChange={onChange}
-			/>
-			{checked && <MaskIcon icon="check/check.svg" className={checkmarkClassName} />}
+		<label className={checkboxHitAreaClassName} onClick={(event) => event.stopPropagation()}>
+			<span className="relative inline-flex h-4 w-4 flex-none">
+				<input
+					ref={ref}
+					type="checkbox"
+					className={checkboxInputClassName}
+					checked={checked}
+					aria-label={ariaLabel}
+					style={checked ? checkedCheckboxStyle : undefined}
+					onChange={onChange}
+				/>
+				{checked && <MaskIcon icon="check/check.svg" className={checkmarkClassName} />}
+			</span>
 			{!checked && indeterminate && (
-				<span className="pointer-events-none absolute inset-0 m-auto h-px w-2 bg-white" aria-hidden="true" />
+				<span className="pointer-events-none absolute inset-0 m-auto h-px w-2 bg-[var(--page-checkbox-checkmark)]" aria-hidden="true" />
 			)}
-		</span>
+		</label>
 	);
 }
 
@@ -323,31 +292,12 @@ function SortableHeader({ label, sortKey, sort, onSort }: { label: string; sortK
 
 export default function IndividualPerformanceTable({ users = [], isAllScope = false, currentSemesterId = null, currentSemesterCode }: IndividualPerformanceTableProps) {
 	const scrollRef = useRef<HTMLDivElement>(null);
-	const topScrollRef = useRef<HTMLDivElement>(null);
 	const headerScrollRef = useRef<HTMLDivElement>(null);
-	const { activeMode } = useActionMode();
+	const lastTableScrollRef = useRef({ left: 0, top: 0 });
+	const { activeMode } = useOptionalActionMode();
+	const { reportScrollTop } = usePageChrome();
 	const [selectedGradeUser, setSelectedGradeUser] = useState<UserStat | null>(null);
 	const [sort, setSort] = useState<SortState>({ key: "presentations", direction: "desc" });
-	// Drives which colgroup (COLUMN_WIDTHS vs PRINT_COLUMN_WIDTHS) and whether
-	// the checkbox column renders at all - see PRINT_COLUMN_WIDTHS above.
-	const [isPrinting, setIsPrinting] = useState(false);
-
-	useEffect(() => {
-		function handleBeforePrint() {
-			setIsPrinting(true);
-		}
-
-		function handleAfterPrint() {
-			setIsPrinting(false);
-		}
-
-		window.addEventListener("beforeprint", handleBeforePrint);
-		window.addEventListener("afterprint", handleAfterPrint);
-		return () => {
-			window.removeEventListener("beforeprint", handleBeforePrint);
-			window.removeEventListener("afterprint", handleAfterPrint);
-		};
-	}, []);
 	// Shared with SelectedCountLabel in the page header, via SelectedUsersProvider.
 	const { selectedUserIds, setSelectedUserIds } = useSelectedUsers();
 	const persistedGradesByUser = useMemo(() => {
@@ -369,47 +319,46 @@ export default function IndividualPerformanceTable({ users = [], isAllScope = fa
 		setGradesByUser(persistedGradesByUser);
 	}, [persistedGradesByUser]);
 
-	// Keeps three independently-scrollable regions in horizontal lockstep:
-	// the fake scrollbar above the table (visible even when the real one, at
-	// the table's bottom edge, is scrolled far out of view), the header row,
-	// and the body. The header has its own scroll container (rather than
-	// sharing one with the body, like a plain <thead>/<tbody> pair normally
-	// would) specifically so it can be position: sticky - an element with
-	// overflow-x: auto is a scroll container as a whole, on both axes at
-	// once, regardless of what overflow-y is set to, which would otherwise
-	// permanently block any sticky descendant from ever reaching a scroll
-	// ancestor further out. The header never fires its own scroll events
-	// (overflow: hidden, no direct user interaction), so it only ever gets
-	// written to here, never read from.
+	// The body owns vertical and horizontal scrolling. The header is a
+	// separate table above it, so body horizontal scroll mirrors into the
+	// header while vertical scroll reports to the mobile chrome.
 	useEffect(() => {
 		const scroll = scrollRef.current;
-		const topScroll = topScrollRef.current;
 		const headerScroll = headerScrollRef.current;
-		if (!scroll || !topScroll || !headerScroll) return;
+		if (!scroll || !headerScroll) return;
 
-		let syncing = false;
-		const onScroll = () => {
-			if (syncing) return;
-			syncing = true;
-			topScroll.scrollLeft = scroll.scrollLeft;
-			headerScroll.scrollLeft = scroll.scrollLeft;
-			syncing = false;
+		lastTableScrollRef.current = {
+			left: scroll.scrollLeft,
+			top: scroll.scrollTop,
 		};
-		const onTopScroll = () => {
-			if (syncing) return;
-			syncing = true;
-			scroll.scrollLeft = topScroll.scrollLeft;
-			headerScroll.scrollLeft = topScroll.scrollLeft;
-			syncing = false;
+
+		const onScroll = () => {
+			const previousScroll = lastTableScrollRef.current;
+			const horizontalDelta = Math.abs(scroll.scrollLeft - previousScroll.left);
+			const verticalDelta = Math.abs(scroll.scrollTop - previousScroll.top);
+			lastTableScrollRef.current = {
+				left: scroll.scrollLeft,
+				top: scroll.scrollTop,
+			};
+
+			headerScroll.scrollLeft = scroll.scrollLeft;
+			if (
+				window.matchMedia("(max-width: 768px)").matches &&
+				verticalDelta >= horizontalDelta * 2
+			) {
+				reportScrollTop(scroll.scrollTop, {
+					preserveCollapsedUntilTop: true,
+					reopenDistance: 48,
+				});
+			}
 		};
 
 		scroll.addEventListener("scroll", onScroll, { passive: true });
-		topScroll.addEventListener("scroll", onTopScroll, { passive: true });
+		reportScrollTop(scroll.scrollTop);
 		return () => {
 			scroll.removeEventListener("scroll", onScroll);
-			topScroll.removeEventListener("scroll", onTopScroll);
 		};
-	}, []);
+	}, [reportScrollTop]);
 
 	function toggleSort(key: SortKey) {
 		setSort((current) => {
@@ -442,20 +391,15 @@ export default function IndividualPerformanceTable({ users = [], isAllScope = fa
 
 	return (
 		<div className="flex h-full min-h-0 flex-col">
-			<div ref={topScrollRef} className={styles.topScrollbar} aria-hidden="true">
-				<div style={{ width: TABLE_MIN_WIDTH, height: 1 }} />
-			</div>
 			<div ref={headerScrollRef} className={styles.headerScroll}>
 				<div className={styles.tableInset}>
 				<table className={styles.table}>
-					<ColumnWidths widths={isPrinting ? PRINT_COLUMN_WIDTHS : COLUMN_WIDTHS} />
+					<ColumnWidths widths={COLUMN_WIDTHS} />
 					<thead>
 						<tr>
-							{!isPrinting && (
-								<th>
-									<SelectAllCheckbox users={sortedUsers} selectedUserIds={selectedUserIds} onChange={setSelectedUserIds} />
-								</th>
-							)}
+							<th>
+								<SelectAllCheckbox users={sortedUsers} selectedUserIds={selectedUserIds} onChange={setSelectedUserIds} />
+							</th>
 							<th aria-sort={ariaSortFor("name")}>
 								<SortableHeader label={currentSemesterCode ? `Names (${currentSemesterCode})` : "Names"} sortKey="name" sort={sort} onSort={toggleSort} />
 							</th>
@@ -474,7 +418,7 @@ export default function IndividualPerformanceTable({ users = [], isAllScope = fa
 			<div ref={scrollRef} className={styles.tableScroll}>
 				<div className={styles.tableInset}>
 				<table className={styles.table}>
-					<ColumnWidths widths={isPrinting ? PRINT_COLUMN_WIDTHS : COLUMN_WIDTHS} />
+					<ColumnWidths widths={COLUMN_WIDTHS} />
 					<tbody>
 						{sortedUsers.map((user) => {
 							const productions = user.productions || [];
@@ -491,7 +435,7 @@ export default function IndividualPerformanceTable({ users = [], isAllScope = fa
 							return (
 								<tr
 									key={user.id}
-									className={clsx("group", !isSelected && "print:hidden")}
+									className="group"
 									data-selected={isSelected || undefined}
 									onClick={(event) => {
 										const target = event.target as HTMLElement;
@@ -507,15 +451,13 @@ export default function IndividualPerformanceTable({ users = [], isAllScope = fa
 										toggleUserSelected(user.id);
 									}}
 								>
-									{!isPrinting && (
-										<td>
-											<Checkbox
-												checked={isSelected}
-												ariaLabel={`Select ${user.name}`}
-												onChange={() => toggleUserSelected(user.id)}
-											/>
-										</td>
-									)}
+									<td>
+										<Checkbox
+											checked={isSelected}
+											ariaLabel={`Select ${user.name}`}
+											onChange={() => toggleUserSelected(user.id)}
+										/>
+									</td>
 									<td>
 										<PersonLink userId={user.id} className={clsx(styles.nameLink, "inline-flex max-w-full items-center gap-3")}>
 											<span className="relative h-10 w-10 flex-none overflow-hidden rounded-full">
@@ -538,7 +480,6 @@ export default function IndividualPerformanceTable({ users = [], isAllScope = fa
 													<div className={styles.section}>
 														<ProgressItemList
 															groupLabel="Pre-Mid"
-															printGrid
 															items={user.presentationsBeforeMid.map((presentation) => ({
 																id: presentation.id,
 																name: presentation.name,
@@ -554,7 +495,6 @@ export default function IndividualPerformanceTable({ users = [], isAllScope = fa
 													<div className={styles.section}>
 														<ProgressItemList
 															groupLabel="Post-Mid"
-															printGrid
 															items={user.presentationsAfterMid.map((presentation) => ({
 																id: presentation.id,
 																name: presentation.name,
@@ -608,7 +548,7 @@ export default function IndividualPerformanceTable({ users = [], isAllScope = fa
 												<span className={clsx(styles.emptyCell, "flex-1")}>-</span>
 											) : null}
 											<span className={styles.gradeEditOverlay} data-grade-action-overlay aria-hidden="true">
-												<span className={styles.gradeEditIcon} />
+												<span className={styles.actionOverlayIcon} />
 											</span>
 										</div>
 									</td>

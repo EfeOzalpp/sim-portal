@@ -10,6 +10,7 @@ import { Alert } from "@/components/alert";
 import { Button } from "@/components/button";
 import { useToast } from "@/components/toast";
 import { getLabelColors } from "@/constants/labelColors";
+import styles from "@/app/individual/composition/GradeEditorModal.module.css";
 
 export type GradeValue = "P" | "NC" | "INC" | "W";
 export type GradeMap = Record<string, GradeValue | null | undefined>;
@@ -48,9 +49,9 @@ function GradeOptionButton({
 	return (
 		<button
 			type="button"
-			className="inline-flex min-h-9 min-w-[3.25rem] cursor-pointer items-center justify-center rounded-md border-0 bg-[var(--app-subtle-2)] px-2 [font:inherit] hover:bg-[var(--app-subtle-2-hover)] data-[selected=true]:font-semibold"
+			className="inline-flex min-h-9 min-w-[3.25rem] cursor-pointer items-center justify-center rounded-md border-0 bg-[var(--modal-surface-3)] px-2 [font:inherit] hover:bg-[var(--modal-surface-3-hover)] data-[selected=true]:font-semibold"
 			data-selected={selected ? "true" : undefined}
-			style={selectedColors ? { backgroundColor: selectedColors.bg, color: selectedColors.text } : undefined}
+			style={selectedColors ? { backgroundColor: selectedColors.bg, color: "var(--selected-checkbox-text)" } : undefined}
 			onClick={onClick}
 		>
 			<span>{grade}</span>
@@ -107,7 +108,7 @@ function GradeEditorForm({ user, value, onChange, onClose }: GradeEditorFormProp
 	useModalCloseGuard(JSON.stringify(draft) !== JSON.stringify(value) && !isSaving, true, handleSave);
 
 	return (
-		<div className="flex flex-col gap-6">
+		<div className={styles.root}>
 			{error && (
 				<Alert
 					description={error}
@@ -118,17 +119,17 @@ function GradeEditorForm({ user, value, onChange, onClose }: GradeEditorFormProp
 				/>
 			)}
 
-			<div className="flex flex-col gap-4">
+			<div className={styles.list}>
 				{semesters.length > 0 ? (
 					semesters.map((semester) => (
 						<div
 							key={semester.id}
-							className="grid grid-cols-[minmax(8rem,0.8fr)_minmax(0,1.2fr)] items-center gap-6 rounded-xl bg-[var(--app-subtle)] p-4 max-[768px]:grid-cols-1"
+							className={styles.row}
 						>
 							<h3 className="m-0">
 								{semester.name}
 							</h3>
-							<div className="flex min-w-0 flex-wrap items-center justify-end gap-3 max-[768px]:justify-start">
+							<div className={styles.grades}>
 								<span className="ui-label">Grade</span>
 								<div className="flex flex-wrap items-center gap-2">
 									{gradeOptions.map((grade) => (
@@ -148,14 +149,18 @@ function GradeEditorForm({ user, value, onChange, onClose }: GradeEditorFormProp
 				)}
 			</div>
 
-			<Button
-				type="button"
-				tone="success"
-				disabled={isSaving}
-				onClick={handleSave}
-			>
-				{isSaving ? "Saving..." : "Save grades"}
-			</Button>
+			<div className="flex justify-start">
+				<Button
+					surface="modal"
+					type="button"
+					tone="cta"
+					disabled={isSaving}
+					onClick={handleSave}
+					className="px-6!"
+				>
+					{isSaving ? "Saving..." : "Save grades"}
+				</Button>
+			</div>
 		</div>
 	);
 }
