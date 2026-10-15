@@ -88,6 +88,26 @@ export async function getAdjacentThursdays(id: string) {
 	});
 }
 
+export async function getPresentationTagSuggestions() {
+	return await action(async () => {
+		noStore();
+
+		const presentations = await prisma.presentation.findMany({
+			select: { tags: true },
+		});
+		const tags = new Set<string>();
+
+		for (const presentation of presentations) {
+			for (const tag of presentation.tags) {
+				const normalized = tag.trim();
+				if (normalized) tags.add(normalized);
+			}
+		}
+
+		return Array.from(tags).sort((a, b) => a.localeCompare(b));
+	});
+}
+
 export async function getFilteredThursdays(rawFilters: { semester?: string | string[]; semesterId?: string | string[]; thursdays?: string | string[] }) {
 	return await action(async () => {
 		noStore();

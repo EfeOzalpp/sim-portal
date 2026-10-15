@@ -14,6 +14,7 @@ import {
 	selectClearIconClassName,
 	selectContentClassName,
 	selectContentInModalClassName,
+	selectContentTitleClassName,
 	selectEmptyClassName,
 	selectFilterableActionsClassName,
 	selectFilterableHeaderClassName,
@@ -21,13 +22,15 @@ import {
 	selectIndicatorsClassName,
 	selectItemVariants,
 	selectOptionCheckboxClassName,
+	selectOptionCheckboxWrapperClassName,
 	selectOptionCheckmarkClassName,
+	selectOptionGroupLabelClassName,
+	selectOptionLabelClassName,
 	selectPlaceholderClassName,
 	selectSearchWrapperClassName,
 	selectSpinnerVariants,
 	selectTagClassName,
 	selectTagCommitButtonClassName,
-	selectTagCommitIconClassName,
 	selectTagDraftInputClassName,
 	selectTagRemoveClassName,
 	selectTagsBoxClassName,
@@ -84,9 +87,12 @@ export interface TagsSelectProps {
 	value?: string[];
 	onChange?: (value: string[]) => void;
 	placeholder?: string;
+	suggestedOptions?: SelectOption[];
+	suggestedLabel?: string;
 	disabled?: boolean;
 	status?: "error" | "";
 	className?: string;
+	inModal?: boolean;
 	/** Tags beyond this count collapse into a "+N" pill. */
 	maxTagCount?: number;
 }
@@ -136,6 +142,7 @@ function SearchBox({
 				onKeyDown={stopTypingPropagation}
 				placeholder={placeholder ?? "Search"}
 				prefix={<MaskIcon icon="search/search.svg" className={inputIconClassName} />}
+				variant="dropdown"
 				mode={filterTrigger ? "filter" : undefined}
 				filterTrigger={filterTrigger}
 				autoFocus
@@ -230,7 +237,11 @@ function SingleSelectImpl({
 			</Popover.Trigger>
 			<Popover.Portal>
 				<Popover.Content
-					className={clsx(selectContentClassName, inModal && selectContentInModalClassName)}
+					className={clsx(
+						selectContentClassName,
+						variant === "title" && selectContentTitleClassName,
+						inModal && selectContentInModalClassName,
+					)}
 					sideOffset={4}
 					align="start"
 					style={{ width: "var(--radix-popover-trigger-width)" }}
@@ -337,7 +348,7 @@ function MultiSelectImpl({
 					className={clsx(
 						selectTriggerVariants({ error }),
 						"group min-h-12 flex-wrap py-1.5!",
-						selectedOptions.length > 0 && "pl-2!",
+						selectedOptions.length > 0 && "pl-2",
 						className,
 					)}
 				>
@@ -410,7 +421,7 @@ function MultiSelectImpl({
 											}
 										}}
 									>
-										<span className="relative inline-flex h-4 w-4 flex-none">
+										<span className={selectOptionCheckboxWrapperClassName}>
 											<input
 												type="checkbox"
 												checked={isSelected}
@@ -421,7 +432,7 @@ function MultiSelectImpl({
 											/>
 											{isSelected && <MaskIcon icon="check/check.svg" className={selectOptionCheckmarkClassName} />}
 										</span>
-										<span className="min-w-0 flex-1 truncate font-semibold">{option.label}</span>
+										<span className={selectOptionLabelClassName}>{option.label}</span>
 									</div>
 								);
 							})
@@ -437,15 +448,20 @@ function TagsSelectImpl({
 	value = [],
 	onChange,
 	placeholder,
+	suggestedOptions = [],
+	suggestedLabel = "Suggested",
 	disabled,
 	status,
 	className,
+	inModal,
 	maxTagCount,
 }: TagsSelectProps) {
 	const [draft, setDraft] = useState("");
+	const [open, setOpen] = useState(false);
 	const error = status === "error";
 	const visibleTags = maxTagCount ? value.slice(0, maxTagCount) : value;
 	const overflowCount = value.length - visibleTags.length;
+	const hasSuggestions = suggestedOptions.length > 0;
 
 	function commitDraft() {
 		const next = draft.trim();
@@ -457,56 +473,139 @@ function TagsSelectImpl({
 		onChange?.(value.filter((current) => current !== tag));
 	}
 
+	function toggleSuggestion(tag: string) {
+		onChange?.(
+			value.includes(tag)
+				? value.filter((current) => current !== tag)
+				: [...value, tag],
+		);
+	}
+
 	return (
-		<div
-			className={clsx(
-				selectTriggerVariants({ error }),
-				selectTagsBoxClassName,
-				value.length > 0 && "pl-2!",
-				disabled && "cursor-not-allowed! opacity-60",
-				className,
-			)}
-		>
-			{visibleTags.map((tag) => (
-				<span key={tag} className={selectTagClassName}>
-					<span className="min-w-0 truncate">{tag}</span>
-					<span
-						role="button"
-						tabIndex={-1}
-						className={selectTagRemoveClassName}
-						aria-label={`Remove ${tag}`}
-						onClick={() => !disabled && removeTag(tag)}
+		<Popover.Root open={hasSuggestions ? open : false} onOpenChange={setOpen}>
+			<Popover.Anchor asChild>
+				<div
+					className={clsx(
+						selectTriggerVariants({ error }),
+						"group",
+						selectTagsBoxClassName,
+						value.length > 0 && "pl-2!",
+						disabled && "cursor-not-allowed! opacity-60",
+						className,
+					)}
+					data-state={open ? "open" : "closed"}
+					onClick={() => hasSuggestions && !disabled && setOpen(true)}
+					onFocusCapture={() => hasSuggestions && !disabled && setOpen(true)}
+				>
+					{visibleTags.map((tag) => (
+						<span key={tag} className={selectTagClassName}>
+							<span className="min-w-0 truncate">{tag}</span>
+							<span
+								role="button"
+								tabIndex={-1}
+								className={selectTagRemoveClassName}
+								aria-label={`Remove ${tag}`}
+								onClick={() => !disabled && removeTag(tag)}
+							>
+								<span className={selectClearIconClassName} aria-hidden="true" />
+							</span>
+						</span>
+					))}
+					{overflowCount > 0 && <span className={selectTagClassName}>+{overflowCount} more</span>}
+					<input
+						type="text"
+						value={draft}
+						disabled={disabled}
+						onFocus={() => hasSuggestions && setOpen(true)}
+						onChange={(event) => setDraft(event.target.value)}
+						onKeyDown={(event) => {
+							if (event.key === "Enter") {
+								event.preventDefault();
+								commitDraft();
+							}
+						}}
+						placeholder={value.length === 0 ? (placeholder ?? "Type and press Enter...") : ""}
+						className={selectTagDraftInputClassName}
+					/>
+					<Button
+						surface="modal"
+						variant="text"
+						type="button"
+						disabled={disabled || !draft.trim()}
+						onClick={(event) => {
+							event.stopPropagation();
+							commitDraft();
+						}}
+						aria-label="Enter tag"
+						className={selectTagCommitButtonClassName}
 					>
-						<span className={selectClearIconClassName} aria-hidden="true" />
-					</span>
-				</span>
-			))}
-			{overflowCount > 0 && <span className={selectTagClassName}>+{overflowCount} more</span>}
-			<input
-				type="text"
-				value={draft}
-				disabled={disabled}
-				onChange={(event) => setDraft(event.target.value)}
-				onKeyDown={(event) => {
-					if (event.key === "Enter") {
-						event.preventDefault();
-						commitDraft();
-					}
-				}}
-				placeholder={value.length === 0 ? (placeholder ?? "Type and press Enter...") : ""}
-				className={selectTagDraftInputClassName}
-			/>
-			<button
-				type="button"
-				tabIndex={-1}
-				disabled={disabled || !draft.trim()}
-				onClick={commitDraft}
-				aria-label="Add tag"
-				className={selectTagCommitButtonClassName}
-			>
-				<span className={selectTagCommitIconClassName} aria-hidden="true" />
-			</button>
-		</div>
+						Enter
+					</Button>
+					{hasSuggestions && (
+						<button
+							type="button"
+							tabIndex={-1}
+							disabled={disabled}
+							onClick={() => setOpen((current) => !current)}
+							aria-label="Show suggested tags"
+							className={selectClearButtonClassName}
+						>
+							<span className={selectChevronVariants({ variant: "default" })} aria-hidden="true" />
+						</button>
+					)}
+				</div>
+			</Popover.Anchor>
+			{hasSuggestions && (
+				<Popover.Portal>
+					<Popover.Content
+						className={clsx(selectContentClassName, inModal && selectContentInModalClassName)}
+						sideOffset={4}
+						align="start"
+						style={{ width: "var(--radix-popover-trigger-width)" }}
+						onOpenAutoFocus={(event) => event.preventDefault()}
+						onCloseAutoFocus={(event) => event.preventDefault()}
+					>
+						<div className={selectViewportClassName} role="listbox" aria-multiselectable="true">
+							<div className={selectOptionGroupLabelClassName}>{suggestedLabel}</div>
+							{suggestedOptions.map((option) => {
+								const isSelected = value.includes(option.value);
+								return (
+									<div
+										key={option.value}
+										role="option"
+										aria-selected={isSelected}
+										aria-disabled={option.disabled}
+										data-value={option.value}
+										tabIndex={option.disabled ? -1 : 0}
+										className={selectItemVariants({ selected: isSelected, disabled: option.disabled, highlightSelected: false })}
+										onClick={() => !option.disabled && toggleSuggestion(option.value)}
+										onKeyDown={(event) => {
+											if ((event.key === "Enter" || event.key === " ") && !option.disabled) {
+												event.preventDefault();
+												toggleSuggestion(option.value);
+											}
+										}}
+									>
+										<span className={selectOptionCheckboxWrapperClassName}>
+											<input
+												type="checkbox"
+												checked={isSelected}
+												disabled={option.disabled}
+												readOnly
+												tabIndex={-1}
+												className={selectOptionCheckboxClassName}
+											/>
+											{isSelected && <MaskIcon icon="check/check.svg" className={selectOptionCheckmarkClassName} />}
+										</span>
+										<span className={selectOptionLabelClassName}>{option.label}</span>
+									</div>
+								);
+							})}
+						</div>
+					</Popover.Content>
+				</Popover.Portal>
+			)}
+		</Popover.Root>
 	);
 }
 
@@ -528,10 +627,10 @@ function FilterableMultiSelectImpl({
 				<span className={selectFilterableLabelClassName}>{label}</span>
 				<div className={selectFilterableActionsClassName}>
 					{headerFilter}
-					<Button type="button" className="whitespace-nowrap" onClick={() => onChange?.(allValues)}>
+					<Button surface="modal" type="button" className="whitespace-nowrap" onClick={() => onChange?.(allValues)}>
 						Select all
 					</Button>
-					<Button type="button" className="whitespace-nowrap" onClick={() => onChange?.([])}>
+					<Button surface="modal" type="button" className="whitespace-nowrap" onClick={() => onChange?.([])}>
 						Unselect all
 					</Button>
 				</div>
