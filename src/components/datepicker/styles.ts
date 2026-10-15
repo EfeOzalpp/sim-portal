@@ -37,32 +37,32 @@ const RADIUS = 12;
 // sync with the matching app token (named alongside each value below) -
 // this file won't notice if styling-theme.css changes out from under it.
 const lightValues: DatePickerThemeValues = {
-	background: "#ffffff", // = --select-bg
-	elevatedBackground: "#ffffff", // = --input-dropdown-bg
-	border: "#d4d4da", // = --input-border
-	text: "#000000", // = --app-text
-	placeholder: "#5a5a5a", // = --input-placeholder
-	icon: "#646464", // = --input-icon
-	hoverBackground: "#ffffff", // = --select-bg-hover
-	hoverBorder: "#c7c7c7", // = --input-border-hover
+	background: "#ffffff", // = --modal-select-bg
+	elevatedBackground: "#ffffff", // = --contrast-surface-bg
+	border: "#d1d1da", // ~= --modal-select-border
+	text: "#0e1217", // = --app-text
+	placeholder: "#454545", // = --input-placeholder
+	icon: "#64748b", // = --input-icon
+	hoverBackground: "#fafafe", // ~= --modal-select-bg-hover
+	hoverBorder: "#bfc0ca", // ~= --modal-select-border-hover
 	focusShadow: "var(--input-hover-shadow)",
 	error: "#d36b6b", // = --input-error-border
 	primary: "#56a1e7", // = --select-checkbox-active-bg - a plain accent shown directly on the calendar surface, not paired with a light pill bg
 	primarySolidText: "#ffffff",
-	rangeBackground: "#d9ebfa", // = --select-active-bg
+	rangeBackground: "#d5e8f6", // ~= --select-active-bg
 	link: "#56a1e7", // = --select-checkbox-active-bg
 	linkHover: "#3d84cc", // darker shade of the above
 };
 
 const darkValues: DatePickerThemeValues = {
-	background: "rgba(54, 54, 54, 0.5)", // = --select-bg
-	elevatedBackground: "rgb(247, 247, 247)", // = --input-dropdown-bg
-	border: "rgba(54, 54, 54, 0.7)", // = --input-border
+	background: "#202027", // ~= --modal-select-bg
+	elevatedBackground: "#1d1d21", // ~= --input-modal-dropdown-bg
+	border: "#25252c", // ~= --modal-select-border
 	text: "#ffffff", // = --app-text
 	placeholder: "#f4f4f4", // = --input-placeholder
-	icon: "#ffffff", // = --input-icon
-	hoverBackground: "rgba(54, 54, 54, 0.7)", // = --select-bg-hover
-	hoverBorder: "rgba(123, 123, 123, 0.8)", // = --input-border-hover
+	icon: "#b7b7b7", // = --input-icon
+	hoverBackground: "#222229", // ~= --modal-select-bg-hover
+	hoverBorder: "#2d2d35", // ~= --modal-select-border-hover
 	focusShadow: "var(--input-hover-shadow)",
 	error: "#b36a6a", // = --input-error-border
 	primary: "#87b4de", // = --select-checkbox-active-bg - a plain accent shown directly on the calendar surface (dark), not paired with a light pill bg like --select-active-text now is

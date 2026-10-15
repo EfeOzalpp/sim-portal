@@ -1,5 +1,5 @@
 // The row holding one item's trigger plus its optional trailing "extra" content.
-export const collapseHeaderRowClassName = "flex items-stretch";
+export const collapseHeaderRowClassName = "flex min-w-0 items-stretch";
 
 // The clickable trigger itself, sized to share the row with any "extra"
 // content. Explicit appearance/border/bg/margin/padding/font reset because

@@ -12,11 +12,11 @@ export const alertVariants = cva(
 	{
 		variants: {
 			tone: {
-				success: "border-transparent bg-[var(--tone-success-bg)] text-[var(--tone-success-text)]",
-				danger: "border-transparent bg-[var(--tone-danger-bg)] text-[var(--tone-danger-text)]",
-				warning: "border-[var(--tone-warning-border)] bg-[var(--tone-warning-bg)] text-[var(--tone-warning-text)]",
+				success: "border-transparent bg-[var(--tone-success-bg)] text-[var(--tone-success-text)] [--tones-close-hover:var(--tones-success-close-hover,var(--tone-success-bg))]",
+				danger: "border-transparent bg-[var(--tone-danger-bg)] text-[var(--tone-danger-text)] [--tones-close-hover:var(--tones-danger-close-hover,var(--tone-danger-bg))]",
+				warning: "border-[var(--tone-warning-border)] bg-[var(--tone-warning-bg)] text-[var(--tone-warning-text)] [--tones-close-hover:var(--tones-warning-close-hover,var(--tone-warning-bg))]",
 				// Plain status/info messaging - not a success/danger/warning outcome.
-				neutral: "border-transparent bg-[var(--tone-neutral-bg)] text-[var(--tone-neutral-text)]",
+				neutral: "border-transparent bg-[var(--tone-neutral-bg)] text-[var(--tone-neutral-text)] [--tones-close-hover:var(--tones-neutral-close-hover,var(--tone-neutral-bg))]",
 			},
 		},
 		defaultVariants: { tone: "danger" },

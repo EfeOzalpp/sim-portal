@@ -1,19 +1,17 @@
-import type {
-	AnchorHTMLAttributes,
-	ButtonHTMLAttributes,
-	Ref,
-} from "react";
+import { Children, type AnchorHTMLAttributes, type ButtonHTMLAttributes, type ReactNode, type Ref } from "react";
 import Link from "next/link";
 import clsx from "clsx";
-import { buttonIconClassName, buttonVariants, type ButtonTone, type ButtonVariant } from "@/components/button/styles";
+import { buttonIconClassName, buttonVariants, type ButtonSurface, type ButtonTone, type ButtonVariant } from "@/components/button/styles";
 import { MaskIcon } from "@/theme/MaskIcon";
 import type { IconName } from "@/theme/icons";
 
-export type { ButtonTone, ButtonVariant } from "@/components/button/styles";
+export type { ButtonSurface, ButtonTone, ButtonVariant } from "@/components/button/styles";
 
 interface SharedButtonProps {
 	/** Controls the button's structure and visual treatment. */
 	variant?: ButtonVariant;
+	/** Whether --button-* resolves to the page tokens or the modal-scoped ones. */
+	surface?: ButtonSurface;
 	/** Changes only the semantic color palette. */
 	tone?: ButtonTone;
 	fullWidth?: boolean;
@@ -39,6 +37,14 @@ type AnchorButtonProps = SharedButtonProps &
 
 export type ButtonProps = NativeButtonProps | AnchorButtonProps;
 
+const labelClassName = "btn-label [text-box:trim-both_cap_alphabetic]";
+
+function wrapTextChildren(children: ReactNode) {
+	return Children.map(children, (child) =>
+		typeof child === "string" || typeof child === "number" ? <span className={labelClassName}>{child}</span> : child,
+	);
+}
+
 function ButtonIcon({ icon, variant, iconPosition }: { icon: IconName; variant: ButtonVariant; iconPosition: "start" | "end" }) {
 	return <MaskIcon icon={icon} className={buttonIconClassName(variant, iconPosition)} />;
 }
@@ -46,6 +52,7 @@ function ButtonIcon({ icon, variant, iconPosition }: { icon: IconName; variant: 
 export function Button(props: ButtonProps) {
 	const {
 		variant = "default",
+		surface = "modal",
 		tone = "default",
 		fullWidth = false,
 		className,
@@ -57,7 +64,7 @@ export function Button(props: ButtonProps) {
 		children,
 		...elementProps
 	} = props;
-	const finalClassName = clsx(buttonVariants({ variant, tone, fullWidth }), className);
+	const finalClassName = clsx(buttonVariants({ variant, surface, tone, fullWidth }), className);
 	const iconElement = icon && <ButtonIcon icon={icon} variant={variant} iconPosition={iconPosition} />;
 	// Only iconPosition="start" pins the icon absolutely (see
 	// buttonIconClassName) - the text needs a matching shift to clear it.
@@ -68,9 +75,9 @@ export function Button(props: ButtonProps) {
 			// whitespace-nowrap - without it, a long enough label (e.g. "Add
 			// Thursday") wraps to two lines instead of the button just growing to
 			// fit it on one.
-			<span className="inline-block whitespace-nowrap translate-x-[0.625rem]">{children}</span>
+			<span className="btn-label inline-block whitespace-nowrap translate-x-[0.625rem]">{children}</span>
 		) : (
-			children
+			wrapTextChildren(children)
 		);
 	const content =
 		iconPosition === "end" ? (

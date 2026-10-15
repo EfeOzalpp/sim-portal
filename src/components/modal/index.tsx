@@ -16,6 +16,7 @@ import {
 	modalDialogClassName,
 	modalDialogDefaultWidthClassName,
 	modalHeaderClassName,
+	modalHeaderMinimalClassName,
 	modalTitleClassName,
 } from "@/components/modal/styles";
 
@@ -25,6 +26,7 @@ interface ModalPopupProps {
 	children: ReactNode;
 	triggerClassName?: string;
 	dialogClassName?: string;
+	minimalHeader?: boolean;
 	open?: boolean;
 	defaultOpen?: boolean;
 	onOpenChange?: (open: boolean) => void;
@@ -36,6 +38,7 @@ export default function ModalPopup({
 	children,
 	triggerClassName,
 	dialogClassName,
+	minimalHeader = false,
 	open,
 	defaultOpen = false,
 	onOpenChange,
@@ -133,7 +136,7 @@ export default function ModalPopup({
 				aria-modal="true"
 				aria-labelledby={titleId}
 			>
-				<div className={modalHeaderClassName}>
+				<div className={minimalHeader ? modalHeaderMinimalClassName : modalHeaderClassName}>
 					<h3 id={titleId} className={modalTitleClassName}>
 						{title}
 					</h3>
@@ -168,13 +171,14 @@ export default function ModalPopup({
 						}}
 					>
 						<div className={modalCloseGuardActionsClassName}>
-							<Button type="button" onClick={() => setShowCloseGuard(false)}>
+							<Button surface="modal" type="button" tone="neutral" onClick={() => setShowCloseGuard(false)}>
 								Keep Editing
 							</Button>
 							{guardState?.canSave && (
 								<Button
+									surface="modal"
 									type="button"
-									tone="success"
+									tone="cta"
 									onClick={() => {
 										setShowCloseGuard(false);
 										guardState.onSave();
@@ -184,6 +188,7 @@ export default function ModalPopup({
 								</Button>
 							)}
 							<Button
+								surface="modal"
 								type="button"
 								tone="danger"
 								onClick={() => setIsOpen(false)}
@@ -200,7 +205,7 @@ export default function ModalPopup({
 	return (
 		<>
 			{triggerLabel !== undefined && (
-				<Button type="button" className={triggerClassName} onClick={() => setIsOpen(true)}>
+				<Button surface="page" type="button" className={triggerClassName} onClick={() => setIsOpen(true)}>
 					{triggerLabel}
 				</Button>
 			)}

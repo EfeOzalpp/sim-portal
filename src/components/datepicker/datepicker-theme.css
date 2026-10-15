@@ -9,6 +9,9 @@
 
 html[data-theme] .input-theme-surface .ant-picker {
   width: 100%;
+	background: var(--select-bg);
+	border-color: var(--select-border, var(--input-border));
+	color: var(--input-text);
 }
 
 html[data-theme] .ant-picker {
@@ -17,8 +20,22 @@ html[data-theme] .ant-picker {
 	padding-block: 0.625rem;
 }
 
+html[data-theme] .input-theme-surface .ant-picker .ant-picker-input > input {
+	color: var(--input-text);
+}
+
+html[data-theme] .input-theme-surface .ant-picker .ant-picker-input > input::placeholder {
+	color: var(--input-placeholder);
+}
+
 html[data-theme] .ant-picker:not(.ant-picker-disabled):hover,
 html[data-theme] .input-theme-surface .ant-picker:hover {
+	background: var(--select-bg-hover);
+	border-color: var(--input-border-hover, var(--select-border-hover)) !important;
+}
+
+html[data-theme] .input-theme-surface .ant-picker.ant-picker-focused {
+	border-color: var(--input-border-hover, var(--select-border-hover)) !important;
 	box-shadow: var(--input-hover-shadow);
 }
 
@@ -61,22 +78,22 @@ html[data-theme] .input-theme-surface .ant-picker.ant-picker-range .ant-picker-s
 	opacity: 0.75;
 }
 
-/* --input-modal-dropdown-bg/-text: same tokens Select's own dropdown uses
+/* --input-modal-dropdown-bg/-text: same modal overrides Select's own dropdown uses
    when inModal (see selectContentInModalClassName) - DatePicker only ever
    renders inside a modal in this app, so it can take them unconditionally
-   instead of needing its own inModal prop. Falls back to --input-dropdown-bg/
-   --input-text (this popover's old, always-light look) wherever the -modal-
+   instead of needing its own inModal prop. Falls back to --contrast-surface-bg/
+   --input-text (this popover/title dropdown look) wherever the -modal-
    tokens aren't defined (light theme). */
 html[data-theme] .ant-picker-panel-container {
-	background: var(--input-modal-dropdown-bg, var(--input-dropdown-bg));
-	border: 1px solid var(--input-border);
+	background: var(--input-modal-dropdown-bg, var(--contrast-surface-bg));
+	border: 1px solid var(--modal-select-border, var(--select-border, var(--input-border)));
 	border-radius: 12px;
 }
 
 html[data-theme] .ant-picker-panel,
 html[data-theme] .ant-picker-header {
-	background: var(--input-modal-dropdown-bg, var(--input-dropdown-bg));
-	border-color: var(--input-border);
+	background: var(--input-modal-dropdown-bg, var(--contrast-surface-bg));
+	border-color: var(--modal-select-border, var(--select-border, var(--input-border)));
 	color: var(--input-modal-dropdown-text, var(--input-text));
 }
 
@@ -114,7 +131,7 @@ html[data-theme] .ant-picker-super-next-icon::after {
 }
 
 html[data-theme] .ant-picker-cell-in-view .ant-picker-cell-inner:hover {
-	border-color: var(--input-border-hover);
+	border-color: var(--modal-select-border-hover, var(--select-border-hover, var(--input-border-hover)));
 }
 
 html[data-theme] .ant-picker-cell-in-view.ant-picker-cell-today .ant-picker-cell-inner::before {

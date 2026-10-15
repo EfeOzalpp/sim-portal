@@ -6,18 +6,13 @@ html[data-color-theme="purple-green"][data-theme="light"] {
 
 	--app-icon: #445841;
 
-	--brand-color: rgb(73, 131, 57);
 	--profile-indicator: #79ac55;
 	--app-title: #b13991;
 
-	--main-border: #ffffff;
+	--page-bg-border: #ffffff;
 	--main-border-2: #c9cfdb;
 
 	--app-bg: linear-gradient(135deg, #dcbbeb 0%, #ffeeff 28%, #b5a8d4 70%);
-
-	/* main-frame scrollbar - same formula as default.css, computed off this theme's own --app-theme */
-	--main-scrollbar-thumb: hsl(from var(--app-theme) h calc(s * 0.6) calc(l * 1.3));
-	--main-scrollbar-thumb-hover: hsl(from var(--main-scrollbar-thumb) h s calc(l * 1.5));
 
 	/* Nav-area theme (green) - NavBar/MobileNavBar's variant="nav" buttons, all breakpoints. */
 	--nav-hover-bg: rgb(235, 246, 239);
@@ -25,19 +20,32 @@ html[data-color-theme="purple-green"][data-theme="light"] {
 	--nav-active-text: #ffffff;
 
 	/* Select's variant="title" - its own green-tinted box; search box inside the dropdown reuses these same two. */
-	--green-select-bg: #b575bb;
-	--green-text: rgb(255, 255, 255);
-	--green-select-bg-hover: #704e74;
-	--green-select-bg-active: #a369a8;
-	--green-select-bg-active-hover: #915e96;
-	--green-select-border: #d4aed4;
+	--title-select-bg: #b575bb;
+	--title-select-text-open: rgb(255, 255, 255);
+	--title-select-bg-hover: #704e74;
+	--title-select-bg-open: #a369a8;
+	--title-select-bg-open-hover: #915e96;
 
-	/* Theme-colored checkbox tokens */
-	--green-bg: hsl(from var(--page-color, #f1f5f9) 220 calc(s * 0.4) calc(l * 0.96));
-	--green-active-bg: hsl(from var(--page-color, #f1f5f9) 220 calc(s * 1.2) calc(l * 0.50));
-	--green-hover: hsl(from var(--green-bg) h s calc(l * 0.94));
-	--green-border-checkbox: hsl(from var(--green-bg) h calc(s * 1.2) calc(l * 0.70));
-	--green-active-checkbox: hsl(from var(--green-bg) h calc(s * 1.2) calc(l * 0.2));
+	/* nav section label (e.g. "Links") */
+	--nav-label: var(--app-icon);
+
+	/* Page elements - text inside the page canvas */
+	--page-based-text: var(--app-text);
+	--page-based-text-subtle: var(--subtle-text);
+	--page-based-accent: var(--app-title);
+
+	/* Page controls */
+
+	--page-input-border: hsl(from var(--app-theme) h calc(s * 0.25) calc(l * 0.88));
+	--page-input-border-hover: hsl(from var(--app-theme) h calc(s * 0.35) calc(l * 0.78));
+	--page-input-text: var(--subtle-text);
+	--page-input-bg: hsl(from var(--app-theme) h calc(s * 0.14) calc(l * 0.98));
+	--page-input-bg-hover: hsl(from var(--app-theme) h calc(s * 0.18) calc(l * 0.94));
+	--page-input-search: #64748b;
+	--page-input-search-hover: #0f172a;
+	--page-input-search-hover-bg: hsl(from var(--page-button-bg-hover) h calc(s * 0.2) calc(l * 0.95));
+	--page-card-hover: hsl(from var(--page-bg) h calc(s * 0.8) calc(l * 0.96) / 0.55);
+
 }
 
 html[data-color-theme="purple-green"][data-theme="dark"] {
@@ -45,37 +53,84 @@ html[data-color-theme="purple-green"][data-theme="dark"] {
 
 	--app-icon: #fef5ff;
 
-	--brand-color: #a5dcb2;
 	
 	--profile-indicator: #7cbb77;
 	--app-title: #fcf6ff;
 
-	--main-border: rgb(223, 181, 232);
+	--page-bg-border: rgb(223, 181, 232);
 	--main-border-2: rgba(114, 94, 117, 0.6);
 
 	--app-bg: linear-gradient(135deg, #876a9a 0%, #b992c0 28%, #7068a9 70%);
 
-	/* main-frame scrollbar - same as default.css, not yet re-tuned for this theme */
-	--main-scrollbar-thumb: rgba(107, 142, 190, 0.35);
-	--main-scrollbar-thumb-hover: rgba(126, 146, 160, 0.55);
-
 	/* Select's variant="title" - green, matching light. */
-	--green-select-bg: #eac5f2;
-	--green-text: rgb(37, 35, 37);
-	--green-select-bg-hover: #ae88b6;
-	--green-select-bg-active: #e4beeb;
-	--green-select-bg-active-hover: #ba9cc1;
-	--green-select-border: #ddb7e5;
+	--title-select-bg: #eac5f2;
+	--title-select-text-open: rgb(37, 35, 37);
+	--title-select-bg-hover: #ae88b6;
+	--title-select-bg-open: #e4beeb;
+	--title-select-bg-open-hover: #ba9cc1;
+
+	/* nav section label (e.g. "Links") */
+	--nav-label: var(--app-icon);
+
+	/* Page elements - text inside the page canvas */
+	--page-based-text: var(--app-text);
+	--page-based-text-subtle: var(--subtle-text);
+	--page-based-accent: var(--app-title);
+
+	/* Page controls */
+
+	--page-input-bg: hsl(0, 0%, 28%);
+	--page-input-bg-hover: hsl(from var(--app-theme) h calc(s * 0.5) calc(l * 0.82));
+	--page-input-border: hsl(from var(--app-theme) h calc(s * 0.6) calc(l * 1.1));
+	--page-input-border-hover: hsl(from var(--app-theme) h calc(s * 0.75) calc(l * 1.35));
+	--page-input-text: var(--subtle-text);
+	--page-input-search: #e4e4e4;
+	--page-input-search-hover: #ffffff;
+	--page-input-search-hover-bg: hsl(from var(--page-button-bg-hover) h s calc(l * 1.1));
 
 	/* Nav-area theme (green) - green, matching light. */
 	--nav-hover-bg: rgb(40, 41, 40);
 	--nav-active-bg: rgb(158, 207, 157);
 	--nav-active-text: #000000;
 
-	/* Theme-colored checkbox tokens */
-	--green-bg: hsl(from var(--page-color) 220 calc(s * 1.2) calc(l * 5.4));
-	--green-active-bg: hsl(from var(--page-color) 220 calc(s * 5.4) calc(l * 5.4));
-	--green-hover: hsl(from var(--green-bg) h s calc(l * 0.9));
-	--green-border-checkbox: hsl(from var(--green-bg) h calc(s * 0.5) calc(l * 0.5));
-	--green-active-checkbox: hsl(from var(--green-bg) h s calc(l * 5.2));
+
+	/* page canvas extras (moved from styling-theme.css) */
+	--content-shadow: 0 0 24px rgba(255, 255, 255, 0);
+	--page-surface-base: hsl(264, 0%, 16%);
+	--page-card-hover: hsl(from var(--page-surface-base) h s calc(l * 1.22) / 0.65);
+
+	/* individual progress items */
+	--app-ind-progress-surface: var(--page-bg);
+	--app-ind-progress-surface-selected: hsl(from var(--page-surface-base) h calc(s * 1) calc(l * 1.8));
+	--app-ind-progress-surface-hover: hsl(from var(--page-surface-base) h calc(s * 1.1) calc(l * 1.3));
+
+	--table-row-border: hsl(from var(--page-surface-base) h calc(s * 1.2) calc(l * 1.5));
+	--table-row-border-hover: hsl(from var(--table-row-border) h calc(s * 0.8) calc(l * 1.5));
+
+	/* add new item border */
+	--card-border: hsl(from var(--table-row-border) h s calc(l * 1.4));
+	--card-border-hover: hsl(from var(--card-border) h s calc(l * 1.1));
+
+	/* action mode icon drop-shadow */
+	--action-mode-icon-ds: drop-shadow(0px 0px 16px hsl(from var(--elevated-surface) h s calc(l * 0.6)));
+
+	/* elevated surface */
+	--elevated-surface: rgba(255, 255, 255, 0.1);
+	--elevated-surface-hover: hsl(from var(--page-surface-base) h s calc(l * 1.4));
+	--elevated-surface-border: hsl(from var(--page-surface-base) h s calc(l * 0.1) / 0.2);
+
+	/* elevated surface labels (colorful labels live in constants/labelColors) */
+	--elevated-surface-2: transparent;
+	--elevated-surface-hover-2: hsl(from var(--page-surface-base) h s calc(l * 2));
+	--elevated-2-label-bg: hsl(from var(--elevated-surface-2) h calc(s * 1.1) calc(l * 2));
+	--elevated-2-label-text: var(--subtle-text);
+
+	/* page button / title select text */
+	--page-select-text: #e9e9e9;
+	--page-select-text-hover: black;
+
+	/* card overlay buttons */
+	--button-overlay-bg: hsl(from var(--page-button-bg) h s calc(l * 1.1));
+	--button-overlay-bg-hover: hsl(from var(--page-button-bg-hover) h s calc(l * 1.6));
+	--button-delete-overlay-bg-hover: hsl(from var(--action-delete-bg-hover) h s calc(l * 0.7));
 }

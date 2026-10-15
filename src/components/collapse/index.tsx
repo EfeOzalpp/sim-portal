@@ -67,7 +67,11 @@ export function Collapse({ items, defaultValue, value, onValueChange, className 
 				const contentId = `collapse-content-${item.value}`;
 
 				return (
-					<div key={item.value} className={item.itemClassName} data-state={isOpen ? "open" : "closed"}>
+					<div
+						key={item.value}
+						className={item.itemClassName}
+						data-state={isOpen ? "open" : "closed"}
+					>
 						<div className={clsx(collapseHeaderRowClassName, item.headerClassName)}>
 							<button
 								type="button"

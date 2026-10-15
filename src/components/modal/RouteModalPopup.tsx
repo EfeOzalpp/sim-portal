@@ -9,6 +9,7 @@ interface RouteModalPopupProps {
 	title: ReactNode;
 	children: ReactNode;
 	dialogClassName?: string;
+	minimalHeader?: boolean;
 }
 
 export default function RouteModalPopup({
@@ -16,6 +17,7 @@ export default function RouteModalPopup({
 	title,
 	children,
 	dialogClassName,
+	minimalHeader = false,
 }: RouteModalPopupProps) {
 	const [isOpen, setIsOpen] = useState(true);
 	const router = useRouter();
@@ -41,6 +43,7 @@ export default function RouteModalPopup({
 			}}
 			title={title}
 			dialogClassName={dialogClassName}
+			minimalHeader={minimalHeader}
 		>
 			{children}
 		</ModalPopup>

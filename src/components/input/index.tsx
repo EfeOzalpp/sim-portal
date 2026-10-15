@@ -8,19 +8,21 @@ import {
 	inputIconClassName,
 	inputSpinnerClassName,
 	inputWrapperVariants,
+	type InputVariant,
 } from "@/components/input/styles";
 import { MaskIcon } from "@/theme/MaskIcon";
 
 interface SharedInputProps {
 	status?: "error" | "warning" | "";
+	variant?: InputVariant;
 	className?: string;
 }
 
-// The two right-hand-side behaviors are mutually exclusive by construction -
-// "clearable" (an "x" once there's a value, or a spinner while `loading`) and
-// "filter" (embeds `filterTrigger` instead) can't both be active on the same
-// input, since they're one `mode` field rather than independent props.
-export type InputMode = "clearable" | "filter";
+// The right-hand-side behaviors are mutually exclusive by construction -
+// "clearable" (an "x" once there's a value, or a spinner while `loading`),
+// "filter" (embeds `filterTrigger`) and "action" (embeds `action`) can't be
+// combined on the same input, since they're one `mode` field rather than independent props.
+export type InputMode = "clearable" | "filter" | "action";
 
 export interface InputProps
 	extends SharedInputProps,
@@ -33,6 +35,8 @@ export interface InputProps
 	loading?: boolean;
 	/** mode="filter" only - the trigger rendered on the field's right edge. */
 	filterTrigger?: ReactNode;
+	/** mode="action" only - an icon button rendered on the field's right edge (see inputActionButtonClassName). */
+	action?: ReactNode;
 	ref?: Ref<HTMLInputElement>;
 }
 
@@ -47,11 +51,13 @@ function mergeRefs(...refs: Array<Ref<HTMLInputElement> | undefined>) {
 
 export function Input({
 	status,
+	variant = "modal",
 	className,
 	prefix,
 	mode,
 	loading,
 	filterTrigger,
+	action,
 	value,
 	onChange,
 	ref,
@@ -85,13 +91,13 @@ export function Input({
 				ref={mergeRefs(inputRef, ref)}
 				value={value}
 				onChange={onChange}
-				className={clsx(inputFieldVariants({ status: cvaStatus }), className)}
+				className={clsx(inputFieldVariants({ status: cvaStatus, variant }), className)}
 			/>
 		);
 	}
 
 	return (
-		<span className={inputWrapperVariants({ status: cvaStatus })}>
+		<span className={inputWrapperVariants({ status: cvaStatus, variant })}>
 			{prefix}
 			<input
 				{...props}
@@ -119,6 +125,7 @@ export function Input({
 				)
 			)}
 			{mode === "filter" && filterTrigger}
+			{mode === "action" && action}
 		</span>
 	);
 }
@@ -129,12 +136,12 @@ export interface TextAreaProps
 	ref?: Ref<HTMLTextAreaElement>;
 }
 
-export function TextArea({ status, className, ref, ...props }: TextAreaProps) {
+export function TextArea({ status, variant = "modal", className, ref, ...props }: TextAreaProps) {
 	return (
 		<textarea
 			{...props}
 			ref={ref}
-			className={clsx(inputFieldVariants({ status: status || "none" }), "resize-y", className)}
+			className={clsx(inputFieldVariants({ status: status || "none", variant }), "resize-y rounded-[var(--textarea-radius,0.75rem)]!", className)}
 		/>
 	);
 }

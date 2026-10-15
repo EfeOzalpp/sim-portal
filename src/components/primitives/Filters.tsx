@@ -3,7 +3,7 @@
 import { useURLFilter } from "@/hooks/useURLFilter";
 import { Input, InputProps, type InputMode } from "@/components/input";
 import { Select, SingleSelectProps } from "@/components/select";
-import { inputIconClassName } from "@/components/input/styles";
+import { inputLargeIconClassName } from "@/components/input/styles";
 import { MaskIcon } from "@/theme/MaskIcon";
 
 interface FilterInputProps extends Omit<InputProps, "value" | "onChange" | "loading" | "mode"> {
@@ -26,7 +26,7 @@ export function FilterInput({ query = "search", placeholder = "Search", classNam
 			mode={resolvedMode}
 			loading={resolvedMode === "clearable" ? isPending : undefined}
 			filterTrigger={resolvedMode === "filter" ? filterTrigger : undefined}
-			prefix={<MaskIcon icon="search/search.svg" className={inputIconClassName} />}
+			prefix={<MaskIcon icon="search/search.svg" className={inputLargeIconClassName} />}
 		/>
 	);
 }

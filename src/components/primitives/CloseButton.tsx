@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import Block from "@/components/primitives/Block";
+import Link from "next/link";
 import closeIcon from "@/theme/assets/close/close.svg";
 
 interface CloseButtonProps {
@@ -9,10 +9,8 @@ interface CloseButtonProps {
 
 export default function CloseButton({ href, className }: CloseButtonProps) {
   return (
-    <Block
-      as="a"
+    <Link
       href={href}
-      pressable
       aria-label="Close"
       className={clsx(
         "inline-flex h-10 w-10 items-center justify-center rounded-2xl text-[var(--app-icon)] hover:bg-[var(--nav-button-bg-hover)] hover:text-[var(--app-text)]",
@@ -27,6 +25,6 @@ export default function CloseButton({ href, className }: CloseButtonProps) {
         }}
         aria-hidden="true"
       />
-    </Block>
+    </Link>
   );
 }
