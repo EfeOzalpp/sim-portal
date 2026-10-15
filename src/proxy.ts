@@ -4,6 +4,10 @@ import { isAdminRole } from "@/constants/roles";
 
 // Middleware to handle authentication, authorization, and route protection
 export default auth((req) => {
+  if (process.env.NODE_ENV === "development" && process.env.AUTH_DEV_BYPASS === "true") {
+    return NextResponse.next();
+  }
+
   const isLoggedIn = !!req.auth;
   const isAdmin = isAdminRole(req.auth?.user?.role);
   const { pathname } = req.nextUrl;

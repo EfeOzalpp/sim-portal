@@ -5,7 +5,10 @@ import { cache } from "react";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 
 import { prisma } from "@/database";
+import { ROLES } from "@/constants/roles";
 
+const isDevAuthBypassEnabled =
+  process.env.NODE_ENV === "development" && process.env.AUTH_DEV_BYPASS === "true";
 
 // Configure NextAuth. `auth` itself isn't request-memoized by next-auth - every
 // call re-runs the jwt callback below, which does its own prisma.user.findUnique -
@@ -112,8 +115,43 @@ const { handlers, signIn, signOut, auth: uncachedAuth } = NextAuth({
   },
 });
 
+async function getDevBypassSession() {
+  const dbUser = await prisma.user.findFirst({
+    where: { role: ROLES.admin },
+    select: {
+      id: true,
+      email: true,
+      image: true,
+      name: true,
+      role: true,
+    },
+    orderBy: { name: "asc" },
+  });
+
+  if (!dbUser) return null;
+
+  return {
+    user: {
+      id: dbUser.id,
+      email: dbUser.email,
+      image: dbUser.image,
+      name: dbUser.name,
+      role: dbUser.role,
+    },
+    expires: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
+  };
+}
+
 // Every call site (layout, pages, form-content composition files, etc.) calls
 // auth() independently and expects its own DB round trip - cache() collapses
 // all of those into one prisma lookup per request instead of one per call site.
-export const auth = cache(uncachedAuth);
+const cachedAuth = cache((...args: any[]) => {
+  if (isDevAuthBypassEnabled && args.length === 0) {
+    return getDevBypassSession();
+  }
+
+  return (uncachedAuth as (...authArgs: any[]) => ReturnType<typeof uncachedAuth>)(...args);
+});
+
+export const auth = cachedAuth as typeof uncachedAuth;
 export { handlers, signIn, signOut };

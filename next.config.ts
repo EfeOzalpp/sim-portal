@@ -15,6 +15,7 @@ const imageRemotePatterns = imageOrigin
 
 // Next.js configuration for the application
 const nextConfig: NextConfig = {
+	allowedDevOrigins: ["192.168.1.203"],
 	turbopack: {
 		root: __dirname,
 	},

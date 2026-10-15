@@ -1,10 +1,15 @@
 "use server";
 
 import { auth, signIn, signOut } from "@/authentication";
+import { redirect } from "next/navigation";
 import { prisma } from "@/database";
 import { isAdminRole } from "@/constants/roles";
 
 export async function logIn() {
+	if (process.env.NODE_ENV === "development" && process.env.AUTH_DEV_BYPASS === "true") {
+		redirect("/users");
+	}
+
 	await signIn("google");
 }
 
