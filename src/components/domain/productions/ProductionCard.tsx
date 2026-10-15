@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import PersonLink from "@/components/domain/profile/PersonLink";
 import EditThursdayButton from "@/components/domain/productions/EditThursdayButton";
-import { type ButtonSurface } from "@/components/button";
+import { Button, type ButtonSurface } from "@/components/button";
 import { MaskIcon } from "@/theme/MaskIcon";
 import { isAdminRole } from "@/constants/roles";
 import { formatShortMonthDayYear } from "@/constants/date-format";
@@ -53,6 +53,7 @@ export default async function ProductionCard({
 			</h3>
 			{(surface === "modal" || (isAdmin && showEditButton)) && (
 				<div className="flex shrink-0 items-center gap-2">
+					{surface === "modal" && <Button surface="modal" variant="tool" type="button" icon="download/download.svg" aria-label="Print production" title="Print production" />}
 					{isAdmin && showEditButton && <EditThursdayButton thursdayId={thursday.id} surface={surface} />}
 				</div>
 			)}

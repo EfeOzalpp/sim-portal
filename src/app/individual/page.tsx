@@ -85,7 +85,12 @@ export default async function IndividualPage({ searchParams }: IndividualPagePro
 							actions={<EditGradesButton />}
 							tools={<ThursdayScopeFilterPopover currentSemesterId={semesterId ?? ALL_SEMESTERS_VALUE} />}
 							status={<SelectedCountLabel />}
-
+							printLabel="PDF Selected"
+							csvLabel="CSV Selected"
+							utilities={[
+								{ label: "PDF All", icon: "download/download.svg" },
+								{ label: "CSV All", icon: "download/download.svg" },
+							]}
 						/>
 						<PageBar />
 						<div data-page-surface className="min-h-0 flex-1 bg-[var(--page-bg)]">

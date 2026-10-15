@@ -64,8 +64,4 @@
 		margin: 0.25in 0.3in;
 	}
 
-	/* Set on every sibling along an element's ancestor chain right before window.print(), to isolate just that one element's subtree in the printed output. */
-	[data-print-hidden="true"] {
-		display: none !important;
-	}
 }

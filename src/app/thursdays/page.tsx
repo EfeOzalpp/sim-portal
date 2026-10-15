@@ -265,7 +265,12 @@ export default async function Thursdays({ searchParams }: ThursdaysProps) {
             </>
           ) : undefined}
           status={<SelectedThursdaysCountLabel />}
-
+          printLabel="PDF Selected"
+          csvLabel="CSV Selected"
+          utilities={[
+            { label: "PDF All", icon: "download/download.svg" },
+            { label: "CSV All", icon: "download/download.svg" },
+          ]}
         />
         <PageCard data-full-bleed-content className="flex h-full min-h-0 flex-col">
           <PageBar />

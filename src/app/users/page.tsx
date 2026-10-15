@@ -168,7 +168,9 @@ export default async function UsersPage({ searchParams }: UsersProps) {
 						status={viewingCount !== undefined ? (
 							<span className="whitespace-nowrap text-sm font-semibold text-[var(--page-bar-label,var(--app-text))]">{viewingCount} people</span>
 						) : undefined}
-
+						printLabel="Export PDF"
+						csvLabel="Export CSV"
+						utilities={isAdmin ? [{ label: "Import CSV", icon: "import/import.svg" }] : undefined}
 					/>
 					<ActionModePageContent>
 						<PageCard data-full-bleed-content className="flex h-full min-h-0 flex-col">

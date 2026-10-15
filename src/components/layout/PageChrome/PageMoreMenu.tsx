@@ -51,6 +51,23 @@ export default function PageMoreMenu({ items = [], printLabel, csvLabel }: PageM
 						</button>
 					),
 				)}
+				{printLabel && (
+					<button
+						type="button"
+						role="menuitem"
+						className={itemClassName}
+						onClick={() => setOpen(false)}
+					>
+						<MaskIcon icon="download/download.svg" className={actionButtonIconClassName} />
+						{printLabel}
+					</button>
+				)}
+				{csvLabel && (
+					<button type="button" role="menuitem" className={itemClassName} onClick={() => setOpen(false)}>
+						<MaskIcon icon="download/download.svg" className={actionButtonIconClassName} />
+						{csvLabel}
+					</button>
+				)}
 			</div>
 		</Popover>
 	);
