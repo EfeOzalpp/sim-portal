@@ -15,11 +15,12 @@
 /*
  * The app's design tokens are just colors now (see styling-theme.css) —
  * spacing, radius, border-width, and type all use Tailwind's own scale
- * directly. The one exception is the heading font: "Sour Gummy" has no
- * Tailwind default equivalent, so it's registered here to get a real,
- * readable `font-heading` utility instead of an arbitrary-value bracket.
+ * directly. The exceptions are the self-hosted fonts: Figtree replaces the
+ * default `font-sans` stack, and "Sour Gummy" is registered as a real
+ * `font-heading` utility instead of an arbitrary-value bracket.
  */
 @theme {
+	--font-sans: "Figtree", ui-sans-serif, system-ui, sans-serif;
 	--font-heading: "Sour Gummy", var(--font-sans);
 }
 

@@ -1,13 +1,13 @@
 import Link from "next/link";
 import PersonLink from "@/components/domain/profile/PersonLink";
-import SemesterBadge from "@/components/domain/productions/SemesterBadge";
 import { formatNiceListFromArray } from "@/helpers";
 import { MaskIcon } from "@/theme/MaskIcon";
 import { Prisma } from "@prisma/client";
 import { formatShortMonthDayYear } from "@/constants/date-format";
+import styles from "@/components/domain/productions/PresentationCard.module.css";
 
 const metaIconClassName = "h-4 w-4 flex-none bg-[var(--app-text)] [mask-position:center] [mask-repeat:no-repeat] [mask-size:contain]";
-const viewArrowIconClassName = "h-4 w-4 flex-none bg-[var(--app-text)] [mask-position:center] [mask-repeat:no-repeat] [mask-size:contain]";
+const viewArrowIconClassName = "h-5 w-5 flex-none bg-[var(--app-text)] [mask-position:center] [mask-repeat:no-repeat] [mask-size:contain]";
 
 type PresentationWithPresenters = Prisma.PresentationGetPayload<{
   include: {
@@ -51,7 +51,7 @@ export default function PresentationCard({
       <PersonLink
         key={`author.id:${author.id}`}
         userId={author.id}
-        className="text-inherit! no-underline underline-offset-[0.14em] hover:text-[var(--brand-color)]! hover:underline"
+        className="text-inherit! no-underline underline-offset-[0.14em] hover:text-[var(--inline-link-hover)]! hover:underline"
       >
         {author.name}
       </PersonLink>
@@ -59,13 +59,13 @@ export default function PresentationCard({
   ));
 
   const thursdayId = (presentation as any).production?.thursday_id;
-  const semesterName = (presentation as any).production?.thursday?.semester?.name;
   const thursdayDate = (presentation as any).production?.thursday?.date;
   const formattedDate = formatShortMonthDayYear(thursdayDate);
 
   if (!isUserProfile) {
     return (
-      <div className="my-3 grid w-full grid-cols-1 items-baseline gap-1 text-inherit no-underline min-[768px]:grid-cols-[minmax(10rem,14rem)_minmax(0,1fr)] min-[768px]:gap-4">
+      <div className={styles.container}>
+      <div className={styles.row}>
         <div className="flex min-w-0 flex-col gap-1 leading-[1.4]">
           <div>{presentation.name}</div>
         </div>
@@ -83,12 +83,12 @@ export default function PresentationCard({
           </div>
         </div>
       </div>
+      </div>
     );
   }
 
   const cardContent = (
     <>
-      <SemesterBadge name={semesterName} />
       <h4 className="m-0">{presentation.name}</h4>
       <div className="mt-1 flex w-full flex-row flex-wrap items-baseline gap-x-4 gap-y-2 [&_div]:m-0">
         {presentation.about !== "" ? (
@@ -121,7 +121,7 @@ export default function PresentationCard({
     return (
       <Link
         href={`/thursdays/${thursdayId}`}
-        className="group relative flex w-full flex-col gap-2 rounded-xl bg-[var(--app-subtle)] p-4 text-inherit no-underline hover:brightness-95 dark:hover:brightness-125"
+        className="group relative flex w-full flex-col gap-2 border-b border-b-[var(--modal-separator)] p-4 text-inherit no-underline hover:bg-[var(--modal-surface-2)] hover:brightness-95 dark:hover:brightness-125"
       >
         {cardContent}
       </Link>
@@ -129,7 +129,7 @@ export default function PresentationCard({
   }
 
   return (
-    <div className="relative flex w-full flex-col gap-2 rounded-xl bg-[var(--app-subtle)] p-4">
+    <div className="relative flex w-full flex-col gap-2 border-b border-b-[var(--modal-separator)] p-4">
       {cardContent}
     </div>
   );

@@ -3,6 +3,7 @@ import { Metadata } from "next";
 
 // Global styles (side-effect only - order matters for cascade layers)
 import "@/theme/fonts/sour-gummy/sour-gummy.css";
+import "@/theme/fonts/figtree/figtree.css";
 import "@/theme/global-styles/antd-reset.css";
 import "@/theme/global-styles/app-theme/styling-theme.css";
 import "@/theme/global-styles/mainframe-theme/default.css";

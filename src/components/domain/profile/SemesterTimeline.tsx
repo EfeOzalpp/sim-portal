@@ -3,7 +3,7 @@ interface SemesterTimelineProps {
 }
 
 const badgeClassName =
-	"self-start rounded-md border-solid border-[var(--label-border)] bg-[var(--label-bg)] px-2 py-1 font-sans text-xs leading-tight font-semibold text-[var(--label-text)] uppercase border";
+	"self-start border-0 border-b border-solid border-b-[var(--elevated-2-label-bg)] bg-transparent px-0 pb-0.5 font-sans text-xs leading-tight font-semibold text-[var(--elevated-2-label-text)] uppercase";
 
 const lineClassName = "absolute left-1/2 w-px -translate-x-1/2 bg-[var(--lines-color)]";
 

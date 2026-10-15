@@ -6,6 +6,10 @@
  */
 
 @layer base {
+  body {
+    font-family: var(--font-sans);
+  }
+
   .is-body {
     font-family: var(--font-sans);
     font-size: 1rem;
@@ -21,11 +25,6 @@
     line-height: 1.2;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-  }
-
-  [data-content-nav] .ui-label,
-  [data-mobile-content-bar] .ui-label {
-    color: var(--label-text);
   }
 
   .ui-note {
@@ -61,10 +60,30 @@
     letter-spacing: 0.8px;
   }
 
+  .brand-text {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    font-weight: 400;
+    letter-spacing: 0.025em;
+    line-height: 1;
+  }
+
+  .mobile-page-title {
+    font-size: 1.625rem;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+  }
+
+  .mobile-collapsed-page-title {
+    font-size: 1.125rem;
+    font-weight: 500;
+    letter-spacing: 0.25px;
+  }
+
   h3 {
     font-size: 1.25rem;
     font-weight: 500;
-    letter-spacing: 0.4px;
+    letter-spacing: 0.2px;
   }
 
   h4,

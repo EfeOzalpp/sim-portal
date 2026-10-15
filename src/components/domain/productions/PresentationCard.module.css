@@ -1,0 +1,19 @@
+.container {
+	container-type: inline-size;
+	margin-block: 0.75rem;
+}
+
+.row {
+	display: grid;
+	width: 100%;
+	grid-template-columns: minmax(0, 1fr);
+	align-items: baseline;
+	gap: 0.25rem;
+}
+
+@container (min-width: 32rem) {
+	.row {
+		grid-template-columns: minmax(10rem, 14rem) minmax(0, 1fr);
+		gap: 1rem;
+	}
+}
