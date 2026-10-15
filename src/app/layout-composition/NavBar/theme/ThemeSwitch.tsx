@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Button } from "@/components/button";
-import styles from "@/app/layout-composition/NavBar/NavBar.module.css";
+import styles from "@/app/layout-composition/NavBar/NavItems.module.css";
 
 type Theme = "light" | "dark";
 
@@ -10,7 +10,11 @@ function readTheme(): Theme {
 	return document.documentElement.dataset.theme === "dark" ? "dark" : "light";
 }
 
-export default function ThemeSwitch() {
+interface ThemeSwitchProps {
+	iconOnly?: boolean;
+}
+
+export default function ThemeSwitch({ iconOnly = false }: ThemeSwitchProps) {
 	const [theme, setTheme] = useState<Theme>("light");
 	const nextTheme: Theme = theme === "dark" ? "light" : "dark";
 
@@ -44,6 +48,18 @@ export default function ThemeSwitch() {
 				root.classList.remove("theme-toggle-in-progress");
 			});
 		});
+	}
+
+	if (iconOnly) {
+		return (
+			<Button
+				surface="page"
+				variant="icon"
+				icon={theme === "dark" ? "theme-switch/light_mode.svg" : "theme-switch/dark_mode.svg"}
+				onClick={handleToggle}
+				aria-label={`Switch to ${nextTheme} mode`}
+			/>
+		);
 	}
 
 	return (

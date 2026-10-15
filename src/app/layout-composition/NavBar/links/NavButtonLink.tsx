@@ -2,7 +2,7 @@
 
 import { usePathname, useSearchParams } from "next/navigation";
 import { Button } from "@/components/button";
-import styles from "@/app/layout-composition/NavBar/NavBar.module.css";
+import styles from "@/app/layout-composition/NavBar/NavItems.module.css";
 import {
 	LEGACY_SEMESTER_FILTER_KEY,
 	SEMESTER_FILTER_KEY,

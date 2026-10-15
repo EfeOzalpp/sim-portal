@@ -1,0 +1,119 @@
+.root {
+	--app-topbar-gap: 0.75rem;
+	--app-topbar-field-gap: 0.5rem;
+	--page-icon-bg-hover: var(--page-button-bg-hover);
+	--page-icon-bg-active: var(--page-button-bg-active, var(--page-button-bg-hover));
+
+	position: relative;
+	z-index: 40;
+	display: grid;
+	grid-template-columns: auto auto auto minmax(0, 1fr) auto;
+	column-gap: var(--app-topbar-gap);
+	align-items: stretch;
+	width: 100%;
+	min-height: 4rem;
+	background: transparent;
+	color: var(--app-title);
+	box-sizing: border-box;
+	print-color-adjust: exact;
+}
+
+.leading,
+.brand,
+.titleSlot,
+.scopeSlot,
+.controlsSlot {
+	display: flex;
+	min-width: 0;
+	align-items: center;
+	box-sizing: border-box;
+}
+
+.leadGroup {
+	display: flex;
+	align-items: stretch;
+	column-gap: var(--app-topbar-gap);
+	min-width: calc(var(--nav-rail-expanded-width) + var(--page-gutter) - var(--app-topbar-gap));
+}
+
+.leading {
+	min-width: calc(var(--nav-rail-collapsed-width) + var(--page-gutter) - var(--app-topbar-gap));
+	transition: min-width 160ms ease;
+}
+
+:global(html[data-desktop-nav="expanded"]) .leading {
+	min-width: calc(var(--nav-rail-expanded-width) + var(--page-gutter) - var(--app-topbar-gap));
+}
+
+.menuCell {
+	display: flex;
+	flex: none;
+	width: var(--nav-rail-collapsed-width);
+	align-items: center;
+	justify-content: center;
+}
+
+.brand {
+	justify-content: center;
+	padding-inline: 0.25rem 0;
+	color: var(--app-brand, var(--app-title));
+	white-space: nowrap;
+}
+
+.titleSlot {
+	color: var(--app-page-title, var(--app-title));
+	white-space: nowrap;
+}
+
+.titleSlot::before {
+	content: "/";
+	display: inline-block;
+	overflow: hidden;
+	max-width: 1ch;
+	margin-inline-end: 0.625rem;
+	color: var(--app-icon);
+	font-weight: 400;
+	transition:
+		max-width 160ms ease,
+		margin-inline-end 160ms ease,
+		opacity 160ms ease;
+}
+
+:global(html[data-desktop-nav="expanded"]) .titleSlot::before {
+	max-width: 0;
+	margin-inline-end: 0;
+	opacity: 0;
+}
+
+.titleSlot > * {
+	font: inherit;
+	letter-spacing: inherit;
+}
+
+.titleSlot:empty,
+.scopeSlot:empty,
+.controlsSlot:empty {
+	display: none;
+}
+
+.controlsSlot {
+	align-self: stretch;
+}
+
+.scopeSlot:not(:empty) + .controlsSlot {
+	margin-inline-start: calc(var(--app-topbar-field-gap) - var(--app-topbar-gap));
+}
+
+.tools {
+	grid-column: -2 / -1;
+	display: flex;
+	align-items: center;
+	gap: var(--app-topbar-gap);
+	padding-inline: 0 1rem;
+}
+
+@media (max-width: 768px) {
+	.root {
+		display: none;
+	}
+}

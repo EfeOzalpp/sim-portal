@@ -1,26 +1,104 @@
-/* Hidden on desktop; only renders on mobile */
-.topBar,
-.backdrop,
-.panel {
-	display: none;
-}
-
 @media (max-width: 768px) {
 	/* Top bar: hamburger + SIM brand, always visible */
 	.topBar {
+		--mobile-chrome-collapse: 0;
+		--mobile-chrome-title-height: 3.75rem;
+		--mobile-chrome-title-opacity: 1;
+
 		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 0;
+		width: 100%;
+		box-sizing: border-box;
+	}
+
+	.menuLogoFilter {
+		display: flex;
+		flex-direction: row;
+		width: 100%;
+		height: 3rem;
+		min-width: 0;
 		align-items: center;
 		gap: 0.5rem;
 		padding: 0.5rem;
-		width: 100%;
+		flex-wrap: nowrap;
+		overflow: hidden;
 		box-sizing: border-box;
+	}
+
+	.brand {
+		flex: 0 0 auto;
+		min-width: 0;
+		font-family: var(--font-heading);
+		font-size: 1.375rem;
+		font-weight: 700;
+		letter-spacing: 0.025em;
+		line-height: 1.25;
+		color: var(--app-title);
+		white-space: nowrap;
+	}
+
+	.pageFilterSlot {
+		flex: 1 1 0%;
+		min-width: 0;
+		padding-right: 0.5rem;
+		padding-left: 2rem;
+		overflow: hidden;
+		box-sizing: border-box;
+	}
+
+	.collapsedTitleSlot {
+		display: none;
+		min-width: 0;
+		padding-inline: 1rem;
+		overflow: hidden;
+		box-sizing: border-box;
+	}
+
+	.topBar[data-mobile-chrome-collapsed="true"] .collapsedTitleSlot {
+		display: flex;
+		flex: 2 1 0%;
+		align-items: center;
+	}
+
+	.topBar[data-mobile-chrome-collapsed="true"] .pageFilterSlot {
+		flex: 3 1 0%;
+		padding-left: 0;
+		padding-right: 0.5rem;
+	}
+
+	.topBar[data-mobile-chrome-collapsed="true"] .pageFilterSlot :global(.select-trigger) {
+		border-bottom-right-radius: 0;
+		border-bottom-left-radius: 0;
+	}
+
+	.menuTitle {
+		display: flex;
+		width: 100%;
+		min-width: 0;
+		justify-content: center;
+		align-items: center;
+		padding-inline: 0.5rem;
+		padding-top: calc((1 - var(--mobile-chrome-collapse)) * 0.5rem);
+		padding-bottom: calc((1 - var(--mobile-chrome-collapse)) * 0.75rem);
+		min-height: 0;
+		max-height: var(--mobile-chrome-title-height);
+		opacity: var(--mobile-chrome-title-opacity);
+		overflow: hidden;
+		box-sizing: border-box;
+		transform: translateY(calc(var(--mobile-chrome-collapse) * -0.25rem));
+	}
+
+	.topBar[data-mobile-chrome-collapsed="true"] .menuTitle {
+		pointer-events: none;
 	}
 
 	.menuButton {
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
-		flex: 0 0 auto;
+		flex: 0 0 2.25rem;
 		width: 2.25rem;
 		height: 2.25rem;
 		padding: 0;
@@ -28,11 +106,11 @@
 		border-radius: 12px;
 		background: transparent;
 		cursor: pointer;
-		color: var(--app-text);
+		color: var(--app-icon);
 	}
 
 	.menuButton:hover {
-		background: var(--app-subtle);
+		background: var(--nav-hover-bg);
 	}
 
 	.menuIconAsset {
@@ -56,7 +134,7 @@
 		position: fixed;
 		inset: 0;
 		z-index: 55;
-		background: rgba(0, 0, 0, 0.4);
+		background: var(--scrim);
 	}
 
 	/* Slide-in panel: full-height, 80vw */
@@ -66,10 +144,9 @@
 		top: 0;
 		left: 0;
 		bottom: 0;
-		width: 80vw;
+		width: min(16rem, 86vw);
 		z-index: 60;
-		background: var(--app-surface);
-		border-right: 1px solid var(--main-border);
+		background: var(--nav-hover-opened-bg, var(--modal-surface));
 		transform: translateX(-100%);
 		transition: transform 220ms ease;
 		box-sizing: border-box;
@@ -101,8 +178,18 @@
 		grid-template-columns: 2.5rem 1fr 2.5rem;
 		align-items: center;
 		padding-block: 0.5rem;
-		border-bottom: 1px solid var(--main-border);
 		margin-bottom: 0.5rem;
+	}
+
+	.panelBrand {
+		grid-column-start: 2;
+		text-align: center;
+		font-family: var(--font-heading);
+		font-size: 1.375rem;
+		font-weight: 700;
+		letter-spacing: 0.025em;
+		line-height: 1.25;
+		color: var(--app-title);
 	}
 
 	/* Close button: sits in the third column of the header row, same size as menu button */
@@ -118,11 +205,11 @@
 		border-radius: 12px;
 		background: transparent;
 		cursor: pointer;
-		color: var(--app-text);
+		color: var(--app-icon);
 	}
 
 	.closeButton:hover {
-		background: var(--app-subtle);
+		background: var(--nav-hover-bg);
 	}
 
 	.closeIconAsset {
@@ -140,21 +227,22 @@
 		-webkit-mask-size: 1.375rem 1.375rem;
 	}
 
-	/* Ensure nav labels are always visible inside the panel (no collapsed state) */
-	.panelInner :global([class*="navLabel"]) {
-		max-width: 12rem;
-		opacity: 1;
+	.themeNav {
+		width: 100%;
+		min-width: 0;
 	}
 
-	/* Ensure external link list is always visible inside panel */
-	.panelInner :global([class*="externalLinkList"]) {
-		display: flex;
+	.themeNav > *,
+	.themeNav :global(.btn) {
+		width: 100%;
+		min-width: 0;
 	}
 
-	/* Show full user identity inside mobile panel */
-	.panelInner :global([class*="identity"]) {
-		display: flex;
-		max-width: 12rem;
-		opacity: 1;
+	.colorThemeNav {
+		flex: none;
+	}
+
+	.accountNav a {
+		text-decoration: none;
 	}
 }

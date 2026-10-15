@@ -9,7 +9,6 @@ import "@/theme/global-styles/app-theme/styling-theme.css";
 import "@/theme/global-styles/mainframe-theme/default.css";
 import "@/theme/global-styles/mainframe-theme/purple-green.css";
 import "@/theme/global-styles/app-theme/font-theme.css";
-import "@/theme/global-styles/app-theme/layout-theme.css";
 import "@/theme/global-styles/tailwind.css";
 
 // Components
@@ -18,41 +17,37 @@ import { userProfileDialogClassName } from "@/components/domain/profile/styles";
 
 // Composition
 import AccountModals from "@/app/layout-composition/AccountModals";
+import AppTopBar from "@/app/layout-composition/AppTopBar/AppTopBar";
 import EditUserFormContent from "@/app/users/[id]/edit/EditUserFormContent";
-import NavBar from "@/app/layout-composition/NavBar";
+import NavBar from "@/app/layout-composition/NavBar/NavBar";
+import MobileNavBar from "@/app/layout-composition/NavBar/MobileNavBar";
 import ThemeStorageSync from "@/app/layout-composition/ThemeStorageSync";
 import SimHistoryModal from "@/components/domain/sim-history/SimHistoryModal";
+import { PageChromeProvider } from "@/components/layout/PageChrome";
+import { DesktopOnly } from "@/components/layout/breakpoints";
 import { ToastProvider } from "@/components/toast";
 import styles from "@/app/layout.module.css";
 
 // Helpers
 import { auth } from "@/authentication";
+import { isAdminRole } from "@/constants/roles";
 
 const appShellClassName =
-	// "image:" type hint routes this to background-image, not Tailwind's default background-color, since --app-bg holds a gradient.
-	"flex h-dvh min-h-0 flex-col overflow-hidden bg-[image:var(--app-bg)] text-[var(--app-text)] print:block! print:h-auto! print:overflow-visible!";
+	"flex h-dvh min-h-0 flex-col overflow-hidden [background:var(--app-bg)] text-[var(--app-text)] print:block! print:h-auto! print:overflow-visible!";
 
 const appDividerClassName =
-	"flex min-h-0 flex-[1_1_auto] flex-col items-stretch overflow-hidden min-[769px]:flex-row print:block! print:h-auto! print:overflow-visible!";
+	"flex min-h-0 flex-[1_1_auto] flex-col items-stretch overflow-hidden print:block! print:h-auto! print:overflow-visible!";
 
 const navDividerClassName = [
-	// z-[200]: above nav/Select dropdown, below ActionMode/modal. bg is mobile-only -
-	// the desktop rail (NavBar.module.css's .root) has none at rest either, only on hover.
-	// Desktop: w-0, not a reserved width - the rail itself is position:absolute (NavBar.module.css's
-	// .root), so it never needed this div to have real width; collapsing it lets .contentDivider
-	// (layout.module.css) reclaim that space as its own left gutter column instead, which is what
-	// [data-page-content]'s drop-shadow needs room to bleed into.
-	"relative z-[200] min-h-0 min-w-0 flex-none overflow-visible max-[768px]:bg-[var(--app-surface)] overscroll-contain",
+	"relative z-[200] min-h-0 min-w-0 flex-none overflow-visible overscroll-contain",
 	"w-full border-r-0 border-b-0 print:hidden!",
-	"min-[769px]:w-0",
 ].join(" ");
 
 const contentDividerClassName =
-	// No bg here - NavContent paints its own area, the gradient shows through the rest. min-[769px]:overflow-y-hidden since only the content column scrolls now, not <main>.
-	// [--scrollbar-thumb:...]: cascade-scoped, same mechanism as --button-bg/--input-bg -
-	// modals render outside <main> (portaled to <body>), so they never inherit this and
-	// keep the plain --scrollbar-thumb/-hover instead.
-	"grid h-full min-h-0 min-w-0 flex-[1_1_auto] grid-cols-[minmax(0,1fr)] grid-rows-[auto] content-start items-stretch overflow-auto overscroll-contain min-[769px]:grid-rows-[auto_minmax(0,1fr)] min-[769px]:overflow-x-hidden min-[769px]:overflow-y-hidden print:block! print:h-auto! print:overflow-visible! [--scrollbar-thumb:var(--main-scrollbar-thumb)] [--scrollbar-thumb-hover:var(--main-scrollbar-thumb-hover)]";
+	"grid h-full min-h-0 min-w-0 flex-[1_1_auto] grid-cols-[minmax(0,1fr)] grid-rows-[auto] content-start items-stretch overflow-auto overscroll-contain print:block! print:h-auto! print:overflow-visible! [--scrollbar-thumb:var(--main-scrollbar-thumb)] [--scrollbar-thumb-hover:var(--main-scrollbar-thumb-hover,var(--main-scrollbar-thumb))]";
+
+const bodyDividerClassName =
+	"flex min-h-0 flex-[1_1_auto] flex-col items-stretch overflow-hidden";
 
 // Global metadata for the application
 export const metadata: Metadata = {
@@ -116,16 +111,30 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 				<ToastProvider>
 					<ThemeStorageSync />
 					<div className={appShellClassName}>
-						<div className={appDividerClassName}>
-							{session && (
-								<div className={navDividerClassName}>
-									<NavBar session={session} />
+						<PageChromeProvider>
+							<div className={appDividerClassName}>
+								{session && <AppTopBar user={session.user} />}
+								<div className={`${styles.bodyDivider} ${bodyDividerClassName}`}>
+									{session && (
+										<>
+											{/* Desktop rail, below the full-width app topbar. */}
+											<div className={`${styles.desktopNav} ${navDividerClassName}`}>
+												<DesktopOnly>
+													<NavBar session={session} />
+												</DesktopOnly>
+											</div>
+											<div className={`${styles.mobileNav} ${navDividerClassName}`}>
+												<MobileNavBar isAdmin={isAdminRole(session.user?.role)} user={session.user} />
+											</div>
+										</>
+									)}
+									{/* Route-owned page content renders inside this grid. */}
+									<main className={`${styles.contentDivider} ${contentDividerClassName}`}>
+										{children}
+									</main>
 								</div>
-							)}
-							<main className={`${styles.contentDivider} ${contentDividerClassName}`}>
-								{children}
-							</main>
-						</div>
+							</div>
+						</PageChromeProvider>
 					</div>
 					{session?.user?.id && (
 						<AccountModals

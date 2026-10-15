@@ -19,9 +19,14 @@ function readColorTheme(): ColorTheme {
 	return document.documentElement.dataset.colorTheme === "purple-green" ? "purple-green" : "default";
 }
 
-const optionButtonClassName = "w-full border-0 bg-transparent text-left hover:bg-[var(--modal-button-bg-hover)]!";
+const optionButtonClassName = "w-full border-0 bg-transparent text-left hover:bg-[var(--contrast-surface-hovered-item-bg)]!";
 
-export default function ColorThemePopover() {
+interface ColorThemePopoverProps {
+	side?: "top" | "bottom";
+	align?: "start" | "end";
+}
+
+export default function ColorThemePopover({ side = "top", align = "start" }: ColorThemePopoverProps) {
 	const [open, setOpen] = useState(false);
 	const [colorTheme, setColorTheme] = useState<ColorTheme>("default");
 
@@ -56,33 +61,22 @@ export default function ColorThemePopover() {
 
 	return (
 		<Popover
-			side="top"
-			align="start"
+			side={side}
+			align={align}
 			open={open}
 			onOpenChange={setOpen}
 			toggle
 			trigger={
 				<Button
+					surface="page"
 					variant="icon"
 					icon="color/brush.svg"
 					aria-label="Color theme"
-					// variant="icon" is shared with plain page buttons elsewhere
-					// (SemesterCardGrid/UserCard/GridViewPopover/ProductionsCollapse),
-					// so its own --button-* tokens are page-based by design - this is
-					// the one instance that lives in the nav rail, so it needs the
-					// same mainframe nav-area tokens ThemeSwitch (variant="nav") right
-					// next to it already uses, not the generic page-button colors.
-					// data-[state=open]: Radix's own Popover.Trigger sets this on the
-					// element asChild clones onto - no need to thread `open` through
-					// manually. Same --nav-active-bg/-text pair variant="nav" uses for
-					// aria-[current=page], so an open popover reads the same way an
-					// active nav link does.
-					className="border-transparent! bg-transparent! text-[var(--app-icon)]! hover:border-transparent! hover:bg-[var(--nav-hover-bg)]! hover:text-[var(--app-icon)]! focus-visible:outline-[var(--app-theme)]! active:outline-[var(--app-theme)]! data-[state=open]:bg-[var(--nav-active-bg)]! data-[state=open]:text-[var(--nav-active-text)]! data-[state=open]:hover:bg-[var(--nav-active-bg)]! data-[state=open]:hover:text-[var(--nav-active-text)]!"
 				/>
 			}
 		>
 			<div className="flex min-w-[10rem] flex-col gap-0.5">
-				<span className="ui-label block px-2 pt-0.5 pb-1">Color</span>
+				<span className="ui-label block px-4 pt-0.5 pb-1">Color</span>
 				<div className="flex flex-col gap-0.5" role="listbox">
 					{colorThemeOptions.map((option) => (
 						<button
