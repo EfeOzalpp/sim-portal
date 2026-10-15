@@ -8,9 +8,11 @@ import { getSemesterOptions } from "@/actions/semesters";
 // Components
 import { Button } from "@/components/button";
 import { actionButtonIconClassName } from "@/components/button/styles";
-import PageTitle from "@/components/layout/PageTitle";
+import PageChrome from "@/components/layout/PageChrome/PageChrome";
+import PageBar from "@/components/layout/PageBar";
+import PageCard from "@/components/layout/PageCard";
+import PageChromeScrollArea from "@/components/layout/PageChrome/PageChromeScrollArea";
 import { FilterInput } from "@/components/primitives/Filters";
-import PrintLink from "@/components/primitives/PrintLink";
 import SemesterFilterSelect from "@/components/domain/filters/SemesterFilterSelect";
 import { ActionModeSurface } from "@/components/layout/ActionMode";
 import RouteModalPopup from "@/components/modal/RouteModalPopup";
@@ -22,6 +24,8 @@ import { MaskIcon } from "@/theme/MaskIcon";
 
 // Composition
 import ThursdayCard from "@/app/thursdays/composition/ThursdayCard";
+import ThursdayGridCard from "@/app/thursdays/composition/ThursdayGridCard";
+import { ThursdayDateProvider } from "@/app/thursdays/composition/ThursdayDateIndicator";
 import AddThursdayFormContent from "@/app/thursdays/add/AddThursdayFormContent";
 import EditThursdayFormContent from "@/app/thursdays/[id]/edit/EditThursdayFormContent";
 import ThursdayDeleteConfirmContent from "@/app/thursdays/composition/ThursdayDeleteConfirmContent";
@@ -31,16 +35,21 @@ import DeleteThursdaysButton from "@/app/thursdays/composition/DeleteThursdaysBu
 import ThursdayViewTabs from "@/app/thursdays/composition/ThursdayViewTabs";
 import { SelectedThursdaysProvider } from "@/app/thursdays/composition/SelectedThursdaysProvider";
 import SelectedThursdaysCountLabel from "@/app/thursdays/composition/SelectedThursdaysCountLabel";
+import styles from "@/app/thursdays/ThursdaysPage.module.css";
 
 // Helpers
 import { getSelectedSemesterId } from "@/components/domain/filters/semester-filter";
 import { THURSDAY_MODAL_PARAMS, USER_MODAL_PARAMS, type ThursdayModalParam } from "@/constants/modal-params";
 import { isAdminRole } from "@/constants/roles";
+import { formatShortMonthDay } from "@/constants/date-format";
 import { auth } from "@/authentication";
+import { normalizeThursdayName } from "@/helpers";
 
 interface ThursdaysProps {
 	searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
+
+type ThursdayView = "grid" | "list";
 
 const thursdayModalParams = new Set<string>([
   ...Object.values(THURSDAY_MODAL_PARAMS),
@@ -49,6 +58,10 @@ const thursdayModalParams = new Set<string>([
 
 function getSingleParam(value: string | string[] | undefined) {
   return Array.isArray(value) ? value[0] : value;
+}
+
+function getThursdayView(value: string | string[] | undefined): ThursdayView {
+  return getSingleParam(value) === "list" ? "list" : "grid";
 }
 
 function getThursdaysModalHref(
@@ -99,23 +112,65 @@ function getThursdaysReturnHref(filters: { [key: string]: string | string[] | un
   return query ? `/thursdays?${query}` : "/thursdays";
 }
 
-async function ThursdaysList({
+async function ThursdaysView({
+  thursdays,
   filters,
   isAdmin,
   semesters,
+  view,
 }: {
+  thursdays: any[];
   filters: any;
   isAdmin: boolean;
   semesters: any[];
+  view: ThursdayView;
 }) {
-  const thursdaysResult = await getFilteredThursdays(filters);
-  const thursdays = thursdaysResult.success ? thursdaysResult.data : [];
-
   if (thursdays.length < 1) {
     const semesterName = semesters.find(s => s.id === filters.semesterId)?.name || filters.semesterId || "this semester";
     return <>There are no results for {semesterName}.</>;
   }
 
+  if (view === "grid") {
+    return <ThursdaysGridView thursdays={thursdays} filters={filters} isAdmin={isAdmin} />;
+  }
+
+  return <ThursdaysListView thursdays={thursdays} isAdmin={isAdmin} />;
+}
+
+async function ThursdaysPageContent({
+  filters,
+  isAdmin,
+  semesters,
+  view,
+}: {
+  filters: any;
+  isAdmin: boolean;
+  semesters: any[];
+  view: ThursdayView;
+}) {
+  const thursdaysResult = await getFilteredThursdays(filters);
+  const thursdays = thursdaysResult.success ? thursdaysResult.data : [];
+  const thursdayIds = thursdays.map((thursday: any) => thursday.id);
+
+  return (
+    <>
+      <div className={styles.contentControls}>
+        <ThursdayViewTabs thursdayIds={thursdayIds} activeView={view} />
+      </div>
+      <ThursdayDateProvider>
+        <ThursdaysView
+          thursdays={thursdays}
+          filters={filters}
+          isAdmin={isAdmin}
+          semesters={semesters}
+          view={view}
+        />
+      </ThursdayDateProvider>
+    </>
+  );
+}
+
+function ThursdaysListView({ thursdays, isAdmin }: { thursdays: any[]; isAdmin: boolean }) {
   return (
     <div className="grid gap-2">
       {thursdays.map((thursday: any, index: number) => (
@@ -125,11 +180,54 @@ async function ThursdaysList({
   );
 }
 
-async function ThursdaySelectionTabs({ filters }: { filters: any }) {
-  const thursdaysResult = await getFilteredThursdays(filters);
-  const thursdayIds = thursdaysResult.success ? thursdaysResult.data.map((thursday: any) => thursday.id) : [];
+function ThursdaysGridView({ thursdays, filters, isAdmin }: { thursdays: any[]; filters: any; isAdmin: boolean }) {
+  return (
+    <div className="grid grid-cols-2 gap-x-3 gap-y-6 pb-6 min-[769px]:grid-cols-[repeat(auto-fill,minmax(min(100%,18rem),1fr))]">
+      {thursdays.map((thursday: any) => {
+        const hasOnlyPlaceholderProduction =
+          thursday.productions.length === 1 &&
+          thursday.productions[0].name === "Big Production" &&
+          thursday.productions[0].location === "Pozen Center" &&
+          thursday.productions[0].presentations.length === 0 &&
+          thursday.productions[0].producers.length === 0;
+        const isEmpty = thursday.productions.length === 0 || hasOnlyPlaceholderProduction;
+        const presentationCount = thursday.productions.reduce((total: number, production: any) => total + production.presentations.length, 0);
+        const producerIds = new Set<string>();
+        const producerPreviews: { id: string; name: string | null; image?: string | null }[] = [];
+        thursday.productions.forEach((production: any) => {
+          production.producers.forEach((producer: any) => {
+            if (producerIds.has(producer.id)) return;
 
-  return <ThursdayViewTabs thursdayIds={thursdayIds} />;
+            producerIds.add(producer.id);
+            if (producerPreviews.length < 3) {
+              producerPreviews.push({
+                id: producer.id,
+                name: producer.name,
+                image: producer.image,
+              });
+            }
+          });
+        });
+
+        return (
+          <ThursdayGridCard
+            key={thursday.id}
+            id={thursday.id}
+            name={normalizeThursdayName(thursday.name)}
+            href={getThursdaysModalHref({ ...filters, view: "grid" }, THURSDAY_MODAL_PARAMS.view, thursday.id)}
+            date={formatShortMonthDay(thursday.date) || ""}
+            calendarDate={thursday.date.toISOString().slice(0, 10)}
+            productionCount={isEmpty ? 0 : thursday.productions.length}
+            presentationCount={presentationCount}
+            producerCount={producerIds.size}
+            producerPreviews={producerPreviews}
+            isEmpty={isEmpty}
+            isAdmin={isAdmin}
+          />
+        );
+      })}
+    </div>
+  );
 }
 
 export default async function Thursdays({ searchParams }: ThursdaysProps) {
@@ -138,6 +236,7 @@ export default async function Thursdays({ searchParams }: ThursdaysProps) {
   const [semestersResult, session] = await Promise.all([getSemesterOptions(), auth()]);
   const semesters = semestersResult.success ? semestersResult.data : [];
   const isAdmin = isAdminRole(session?.user?.role);
+  const view = getThursdayView(filters.view);
 
   const selectedSemesterId = getSelectedSemesterId(filters, semesters);
   const addThursday = getSingleParam(filters[THURSDAY_MODAL_PARAMS.add]);
@@ -149,48 +248,35 @@ export default async function Thursdays({ searchParams }: ThursdaysProps) {
 
   return (
     <>
-      <PageTitle
-        title="Thursdays"
-        contentClassName="min-[769px]:ml-[calc(var(--nav-rail-collapsed-width)_+_12rem)]"
-        filterControl={<SemesterFilterSelect semesters={semesters} defaultValue={selectedSemesterId} variant="title" />}
-      />
       <ActionModeSurface>
         <SelectedThursdaysProvider>
-        <div data-full-bleed-content className="flex h-full min-h-0 flex-col bg-[var(--page-bg)] min-[769px]:ml-[var(--nav-rail-collapsed-width)] min-[769px]:mr-2 min-[769px]:rounded-tl-[0.5rem] min-[769px]:rounded-tr-[0.5rem] min-[769px]:border min-[769px]:border-b-0 min-[769px]:border-solid min-[769px]:border-[var(--main-border)] min-[769px]:shadow-[var(--content-shadow)] print:bg-transparent">
-          <div className="flex flex-none flex-wrap items-center justify-between gap-6 overflow-hidden px-6 pt-6 pb-3 [scrollbar-gutter:stable] print:hidden">
-            <div className="flex items-center gap-2">
-              <div className="w-50 [--input-bg:var(--page-input-bg)] [--input-border:var(--page-input-border)] [--input-bg-hover:var(--page-input-bg-hover)] [--input-border-hover:var(--page-input-border-hover)] [--input-placeholder:var(--page-input-text)] [--input-icon:var(--page-input-search)]">
-                <FilterInput query="thursdays" placeholder="Search" />
-              </div>
-              {isAdmin && (
-                <Button href={getThursdaysModalHref(filters, THURSDAY_MODAL_PARAMS.add, "1")} variant="action">
-                  <MaskIcon icon="add/add.svg" className={actionButtonIconClassName} />
-                  Add thursday
-                </Button>
-              )}
-            </div>
-            <div className="flex flex-none items-center gap-2">
-              <SelectedThursdaysCountLabel />
-              <PrintLink label="Export selected" variant="action" />
-              {isAdmin && (
-                <>
-                  <EditThursdaysButton />
-                  <DeleteThursdaysButton />
-                </>
-              )}
-            </div>
-          </div>
-          <Suspense fallback={<ThursdayViewTabs thursdayIds={[]} />}>
-            <ThursdaySelectionTabs filters={filters} />
-          </Suspense>
-          <div className="min-h-0 flex-1 overflow-y-auto px-6 [scrollbar-gutter:stable] print:overflow-visible print:px-0 print:pb-0">
+        <PageChrome
+          title="Thursdays"
+          scope={<SemesterFilterSelect semesters={semesters} defaultValue={selectedSemesterId} variant="title" />}
+          search={<FilterInput variant="page" query="thursdays" placeholder="Search" />}
+          actions={isAdmin ? (
+            <>
+              <Button surface="page" href={getThursdaysModalHref(filters, THURSDAY_MODAL_PARAMS.add, "1")} variant="action" tone="cta">
+                <MaskIcon icon="add/add.svg" className={actionButtonIconClassName} />
+                New thursday
+              </Button>
+              <EditThursdaysButton />
+              <DeleteThursdaysButton />
+            </>
+          ) : undefined}
+          status={<SelectedThursdaysCountLabel />}
+
+        />
+        <PageCard data-full-bleed-content className="flex h-full min-h-0 flex-col">
+          <PageBar />
+          <PageChromeScrollArea data-page-surface className={`${styles.scrollArea} min-h-0 flex-1 overflow-y-auto bg-[var(--page-bg)] px-6 pb-6 print:overflow-visible print:bg-transparent print:px-0 print:pb-0`}>
             <Suspense
               fallback={<div style={{ opacity: 0.5, padding: "1rem", background: "transparent" }}>Loading days...</div>}
             >
-              <ThursdaysList filters={filters} isAdmin={isAdmin} semesters={semesters} />
+              <ThursdaysPageContent filters={filters} isAdmin={isAdmin} semesters={semesters} view={view} />
             </Suspense>
-          </div>
-        </div>
+          </PageChromeScrollArea>
+        </PageCard>
         </SelectedThursdaysProvider>
         {profileUserId && (
           <PersonProfileModal key={profileUserId} profileUserId={profileUserId} />

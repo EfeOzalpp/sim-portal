@@ -1,6 +1,6 @@
 import { notFound, redirect } from "next/navigation";
 import { getAllSemesters } from "@/actions/semesters";
-import { getThursday, updateThursdayWithProductions } from "@/actions/thursdays";
+import { getPresentationTagSuggestions, getThursday, updateThursdayWithProductions } from "@/actions/thursdays";
 import { getAllUsers } from "@/actions/users";
 import ThursdayForm from "@/app/thursdays/composition/ThursdayForm";
 import { THURSDAY_MODAL_PARAMS } from "@/constants/modal-params";
@@ -18,10 +18,14 @@ export default async function EditThursdayFormContent({
 		notFound();
 	}
 
-	const usersResult = await getAllUsers();
+	const [usersResult, semestersResult, tagSuggestionsResult] = await Promise.all([
+		getAllUsers(),
+		getAllSemesters(),
+		getPresentationTagSuggestions(),
+	]);
 	const users = usersResult.success ? usersResult.data : [];
-	const semestersResult = await getAllSemesters();
 	const semesters = semestersResult.success ? semestersResult.data : [];
+	const suggestedTags = tagSuggestionsResult.success ? tagSuggestionsResult.data : [];
 
 	async function onSubmit(data: any) {
 		"use server";
@@ -38,6 +42,7 @@ export default async function EditThursdayFormContent({
 			defaultValues={result.data}
 			users={users}
 			semesters={semesters}
+			suggestedTags={suggestedTags}
 			thursdayId={thursdayId}
 			onSubmit={onSubmit}
 		/>

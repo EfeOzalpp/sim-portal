@@ -5,7 +5,6 @@ import { notFound } from "next/navigation";
 import { getThursday } from "@/actions/thursdays";
 
 // Components
-import NavContent from "@/components/layout/NavContent";
 import CloseButton from "@/components/primitives/CloseButton";
 
 // Composition
@@ -26,11 +25,10 @@ export default async function EditThursday({ params }: EditThursdayProps) {
 
 	return (
 		<>
-			<NavContent
-				className="mx-auto max-w-[50%] border-b border-[var(--main-border)]"
-				start={<h2>Edit Day</h2>}
-				end={<CloseButton href={`/thursdays?thursdayId=${id}`} />}
-			/>
+			<header className="mx-auto flex max-w-[50%] items-center justify-between border-b border-[var(--page-bg-border)] py-3">
+				<h2 className="m-0">Edit Day</h2>
+				<CloseButton href={`/thursdays?thursdayId=${id}`} />
+			</header>
 			<div className="mx-auto max-w-[50%] pb-4">
 				<div className="content-card">
 					<EditThursdayFormContent thursdayId={id} />

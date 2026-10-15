@@ -39,6 +39,30 @@ export default function ThursdaySection({
   return (
     <div className="flex flex-1 flex-col gap-6">
       <div className={semesters ? "grid grid-cols-1 gap-4 min-[601px]:grid-cols-2" : undefined}>
+        <div className={fieldStackClassName}>
+          <Controller
+            control={control}
+            name="name"
+            rules={{ required: "Day name is required" }}
+            render={({ field, fieldState }) => {
+              const showError = Boolean(fieldState.error) && (fieldState.isTouched || isSubmitted);
+              return (
+                <>
+                  <div className={fieldLabelRowClassName}>
+                    <span className={fieldLabelClassName}>Day Name *</span>
+                    {showError && <FieldError>{fieldState.error!.message}</FieldError>}
+                  </div>
+                  <Input
+                    variant="modal"
+                    {...field}
+                    placeholder="Enter day name"
+                    status={showError ? "error" : ""}
+                  />
+                </>
+              );
+            }}
+          />
+        </div>
         {semesters && (
           <div className={fieldStackClassName}>
             <span className={fieldLabelClassName}>Semester</span>
@@ -55,29 +79,6 @@ export default function ThursdaySection({
             />
           </div>
         )}
-        <div className={fieldStackClassName}>
-          <Controller
-            control={control}
-            name="name"
-            rules={{ required: "Day name is required" }}
-            render={({ field, fieldState }) => {
-              const showError = Boolean(fieldState.error) && (fieldState.isTouched || isSubmitted);
-              return (
-                <>
-                  <div className={fieldLabelRowClassName}>
-                    <span className={fieldLabelClassName}>Day Name *</span>
-                    {showError && <FieldError>{fieldState.error!.message}</FieldError>}
-                  </div>
-                  <Input
-                    {...field}
-                    placeholder="Enter Day name"
-                    status={showError ? "error" : ""}
-                  />
-                </>
-              );
-            }}
-          />
-        </div>
       </div>
 
       <div className={fieldStackClassName}>

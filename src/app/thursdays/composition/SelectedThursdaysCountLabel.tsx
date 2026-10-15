@@ -8,8 +8,9 @@ export default function SelectedThursdaysCountLabel() {
 	const count = selectedThursdayIds.size;
 
 	return (
-		<span className={clsx("text-sm", count === 0 ? "text-[var(--content-muted)]" : "text-[var(--app-text)]")}>
-			{count} selected
+		<span className={clsx("inline-flex flex-none items-center gap-1 whitespace-nowrap text-sm font-semibold text-[var(--page-bar-label,var(--app-text))]", count === 0 && "opacity-55")}>
+			<span className="min-w-[2ch] text-right tabular-nums">{count}</span>
+			selected
 		</span>
 	);
 }

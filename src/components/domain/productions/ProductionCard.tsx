@@ -1,19 +1,21 @@
 import clsx from "clsx";
 import PersonLink from "@/components/domain/profile/PersonLink";
 import EditThursdayButton from "@/components/domain/productions/EditThursdayButton";
+import { type ButtonSurface } from "@/components/button";
 import { MaskIcon } from "@/theme/MaskIcon";
 import { isAdminRole } from "@/constants/roles";
 import { formatShortMonthDayYear } from "@/constants/date-format";
+import styles from "@/components/domain/productions/ProductionCard.module.css";
 
 // Producers/Faculty/Presenters - every "list of people" in this card uses
 // this same 2-column grid instead of a flowing inline wrap.
-const peopleListClassName = "grid grid-cols-[repeat(2,max-content)] gap-x-4 gap-y-1";
+const peopleListClassName = "grid grid-cols-[repeat(2,max-content)] gap-x-6 gap-y-1";
 const personLinkClassName =
-	"text-inherit! no-underline underline-offset-[0.14em] hover:text-[var(--brand-color)]! hover:underline";
+	"text-inherit! no-underline underline-offset-[0.14em] hover:text-[var(--inline-link-hover)]! hover:underline";
 const presentationTagClassName = "ui-label m-0 text-[var(--label-text)]";
 const emptyStateClassName = "ui-note text-[var(--content-muted)]";
-const sectionLabelClassName = "ui-label";
-const inactiveSectionLabelClassName = "ui-label text-[var(--content-muted)]";
+const sectionLabelClassName = "ui-label m-0 block";
+const inactiveSectionLabelClassName = "ui-label m-0 block text-[var(--content-muted)]";
 const metaIconClassName = "h-4 w-4 flex-none bg-[var(--app-text)] [mask-position:center] [mask-repeat:no-repeat] [mask-size:contain]";
 
 interface ProductionCardProps {
@@ -22,22 +24,8 @@ interface ProductionCardProps {
 	productionIndex?: number;
 	productionCount?: number;
 	isAdmin?: boolean;
-}
-
-function formatOrdinal(value: number) {
-	const remainder = value % 100;
-	if (remainder >= 11 && remainder <= 13) return `${value}th`;
-
-	switch (value % 10) {
-		case 1:
-			return `${value}st`;
-		case 2:
-			return `${value}nd`;
-		case 3:
-			return `${value}rd`;
-		default:
-			return `${value}th`;
-	}
+	showEditButton?: boolean;
+	surface?: ButtonSurface;
 }
 
 export default async function ProductionCard({
@@ -46,25 +34,34 @@ export default async function ProductionCard({
 	productionIndex = 0,
 	productionCount = 1,
 	isAdmin = false,
+	showEditButton = true,
+	surface = "modal",
 }: ProductionCardProps) {
 	const producers = production.producers.filter((user: any) => !isAdminRole(user.role));
 	const faculty = production.producers.filter((user: any) => isAdminRole(user.role));
 	const formattedDate = formatShortMonthDayYear(thursday.date);
 	const isMultiple = productionCount > 1;
-	const productionTitle = isMultiple
-		? `${formatOrdinal(productionIndex + 1)}: ${production.name}`
-		: production.name;
+	const isLastProduction = productionIndex >= productionCount - 1;
+	const isPlaceholderDisplay = Boolean(production.isPlaceholderDisplay);
 
 	const titleRow = (
-		<div className="flex items-center justify-between gap-2">
-			<h3 className="m-0 pl-2">{productionTitle}</h3>
-			{isAdmin && <EditThursdayButton thursdayId={thursday.id} />}
+		<div className="flex items-center justify-between gap-2 px-5">
+			<h3 className="m-0 flex min-w-0 items-baseline gap-2">
+				<span className={clsx("min-w-0 truncate", isPlaceholderDisplay && "text-[var(--content-muted)]")}>
+					{isPlaceholderDisplay ? "Untitled" : production.name}
+				</span>
+			</h3>
+			{(surface === "modal" || (isAdmin && showEditButton)) && (
+				<div className="flex shrink-0 items-center gap-2">
+					{isAdmin && showEditButton && <EditThursdayButton thursdayId={thursday.id} surface={surface} />}
+				</div>
+			)}
 		</div>
 	);
 
 	const fields = (
-		<div className="flex flex-col gap-6">
-			<div className="flex flex-col gap-2 text-[var(--app-text)] min-[768px]:flex-row min-[768px]:gap-6">
+		<div className={styles.fields}>
+			<div className={styles.meta}>
 				<div className="flex items-center gap-1.5">
 					<MaskIcon icon="location/location.svg" className={metaIconClassName} />
 					{production.location}
@@ -74,9 +71,9 @@ export default async function ProductionCard({
 					{formattedDate}
 				</div>
 			</div>
-			<div className="grid grid-cols-2 gap-6 max-[640px]:grid-cols-1">
-				<div className="flex min-w-0 flex-col gap-4">
-					<div className="flex min-w-0 flex-col gap-2">
+			<div className={styles.split}>
+				<div className={styles.people}>
+					<div className={styles.section}>
 						<span className={producers.length > 0 ? sectionLabelClassName : inactiveSectionLabelClassName}>Producers</span>
 						{producers.length > 0 ? (
 							<div className={peopleListClassName}>
@@ -90,7 +87,7 @@ export default async function ProductionCard({
 							<span className={emptyStateClassName}>No producers credited yet.</span>
 						)}
 					</div>
-					<div className="flex min-w-0 flex-col gap-2">
+					<div className={styles.section}>
 						<span className={faculty.length > 0 ? sectionLabelClassName : inactiveSectionLabelClassName}>Faculty</span>
 						{faculty.length > 0 ? (
 							<div className={peopleListClassName}>
@@ -105,23 +102,25 @@ export default async function ProductionCard({
 						)}
 					</div>
 				</div>
-				<div className="flex min-w-0 flex-col gap-2">
+				<div className={styles.presentationsColumn}>
 					<span className={production.presentations.length > 0 ? sectionLabelClassName : inactiveSectionLabelClassName}>Presentations</span>
-					<div className="flex flex-col gap-2">
+					<div className={styles.presentationList}>
 						{production.presentations.length > 0 ? (
 							production.presentations.map((presentation: any) => {
 								const presenters = presentation.presenters || [];
 
 								return (
 									<div key={presentation.id} className="flex flex-col gap-1.5">
-										<div className="flex flex-wrap items-baseline gap-x-1.5 gap-y-1">
-											<h6 className="m-0">{presentation.name}</h6>
-											{(presentation.tags || []).map((tag: string) => (
-												<span key={tag} className={presentationTagClassName}>
-													· {tag}
-												</span>
-											))}
-										</div>
+										{(presentation.tags || []).length > 0 && (
+											<div className="flex flex-wrap items-center gap-1">
+												{presentation.tags.map((tag: string) => (
+													<span key={tag} className={presentationTagClassName}>
+														{tag}
+													</span>
+												))}
+											</div>
+										)}
+										<h6 className="m-0">{presentation.name}</h6>
 										{presenters.length > 0 ? (
 											<div className={peopleListClassName}>
 												{presenters.map((presenter: any) => (
@@ -157,7 +156,13 @@ export default async function ProductionCard({
 	}
 
 	return (
-		<div className={clsx("flex flex-col gap-2", productionIndex > 0 && "mt-6")}>
+		<div
+			className={clsx(
+				"flex flex-col gap-2",
+				productionIndex > 0 && "pt-6",
+				!isLastProduction && "border-b border-b-[var(--modal-separator)] pb-6",
+			)}
+		>
 			{titleRow}
 			<div className="p-5">
 				{fields}

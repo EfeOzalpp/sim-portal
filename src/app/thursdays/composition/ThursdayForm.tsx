@@ -46,6 +46,7 @@ interface ThursdayFormProps {
   defaultValues?: any;
   users: BasicUser[];
   semesters: Array<{ id: string; name: string }>;
+  suggestedTags?: string[];
   thursdayId?: string;
   onSubmit: (data: any) => Promise<ActionResult<any> | any>;
 }
@@ -54,6 +55,7 @@ export default function ThursdayForm({
   defaultValues,
   users,
   semesters,
+  suggestedTags = [],
   thursdayId,
   onSubmit,
 }: ThursdayFormProps) {
@@ -117,11 +119,11 @@ export default function ThursdayForm({
         )}
 
         <ThursdaySection control={control} semesters={semesters} />
-        <ProductionsSection control={control} users={users} semesters={semesters} />
+        <ProductionsSection control={control} users={users} semesters={semesters} suggestedTags={suggestedTags} />
       </div>
 
-      <div className="mt-4 flex justify-start pt-4">
-        <Button type="submit" disabled={isSubmitting} tone="success" fullWidth>
+      <div className="mt-6 flex justify-start">
+        <Button surface="modal" type="submit" disabled={isSubmitting} tone="cta" className="px-6!">
           {isSubmitting
             ? "Saving..."
             : thursdayId

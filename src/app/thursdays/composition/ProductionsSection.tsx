@@ -38,12 +38,14 @@ interface ProductionsSectionProps {
   control: any;
   users: BasicUser[];
   semesters?: Array<{ id: string; name: string }>;
+  suggestedTags?: string[];
 }
 
 export default function ProductionsSection({
   control,
   users,
   semesters,
+  suggestedTags = [],
 }: ProductionsSectionProps) {
   const { fields, append, remove } = useFieldArray({
     control,
@@ -96,7 +98,8 @@ export default function ProductionsSection({
         </button>
       </div>
 
-      {fields.length === 0 ? (
+      <div data-modal-surface-depth="2">
+        {fields.length === 0 ? (
         <p className="ui-note my-6 text-center">
           No productions yet.
         </p>
@@ -104,13 +107,15 @@ export default function ProductionsSection({
         <Collapse
           defaultValue={fields.map((f: any) => f.id)}
           items={fields.map((field: any, pIndex) => {
-            const name = watchProductions?.[pIndex]?.name;
+            const name = watchProductions?.[pIndex]?.name?.trim();
             const trigger = (
               <span className={collapseLabelClassName}>
                 {/* Rotation reads the trigger's own data-state — Radix sets
                     data-state="open"/"closed" on it directly. */}
                 <span className={collapseIconClassName} aria-hidden="true" />
-                <span className={collapseTitleTextClassName}>{name}</span>
+                <span className={collapseTitleTextClassName} style={!name ? { color: "var(--content-muted)" } : undefined}>
+                  {name || "Unnamed Production"}
+                </span>
               </span>
             );
 
@@ -140,12 +145,14 @@ export default function ProductionsSection({
                   control={control}
                   users={users}
                   semesters={semesters}
+                  suggestedTags={suggestedTags}
                 />
               ),
             };
           })}
         />
-      )}
+        )}
+      </div>
 
       <ModalPopup
         open={pendingRemoveIndex !== null}

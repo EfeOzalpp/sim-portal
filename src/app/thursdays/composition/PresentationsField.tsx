@@ -1,7 +1,7 @@
 "use client";
 
 // React & Next.js
-import { useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 // Actions
 import { BasicUser } from "@/actions/schemas";
@@ -49,6 +49,7 @@ interface PresentationsFieldProps {
   control: any;
   users: BasicUser[];
   semesters?: Array<{ id: string; name: string }>;
+  suggestedTags?: string[];
 }
 
 export default function PresentationsField({
@@ -56,6 +57,7 @@ export default function PresentationsField({
   control,
   users,
   semesters = [],
+  suggestedTags = [],
 }: PresentationsFieldProps) {
   const { fields, append, remove } = useFieldArray({
     control,
@@ -68,7 +70,26 @@ export default function PresentationsField({
   });
 
   const [pendingRemoveIndex, setPendingRemoveIndex] = useState<number | null>(null);
+  const [openPresentationIds, setOpenPresentationIds] = useState<string[]>([]);
+  const previousFieldCount = useRef(fields.length);
   const studentUsers = users.filter((u) => isStudentRole((u as any).role));
+  const suggestedTagOptions = useMemo(
+    () => suggestedTags.map((tag) => ({ value: tag, label: tag })),
+    [suggestedTags],
+  );
+
+  useEffect(() => {
+    if (fields.length > previousFieldCount.current) {
+      const addedField = fields[fields.length - 1];
+      if (addedField) {
+        setOpenPresentationIds((current) =>
+          current.includes(addedField.id) ? current : [...current, addedField.id],
+        );
+      }
+    }
+
+    previousFieldCount.current = fields.length;
+  }, [fields]);
 
   // Narrows which people show up as Presenters candidates to just this
   // semester's members - defaults to whichever semester matches today (same
@@ -113,15 +134,19 @@ export default function PresentationsField({
         </p>
       ) : (
         <Collapse
+          value={openPresentationIds}
+          onValueChange={setOpenPresentationIds}
           items={fields.map((field: any, pIndex) => {
-            const name = watchPresentations?.[pIndex]?.name;
+            const name = watchPresentations?.[pIndex]?.name?.trim();
             const trigger = (
               <span className={collapseLabelClassName}>
                 {/* Rotation reads the trigger's own data-state — Radix sets
                     data-state="open"/"closed" on it directly, no isActive
                     render-prop needed. */}
                 <span className={collapseIconClassName} aria-hidden="true" />
-                <span className={presentationTitleTextClassName}>{name}</span>
+                <span className={presentationTitleTextClassName} style={!name ? { color: "var(--content-muted)" } : undefined}>
+                  {name || "Unnamed Presentation"}
+                </span>
               </span>
             );
 
@@ -161,6 +186,7 @@ export default function PresentationsField({
                               {showError && <FieldError>{fieldState.error!.message}</FieldError>}
                             </div>
                             <Input
+                              variant="modal"
                               {...field}
                               placeholder="Enter presentation name"
                               status={showError ? "error" : ""}
@@ -241,9 +267,12 @@ export default function PresentationsField({
                       name={`productions.${productionIndex}.presentations.${pIndex}.tags`}
                       render={({ field }) => (
                         <Select
+                          inModal
                           mode="tags"
                           value={field.value ?? []}
                           onChange={field.onChange}
+                          suggestedOptions={suggestedTagOptions}
+                          suggestedLabel="Suggested"
                           placeholder="Type a tag and press Enter..."
                         />
                       )}

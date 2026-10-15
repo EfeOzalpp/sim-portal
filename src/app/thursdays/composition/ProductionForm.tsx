@@ -40,6 +40,7 @@ interface ProductionFormProps {
   control: any;
   users: BasicUser[];
   semesters?: Array<{ id: string; name: string }>;
+  suggestedTags?: string[];
 }
 
 export default function ProductionForm({
@@ -47,6 +48,7 @@ export default function ProductionForm({
   control,
   users,
   semesters = [],
+  suggestedTags = [],
 }: ProductionFormProps) {
   const producerUsers = users.filter((u) => !isStaffRole((u as any).role));
 
@@ -84,6 +86,7 @@ export default function ProductionForm({
                     {showError && <FieldError>{fieldState.error!.message}</FieldError>}
                   </div>
                   <Input
+                    variant="modal"
                     {...field}
                     placeholder="Enter production name"
                     status={showError ? "error" : ""}
@@ -188,6 +191,7 @@ export default function ProductionForm({
         control={control}
         users={users}
         semesters={semesters}
+        suggestedTags={suggestedTags}
       />
     </div>
   );

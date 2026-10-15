@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname, useSearchParams } from "next/navigation";
-import { Button } from "@/components/button";
+import { Button, type ButtonSurface } from "@/components/button";
 import { actionButtonIconClassName } from "@/components/button/styles";
 import { MaskIcon } from "@/theme/MaskIcon";
 import { THURSDAY_MODAL_PARAMS } from "@/constants/modal-params";
@@ -9,6 +9,7 @@ import { THURSDAY_MODAL_PARAMS } from "@/constants/modal-params";
 interface EditThursdayButtonProps {
 	thursdayId: string;
 	className?: string;
+	surface?: ButtonSurface;
 }
 
 // Swaps to the exact same Edit Thursday modal the "Edit Thursdays" action
@@ -19,7 +20,7 @@ interface EditThursdayButtonProps {
 // Works from wherever ThursdayDetailContent is rendered (Thursdays or
 // Individual Performance) since it swaps the current pathname's params
 // rather than hardcoding a destination page.
-export default function EditThursdayButton({ thursdayId, className }: EditThursdayButtonProps) {
+export default function EditThursdayButton({ thursdayId, className, surface = "modal" }: EditThursdayButtonProps) {
 	const pathname = usePathname();
 	const searchParams = useSearchParams();
 
@@ -29,8 +30,12 @@ export default function EditThursdayButton({ thursdayId, className }: EditThursd
 	params.delete(THURSDAY_MODAL_PARAMS.delete);
 	params.set(THURSDAY_MODAL_PARAMS.edit, thursdayId);
 
+	if (surface === "modal") {
+		return <Button surface={surface} href={`${pathname}?${params.toString()}`} variant="tool" icon="edit/edit.svg" className={className} aria-label="Edit Thursday" title="Edit Thursday" />;
+	}
+
 	return (
-		<Button href={`${pathname}?${params.toString()}`} variant="action" className={className}>
+		<Button surface={surface} href={`${pathname}?${params.toString()}`} variant="action" className={className}>
 			<MaskIcon icon="edit/edit.svg" className={actionButtonIconClassName} />
 			Edit
 		</Button>

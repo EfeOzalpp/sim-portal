@@ -1,0 +1,88 @@
+.fields {
+	container-type: inline-size;
+	display: flex;
+	flex-direction: column;
+	gap: 1.5rem;
+}
+
+.meta {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	color: var(--app-text);
+}
+
+.split {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
+	gap: 3rem 4rem;
+	align-items: start;
+}
+
+.people,
+.section,
+.presentationsColumn {
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
+}
+
+.people {
+	gap: 1.5rem;
+}
+
+.section,
+.presentationsColumn {
+	gap: 0.5rem;
+}
+
+.presentationsColumn {
+	container-type: inline-size;
+}
+
+.presentationList {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
+	column-gap: 1.5rem;
+}
+
+.presentationList > * {
+	position: relative;
+	padding-block: 0.75rem;
+}
+
+.presentationList > :not(:last-child)::after {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 14rem;
+	max-width: 100%;
+	height: 1px;
+	background: var(--modal-separator);
+	content: "";
+}
+
+@container (min-width: 32rem) {
+	.meta {
+		flex-direction: row;
+		gap: 1.5rem;
+	}
+}
+
+@container (min-width: 40rem) {
+	.split {
+		grid-template-columns: minmax(16rem, max-content) minmax(0, 1fr);
+	}
+}
+
+@container (min-width: 24rem) {
+	.presentationList {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+
+	.presentationList > :nth-last-child(2):nth-child(odd) {
+		&::after {
+			display: none;
+		}
+	}
+}
