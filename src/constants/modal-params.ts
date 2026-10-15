@@ -16,6 +16,7 @@ export const THURSDAY_MODAL_PARAMS = {
 
 export const SEMESTER_MODAL_PARAMS = {
 	add: "addSemester",
+	view: "viewSemesterId",
 	edit: "editSemesterId",
 	delete: "deleteSemesterId",
 } as const;

@@ -15,6 +15,7 @@ import AddSemesterFormContent from "@/app/semester/add/AddSemesterFormContent";
 import EditSemesterFormContent from "@/app/semester/[id]/edit/EditSemesterFormContent";
 import SemesterDeleteConfirmContent from "@/app/semester/composition/SemesterDeleteConfirmContent";
 import SemesterCardGrid from "@/app/semester/composition/SemesterCardGrid";
+import SemesterEnrollmentModalContent from "@/app/semester/composition/SemesterEnrollmentModalContent";
 import SemesterSortPopover from "@/app/semester/composition/SemesterSortPopover";
 
 // Helpers
@@ -131,10 +132,13 @@ export default async function SemesterPage({ searchParams }: SemesterPageProps) 
     : semesters;
   const visibleSemesters = sortSemesters(filteredSemesters, semesterSort);
   const addSemester = getSingleParam(filters[SEMESTER_MODAL_PARAMS.add]);
+  const viewSemesterId = getSingleParam(filters[SEMESTER_MODAL_PARAMS.view]);
   const editSemesterId = getSingleParam(filters[SEMESTER_MODAL_PARAMS.edit]);
   const deleteSemesterId = getSingleParam(filters[SEMESTER_MODAL_PARAMS.delete]);
+  const viewSemester = viewSemesterId ? semesters.find((semester: any) => semester.id === viewSemesterId) : null;
   const semesterReturnHref = getSemesterReturnHref(filters);
   const addHref = getSemesterModalHref(filters, SEMESTER_MODAL_PARAMS.add, "1");
+  const getViewHref = (semesterId: string) => getSemesterModalHref(filters, SEMESTER_MODAL_PARAMS.view, semesterId);
   const getEditHref = (semesterId: string) => getSemesterModalHref(filters, SEMESTER_MODAL_PARAMS.edit, semesterId);
   const getDeleteHref = (semesterId: string) => getSemesterModalHref(filters, SEMESTER_MODAL_PARAMS.delete, semesterId);
 
@@ -154,11 +158,23 @@ export default async function SemesterPage({ searchParams }: SemesterPageProps) 
           <SemesterCardGrid
             semesters={visibleSemesters}
             addHref={addHref}
+            getViewHref={getViewHref}
             getEditHref={getEditHref}
             getDeleteHref={getDeleteHref}
           />
         </PageCard>
-        {addSemester && !editSemesterId && !deleteSemesterId && (
+        {viewSemester && !addSemester && !editSemesterId && !deleteSemesterId && (
+          <RouteModalPopup
+            key={viewSemester.id}
+            paramName={SEMESTER_MODAL_PARAMS.view}
+            title={<span className="sr-only">{formatSemesterCode(viewSemester.name)} enrollment</span>}
+            dialogClassName="w-[min(44rem,100%)] max-[768px]:h-dvh"
+            minimalHeader
+          >
+            <SemesterEnrollmentModalContent semester={viewSemester} />
+          </RouteModalPopup>
+        )}
+        {addSemester && !viewSemesterId && !editSemesterId && !deleteSemesterId && (
           <RouteModalPopup
             key="add-semester"
             paramName={SEMESTER_MODAL_PARAMS.add}
@@ -168,7 +184,7 @@ export default async function SemesterPage({ searchParams }: SemesterPageProps) 
             <AddSemesterFormContent />
           </RouteModalPopup>
         )}
-        {editSemesterId && !addSemester && !deleteSemesterId && (
+        {editSemesterId && !addSemester && !viewSemesterId && !deleteSemesterId && (
           <RouteModalPopup
             key={editSemesterId}
             paramName={SEMESTER_MODAL_PARAMS.edit}
@@ -178,7 +194,7 @@ export default async function SemesterPage({ searchParams }: SemesterPageProps) 
             <EditSemesterFormContent semesterId={editSemesterId} />
           </RouteModalPopup>
         )}
-        {deleteSemesterId && !addSemester && !editSemesterId && (
+        {deleteSemesterId && !addSemester && !viewSemesterId && !editSemesterId && (
           <RouteModalPopup
             key={deleteSemesterId}
             paramName={SEMESTER_MODAL_PARAMS.delete}

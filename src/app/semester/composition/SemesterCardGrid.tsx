@@ -16,11 +16,12 @@ const enrollmentRoles = [
 
 interface SemesterCardProps {
 	semester: any;
+	viewHref: string;
 	editHref: string;
 	deleteHref: string;
 }
 
-function SemesterCard({ semester, editHref, deleteHref }: SemesterCardProps) {
+function SemesterCard({ semester, viewHref, editHref, deleteHref }: SemesterCardProps) {
 	const semesterCode = formatSemesterCode(semester.name);
 	const isCurrent = normalizeSemesterCode(semester.name) === getCurrentSemesterCode();
 	const showSemesterName = semester.name && semester.name !== semesterCode;
@@ -32,7 +33,7 @@ function SemesterCard({ semester, editHref, deleteHref }: SemesterCardProps) {
 				<Button surface="page" variant="tool" href={editHref} icon="edit/edit.svg" aria-label={`Edit ${semesterCode}`} />
 				<Button surface="page" variant="tool" tone="danger" href={deleteHref} icon="delete/delete.svg" aria-label={`Delete ${semesterCode}`} className="[--page-icon-bg-hover:var(--button-delete-overlay-bg-hover)] [--button-danger-icon-text:var(--button-delete-overlay-text)]" />
 			</div>
-			<div className="relative z-[1] flex h-full min-h-36 flex-col gap-3 px-4 py-4 no-underline">
+			<Link href={viewHref} scroll={false} className="relative z-[1] flex h-full min-h-36 flex-col gap-3 px-4 py-4 no-underline" aria-label={`View ${semesterCode} enrollment`}>
 				<h3 className="m-0 flex items-center gap-1 pr-16 text-[var(--app-text)]">
 					{isCurrent && (
 						<span className="inline-flex shrink-0" role="img" aria-label="Current semester" title="Current semester">
@@ -58,7 +59,7 @@ function SemesterCard({ semester, editHref, deleteHref }: SemesterCardProps) {
 				<span className="pointer-events-none absolute top-1/2 right-5 flex -translate-y-1/2 opacity-0 transition-opacity duration-150 group-hover:opacity-100 group-focus-within:opacity-100" aria-hidden="true">
 					<MaskIcon icon="view/forward.svg" className="h-5 w-5 flex-none bg-[var(--app-text)] [mask-position:center] [mask-repeat:no-repeat] [mask-size:contain]" />
 				</span>
-			</div>
+			</Link>
 		</article>
 	);
 }
@@ -78,11 +79,12 @@ function AddSemesterCard({ href }: { href: string }) {
 interface SemesterCardGridProps {
 	semesters: any[];
 	addHref: string;
+	getViewHref: (semesterId: string) => string;
 	getEditHref: (semesterId: string) => string;
 	getDeleteHref: (semesterId: string) => string;
 }
 
-export default function SemesterCardGrid({ semesters, addHref, getEditHref, getDeleteHref }: SemesterCardGridProps) {
+export default function SemesterCardGrid({ semesters, addHref, getViewHref, getEditHref, getDeleteHref }: SemesterCardGridProps) {
 	return (
 		<div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,max(8rem,calc((100%_-_0.5rem)/2))),1fr))] items-stretch gap-x-3 gap-y-6 min-[769px]:grid-cols-[repeat(auto-fill,minmax(min(100%,18rem),1fr))]">
 			<AddSemesterCard href={addHref} />
@@ -90,6 +92,7 @@ export default function SemesterCardGrid({ semesters, addHref, getEditHref, getD
 				<SemesterCard
 					key={semester.id}
 					semester={semester}
+					viewHref={getViewHref(semester.id)}
 					editHref={getEditHref(semester.id)}
 					deleteHref={getDeleteHref(semester.id)}
 				/>
