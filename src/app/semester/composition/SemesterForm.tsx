@@ -13,9 +13,10 @@ import { RangePicker } from "@/components/datepicker";
 import { Alert } from "@/components/alert";
 import { Select } from "@/components/select";
 import { selectItemVariants } from "@/components/select/styles";
-import { inputFilterTriggerClassName } from "@/components/input/styles";
+import { inputFilterIconClassName, inputFilterTriggerClassName } from "@/components/input/styles";
 import { Button } from "@/components/button";
 import Popover from "@/components/popover";
+import InfoPopover from "@/components/popover/InfoPopover";
 import { useModalCloseGuard } from "@/components/modal/CloseGuard";
 import { FieldError, fieldLabelRowClassName } from "@/components/field-error";
 import { useToast } from "@/components/toast";
@@ -35,6 +36,7 @@ import dayjs from "dayjs";
 import { useForm, useWatch, Controller } from "react-hook-form";
 import { handleFormAction } from "@/helpers";
 import { formatSemesterCode, getCurrentSemesterCode, getDefaultSemesterDateRange, getSemesterYear, normalizeSemesterCode, semesterOrdinal } from "@/components/domain/filters/semester-filter";
+import styles from "@/app/semester/composition/SemesterForm.module.css";
 
 // Sentinel for the semester filter's own "show everyone" option - distinct
 // from ALL_SEMESTERS_VALUE (the page-level filter's sentinel), since this is
@@ -97,14 +99,11 @@ const roleFilterOptions = [
 
 // Same shape as RoleFilterPopover's own optionButtonClassName (the /users
 // page's search-field role filter) - justify-between + gap-3 leaves room for
-// a right-aligned count, and --modal-button-bg-hover is this popover's own
-// surface's hover token (same Popover shell either one renders through), not
-// selectItemVariants' own --input-area-hovered-item-bg (tuned for Select's dropdown).
-const roleFilterOptionButtonClassName = "flex w-full items-center justify-between gap-3 border-0 bg-transparent text-left hover:bg-[var(--modal-button-bg-hover)]!";
+// a right-aligned count, and the hover token is shared by Select dropdowns and page popovers.
+const roleFilterOptionButtonClassName = "flex w-full items-center justify-between gap-3 border-0 bg-transparent text-left hover:bg-[var(--contrast-surface-hovered-item-bg)]!";
 
-// Muted at rest, matches the label's own --select-active-text once selected - same as RoleFilterPopover's own optionCountClassName.
 function roleFilterCountClassName(selected: boolean) {
-  return selected ? "text-[var(--select-active-text)]" : "text-[var(--content-muted)]";
+  return selected ? "text-[var(--select-active-text)]" : "text-inherit";
 }
 
 function EnrollmentRoleFilter({
@@ -138,12 +137,12 @@ function EnrollmentRoleFilter({
       contentClassName="z-[320]!"
       trigger={
         <button type="button" className={inputFilterTriggerClassName} aria-label="Filter by role">
-          <MaskIcon icon="filter/filter.svg" className="h-4 w-4 bg-current [mask-position:center] [mask-repeat:no-repeat] [mask-size:contain]" />
+          <MaskIcon icon="filter/filter.svg" className={inputFilterIconClassName} />
         </button>
       }
     >
       <div className="flex min-w-[9rem] flex-col gap-0.5">
-        <span className="ui-label block px-2 pt-0.5 pb-1">Filter by role</span>
+        <span className="ui-label block px-4 pt-0.5 pb-1">Filter by role</span>
         <div className="flex flex-col gap-0.5" role="listbox">
           <button
             type="button"
@@ -329,9 +328,9 @@ export default function SemesterForm({
             onClose={() => setError(null)}
           />
         )}
-        <div className="flex flex-1 flex-col gap-8 pt-4">
-          <div className="grid w-full grid-cols-[max-content_minmax(0,1fr)] gap-4 max-[600px]:grid-cols-1">
-            <div className="flex w-40 flex-col gap-2 max-[600px]:w-full">
+        <div className={clsx(styles.body, "flex flex-1 flex-col gap-8")}>
+          <div className={styles.nameRow}>
+            <div className={styles.nameField}>
               <Controller
                 control={control}
                 name="name"
@@ -375,7 +374,14 @@ export default function SemesterForm({
                   return (
                     <>
                       <div className={clsx(fieldLabelRowClassName, "pl-1")}>
-                        <span className="ui-label m-0">Date Range *</span>
+                        <span className="inline-flex items-center gap-2">
+                          <span className="ui-label m-0">Date Range *</span>
+                          {!nameValue && (
+                            <InfoPopover label="Why is date range locked?" inModal>
+                              Select an academic term first to unlock date range.
+                            </InfoPopover>
+                          )}
+                        </span>
                         {showError && <FieldError>{fieldState.error!.message}</FieldError>}
                       </div>
                       <RangePicker
@@ -466,8 +472,8 @@ export default function SemesterForm({
           </div>
         </div>
 
-        <div className="mt-4 flex justify-start pt-4">
-        <Button type="submit" disabled={isSubmitting} tone="success" fullWidth>
+        <div className="mt-6 flex justify-start">
+        <Button surface="modal" type="submit" disabled={isSubmitting} tone="cta" className="px-6!">
           {isSubmitting
             ? "Saving..."
             : semester

@@ -6,7 +6,8 @@ import { getAllSemesters } from "@/actions/semesters";
 
 // Components
 import { FilterInput } from "@/components/primitives/Filters";
-import PageTitle from "@/components/layout/PageTitle";
+import PageChrome from "@/components/layout/PageChrome/PageChrome";
+import PageCard from "@/components/layout/PageCard";
 import RouteModalPopup from "@/components/modal/RouteModalPopup";
 
 // Composition
@@ -17,7 +18,7 @@ import SemesterCardGrid from "@/app/semester/composition/SemesterCardGrid";
 import SemesterSortPopover from "@/app/semester/composition/SemesterSortPopover";
 
 // Helpers
-import { ALL_SEMESTERS_VALUE, formatSemesterCode, getSearchParamValue, normalizeSemesterCode, semesterOrdinal } from "@/components/domain/filters/semester-filter";
+import { formatSemesterCode, getSearchParamValue, normalizeSemesterCode, semesterOrdinal } from "@/components/domain/filters/semester-filter";
 import { SEMESTER_MODAL_PARAMS, type SemesterModalParam } from "@/constants/modal-params";
 import { DEFAULT_SEMESTER_SORT, SEMESTER_SORT_KEY, type SemesterSortValue } from "@/constants/filters";
 import { isAdminRole } from "@/constants/roles";
@@ -139,19 +140,14 @@ export default async function SemesterPage({ searchParams }: SemesterPageProps) 
 
   return (
     <>
-      <PageTitle
-        title={ALL_SEMESTERS_VALUE}
-        contentClassName="min-[769px]:ml-[calc(var(--nav-rail-collapsed-width)_+_12rem)]"
-        filterControlClassName="w-56 min-w-0 shrink-0"
-        filterControl={
-          <div className="min-w-0 [&_.input-affix-wrapper]:border-[var(--green-select-border)] [&_.input-affix-wrapper]:bg-[var(--green-select-bg)] [&_.input-affix-wrapper:hover]:border-[var(--green-select-border)] [&_.input-affix-wrapper:hover]:bg-[var(--green-select-bg-hover)] [&_.input-affix-wrapper:focus-within]:border-[var(--green-select-border)] [&_input]:text-[var(--green-text)] [&_input]:placeholder:text-[var(--green-text)] [&_.input-affix-wrapper>span:first-child]:bg-[var(--green-text)]">
-            <FilterInput query="semesterSearch" placeholder="Search" mode="filter" filterTrigger={<SemesterSortPopover />} />
-          </div>
-        }
+      <PageChrome
+        title="Semesters"
+        desktopSearchWidth="var(--select-title-width)"
+        search={<FilterInput variant="page" query="semesterSearch" placeholder="Search" mode="filter" filterTrigger={<SemesterSortPopover />} />}
       />
       <div data-page-content>
         {/* bg here, not on individual cards' own container - see users/page.tsx for the full explanation. */}
-        <div className="bg-[var(--page-bg)] p-6 min-[769px]:ml-[var(--nav-rail-collapsed-width)] min-[769px]:mr-2 min-[769px]:rounded-tl-[0.5rem] min-[769px]:rounded-tr-[0.5rem] min-[769px]:border min-[769px]:border-b-0 min-[769px]:border-solid min-[769px]:border-[var(--main-border)] min-[769px]:shadow-[var(--content-shadow)]">
+        <PageCard padded data-page-surface className="bg-[var(--page-bg)]">
           {semesterSearch && visibleSemesters.length === 0 && (
             <p className="m-0 mb-4 text-[var(--label-text)]">No semesters found.</p>
           )}
@@ -161,7 +157,7 @@ export default async function SemesterPage({ searchParams }: SemesterPageProps) 
             getEditHref={getEditHref}
             getDeleteHref={getDeleteHref}
           />
-        </div>
+        </PageCard>
         {addSemester && !editSemesterId && !deleteSemesterId && (
           <RouteModalPopup
             key="add-semester"

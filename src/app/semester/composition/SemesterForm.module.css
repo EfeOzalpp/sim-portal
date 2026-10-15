@@ -1,0 +1,27 @@
+.body {
+	container-type: inline-size;
+}
+
+.nameRow {
+	display: grid;
+	width: 100%;
+	grid-template-columns: minmax(0, 1fr);
+	gap: 1rem;
+}
+
+.nameField {
+	display: flex;
+	width: 100%;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+
+@container (min-width: 30rem) {
+	.nameRow {
+		grid-template-columns: max-content minmax(0, 1fr);
+	}
+
+	.nameField {
+		width: 10rem;
+	}
+}

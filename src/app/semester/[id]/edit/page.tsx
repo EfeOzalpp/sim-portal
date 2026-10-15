@@ -5,7 +5,6 @@ import { notFound } from "next/navigation";
 import { getSemester } from "@/actions/semesters";
 
 // Components
-import NavContent from "@/components/layout/NavContent";
 import CloseButton from "@/components/primitives/CloseButton";
 
 // Composition
@@ -24,11 +23,10 @@ export default async function EditSemester({ params }: EditSemesterProps) {
 
 	return (
 		<>
-			<NavContent
-				className="mx-auto max-w-[50%] border-b border-b-[var(--main-border)]"
-				start={<h2>Edit Semester</h2>}
-				end={<CloseButton href="/semester" />}
-			/>
+			<header className="mx-auto flex max-w-[50%] items-center justify-between border-b border-b-[var(--page-bg-border)] py-3">
+				<h2 className="m-0">Edit Semester</h2>
+				<CloseButton href="/semester" />
+			</header>
 			<div className="mx-auto max-w-[50%] pb-4">
 				<div className="content-card">
 					<EditSemesterFormContent semesterId={id} />
