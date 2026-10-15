@@ -1,0 +1,46 @@
+.root {
+	min-width: 0;
+}
+
+@supports not selector(::-webkit-scrollbar) {
+	@media (min-width: 769px) {
+		.root {
+			scrollbar-width: thin !important;
+			scrollbar-color: var(--scrollbar-thumb) transparent !important;
+		}
+	}
+}
+
+@media (min-width: 769px) {
+	.root::-webkit-scrollbar {
+		width: 1rem !important;
+		height: 1rem !important;
+	}
+
+	.root::-webkit-scrollbar-track {
+		background: transparent !important;
+		background-clip: padding-box !important;
+	}
+
+	.root::-webkit-scrollbar-thumb {
+		min-height: 2.5rem;
+		border: 0.25rem solid transparent !important;
+		border-radius: 0 !important;
+		background: var(--scrollbar-thumb) !important;
+		background-clip: padding-box !important;
+	}
+
+	.root::-webkit-scrollbar-thumb:hover {
+		border: 0.25rem solid transparent !important;
+		background: var(--scrollbar-thumb-hover) !important;
+		background-clip: padding-box !important;
+	}
+
+	.root::-webkit-scrollbar-button,
+	.root::-webkit-scrollbar-corner {
+		display: none !important;
+		width: 0 !important;
+		height: 0 !important;
+		background: transparent !important;
+	}
+}

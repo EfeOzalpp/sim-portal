@@ -1,0 +1,32 @@
+.root {
+	--app-text: var(--page-based-text);
+	--subtle-text: var(--page-based-text-subtle);
+	--app-title: var(--page-based-accent);
+	--page-button-text: var(--page-based-text);
+
+	box-sizing: border-box;
+	color: var(--page-based-text);
+}
+
+.padded {
+	padding: 1rem;
+}
+
+@media (min-width: 769px) {
+	.root {
+		position: relative;
+		margin-right: var(--page-gutter);
+		gap: 0;
+		box-shadow: var(--content-shadow);
+	}
+
+	.root[data-page-surface],
+	.root [data-page-surface] {
+		border: 1px solid var(--page-bg-border);
+		border-bottom: 0;
+	}
+
+	.padded {
+		padding: 1.5rem;
+	}
+}
