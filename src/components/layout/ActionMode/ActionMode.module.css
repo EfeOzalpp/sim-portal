@@ -24,51 +24,35 @@
 .surface[data-action-mode="edit-grades"] :global([data-action-mode-target="grade-cell"]) {
 	position: relative;
 	z-index: 270;
+	/* Cover the scrim even when a target has a translucent hover or inline open-state background. */
+	background-color: hsl(from var(--page-bg) h s l / 1) !important;
 }
 
-@keyframes actionModeSweep {
-	from {
-		background-position: 200% 0;
-	}
-	to {
-		background-position: -100% 0;
-	}
-}
-
-/* Continuous sweep as a ::after painted in front of the card, not a background-image on the target - some targets put their own opaque bg on a nested child, which would occlude it. mix-blend-mode: soft-light so it reads as a darker hue, not a stripe over the text. */
+/* Paint above nested surfaces so every action target gets the same tint. */
 .surface[data-action-mode="edit-users"] :global([data-action-mode-target="user-card"])::after,
 .surface[data-action-mode="delete-users"] :global([data-action-mode-target="user-card"])::after,
 .surface[data-action-mode="edit-thursdays"] :global([data-action-mode-target="thursday-card"])::after,
 .surface[data-action-mode="delete-thursdays"] :global([data-action-mode-target="thursday-card"])::after,
 .surface[data-action-mode="edit-semesters"] :global([data-action-mode-target="semester-card"])::after,
-.surface[data-action-mode="delete-semesters"] :global([data-action-mode-target="semester-card"])::after {
-	content: "";
-	position: absolute;
-	inset: 0;
-	z-index: 1;
-	pointer-events: none;
-	border-radius: 0.75rem;
-	mix-blend-mode: soft-light;
-	/* rgba(0,0,0,...), not var(--nav-button-bg-hover) - that token is near-white in light mode and barely registered blended with soft-light. */
-	background-image: linear-gradient(100deg, transparent 15%, rgba(0, 0, 0, 0.2) 50%, transparent 85%);
-	background-repeat: no-repeat;
-	background-size: 300% 100%;
-	animation: actionModeSweep 3s linear infinite;
-}
-
-/* grade-cell is a plain <td>, no rounding of its own. */
+.surface[data-action-mode="delete-semesters"] :global([data-action-mode-target="semester-card"])::after,
 .surface[data-action-mode="edit-grades"] :global([data-action-mode-target="grade-cell"])::after {
 	content: "";
 	position: absolute;
 	inset: 0;
 	z-index: 1;
 	pointer-events: none;
-	mix-blend-mode: soft-light;
-	/* rgba(0,0,0,...), not var(--nav-button-bg-hover) - that token is near-white in light mode and barely registered blended with soft-light. */
-	background-image: linear-gradient(100deg, transparent 15%, rgba(0, 0, 0, 0.2) 50%, transparent 85%);
-	background-repeat: no-repeat;
-	background-size: 300% 100%;
-	animation: actionModeSweep 3s linear infinite;
+	border-radius: 0;
+	background: transparent;
+}
+
+:global(html[data-theme="dark"]) .surface[data-action-mode="edit-users"] :global([data-action-mode-target="user-card"])::after,
+:global(html[data-theme="dark"]) .surface[data-action-mode="delete-users"] :global([data-action-mode-target="user-card"])::after,
+:global(html[data-theme="dark"]) .surface[data-action-mode="edit-thursdays"] :global([data-action-mode-target="thursday-card"])::after,
+:global(html[data-theme="dark"]) .surface[data-action-mode="delete-thursdays"] :global([data-action-mode-target="thursday-card"])::after,
+:global(html[data-theme="dark"]) .surface[data-action-mode="edit-semesters"] :global([data-action-mode-target="semester-card"])::after,
+:global(html[data-theme="dark"]) .surface[data-action-mode="delete-semesters"] :global([data-action-mode-target="semester-card"])::after,
+:global(html[data-theme="dark"]) .surface[data-action-mode="edit-grades"] :global([data-action-mode-target="grade-cell"])::after {
+	background: rgba(255, 255, 255, 0.08);
 }
 
 .surface[data-action-mode="edit-thursdays"] :global([data-action-mode-target="thursday-card"]),
@@ -100,12 +84,90 @@
 	--semester-card-action-icon: url("../../../theme/assets/edit/edit.svg");
 }
 
+.surface[data-action-mode="edit-thursdays"] :global([data-thursday-action-overlay]) {
+	--thursday-card-action-icon: url("../../../theme/assets/edit/edit.svg");
+}
+
 .surface[data-action-mode="delete-thursdays"] :global([data-thursday-action-overlay]) {
 	--thursday-card-action-icon: url("../../../theme/assets/delete/delete.svg");
 }
 
 .surface[data-action-mode="delete-semesters"] :global([data-semester-action-overlay]) {
 	--semester-card-action-icon: url("../../../theme/assets/delete/delete.svg");
+}
+
+.surface[data-action-mode="edit-users"] :global([data-user-action-overlay] > span),
+.surface[data-action-mode="delete-users"] :global([data-user-action-overlay] > span),
+.surface[data-action-mode="edit-thursdays"] :global([data-thursday-action-overlay] > span),
+.surface[data-action-mode="delete-thursdays"] :global([data-thursday-action-overlay] > span),
+.surface[data-action-mode="edit-semesters"] :global([data-semester-action-overlay] > span),
+.surface[data-action-mode="delete-semesters"] :global([data-semester-action-overlay] > span),
+.surface[data-action-mode="edit-grades"] :global([data-grade-action-overlay] > span) {
+	position: relative;
+	isolation: isolate;
+	background: transparent !important;
+	mask-image: none !important;
+	-webkit-mask-image: none !important;
+}
+
+.surface[data-action-mode="edit-users"] :global([data-user-action-overlay] > span)::before,
+.surface[data-action-mode="delete-users"] :global([data-user-action-overlay] > span)::before,
+.surface[data-action-mode="edit-thursdays"] :global([data-thursday-action-overlay] > span)::before,
+.surface[data-action-mode="delete-thursdays"] :global([data-thursday-action-overlay] > span)::before,
+.surface[data-action-mode="edit-semesters"] :global([data-semester-action-overlay] > span)::before,
+.surface[data-action-mode="delete-semesters"] :global([data-semester-action-overlay] > span)::before,
+.surface[data-action-mode="edit-grades"] :global([data-grade-action-overlay] > span)::before {
+	content: "";
+	position: absolute;
+	inset: -0.65rem;
+	z-index: 0;
+	border-radius: 9999px;
+	background: var(--elevated-surface);
+	filter: var(--action-mode-icon-ds);
+	opacity: 1;
+}
+
+.surface[data-action-mode="edit-users"] :global([data-user-action-overlay] > span)::after,
+.surface[data-action-mode="delete-users"] :global([data-user-action-overlay] > span)::after,
+.surface[data-action-mode="edit-thursdays"] :global([data-thursday-action-overlay] > span)::after,
+.surface[data-action-mode="delete-thursdays"] :global([data-thursday-action-overlay] > span)::after,
+.surface[data-action-mode="edit-semesters"] :global([data-semester-action-overlay] > span)::after,
+.surface[data-action-mode="delete-semesters"] :global([data-semester-action-overlay] > span)::after,
+.surface[data-action-mode="edit-grades"] :global([data-grade-action-overlay] > span)::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	z-index: 1;
+	background: currentColor;
+	mask-position: center;
+	mask-repeat: no-repeat;
+	mask-size: contain;
+	-webkit-mask-position: center;
+	-webkit-mask-repeat: no-repeat;
+	-webkit-mask-size: contain;
+}
+
+.surface[data-action-mode="edit-users"] :global([data-user-action-overlay] > span)::after,
+.surface[data-action-mode="delete-users"] :global([data-user-action-overlay] > span)::after {
+	mask-image: var(--user-card-action-icon);
+	-webkit-mask-image: var(--user-card-action-icon);
+}
+
+.surface[data-action-mode="edit-thursdays"] :global([data-thursday-action-overlay] > span)::after,
+.surface[data-action-mode="delete-thursdays"] :global([data-thursday-action-overlay] > span)::after {
+	mask-image: var(--thursday-card-action-icon);
+	-webkit-mask-image: var(--thursday-card-action-icon);
+}
+
+.surface[data-action-mode="edit-semesters"] :global([data-semester-action-overlay] > span)::after,
+.surface[data-action-mode="delete-semesters"] :global([data-semester-action-overlay] > span)::after {
+	mask-image: var(--semester-card-action-icon);
+	-webkit-mask-image: var(--semester-card-action-icon);
+}
+
+.surface[data-action-mode="edit-grades"] :global([data-grade-action-overlay] > span)::after {
+	mask-image: url("../../../theme/assets/edit/edit.svg");
+	-webkit-mask-image: url("../../../theme/assets/edit/edit.svg");
 }
 
 .surface[data-action-mode="edit-users"] :global([data-action-mode-target="user-card"]:hover [data-user-action-overlay] > span),
