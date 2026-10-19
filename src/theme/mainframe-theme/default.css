@@ -11,33 +11,24 @@ html[data-color-theme="default"][data-theme="light"] {
 	--app-theme: hsl(var(--hue-chrome) 60% 94%);
 
 	/* chrome - top bar + rail */
-	--app-bg: hsl(var(--hue-chrome) 60% 96%);
+	--app-bg: hsl(var(--hue-chrome) 70% 97%);
 
 			/* secondary buttons when the page bar is minimized and floats over content */
 			--page-bar-floating-button-bg: #ffffff;
 			--page-bar-floating-button-bg-hover: hsl(var(--hue-page) 30% 96%);
 
 	/* page content area */
-	--page-surface-base: hsl(var(--hue-page) 78% 98.5%);
-	--page-bg: hsl(var(--hue-page) 78% 98.5% / 0.8);
-	--page-bg-border: hsl(var(--hue-page) 30% 20% / 0.12);
+		/* specific to lightmode only because it derives modal hue from page slightly */
+		--page-surface-base: hsl(var(--hue-page) 78% 98.5%);
+		
+	--page-bg: hsl(var(--hue-page) 78% 98.5% / 0.4);
+	--page-bg-border: hsl(var(--hue-chrome) 80% 20% / 0.3);
 
 	/* optional */
 	--page-bg-hover: hsl(var(--hue-page) 78% 94.6%);
-
 	--page-bar-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
-	--page-bar-border: hsl(var(--hue-chrome) 10% 30% / 0.28);
+	--page-bar-border: hsl(var(--hue-chrome) 80% 20% / 0.2);
 	--content-shadow: none;
-	/* cards on the page canvas */
-	--page-card-hover: hsl(var(--hue-page) 55% 94.5% / 0.55);
-	--elevated-surface: var(--page-card-hover);
-	--elevated-surface-hover: hsl(0 0% 92%);
-	--elevated-surface-border: hsl(0 0% 0% / 0.06);
-	--elevated-surface-2: transparent;
-	--elevated-surface-hover-2: hsl(from var(--app-ind-progress-surface-hover) h s l / calc(alpha * 1.7));
-	--elevated-2-label-bg: hsl(var(--hue-page) 0% 88%);
-	--elevated-2-label-text: var(--subtle-text);
-	--action-mode-icon-ds: drop-shadow(0px 0px 16px hsl(0 0% 80%));
 
 	/* page borders */
 	--table-row-border: hsl(var(--hue-page) 62% 91.6%);
@@ -45,16 +36,11 @@ html[data-color-theme="default"][data-theme="light"] {
 	--card-border: hsl(var(--hue-page) 16% 81%);
 	--card-border-hover: hsl(var(--hue-page) 16% 69%);
 
-	/* individual progress items */
-	--app-ind-progress-surface: var(--page-bg);
-	--app-ind-progress-surface-selected: hsl(from var(--select-checkbox-active-bg) h s l / 0.12);
-	--app-ind-progress-surface-hover: hsl(from var(--select-checkbox-active-bg) h s l / 0.07);
-
 	/* nav rail */
 	--nav-active-bg: hsl(var(--hue-chrome) 60% 50% / 0.18);
 	--nav-hover-bg: hsl(var(--hue-chrome) 40% 40% / 0.08);
 	--nav-active-text: hsl(var(--hue-chrome) 50% 22%);
-	--nav-hover-opened-bg: var(--app-theme);
+	--nav-hover-opened-bg: var(--app-bg);
 	--app-icon: hsl(var(--hue-chrome) 40% 37.6%);
 	--nav-label: var(--app-icon);
 
@@ -71,18 +57,15 @@ html[data-color-theme="default"][data-theme="light"] {
 	/* text inside the page canvas */
 	--page-based-text: var(--app-text);
 	--page-based-text-subtle: var(--subtle-text);
-	--page-based-accent: var(--app-title);
 
 	/* icon-only buttons on the page content (outside the page bar) */
-	--page-icon-bg-hover: hsl(var(--hue-page) 30% 90%);
+	--page-icon-bg-hover: hsl(var(--hue-chrome) 40% 86% / 0.7);
 	--page-icon-bg-active: hsl(var(--hue-page) 30% 86%);
 
 	/* card overlay buttons */
-	--button-overlay-bg: hsl(var(--hue-page) 30% 98% / 0.92);
-	--button-overlay-bg-hover: hsl(var(--hue-page) 30% 92% / 0.95);
+	--button-overlay-bg: hsl(var(--hue-page) 30% 100%);
+	--button-overlay-bg-hover: hsl(var(--hue-page) 30% 86%);
 	--button-overlay-shadow: 0 1px 3px rgba(15, 23, 42, 0.2), 0 0 0 1px rgba(15, 23, 42, 0.06);
-	--button-delete-overlay-bg-hover: var(--action-delete-bg-hover);
-	--button-delete-overlay-text: var(--action-delete-text);
 
 	/* page search + title select */
 	--page-input-bg: hsl(var(--hue-chrome) 45% 45% / 0.14);
@@ -94,8 +77,6 @@ html[data-color-theme="default"][data-theme="light"] {
 	--title-select-bg: var(--page-input-bg);
 	--title-select-bg-hover: var(--page-input-bg-hover);
 	--title-select-text-open: #ffffff;
-	--page-select-text: var(--page-button-text);
-	--page-select-text-hover: var(--page-button-text-hover);
 
 }
 
@@ -112,49 +93,33 @@ html[data-color-theme="default"][data-theme="dark"] {
 	--app-theme: hsl(var(--hue-chrome) 32% 20%);
 
 	/* chrome - top bar + rail */
-	--app-bg: hsl(var(--hue-chrome) 40% 10%);
+	--app-bg: hsl(var(--hue-chrome) 60% 7%);
 
 			/* secondary buttons when the page bar is minimized and floats over content */
 			--page-bar-floating-button-bg: hsl(var(--hue-page) 25% 12%);
 			--page-bar-floating-button-bg-hover: hsl(var(--hue-page) 28% 18%);
 
 	/* page content area */
-	--page-surface-base: hsl(264 0% 16%);
-	--page-bg: hsl(var(--hue-page) 6% 10% / 0.8);
-	--page-bg-border: hsl(var(--hue-page) 6% 100% / 0.24);
+	--page-bg: hsl(var(--hue-page) 12% 8% / 0.65);
+	--page-bg-border: hsl(var(--hue-chrome) 80% 90% / 0.15);
 
 	/* optional */
 	--page-bg-hover: hsl(var(--hue-page) 16% 15%);
-
 	--page-bar-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
-	--page-bar-border: hsl(var(--hue-chrome) 10% 80% / 0.3);
-	--content-shadow: 0 0 24px rgba(255, 255, 255, 0);
-	/* cards on the page canvas */
-	--page-card-hover: hsl(var(--hue-page) 10% 15% / 0.65);
-	--elevated-surface: var(--page-card-hover);
-	--elevated-surface-hover: hsl(var(--hue-page) 16% 19%);
-	--elevated-surface-border: hsl(0 0% 100% / 0.05);
-	--elevated-surface-2: transparent;
-	--elevated-surface-hover-2: hsl(from var(--app-ind-progress-surface-hover) h s l / calc(alpha * 1.7));
-	--elevated-2-label-bg: hsl(from var(--select-checkbox-active-bg) h calc(s * 0.4) 30%);
-	--elevated-2-label-text: hsl(from var(--select-checkbox-active-bg) h 60% 88%);
-	--action-mode-icon-ds: drop-shadow(0px 0px 16px hsl(var(--hue-page) 16% 10%));
+	--page-bar-border: hsl(var(--hue-chrome) 80% 95% / 0.45);
 
+	--content-shadow: 0 0 24px rgba(255, 255, 255, 0);
 	/* page borders */
-	--table-row-border: hsl(var(--hue-page) 16% 23%);
-	--table-row-border-hover: hsl(var(--hue-page) 16% 32%);
+	--table-row-border: hsl(var(--hue-page) 12% 23%);
+	--table-row-border-hover: hsl(var(--hue-page) 12% 32%);
 	--card-border: hsl(var(--hue-page) 16% 28%);
 	--card-border-hover: hsl(var(--hue-page) 16% 38%);
 
-	/* individual progress items */
-	--app-ind-progress-surface: var(--page-bg);
-	--app-ind-progress-surface-selected: hsl(from var(--select-checkbox-active-bg) h calc(s * 1.3) l / 0.14);
-	--app-ind-progress-surface-hover: hsl(from var(--select-checkbox-active-bg) h s l / 0.08);
-
 	/* nav rail */
 	--nav-active-bg: hsl(var(--hue-chrome) 26% 85% / 0.5);
-	--nav-hover-bg: hsl(var(--hue-chrome) 13% 50% / 0.5);
+	--nav-hover-bg: hsl(var(--hue-chrome) 13% 50% / 0.22);
 	--nav-active-text: white;
+
 	--nav-hover-opened-bg: var(--app-bg);
 	--app-icon: hsl(var(--hue-chrome) 20% 95%);
 	--nav-label: hsl(var(--hue-chrome) 10% 90%);
@@ -174,15 +139,13 @@ html[data-color-theme="default"][data-theme="dark"] {
 	--page-based-text-subtle: hsl(0 0% 78%);
 
 	/* icon-only buttons on the page content (outside the page bar) */
-	--page-icon-bg-hover: hsl(var(--hue-page) 20% 22%);
+	--page-icon-bg-hover: hsl(var(--hue-chrome) 22% 18% / 0.7);
 	--page-icon-bg-active: hsl(var(--hue-page) 20% 26%);
 
 	/* card overlay buttons */
-	--button-overlay-bg: hsl(from var(--page-bg) h s calc(l * 1.6) / 0.92);
-	--button-overlay-bg-hover: hsl(from var(--page-bg) h s calc(l * 2.4) / 0.95);
+	--button-overlay-bg: hsl(from var(--page-bg) h s 20% / 1);
+	--button-overlay-bg-hover: hsl(from var(--page-bg) h s 26% / 0.95);
 	--button-overlay-shadow: none;
-	--button-delete-overlay-bg-hover: hsl(from var(--action-delete-bg-hover) h s calc(l * 0.7));
-	--button-delete-overlay-text: hsl(from var(--action-delete-text) h calc(s * 1.15) 80%);
 
 	/* page search + title select (a visual pair) */
 	--page-input-bg: hsl(var(--hue-chrome) 20% 85% / 0.12);
@@ -194,7 +157,5 @@ html[data-color-theme="default"][data-theme="dark"] {
 	--title-select-bg: var(--page-input-bg);
 	--title-select-bg-hover: var(--page-input-bg-hover);
 	--title-select-text-open: hsl(var(--hue-chrome) 32% 8%);
-	--page-select-text: #e9e9e9;
-	--page-select-text-hover: var(--page-input-search-hover);
 
 }

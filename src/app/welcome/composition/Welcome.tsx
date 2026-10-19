@@ -20,10 +20,10 @@ export default function Welcome() {
 				<h1 className="m-0">Welcome to SIM</h1>
 				{isAccessDenied ? (
 					<div className="flex flex-col gap-2 rounded-xl bg-[var(--tone-danger-bg)] p-4 text-[var(--tone-danger-text)]">
-						<p className="m-0 text-lg font-bold">
+						<p className="ui-heading m-0">
 							{error === "OAuthAccountNotLinked" ? "Account Linking Required" : "Access Denied: Your account is not whitelisted."}
 						</p>
-						<p className="m-0 leading-normal">
+						<p className="ui-reading m-0">
 							{error === "OAuthAccountNotLinked"
 								? "An account with this email already exists but is not linked to this login method. Please contact administration to resolve this."
 								: "This website is restricted to authorized SIM students and faculty. If you believe you should have access, please "}
@@ -34,7 +34,7 @@ export default function Welcome() {
 						</p>
 					</div>
 				) : (
-					<p className="m-0 leading-normal text-[var(--label-text)]">
+					<p className="ui-reading m-0 text-[var(--label-text)]">
 						This is a private website for the students and faculty of{" "}
 						<b className="text-[var(--app-text)]">Studio for Interrelated Media (SIM)</b> department of the{" "}
 						<b className="text-[var(--app-text)]">Massachusetts College of Art and Design</b>. Please login with your MassArt account to continue.
@@ -42,7 +42,7 @@ export default function Welcome() {
 				)}
 				<LoginButton />
 				{!isAccessDenied && (
-					<p className="m-0 text-sm text-[var(--label-text)]">
+					<p className="ui-note m-0 text-[var(--label-text)]">
 						<i>If you cannot login with your MassArt account, contact the SIM faculty for help.</i>
 					</p>
 				)}

@@ -4,7 +4,7 @@
   /* Theme-invariant */
   --scrim: rgba(0, 0, 0, 0.25);
   /* System blue belongs to page actions, independently of the mainframe palette. */
-  --hue-accent: 209;
+  --hue-accent: 207;
 
   /* Shared layout sizing */
   --nav-account-avatar-size: 2.5rem;
@@ -42,8 +42,8 @@ html[data-theme="light"] {
   /* scrollbar */
   --scrollbar-thumb: rgba(15, 23, 42, 0.15);
   --scrollbar-thumb-hover: rgba(15, 23, 42, 0.35);
-  --main-scrollbar-thumb: hsl(0 0% 55%);
-  --main-scrollbar-thumb-hover: hsl(0 0% 45%);
+  --main-scrollbar-thumb: hsl(calc(var(--hue-chrome, 0) + 25) 20% 55%);
+  --main-scrollbar-thumb-hover: hsl(calc(var(--hue-chrome, 0) + 25) 20% 45%);
   --modal-scrollbar-thumb: rgba(15, 23, 42, 0.24);
   --modal-scrollbar-thumb-hover: rgba(15, 23, 42, 0.38);
 
@@ -92,14 +92,13 @@ html[data-theme="light"] {
       --input-hover-shadow: 0 0 0 1px rgba(0, 0, 0, 0.16);
 
       --contrast-surface-field-bg: transparent;
-      --contrast-surface-field-bg-hover: #5e5e5e;
+      --contrast-surface-field-bg-hover: #444444;
       --contrast-surface-field-placeholder: #c5c5c5; 
       --contrast-surface-field-text: #ffffff;
 
       --contrast-surface-tag-text: #ffffff;
       --contrast-surface-tag-icon: #e3e3e3;
 
-      --contrast-surface-border: #3d3d3d;
 
       --contrast-surface-selected-item-bg: transparent;
       --contrast-surface-hovered-item-bg: hsl(209 31% 26%);
@@ -126,6 +125,11 @@ html[data-theme="light"] {
   --select-checkbox-hovered-bg: hsl(var(--hue-accent) 60% 36%);
   --selected-checkbox-text: #ffffff;
   --page-active-border: var(--select-checkbox-active-bg);
+
+  /* System-blue table row states */
+  --app-ind-progress-surface-selected: hsl(from var(--select-checkbox-active-bg) h s l / 0.12);
+  --app-ind-progress-surface-hover: hsl(207 35% 38% / 0.07);
+  --action-mode-icon-bg: rgb(233 238 243 / 0.9);
   
   /* scrollbar in dropdown */
   --input-dropdown-scrollbar: #cbd5e1;
@@ -135,61 +139,31 @@ html[data-theme="light"] {
   --title-select-bg-open: rgb(38, 38, 38);
   --title-select-bg-open-hover: rgb(46, 46, 46);
 
-/* page */
-  /* highlight or shadow */
-  --content-shadow: 0 4px 24px rgba(15, 23, 42, 0.06);  
-  
-  /* master color */
-  --page-surface-base: hsl(240, 78%, 98.5%);
-
-  /* page bg - srgb(36, 36, 44)Thursdays/Semester */
-    --page-bg: var(--page-surface-base);
-    /* optional if an item has hover of the page-bg itself */
-    --page-bg-hover: hsl(from var(--page-bg) h s calc(l * 0.96));
-    --page-card-hover: hsl(from var(--page-bg) h s calc(l * 0.96) / 0.55);
-    /* individual progress items */
-    --app-ind-progress-surface: var(--page-bg);
-
-      --app-ind-progress-surface-selected: hsl(from var(--page-surface-base) h calc(s * 0.6) calc(l * 0.94));
-      --app-ind-progress-surface-hover: hsl(from var(--page-surface-base) h calc(s * 0.5) calc(l * 0.97));
-
-      --table-row-border: hsl(from var(--page-surface-base) h calc(s * 0.8) calc(l * 0.93));
-      --table-row-border-hover: hsl(from var(--table-row-border) h calc(s * 0.5) calc(l * 0.8));
-
-  /* add new item border */
-  --card-border: hsl(from var(--page-surface-base) h calc(s * 0.2) calc(l * 0.82));
-  --card-border-hover: hsl(from var(--card-border) h s calc(l * 0.85)); 
-  
-  /* action mode icon drop-shadow */
-  --action-mode-icon-ds: drop-shadow(0px 0px 16px hsl(from var(--elevated-surface) h s calc(l * 0.8)));
-
-  /* elevated surface */
-  --elevated-surface: #ffffff;
-  --elevated-surface-hover: hsl(from var(--elevated-surface) h s calc(l * 0.92));
-  --elevated-surface-border: hsl(from var(--page-surface-base) h calc(s * 0.2) calc(l * 0.88));
-    /* elevated surface-1 label (colorful labels live in constants/labelColors) */
-
-  --elevated-surface-2: hsl(from var(--page-surface-base) h calc(s * 0.4) calc(l * 1.07));
-  --elevated-surface-hover-2: hsl(from var(--elevated-surface-2) h s calc(l * 0.94));
-    /* elevated surface-2 label (colorful labels live in constants/labelColors) */
-    --elevated-2-label-bg: hsl(from var(--elevated-surface-2) h 0.1 calc(l * 0.88));
-    --elevated-2-label-text: var(--subtle-text);
+  /* System interaction surfaces; canvas colors and borders belong to the mainframe theme. */
+  --page-card-hover: hsl(207 35% 38% / 0.07);
+  --elevated-surface: var(--page-card-hover);
+  --elevated-surface-2: transparent;
+  --elevated-surface-hover-2: hsl(from var(--app-ind-progress-surface-hover) h s l / calc(alpha * 1.7));
+  --app-ind-progress-surface: var(--page-bg);
+  --action-mode-icon-ds: drop-shadow(0px 0px 16px hsl(0 0% 80%));
 
   /* System-blue page controls */
   --page-button-cta: hsl(var(--hue-accent) 15% 22%);
   --page-button-cta-hover: hsl(var(--hue-accent) 18% 26%);
   --page-button-cta-text: #ffffff;
   --page-button-bg: transparent;
-  --page-button-bg-hover: hsl(var(--hue-accent) 40% 30% / 0.1);
+  --page-button-bg-hover: hsl(var(--hue-chrome) 25% 80% / 0.1);
+  --page-view-bg-hover: hsl(var(--hue-accent) 40% 30% / 0.1);
   --page-button-bg-active: hsl(var(--hue-accent) 40% 30% / 0.16);
-  --page-button-border: hsl(var(--hue-accent) 30% 25% / 0.35);
-  --page-button-border-hover: hsl(var(--hue-accent) 30% 25% / 0.55);
+  --page-button-border: hsl(var(--hue-accent) 30% 25% / 0.2);
+  --page-button-border-hover: hsl(var(--hue-accent) 30% 25% / 0.35);
   --page-bar-icon: hsl(var(--hue-accent) 30% 30%);
-  --page-bar-icon-bg-hover: var(--page-button-bg-hover);
+  --page-bar-icon-bg-hover: var(--page-icon-bg-hover);
   --page-bar-icon-bg-active: var(--page-button-bg-active);
   --page-bar-icon-text-active: hsl(var(--hue-accent) 40% 15%);
   --page-bar-label: hsl(var(--hue-accent) 50% 25%);
   --page-bar-label-secondary: hsl(var(--hue-accent) 20% 40%);
+  --page-based-accent: var(--app-title);
 
   /* button for page card overlays */
   --page-button-text: #0f172a;
@@ -197,11 +171,9 @@ html[data-theme="light"] {
   --page-select-text: var(--page-button-text);
   --page-select-text-hover: var(--page-button-text-hover);
 
-  --button-overlay-bg: hsl(from var(--page-button-bg) h s calc(l * 0.96));
-    /* normal */
-    --button-overlay-bg-hover: hsl(from var(--page-button-bg-hover) h 1 calc(l * 0.94));
-    /* delete */
-    --button-delete-overlay-bg-hover: var(--action-delete-bg-hover);
+  /* Semantic delete treatment on card overlay buttons. */
+  --button-delete-overlay-bg-hover: hsl(from var(--action-delete-bg-hover) h calc(s * 1.2) calc(l + 5));
+  --button-delete-overlay-text: var(--action-delete-text);
 
 /* modal's first depth background color, also is master for the primitives in that layer */
   --modal-surface: hsl(from var(--page-surface-base) h calc(s * 0.2) calc(l * 1));
@@ -211,10 +183,11 @@ html[data-theme="light"] {
     --modal-border: hsl(from var(--modal-surface) h s calc(l * 0.84));
     --modal-separator: hsl(from var(--modal-border) h s calc(l * 0.94));
     --modal-shadow: 0 24px 64px rgba(15, 23, 42, 0.18);
-    /* dark semi-opaque fill for small elements on any modal depth */
-    --modal-tint: rgba(15, 23, 42, 0.05);
-    --modal-tint-hover: rgba(15, 23, 42, 0.08);
+
         /* shared across depths */
+        --modal-tint: rgba(15, 23, 42, 0.03);
+        --modal-tint-hover: rgba(15, 23, 42, 0.08);
+
         --input-text: var(--app-text);
         --input-placeholder: #5b6472;
         --input-icon: #64748b;
@@ -229,8 +202,8 @@ html[data-theme="light"] {
         --input-modal-dropdown-text: var(--app-text);
         --input-modal-dropdown-label: var(--subtle-text);
         --input-modal-dropdown-selected-bg: hsl(209 54% 85%);
-        --input-modal-area-input-bg: hsl(from var(--modal-surface-2) h s calc(l *0.99));
-        --input-modal-area-input-bg-hover: hsl(from var(--modal-surface-2) h s calc(l * 0.97));
+        --input-modal-area-input-bg: hsl(from var(--modal-surface-2) h s calc(l * 0.96) / 0.7);
+        --input-modal-area-input-bg-hover: hsl(from var(--modal-surface-2) h s calc(l * 0.94) / 0.7);
         --input-modal-area-input-placeholder: var(--content-muted);
         --input-modal-area-input-text: var(--app-text);
         --input-modal-area-hovered-item-bg: hsl(from var(--page-surface-base) h calc(s * 0.2) calc(l * 0.94));
@@ -252,6 +225,7 @@ html[data-theme="light"] {
       
       /* modal button styling */
       --modal-button-bg: #ffffff;
+      --modal-icon-bg-hover: hsl(from var(--modal-surface) h s calc(l * 0.96));
       --modal-button-bg-hover: hsl(from var(--modal-surface) h s calc(l * 1));
       --modal-button-border: hsl(from var(--modal-surface) h s calc(l * 0.85));
       --modal-button-border-hover: hsl(from var(--modal-button-border) h s calc(l * 0.75));
@@ -262,15 +236,12 @@ html[data-theme="light"] {
       --modal-button-cta-text: #ffffff;
 
     /* secondary surface in a modal bg color also is master */
-    --modal-surface-2: hsl(from var(--modal-surface) h s calc(l * 0.985));
+    --modal-surface-2: hsl(from var(--modal-surface) h s calc(l * 0.97));
     --modal-surface-2-hover: hsl(from var(--modal-surface-2) h s calc(l * 0.985));
 
-          /* third surface in a modal-is border based */
-          --modal-surface-2-border: hsl(from var(--modal-surface-2) h s calc(l * 0.88));
       
           /* third surface in a modal-is bg based (use with caution only for small surfaces) (used in grade modal) */
-          --modal-surface-3: hsl(from var(--modal-surface-2) h s calc(l * 0.97));
-          --modal-surface-3-border: hsl(from var(--modal-surface-3) h s calc(l * 0.88));
+          --modal-surface-3: hsl(from var(--modal-surface) h s calc(l * 0.985 * 0.95));
             /* optional if that surface has hover */
             --modal-surface-3-hover: hsl(from var(--modal-surface-3) h s calc(l * 0.96));
             /* if has active color: uses --select-active-bg from blue selectors */
@@ -285,7 +256,7 @@ html[data-theme="light"] {
     --select-tag-bg-hover: hsl(from var(--select-tag-bg) h s calc(l * 0.96));
 
     /* lines for the user profile modal + slider input line */
-    --lines-color: #cbd5e1;
+    --lines-color: #a6bbd4;
 }
 
 /* modal surface level 2 depth styling for primitives in it */
@@ -325,7 +296,8 @@ html[data-theme="light"] [data-modal-surface-depth="2"] {
   --select-border-hover: var(--modal-select-border-hover);
 
   /* modal button styling */
-  --modal-button-bg: hsl(from var(--modal-surface-2) h s calc(l * 1.06));
+  --modal-button-bg: hsl(from var(--modal-surface-2) h s calc(l * 1.02));
+  --modal-icon-bg-hover: hsl(from var(--modal-surface-2) h s calc(l * 1.04));
   --modal-button-bg-hover: hsl(from var(--modal-surface-2) h s calc(l * 1.04));
   --modal-button-border: hsl(from var(--modal-surface-2) h calc(s * 1.15) calc(l * 0.86));
   --modal-button-border-hover: hsl(from var(--modal-surface-2) h calc(s * 1.25) calc(l * 0.75));
@@ -335,8 +307,17 @@ html[data-theme="light"] [data-modal-surface-depth="2"] {
   --button-border-hover: var(--modal-button-border-hover);
 }
 
+/* Depth 3 inherits depth-2 controls, overriding only icons and label pills. */
+html[data-theme="light"] [data-modal-surface-depth="3"] {
+  --modal-icon-bg-hover: hsl(from var(--modal-surface-3) h s calc(l * 1.04));
+  --select-tag-bg: hsl(from var(--modal-surface-3) h calc(s * 0.4) calc(l * 0.92));
+  --select-tag-bg-hover: hsl(from var(--select-tag-bg) h s calc(l * 0.96));
+}
+
 /* Modal surface bridge: applies modal-scoped Input, Select, and Button tokens. */
 .modal-surface {
+  --input-hover-shadow: none;
+  --textarea-radius: 0;
   --input-bg: var(--modal-input-bg);
   --input-bg-hover: var(--modal-input-bg-hover);
   --input-border: var(--modal-input-border);
@@ -414,11 +395,6 @@ html[data-theme="dark"] .select-content-in-modal .is-selected-row:hover {
   --select-active-text: #ffffff;
 }
 
-.modal-surface {
-  --input-hover-shadow: none;
-  --textarea-radius: 0;
-}
-
 html[data-theme="light"] .modal-surface {
   --focus-ring: hsl(from var(--modal-surface) h s calc(l * 0.45));
 }
@@ -427,7 +403,7 @@ html[data-theme="dark"] .modal-surface {
   --focus-ring: hsl(from var(--modal-surface) h s calc(l * 4.5));
 }
 
-.modal-surface :is(.input-field, .input-affix-wrapper, .select-trigger) {
+.modal-surface :is(.input-field, .input-affix-wrapper, .select-trigger:not(.btn)) {
   outline: none;
   min-height: 2.5rem;
   border-width: 0 0 1px;
@@ -455,8 +431,8 @@ html[data-theme="dark"] {
   /* scrollbar */
   --scrollbar-thumb: rgba(255, 255, 255, 0.35);
   --scrollbar-thumb-hover: rgba(255, 255, 255, 0.55);
-  --main-scrollbar-thumb: hsl(0 0% 55%);
-  --main-scrollbar-thumb-hover: hsl(0 0% 65%);
+  --main-scrollbar-thumb: hsl(calc(var(--hue-chrome, 0) + 25) 20% 55%);
+  --main-scrollbar-thumb-hover: hsl(calc(var(--hue-chrome, 0) + 25) 20% 65%);
 
   /* modal backdrop dim */
   --scrim: rgba(0, 0, 0, 0.45);
@@ -507,11 +483,10 @@ html[data-theme="dark"] {
       --input-hover-shadow: 0 0 0 1px rgba(255, 255, 255, 0.16);
 
       --contrast-surface-field-bg: transparent;
-      --contrast-surface-field-bg-hover: #e8e8e8;
+      --contrast-surface-field-bg-hover: #dedede;
       --contrast-surface-field-placeholder: #242424; 
       --contrast-surface-field-text: #2b2b2b;
 
-      --contrast-surface-border: hsl(from var(--contrast-surface-bg) h s calc(l * 0.78));
 
       --contrast-surface-selected-item-bg: transparent;
       --contrast-surface-hovered-item-bg: hsl(from var(--select-checkbox-active-bg) h calc(s * 0.95) 85%);
@@ -522,10 +497,24 @@ html[data-theme="dark"] {
   --select-checkbox-border: gray;
   --select-checkbox-hovered-border: rgb(88, 88, 88);
   
-  --select-checkbox-active-bg: #8bc5f3;
-  --select-checkbox-hovered-bg: #6baaf0;
+  --select-checkbox-active-bg: hsl(var(--hue-accent) 58% 65%);
+  --select-checkbox-hovered-bg: hsl(var(--hue-accent) 50% 44%);
+  --page-checkbox-hover-bg: hsl(from var(--select-checkbox-hovered-bg) h s l / 0.24);
   --selected-checkbox-text: #000000;
   --page-active-border: var(--select-checkbox-active-bg);
+
+  /* System-blue table row states */
+  --app-ind-progress-surface-selected: hsl(from var(--select-checkbox-active-bg) h calc(s * 1.3) l / 0.18);
+  --app-ind-progress-surface-hover: hsl(207 30% 58% / 0.12);
+  --action-mode-icon-bg: rgb(49 55 61 / 0.9);
+
+  /* System interaction surfaces */
+  --page-card-hover: hsl(207 30% 58% / 0.12);
+  --elevated-surface: var(--page-card-hover);
+  --elevated-surface-2: transparent;
+  --elevated-surface-hover-2: hsl(from var(--app-ind-progress-surface-hover) h s l / calc(alpha * 1.7));
+  --app-ind-progress-surface: var(--page-bg);
+  --action-mode-icon-ds: drop-shadow(0px 0px 16px hsl(var(--hue-page) 16% 10%));
   
   /* scrollbar in dropdown */
   --input-dropdown-scrollbar: hsl(from var(--contrast-surface-bg) h s calc(l * 0.7));
@@ -540,14 +529,21 @@ html[data-theme="dark"] {
   --page-button-cta-hover: hsl(var(--hue-accent) 26% 80%);
   --page-button-cta-text: hsl(var(--hue-accent) 40% 10%);
   --page-button-bg: transparent;
-  --page-button-bg-hover: hsl(var(--hue-accent) 20% 70% / 0.12);
+  --page-button-bg-hover: hsl(var(--hue-chrome) 25% 80% / 0.1);
+  --page-view-bg-hover: hsl(var(--hue-accent) 20% 70% / 0.12);
   --page-button-bg-active: hsl(var(--hue-accent) 20% 70% / 0.2);
-  --page-button-border: hsl(var(--hue-accent) 15% 90% / 0.3);
-  --page-button-border-hover: hsl(var(--hue-accent) 26% 72% / 0.5);
+
+  --page-button-border: hsl(var(--hue-accent) 15% 90% / 0.2);
+  --page-button-border-hover: hsl(var(--hue-accent) 26% 72% / 0.35);
+  
   --page-button-text: #e9e9e9;
   --page-button-text-hover: #ffffff;
+  --page-select-text: #e9e9e9;
+  --page-select-text-hover: var(--page-input-search-hover);
+  --button-delete-overlay-bg-hover: hsl(from var(--action-delete-bg-hover) h calc(s * 1.4) calc(l * 0.85));
+  --button-delete-overlay-text: hsl(from var(--action-delete-text) h calc(s * 1.15) 80%);
   --page-bar-icon: hsl(var(--hue-accent) 52% 85%);
-  --page-bar-icon-bg-hover: var(--page-button-bg-hover);
+  --page-bar-icon-bg-hover: var(--page-icon-bg-hover);
   --page-bar-icon-bg-active: var(--page-button-bg-active);
   --page-bar-icon-text-active: #ffffff;
   --page-bar-label: hsl(var(--hue-accent) 45% 90%);
@@ -566,10 +562,13 @@ html[data-theme="dark"] {
     --modal-scrollbar-thumb: hsl(from var(--modal-surface) h s calc(l * 5));
     --modal-scrollbar-thumb-hover: hsl(from var(--modal-surface) h s calc(l * 6.4));
     --modal-separator: hsl(from var(--modal-surface) h s calc(l * 2.4));
-    /* white semi-opaque fill for small elements on any modal depth */
-    --modal-tint: rgba(255, 255, 255, 0.09);
-    --modal-tint-hover: rgba(255, 255, 255, 0.13);
+
         /* shared across depths */
+          --modal-tint: rgba(255, 255, 255, 0.03);
+          --modal-tint-hover: rgba(255, 255, 255, 0.13);
+          /* Keep controls readable independently of the darker nested surfaces. */
+          --modal-control-surface: hsl(from var(--modal-surface) h calc(s * 0.95) calc(l * 1.3));
+
           --input-text: var(--app-text);
           --input-placeholder: #c4c4c4;
           --input-icon: #b7b7b7;
@@ -584,11 +583,12 @@ html[data-theme="dark"] {
           --input-modal-dropdown-text: var(--app-text);
           --input-modal-dropdown-label: var(--subtle-text);
           --input-modal-dropdown-selected-bg: hsl(from var(--select-checkbox-active-bg) h calc(s * 0.55) 26%);
-          --input-modal-area-input-bg: hsl(from var(--modal-surface-2) h calc(s * 0.8) calc(l * 1.45));
-          --input-modal-area-input-bg-hover: hsl(from var(--input-modal-area-input-bg) h s calc(l * 1.1));
+          --input-modal-area-input-bg: hsl(from var(--input-modal-dropdown-bg) h s calc(l * 1.45) / 0.85);
+          --input-modal-area-input-bg-hover: hsl(from var(--input-modal-area-input-bg) h s calc(l * 1.1) / 0.85);
           --input-modal-area-input-placeholder: var(--content-muted);
           --input-modal-area-input-text: var(--app-text);
-          --input-modal-area-hovered-item-bg: hsl(from var(--modal-surface-3) h s calc(l * 1.35));
+          --input-modal-area-input-icon: #b7b7b7;
+          --input-modal-area-hovered-item-bg: hsl(from var(--modal-control-surface) h s calc(l * 1.15 * 1.35));
           --input-modal-dropdown-scrollbar: var(--scrollbar-thumb);
           --input-modal-dropdown-scrollbar-hover: var(--scrollbar-thumb-hover);
 
@@ -617,15 +617,12 @@ html[data-theme="dark"] {
       --modal-button-cta-text: var(--modal-surface);
 
     /* secondary surface in a modal */
-    --modal-surface-2: hsl(from var(--modal-surface) h calc(s * 0.95) calc(l * 1.3));
+    --modal-surface-2: hsl(from var(--modal-surface) h calc(s * 0.95) calc(l * 1.2));
     --modal-surface-2-hover: hsl(from var(--modal-surface-2) h s calc(l * 1.08));
           
-          /* third surface in a modal-is border based */
-          --modal-surface-2-border: hsl(from var(--modal-surface-2) h s calc(l * 1.4));
       
           /* third surface in a modal-is bg based (use with caution only for small surfaces) (used in grade modal) */
           --modal-surface-3: hsl(from var(--modal-surface-2) h s calc(l * 1.15));
-          --modal-surface-3-border: hsl(from var(--modal-surface-3) h s calc(l * 1.4));
             /* optional if that surface has hover */
             --modal-surface-3-hover: hsl(from var(--modal-surface-3) h s calc(l * 1.12));
             /* if has active color: uses --select-active-bg from blue selectors */
@@ -641,7 +638,7 @@ html[data-theme="dark"] {
     --select-tag-bg-hover: hsl(from var(--select-tag-bg) h s calc(l * 1.1));
 
   /* lines for the user profile modal */
-  --lines-color: rgb(67, 67, 67);
+  --lines-color: rgb(59, 60, 61);
 
 }
 
@@ -649,8 +646,8 @@ html[data-theme="dark"] [data-modal-surface-depth="2"] {
   /* Input & Select */
   --modal-input-bg: transparent;
   --modal-input-bg-hover: transparent;
-  --modal-input-border: hsl(from var(--modal-surface-2) h s calc(l * 3.3));
-  --modal-input-border-hover: hsl(from var(--modal-surface-2) h s calc(l * 4.6));
+  --modal-input-border: hsl(from var(--modal-control-surface) h s calc(l * 3.3));
+  --modal-input-border-hover: hsl(from var(--modal-control-surface) h s calc(l * 4.6));
   --input-bg: var(--modal-input-bg);
   --input-bg-hover: var(--modal-input-bg-hover);
   --input-border: var(--modal-input-border);
@@ -667,10 +664,10 @@ html[data-theme="dark"] [data-modal-surface-depth="2"] {
   --select-border-hover: var(--modal-select-border-hover);
 
   /* modal button styling */
-  --modal-button-bg: hsl(from var(--modal-surface-2) h s calc(l * 1.45));
-  --modal-button-bg-hover: hsl(from var(--modal-surface-2) h s calc(l * 1.6));
-  --modal-button-border: hsl(from var(--modal-surface-2) h s calc(l * 1.75));
-  --modal-button-border-hover: hsl(from var(--modal-surface-2) h s calc(l * 2.1));
+  --modal-button-bg: hsl(from var(--modal-control-surface) h s calc(l * 1.45));
+  --modal-button-bg-hover: hsl(from var(--modal-control-surface) h s calc(l * 1.6));
+  --modal-button-border: hsl(from var(--modal-control-surface) h s calc(l * 1.75));
+  --modal-button-border-hover: hsl(from var(--modal-control-surface) h s calc(l * 2.1));
   --button-bg: var(--modal-button-bg);
   --button-bg-hover: var(--modal-button-bg-hover);
   --button-border: var(--modal-button-border);

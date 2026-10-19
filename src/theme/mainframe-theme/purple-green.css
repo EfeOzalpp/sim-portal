@@ -116,14 +116,10 @@ html[data-color-theme="purple-green"][data-theme="dark"] {
 
 	/* elevated surface */
 	--elevated-surface: rgba(255, 255, 255, 0.1);
-	--elevated-surface-hover: hsl(from var(--page-surface-base) h s calc(l * 1.4));
-	--elevated-surface-border: hsl(from var(--page-surface-base) h s calc(l * 0.1) / 0.2);
 
-	/* elevated surface labels (colorful labels live in constants/labelColors) */
+	/* secondary elevated surface */
 	--elevated-surface-2: transparent;
 	--elevated-surface-hover-2: hsl(from var(--page-surface-base) h s calc(l * 2));
-	--elevated-2-label-bg: hsl(from var(--elevated-surface-2) h calc(s * 1.1) calc(l * 2));
-	--elevated-2-label-text: var(--subtle-text);
 
 	/* page button / title select text */
 	--page-select-text: #e9e9e9;

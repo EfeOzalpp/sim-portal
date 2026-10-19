@@ -1,8 +1,5 @@
-/*
- * Font-family/size/weight/line-height/svg-size are no longer app tokens —
- * Tailwind's own scale covers them (font-sans/font-heading, text-sm/base/xl,
- * font-semibold, leading-tight/normal, w-4/h-7 etc), so the values below
- * are plain CSS. Only color stays tokenized (see styling-theme.css).
+/* Shared typography roles. Components own layout and interaction; color themes own their palettes.
+ * Print sizing, icon alignment, and hidden clipboard mechanics are local exceptions.
  */
 
 @layer base {
@@ -30,8 +27,86 @@
   .ui-note {
     color: var(--content-muted);
     font-size: 0.875rem;
+    font-weight: 400;
     font-style: italic;
     line-height: 1.6;
+  }
+
+  .btn,
+  .ui-control {
+    font-family: var(--font-sans);
+    font-weight: 500;
+    line-height: 1.5;
+  }
+
+  .btn,
+  .ui-control {
+    font-size: 1rem;
+  }
+
+  .ui-person-name {
+    font-weight: 500;
+  }
+
+  .ui-small,
+  .ui-link,
+  .btn-text,
+  .ui-field-error {
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1.25rem;
+  }
+
+  .ui-field-error {
+    font-style: italic;
+  }
+
+  .ui-label-compact {
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1.25;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .ui-chip {
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    font-weight: 600;
+    line-height: 1.25;
+    text-transform: uppercase;
+  }
+
+  .ui-avatar {
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1;
+  }
+
+  .ui-reading {
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  .ui-reading p {
+    font-size: inherit;
+    line-height: inherit;
+  }
+
+  .modal-collapse-title,
+  .modal-presentation-title,
+  .confirmation-title,
+  .ui-heading,
+  .ui-grade {
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.25;
+    letter-spacing: 0;
   }
 
   p {
@@ -46,44 +121,52 @@
   h6 {
     font-family: var(--font-heading);
     line-height: 1.3;
+    letter-spacing: 0;
   }
 
   h1 {
     font-size: 2rem;
     font-weight: 500;
-    letter-spacing: 0.4px;
   }
 
   h2 {
     font-size: 2rem;
     font-weight: 500;
-    letter-spacing: 0.8px;
+  }
+
+  .brand-text,
+  .desktop-page-title,
+  .mobile-page-title {
+    font-family: var(--font-heading);
+    font-weight: 400;
+    letter-spacing: 0;
   }
 
   .brand-text {
-    font-family: var(--font-heading);
     font-size: 1.5rem;
-    font-weight: 400;
-    letter-spacing: 0.025em;
     line-height: 1;
+  }
+
+  .desktop-page-title {
+    font-size: 1.5rem;
+    line-height: 1.3;
   }
 
   .mobile-page-title {
     font-size: 1.625rem;
-    font-weight: 500;
-    letter-spacing: 0.5px;
+    line-height: 1.25;
   }
 
+  .mobile-top-page-title,
   .mobile-collapsed-page-title {
     font-size: 1.125rem;
-    font-weight: 500;
-    letter-spacing: 0.25px;
+    letter-spacing: 0;
+    line-height: 1.25;
   }
 
   h3 {
     font-size: 1.25rem;
     font-weight: 500;
-    letter-spacing: 0.2px;
   }
 
   h4,
@@ -92,4 +175,58 @@
     font-size: 1rem;
     font-weight: 600;
   }
+
+  .ui-emphasis,
+  .btn.tone-cta,
+  .btn-nav[aria-current="page"],
+  .ui-grade-option[aria-pressed="true"] {
+    font-weight: 600;
+  }
+
+  .ui-sidebar .btn {
+    font-size: 1.1rem;
+  }
+
+  @media (max-width: 768px) {
+    .btn {
+      font-size: 0.85rem;
+    }
+
+    body,
+    .is-body,
+    p {
+      font-size: 0.85rem;
+      line-height: 1.5;
+    }
+
+    .ui-reading {
+      font-size: 0.9375rem;
+    }
+
+    .ui-reading p {
+      font-size: inherit;
+      line-height: inherit;
+    }
+
+    .brand-text {
+      font-size: 1.25rem;
+    }
+
+    .btn {
+      font-family: var(--font-sans);
+      font-size: 0.85rem;
+      font-weight: 500;
+      line-height: 1.3;
+    }
+
+    .mobile-top-page-title,
+    .mobile-collapsed-page-title {
+      font-size: 1.3rem;
+    }
+  }
+}
+
+/* Third-party calendar text must override the library's unlayered styles. */
+html[data-theme] .ant-picker-now-btn {
+  font-weight: 600;
 }

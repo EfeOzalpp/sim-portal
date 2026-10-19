@@ -2,7 +2,7 @@
  * Tailwind is introduced without Preflight because Antd's reset and the
  * existing app-wide element styles already own that responsibility.
  *
- * source("../..") points Tailwind at src/ from this file's directory.
+ * source("../..") preserves Tailwind's project-root scan scope.
  */
 @layer theme, base, components, utilities;
 

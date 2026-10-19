@@ -23,7 +23,7 @@ export default function AboutText({ text }: AboutTextProps) {
 				<button
 					type="button"
 					onClick={() => setExpanded(false)}
-					className="ui-note not-italic cursor-pointer border-0 bg-transparent p-0 text-[var(--inline-link)] underline underline-offset-[0.18em] hover:text-[var(--inline-link-hover)]"
+					className="ui-link cursor-pointer border-0 bg-transparent p-0 text-[var(--inline-link)] underline underline-offset-[0.18em] hover:text-[var(--inline-link-hover)]"
 				>
 					Show less
 				</button>
@@ -43,7 +43,7 @@ export default function AboutText({ text }: AboutTextProps) {
 			<button
 				type="button"
 				onClick={() => setExpanded(true)}
-				className="ui-note not-italic cursor-pointer border-0 bg-transparent p-0 text-[var(--inline-link)] underline underline-offset-[0.18em] hover:text-[var(--inline-link-hover)]"
+				className="ui-link cursor-pointer border-0 bg-transparent p-0 text-[var(--inline-link)] underline underline-offset-[0.18em] hover:text-[var(--inline-link-hover)]"
 			>
 				Show more
 			</button>

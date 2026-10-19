@@ -1,6 +1,6 @@
 export default function SimHistoryContent() {
 	return (
-		<div className="flex flex-col gap-6 text-base leading-[1.75] text-[var(--app-text)]">
+		<div className="ui-reading flex flex-col gap-6 text-[var(--app-text)]">
 			<p className="m-0">
 				SIM has been an early adopter of Internet technologies and the program has embraced and integrated
 				them into the SIM Department curriculum since before the existence of the Web, going back to the

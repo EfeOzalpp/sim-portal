@@ -44,7 +44,7 @@ export default function PeopleAvatarStack({
 					</span>
 				))}
 			</span>
-			{extraCount > 0 && <span className="font-semibold text-[var(--page-bar-label,var(--subtle-text))]">+{extraCount}</span>}
+			{extraCount > 0 && <span className="ui-emphasis text-[var(--page-bar-label,var(--subtle-text))]">+{extraCount}</span>}
 		</span>
 	);
 }
