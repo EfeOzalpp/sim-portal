@@ -29,14 +29,14 @@ import { ROLES } from "@/constants/roles";
 import {
   transformSemesterFromAPI,
   transformSemesterPayload,
-} from "@/app/semester/composition/semester.transformers";
+} from "@/app/semester/composition/forms/semester.transformers";
 
 // Helpers
 import dayjs from "dayjs";
 import { useForm, useWatch, Controller } from "react-hook-form";
 import { handleFormAction } from "@/helpers";
 import { formatSemesterCode, getCurrentSemesterCode, getDefaultSemesterDateRange, getSemesterYear, normalizeSemesterCode, semesterOrdinal } from "@/components/domain/filters/semester-filter";
-import styles from "@/app/semester/composition/SemesterForm.module.css";
+import styles from "@/app/semester/composition/forms/SemesterForm.module.css";
 
 // Sentinel for the semester filter's own "show everyone" option - distinct
 // from ALL_SEMESTERS_VALUE (the page-level filter's sentinel), since this is

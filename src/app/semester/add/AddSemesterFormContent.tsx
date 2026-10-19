@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { addSemester, getAllSemesters } from "@/actions/semesters";
 import { getAllUsers } from "@/actions/users";
-import SemesterForm from "@/app/semester/composition/SemesterForm";
+import SemesterForm from "@/app/semester/composition/forms";
 import { getCurrentSemesterCode, normalizeSemesterCode } from "@/components/domain/filters/semester-filter";
 
 export default async function AddSemesterFormContent() {

@@ -1,6 +1,6 @@
 import { editSemester, getAllSemesters, getSemester } from "@/actions/semesters";
 import { getAllUsers } from "@/actions/users";
-import SemesterForm from "@/app/semester/composition/SemesterForm";
+import SemesterForm from "@/app/semester/composition/forms";
 import { notFound, redirect } from "next/navigation";
 
 interface EditSemesterFormContentProps {

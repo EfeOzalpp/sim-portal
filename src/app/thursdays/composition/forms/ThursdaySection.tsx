@@ -7,7 +7,7 @@ import { Select } from "@/components/select";
 import { FieldError, fieldLabelRowClassName } from "@/components/field-error";
 
 // Composition
-import { fieldLabelClassName, fieldStackClassName } from "@/app/thursdays/composition/thursdayFormClasses";
+import { fieldLabelClassName, fieldStackClassName } from "@/app/thursdays/composition/forms/thursdayFormClasses";
 
 // Helpers
 import { Controller, useFormState, useWatch } from "react-hook-form";

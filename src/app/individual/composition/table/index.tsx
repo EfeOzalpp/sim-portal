@@ -14,10 +14,10 @@ import { MaskIcon } from "@/theme/MaskIcon";
 import FaceImage from "@/components/primitives/FaceImage";
 
 // Composition
-import ThursdayLink from "@/app/individual/composition/ThursdayLink";
-import GradeEditorModal, { GradeMap } from "@/app/individual/composition/GradeEditorModal";
-import { useSelectedUsers } from "@/app/individual/composition/SelectedUsersProvider";
-import styles from "@/app/individual/composition/IndividualPerformanceTable.module.css";
+import ThursdayLink from "@/app/individual/composition/table/ThursdayLink";
+import GradeEditorModal, { GradeMap } from "@/app/individual/composition/forms";
+import { useSelectedUsers } from "@/app/individual/composition/selection/SelectedUsersProvider";
+import styles from "@/app/individual/composition/table/IndividualPerformanceTable.module.css";
 
 // Helpers
 import clsx from "clsx";

@@ -10,7 +10,7 @@ import { Button } from "@/components/button";
 import { actionButtonIconClassName } from "@/components/button/styles";
 import { Collapse } from "@/components/collapse";
 import { useOptionalActionMode } from "@/components/layout/ActionMode";
-import { ThursdayCheckbox, useSelectedThursdays } from "@/app/thursdays/composition/SelectedThursdaysProvider";
+import { ThursdayCheckbox, useSelectedThursdays } from "@/app/thursdays/composition/selection/SelectedThursdaysProvider";
 import ThursdayProducerAvatarStack, { type ThursdayProducerPreview } from "@/app/thursdays/composition/ThursdayProducerAvatarStack";
 import { MaskIcon } from "@/theme/MaskIcon";
 
@@ -21,7 +21,7 @@ import { getLabelColors } from "@/constants/labelColors";
 import ThursdayDateIndicator from "@/app/thursdays/composition/ThursdayDateIndicator";
 
 const chevronClassName =
-  "h-5 w-5 flex-none bg-[var(--input-icon)] transition-[background,transform] duration-250 [mask-image:url(../assets/arrow/down.svg)] [mask-position:center] [mask-repeat:no-repeat] [mask-size:contain] group-hover:bg-[var(--app-text)] group-focus-within:bg-[var(--app-text)] [[data-state=open]_&]:rotate-180";
+  "h-5 w-5 flex-none bg-[var(--input-icon)] transition-[background,transform] duration-250 [mask-image:url(./assets/arrow/down.svg)] [mask-position:center] [mask-repeat:no-repeat] [mask-size:contain] group-hover:bg-[var(--app-text)] group-focus-within:bg-[var(--app-text)] [[data-state=open]_&]:rotate-180";
 
 interface ProductionItem {
   id: string;

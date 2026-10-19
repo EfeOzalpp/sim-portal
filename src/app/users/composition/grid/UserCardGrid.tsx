@@ -8,13 +8,13 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useOptionalActionMode } from "@/components/layout/ActionMode";
 
 // Composition
-import UserCard from "@/app/users/composition/UserCard";
+import UserCard from "@/app/users/composition/grid/UserCard";
 
 // Helpers
 import { ACTION_MODES } from "@/constants/action-modes";
 import { USER_MODAL_PARAMS, type UserModalParam } from "@/constants/modal-params";
 import { PEOPLE_GRID_PREFERENCES } from "@/constants/people-grid";
-import styles from "@/app/users/composition/UserCardGrid.module.css";
+import styles from "@/app/users/composition/grid/UserCardGrid.module.css";
 import type { User } from "@prisma/client";
 
 interface UserCardGridProps {

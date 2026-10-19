@@ -10,7 +10,7 @@ import { Alert } from "@/components/alert";
 import { Button } from "@/components/button";
 import { useToast } from "@/components/toast";
 import { getLabelColors } from "@/constants/labelColors";
-import styles from "@/app/individual/composition/GradeEditorModal.module.css";
+import styles from "@/app/individual/composition/forms/GradeEditorModal.module.css";
 
 export type GradeValue = "P" | "NC" | "INC" | "W";
 export type GradeMap = Record<string, GradeValue | null | undefined>;

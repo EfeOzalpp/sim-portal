@@ -32,7 +32,7 @@ export const presentationBodyClassName = "px-4! pt-4! pb-4! text-[var(--app-text
 // Select, input icons) - h-5 w-5, bg-[var(--input-icon)], rotates via the
 // trigger's own Radix data-state.
 export const collapseIconClassName =
-	"h-5 w-5 flex-none bg-[var(--input-icon)] transition-[background,transform] duration-200 [mask-image:url(../assets/arrow/down.svg)] [mask-position:center] [mask-repeat:no-repeat] [mask-size:contain] group-hover:bg-[var(--app-text)] group-focus-within:bg-[var(--app-text)] [[data-state=open]_&]:rotate-180";
+	"h-5 w-5 flex-none bg-[var(--input-icon)] transition-[background,transform] duration-200 [mask-image:url(./assets/arrow/down.svg)] [mask-position:center] [mask-repeat:no-repeat] [mask-size:contain] group-hover:bg-[var(--app-text)] group-focus-within:bg-[var(--app-text)] [[data-state=open]_&]:rotate-180";
 
 export const productionItemClassName =
 	"overflow-hidden rounded-none border-0 border-b-2 border-solid border-b-[var(--modal-surface-2-border)] bg-transparent transition-colors duration-150 hover:bg-[var(--modal-surface-2)] data-[state=open]:bg-[var(--modal-surface-2)]";

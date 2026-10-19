@@ -39,8 +39,8 @@ if (!process.argv.includes("--child")) {
 } else {
 	const { generateThursdayDates } = load("src/constants/semester-calendar.ts");
 	const { formatShortMonthDay, formatShortMonthDayYear } = load("src/constants/date-format.ts");
-	const { getSemesterDateRange, transformSemesterPayload } = load("src/app/semester/composition/semester.transformers.ts");
-	const { transformThursdayFromAPI, transformThursdayPayload } = load("src/app/thursdays/composition/thursday.transformers.ts");
+	const { getSemesterDateRange, transformSemesterPayload } = load("src/app/semester/composition/forms/semester.transformers.ts");
+	const { transformThursdayFromAPI, transformThursdayPayload } = load("src/app/thursdays/composition/forms/thursday.transformers.ts");
 	const keys = (range) => Array.from(generateThursdayDates(range), (date) => date.toISOString().slice(0, 10));
 
 	assert.deepEqual(keys(["2026-11-01", "2026-11-30"]), ["2026-11-05", "2026-11-12", "2026-11-19", "2026-11-26"]);

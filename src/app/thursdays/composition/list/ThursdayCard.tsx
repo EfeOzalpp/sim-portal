@@ -2,7 +2,7 @@
 import ProductionCard from "@/components/domain/productions/ProductionCard";
 
 // Composition
-import ProductionsCollapse from "@/app/thursdays/composition/ProductionsCollapse";
+import ProductionsCollapse from "@/app/thursdays/composition/list/ProductionsCollapse";
 import type { ThursdayProducerPreview } from "@/app/thursdays/composition/ThursdayProducerAvatarStack";
 
 // Helpers

@@ -2,7 +2,7 @@
 import { getFilteredUsers } from "@/actions/users";
 
 // Composition
-import UserCardGrid from "@/app/users/composition/UserCardGrid";
+import UserCardGrid from "@/app/users/composition/grid/UserCardGrid";
 
 interface UsersListProps {
 	filters: any;

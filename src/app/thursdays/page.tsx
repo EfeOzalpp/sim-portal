@@ -23,18 +23,18 @@ import { confirmDeleteDialogClassName } from "@/components/confirm-delete/styles
 import { MaskIcon } from "@/theme/MaskIcon";
 
 // Composition
-import ThursdayCard from "@/app/thursdays/composition/ThursdayCard";
-import ThursdayGridCard from "@/app/thursdays/composition/ThursdayGridCard";
+import ThursdayCard from "@/app/thursdays/composition/list/ThursdayCard";
+import ThursdayGridCard from "@/app/thursdays/composition/grid/ThursdayGridCard";
 import { ThursdayDateProvider } from "@/app/thursdays/composition/ThursdayDateIndicator";
 import AddThursdayFormContent from "@/app/thursdays/add/AddThursdayFormContent";
 import EditThursdayFormContent from "@/app/thursdays/[id]/edit/EditThursdayFormContent";
-import ThursdayDeleteConfirmContent from "@/app/thursdays/composition/ThursdayDeleteConfirmContent";
-import { thursdayFormDialogClassName } from "@/app/thursdays/composition/ThursdayForm";
-import EditThursdaysButton from "@/app/thursdays/composition/EditThursdaysButton";
-import DeleteThursdaysButton from "@/app/thursdays/composition/DeleteThursdaysButton";
+import ThursdayDeleteConfirmContent from "@/app/thursdays/composition/forms/ThursdayDeleteConfirmContent";
+import { thursdayFormDialogClassName } from "@/app/thursdays/composition/forms";
+import EditThursdaysButton from "@/app/thursdays/composition/selection/EditThursdaysButton";
+import DeleteThursdaysButton from "@/app/thursdays/composition/selection/DeleteThursdaysButton";
 import ThursdayViewTabs from "@/app/thursdays/composition/ThursdayViewTabs";
-import { SelectedThursdaysProvider } from "@/app/thursdays/composition/SelectedThursdaysProvider";
-import SelectedThursdaysCountLabel from "@/app/thursdays/composition/SelectedThursdaysCountLabel";
+import { SelectedThursdaysProvider } from "@/app/thursdays/composition/selection/SelectedThursdaysProvider";
+import SelectedThursdaysCountLabel from "@/app/thursdays/composition/selection/SelectedThursdaysCountLabel";
 import styles from "@/app/thursdays/ThursdaysPage.module.css";
 
 // Helpers

@@ -2,7 +2,7 @@ import { notFound, redirect } from "next/navigation";
 import { getAllSemesters } from "@/actions/semesters";
 import { getPresentationTagSuggestions, getThursday, updateThursdayWithProductions } from "@/actions/thursdays";
 import { getAllUsers } from "@/actions/users";
-import ThursdayForm from "@/app/thursdays/composition/ThursdayForm";
+import ThursdayForm from "@/app/thursdays/composition/forms";
 import { THURSDAY_MODAL_PARAMS } from "@/constants/modal-params";
 
 interface EditThursdayFormContentProps {

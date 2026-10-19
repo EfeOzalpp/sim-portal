@@ -21,12 +21,12 @@ import { confirmDeleteDialogClassName } from "@/components/confirm-delete/styles
 import { ActionModePageContent, ActionModeProvider } from "@/components/layout/ActionMode";
 
 // Composition
-import UsersList from "@/app/users/composition/UsersList";
+import UsersList from "@/app/users/composition/grid";
 import RoleFilterPopover from "@/app/users/composition/RoleFilterPopover";
-import GridViewPopover from "@/app/users/composition/GridViewPopover";
-import ExitEditModeOnMount from "@/app/users/composition/ExitEditModeOnMount";
-import EditUsersButton from "@/app/users/composition/EditUsersButton";
-import DeleteUsersButton from "@/app/users/composition/DeleteUsersButton";
+import GridViewPopover from "@/app/users/composition/grid/GridViewPopover";
+import ExitEditModeOnMount from "@/app/users/composition/selection/ExitEditModeOnMount";
+import EditUsersButton from "@/app/users/composition/selection/EditUsersButton";
+import DeleteUsersButton from "@/app/users/composition/selection/DeleteUsersButton";
 import styles from "@/app/users/UsersPage.module.css";
 
 // Helpers
@@ -138,7 +138,7 @@ export default async function UsersPage({ searchParams }: UsersProps) {
 		? (await import("@/components/domain/profile/PersonProfileModal")).default
 		: null;
 	const UserDeleteConfirmContent = showDeleteModal
-		? (await import("@/app/users/composition/UserDeleteConfirmContent")).default
+		? (await import("@/app/users/composition/forms/UserDeleteConfirmContent")).default
 		: null;
 
 	return (

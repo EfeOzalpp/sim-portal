@@ -16,13 +16,13 @@ import RouteModalPopup from "@/components/modal/RouteModalPopup";
 import ThursdayDetailContent, { ThursdayDetailTitle, thursdayDetailDialogClassName } from "@/components/domain/productions/ThursdayDetailContent";
 
 // Composition
-import EditGradesButton from "@/app/individual/composition/EditGradesButton";
-import IndividualPerformanceTable from "@/app/individual/composition/IndividualPerformanceTable";
-import { SelectedUsersProvider } from "@/app/individual/composition/SelectedUsersProvider";
-import SelectedCountLabel from "@/app/individual/composition/SelectedCountLabel";
+import EditGradesButton from "@/app/individual/composition/selection/EditGradesButton";
+import IndividualPerformanceTable from "@/app/individual/composition/table";
+import { SelectedUsersProvider } from "@/app/individual/composition/selection/SelectedUsersProvider";
+import SelectedCountLabel from "@/app/individual/composition/selection/SelectedCountLabel";
 import ThursdayScopeFilterPopover from "@/app/individual/composition/ThursdayScopeFilterPopover";
 import EditThursdayFormContent from "@/app/thursdays/[id]/edit/EditThursdayFormContent";
-import { thursdayFormDialogClassName } from "@/app/thursdays/composition/ThursdayForm";
+import { thursdayFormDialogClassName } from "@/app/thursdays/composition/forms";
 
 // Helpers
 import { ALL_SEMESTERS_VALUE, formatSemesterCode, getSelectedSemesterId, getSemesterFilterValue, isAllSemestersValue, THURSDAY_SCOPE_FILTER_KEY } from "@/components/domain/filters/semester-filter";

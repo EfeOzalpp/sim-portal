@@ -12,11 +12,11 @@ import { Select } from "@/components/select";
 import { FieldError, fieldLabelRowClassName } from "@/components/field-error";
 
 // Composition
-import PresentationsField from "@/app/thursdays/composition/PresentationsField";
+import PresentationsField from "@/app/thursdays/composition/forms/PresentationsField";
 import {
   fieldLabelClassName,
   fieldStackClassName,
-} from "@/app/thursdays/composition/thursdayFormClasses";
+} from "@/app/thursdays/composition/forms/thursdayFormClasses";
 
 // Helpers
 import { Controller, useFormState } from "react-hook-form";

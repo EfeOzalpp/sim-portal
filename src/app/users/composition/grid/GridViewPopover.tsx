@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { usePeopleGridPreference } from "@/app/users/composition/usePeopleGridPreference";
+import { usePeopleGridPreference } from "@/app/users/composition/grid/usePeopleGridPreference";
 import Popover from "@/components/popover";
 import Button from "@/components/button";
 

@@ -5,7 +5,7 @@ import { usePathname, useSearchParams } from "next/navigation";
 import clsx from "clsx";
 import { MaskIcon } from "@/theme/MaskIcon";
 import type { IconName } from "@/theme/icons";
-import { ThursdayCheckbox, useSelectedThursdays } from "@/app/thursdays/composition/SelectedThursdaysProvider";
+import { ThursdayCheckbox, useSelectedThursdays } from "@/app/thursdays/composition/selection/SelectedThursdaysProvider";
 import styles from "@/app/thursdays/composition/ThursdayViewTabs.module.css";
 
 type ThursdayView = "grid" | "list";

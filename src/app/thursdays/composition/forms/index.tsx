@@ -21,9 +21,9 @@ import { useToast } from "@/components/toast";
 import {
   transformThursdayFromAPI,
   transformThursdayPayload,
-} from "@/app/thursdays/composition/thursday.transformers";
-import ThursdaySection from "@/app/thursdays/composition/ThursdaySection";
-import ProductionsSection from "@/app/thursdays/composition/ProductionsSection";
+} from "@/app/thursdays/composition/forms/thursday.transformers";
+import ThursdaySection from "@/app/thursdays/composition/forms/ThursdaySection";
+import ProductionsSection from "@/app/thursdays/composition/forms/ProductionsSection";
 
 // Helpers
 import { useForm } from "react-hook-form";

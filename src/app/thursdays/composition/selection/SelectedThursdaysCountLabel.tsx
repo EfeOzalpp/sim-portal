@@ -1,7 +1,7 @@
 "use client";
 
 import clsx from "clsx";
-import { useSelectedThursdays } from "@/app/thursdays/composition/SelectedThursdaysProvider";
+import { useSelectedThursdays } from "@/app/thursdays/composition/selection/SelectedThursdaysProvider";
 
 export default function SelectedThursdaysCountLabel() {
 	const { selectedThursdayIds } = useSelectedThursdays();

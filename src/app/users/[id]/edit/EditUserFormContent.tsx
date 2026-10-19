@@ -9,7 +9,7 @@ import {
 	removeUser,
 } from "@/actions/users";
 import { getCurrentUser } from "@/actions/auth";
-import UserForm from "@/app/users/composition/UserForm";
+import UserForm from "@/app/users/composition/forms";
 import { isAdminRole } from "@/constants/roles";
 
 interface EditUserFormContentProps {

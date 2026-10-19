@@ -124,12 +124,12 @@
 	height: 1rem;
 	/* Muted at rest (not currentColor, which matched the header's own full-bright text) - only the active sort column's chevron should stand out, via .sortIconActive below. */
 	background: var(--content-muted);
-	mask-image: url("../../../theme/assets/arrow/down.svg");
+	mask-image: url("../../../../theme/assets/arrow/down.svg");
 	mask-position: center;
 	mask-repeat: no-repeat;
 	mask-size: contain;
 	transition: transform 120ms ease, background-color 120ms ease;
-	-webkit-mask-image: url("../../../theme/assets/arrow/down.svg");
+	-webkit-mask-image: url("../../../../theme/assets/arrow/down.svg");
 	-webkit-mask-position: center;
 	-webkit-mask-repeat: no-repeat;
 	-webkit-mask-size: contain;

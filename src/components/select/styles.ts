@@ -57,7 +57,7 @@ export const selectChevronVariants = cva(
 	[
 		"flex-none",
 		"transition-transform duration-150 group-data-[state=open]:rotate-180",
-		"[mask-image:url(../assets/arrow/down.svg)] [mask-position:center] [mask-repeat:no-repeat] [mask-size:contain]",
+		"[mask-image:url(./assets/arrow/down.svg)] [mask-position:center] [mask-repeat:no-repeat] [mask-size:contain]",
 	],
 	{
 		variants: {
@@ -95,7 +95,7 @@ export const selectClearButtonClassName = [
 // The icon glyph inside selectClearButtonClassName.
 export const selectClearIconClassName = [
 	"h-full w-full bg-current",
-	"[mask-image:url(../assets/close/close.svg)] [mask-position:center] [mask-repeat:no-repeat] [mask-size:contain]",
+	"[mask-image:url(./assets/close/close.svg)] [mask-position:center] [mask-repeat:no-repeat] [mask-size:contain]",
 ].join(" ");
 
 // The dropdown popover itself - shared by Select variants; variant-specific
@@ -175,7 +175,7 @@ export const selectItemVariants = cva(
 		},
 		compoundVariants: [
 			{ highlightSelected: true, class: "pl-10" },
-			{ selected: true, highlightSelected: true, class: "is-selected-row text-[var(--select-active-text)]! bg-[var(--contrast-surface-selected-item-bg,transparent)]! hover:bg-[var(--contrast-surface-hovered-item-bg)]! before:absolute before:top-1/2 before:left-3.5 before:h-4 before:w-4 before:-translate-y-1/2 before:bg-current before:content-[''] before:[mask-image:url(../assets/check/check.svg)] before:[mask-position:center] before:[mask-repeat:no-repeat] before:[mask-size:contain]" },
+			{ selected: true, highlightSelected: true, class: "is-selected-row text-[var(--select-active-text)]! bg-[var(--contrast-surface-selected-item-bg,transparent)]! hover:bg-[var(--contrast-surface-hovered-item-bg)]! before:absolute before:top-1/2 before:left-3.5 before:h-4 before:w-4 before:-translate-y-1/2 before:bg-current before:content-[''] before:[mask-image:url(./assets/check/check.svg)] before:[mask-position:center] before:[mask-repeat:no-repeat] before:[mask-size:contain]" },
 			{ selected: true, highlightSelected: true, variant: "title", class: "bg-[var(--contrast-surface-select-active-bg,transparent)]! hover:bg-[var(--contrast-surface-hovered-item-bg)]!" },
 		],
 		defaultVariants: { selected: false, disabled: false, variant: "default", highlightSelected: true },

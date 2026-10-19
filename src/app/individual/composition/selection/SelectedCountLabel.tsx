@@ -1,7 +1,7 @@
 "use client";
 
 import clsx from "clsx";
-import { useSelectedUsers } from "@/app/individual/composition/SelectedUsersProvider";
+import { useSelectedUsers } from "@/app/individual/composition/selection/SelectedUsersProvider";
 
 export default function SelectedCountLabel() {
 	const { selectedUserIds } = useSelectedUsers();

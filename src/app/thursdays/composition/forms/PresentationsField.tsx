@@ -32,7 +32,7 @@ import {
   presentationItemClassName,
   presentationTitleTextClassName,
   sectionHeaderClassName,
-} from "@/app/thursdays/composition/thursdayFormClasses";
+} from "@/app/thursdays/composition/forms/thursdayFormClasses";
 
 // Helpers
 import { Controller, useFieldArray, useFormState, useWatch } from "react-hook-form";

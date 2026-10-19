@@ -13,8 +13,8 @@ import RouteModalPopup from "@/components/modal/RouteModalPopup";
 // Composition
 import AddSemesterFormContent from "@/app/semester/add/AddSemesterFormContent";
 import EditSemesterFormContent from "@/app/semester/[id]/edit/EditSemesterFormContent";
-import SemesterDeleteConfirmContent from "@/app/semester/composition/SemesterDeleteConfirmContent";
-import SemesterCardGrid from "@/app/semester/composition/SemesterCardGrid";
+import SemesterDeleteConfirmContent from "@/app/semester/composition/forms/SemesterDeleteConfirmContent";
+import SemesterCardGrid from "@/app/semester/composition/grid";
 import SemesterEnrollmentModalContent from "@/app/semester/composition/SemesterEnrollmentModalContent";
 import SemesterSortPopover from "@/app/semester/composition/SemesterSortPopover";
 

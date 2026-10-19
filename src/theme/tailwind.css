@@ -2,12 +2,12 @@
  * Tailwind is introduced without Preflight because Antd's reset and the
  * existing app-wide element styles already own that responsibility.
  *
- * source("../../..") points Tailwind at src/ from this file's directory.
+ * source("../..") points Tailwind at src/ from this file's directory.
  */
 @layer theme, base, components, utilities;
 
 @import "tailwindcss/theme.css" layer(theme);
-@import "tailwindcss/utilities.css" layer(utilities) source("../../..");
+@import "tailwindcss/utilities.css" layer(utilities) source("../..");
 
 /* Match Tailwind's dark: variant to the app's existing theme attribute. */
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));

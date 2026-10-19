@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/authentication";
 import { addUser, getAllSemesters, handleImageUpload } from "@/actions/users";
-import UserForm from "@/app/users/composition/UserForm";
+import UserForm from "@/app/users/composition/forms";
 import { isAdminRole } from "@/constants/roles";
 import { USER_MODAL_PARAMS } from "@/constants/modal-params";
 

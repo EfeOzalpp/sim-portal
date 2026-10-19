@@ -4,12 +4,12 @@ import { Metadata, type Viewport } from "next";
 // Global styles (side-effect only - order matters for cascade layers)
 import "@/theme/fonts/sour-gummy/sour-gummy.css";
 import "@/theme/fonts/figtree/figtree.css";
-import "@/theme/global-styles/antd-reset.css";
-import "@/theme/global-styles/app-theme/styling-theme.css";
-import "@/theme/global-styles/mainframe-theme/default.css";
-import "@/theme/global-styles/mainframe-theme/purple-green.css";
-import "@/theme/global-styles/app-theme/font-theme.css";
-import "@/theme/global-styles/tailwind.css";
+import "@/theme/antd-reset.css";
+import "@/theme/app-theme/styling-theme.css";
+import "@/theme/mainframe-theme/default.css";
+import "@/theme/mainframe-theme/purple-green.css";
+import "@/theme/app-theme/font-theme.css";
+import "@/theme/tailwind.css";
 
 // Components
 import UserProfileContent from "@/components/domain/profile/UserProfileContent";

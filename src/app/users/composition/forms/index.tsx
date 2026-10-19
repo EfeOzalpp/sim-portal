@@ -20,9 +20,9 @@ import { useToast } from "@/components/toast";
 import { InfoPopover } from "@/components/popover/InfoPopover";
 
 // Composition
-import { transformUserFromAPI } from "@/app/users/composition/user.transformers";
-import ImageUpload from "@/app/users/composition/ImageUpload";
-import RepeatableInput from "@/app/users/composition/RepeatableInput";
+import { transformUserFromAPI } from "@/app/users/composition/forms/user.transformers";
+import ImageUpload from "@/app/users/composition/forms/ImageUpload";
+import RepeatableInput from "@/app/users/composition/forms/RepeatableInput";
 
 // Helpers
 import { useForm, useWatch, Controller } from "react-hook-form";
@@ -30,7 +30,7 @@ import { handleFormAction } from "@/helpers";
 import { formatSemesterCode, getCurrentSemesterCode, normalizeSemesterCode } from "@/components/domain/filters/semester-filter";
 import { ROLES } from "@/constants/roles";
 import clsx from "clsx";
-import styles from "@/app/users/composition/UserForm.module.css";
+import styles from "@/app/users/composition/forms/UserForm.module.css";
 
 const fieldStackClassName = "flex min-w-0 flex-col gap-2";
 const fieldLabelClassName = "ui-label m-0 block min-h-5 pl-1";

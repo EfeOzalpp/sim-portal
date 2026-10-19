@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Button } from "@/components/button";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useOptionalActionMode } from "@/components/layout/ActionMode";
-import { ThursdayCheckbox, useSelectedThursdays } from "@/app/thursdays/composition/SelectedThursdaysProvider";
+import { ThursdayCheckbox, useSelectedThursdays } from "@/app/thursdays/composition/selection/SelectedThursdaysProvider";
 import ThursdayProducerAvatarStack, { type ThursdayProducerPreview } from "@/app/thursdays/composition/ThursdayProducerAvatarStack";
 import { MaskIcon } from "@/theme/MaskIcon";
 import { ACTION_MODES } from "@/constants/action-modes";

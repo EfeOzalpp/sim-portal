@@ -14,7 +14,7 @@ import { confirmDeleteDialogClassName } from "@/components/confirm-delete/styles
 import { MaskIcon } from "@/theme/MaskIcon";
 
 // Composition
-import ProductionForm from "@/app/thursdays/composition/ProductionForm";
+import ProductionForm from "@/app/thursdays/composition/forms/ProductionForm";
 import {
   addIconButtonClassName,
   addIconClassName,
@@ -29,7 +29,7 @@ import {
   productionHeaderClassName,
   productionItemClassName,
   sectionHeaderClassName,
-} from "@/app/thursdays/composition/thursdayFormClasses";
+} from "@/app/thursdays/composition/forms/thursdayFormClasses";
 
 // Helpers
 import { useFieldArray, useWatch } from "react-hook-form";
