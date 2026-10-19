@@ -10,6 +10,7 @@ import { updateUserSemesterGrades } from "@/actions/semesters";
 import PersonLink from "@/components/domain/profile/PersonLink";
 import { useOptionalActionMode } from "@/components/layout/ActionMode";
 import { usePageChrome } from "@/components/layout/PageChrome";
+import { useTopPullReopen } from "@/components/layout/PageChrome/useTopPullReopen";
 import { MaskIcon } from "@/theme/MaskIcon";
 import FaceImage from "@/components/primitives/FaceImage";
 
@@ -24,7 +25,7 @@ import clsx from "clsx";
 import { ACTION_MODES } from "@/constants/action-modes";
 import { Prisma } from "@prisma/client";
 import { formatSemesterCode } from "@/components/domain/filters/semester-filter";
-import { getStringColors } from "@/constants/stringColors";
+import StringLabel from "@/components/primitives/StringLabel";
 import { formatShortMonthDay } from "@/constants/date-format";
 
 type ProductionWithThursday = Prisma.ProductionGetPayload<{ include: { thursday: { select: { id: true, date: true, semester: { select: { name: true } } } } } }>;
@@ -59,7 +60,7 @@ interface IndividualPerformanceTableProps {
 
 const progressItemIconClassName = "h-5 w-5 flex-none bg-[var(--app-text)] [mask-position:center] [mask-repeat:no-repeat] [mask-size:contain]";
 const progressItemClassName = clsx(styles.progressItem, "no-underline");
-const progressLinkClassName = "ui-note not-italic cursor-pointer self-start border-0 bg-transparent p-0 text-[var(--inline-link)] underline underline-offset-[0.18em] hover:text-[var(--inline-link-hover)]";
+const progressLinkClassName = "ui-link cursor-pointer self-start border-0 bg-transparent p-0 text-[var(--inline-link)] underline underline-offset-[0.18em] hover:text-[var(--inline-link-hover)]";
 
 // isAllScope: All-scope items span multiple semesters, so the semester code
 // shows up in the row (right after the date pill, before groupLabel/tags) -
@@ -76,23 +77,17 @@ function getProgressSemesterCode(isAllScope: boolean, semesterName: string | und
 function ProgressItem({ name, thursdayId, groupLabel, tags, semesterCode, meta, truncate = true }: { name: string; thursdayId?: string; groupLabel?: string; tags?: string[]; semesterCode?: string; meta?: string; truncate?: boolean }) {
 	// meta (the date, colored deterministically by its own text so matching
 	// dates partition into the same color across the app) leads the row,
-	// then semester code (its own neutral pill, not colorful like meta - see
-	// --elevated-2-label-* in styling-theme.css), then groupLabel/tags as
-	// plain text.
+	// then semester code and groupLabel/tags as neutral text.
 	const chips = [groupLabel, ...(tags || [])].filter((chip): chip is string => !!chip);
-	const metaColors = meta ? getStringColors(meta) : undefined;
 	const leadCount = (meta ? 1 : 0) + (semesterCode ? 1 : 0);
 	const content = (
 		<>
 			{(leadCount > 0 || chips.length > 0) && (
 				<span className={clsx("ui-label flex items-center gap-1.5", styles.tagRow)}>
-					{meta && metaColors && (
-						<span
-							className={styles.progressMetaLabel}
-							style={{ borderBottomColor: metaColors.bg, color: metaColors.text }}
-						>
+					{meta && (
+						<StringLabel colorKey={meta}>
 							{meta}
-						</span>
+						</StringLabel>
 					)}
 					{semesterCode && (
 						<>
@@ -148,13 +143,15 @@ function ProgressItemList({ items, groupLabel }: { items: ProgressListItem[]; gr
 
 	if (expanded) {
 		return (
-			<div className={clsx(styles.expandedList, "flex flex-col")}>
+			<div className={styles.itemList}>
 				{items.map((item) => (
 					<ProgressItem key={item.id} name={item.name} thursdayId={item.thursdayId} groupLabel={groupLabel} tags={item.tags} semesterCode={item.semesterCode} meta={item.meta} truncate={false} />
 				))}
-				<button type="button" onClick={() => setExpanded(false)} className={clsx(progressLinkClassName, "mt-2 pl-[0.85rem]", "print:hidden")}>
-					Less
-				</button>
+				<div className={clsx("ui-small", styles.listFooter, "print:hidden!")}>
+					<button type="button" onClick={() => setExpanded(false)} className={progressLinkClassName}>
+						Less
+					</button>
+				</div>
 			</div>
 		);
 	}
@@ -162,21 +159,16 @@ function ProgressItemList({ items, groupLabel }: { items: ProgressListItem[]; gr
 	const [first, ...rest] = items;
 
 	return (
-		<div className="flex items-start gap-3">
+		<div className={styles.itemList}>
 			<ProgressItem name={first.name} thursdayId={first.thursdayId} groupLabel={groupLabel} tags={first.tags} semesterCode={first.semesterCode} meta={first.meta} />
-			{/* Fixed width, always reserved (even with nothing to show) - so the
-			    card beside it (flex-1 in the CSS module) is always the same
-			    width whether or not this row actually has a "N more" to show. */}
-			<div className="mt-3 flex w-[4.5rem] flex-none flex-col gap-0.5">
-				{rest.length > 0 && (
-					<>
-						<span className="text-[var(--subtle-text)]">{rest.length}+</span>
-						<button type="button" onClick={() => setExpanded(true)} className={progressLinkClassName} aria-label={`Show ${rest.length} more`}>
-							More
-						</button>
-					</>
-				)}
-			</div>
+			{rest.length > 0 && (
+				<div className={clsx("ui-small", styles.listFooter, "print:hidden!")}>
+					<span className="text-[var(--app-text)]">+{rest.length}</span>
+					<button type="button" onClick={() => setExpanded(true)} className={progressLinkClassName} aria-label={`Show ${rest.length} more`}>
+						More
+					</button>
+				</div>
+			)}
 		</div>
 	);
 }
@@ -184,7 +176,7 @@ function ProgressItemList({ items, groupLabel }: { items: ProgressListItem[]; gr
 // Shared between the header table and the body table (see the render below)
 // so their columns line up exactly - table-layout: fixed makes both tables
 // honor these widths precisely instead of letting content nudge them apart.
-const COLUMN_WIDTHS = ["4%", "17%", "34%", "27%", "18%"];
+const COLUMN_WIDTHS = ["var(--progress-checkbox-column-width, 4%)", "20%", "29%", "29%", "18%"];
 
 // Not wired to anything yet - just the row-selection UI ahead of a later
 // "export only the checked people" feature.
@@ -296,6 +288,7 @@ export default function IndividualPerformanceTable({ users = [], isAllScope = fa
 	const lastTableScrollRef = useRef({ left: 0, top: 0 });
 	const { activeMode } = useOptionalActionMode();
 	const { reportScrollTop } = usePageChrome();
+	const { reportScroll, onWheel, onTouchStart, onTouchMove, onTouchEnd, onTouchCancel } = useTopPullReopen();
 	const [selectedGradeUser, setSelectedGradeUser] = useState<UserStat | null>(null);
 	const [sort, setSort] = useState<SortState>({ key: "presentations", direction: "desc" });
 	// Shared with SelectedCountLabel in the page header, via SelectedUsersProvider.
@@ -318,6 +311,16 @@ export default function IndividualPerformanceTable({ users = [], isAllScope = fa
 	useEffect(() => {
 		setGradesByUser(persistedGradesByUser);
 	}, [persistedGradesByUser]);
+
+	useEffect(() => {
+		if (activeMode !== ACTION_MODES.editGrades) return;
+		const scroll = scrollRef.current;
+		if (!scroll) return;
+		scroll.scrollTo({
+			left: scroll.scrollWidth - scroll.clientWidth,
+			behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth",
+		});
+	}, [activeMode]);
 
 	// The body owns vertical and horizontal scrolling. The header is a
 	// separate table above it, so body horizontal scroll mirrors into the
@@ -346,10 +349,7 @@ export default function IndividualPerformanceTable({ users = [], isAllScope = fa
 				window.matchMedia("(max-width: 768px)").matches &&
 				verticalDelta >= horizontalDelta * 2
 			) {
-				reportScrollTop(scroll.scrollTop, {
-					preserveCollapsedUntilTop: true,
-					reopenDistance: 48,
-				});
+				reportScroll(scroll);
 			}
 		};
 
@@ -358,7 +358,7 @@ export default function IndividualPerformanceTable({ users = [], isAllScope = fa
 		return () => {
 			scroll.removeEventListener("scroll", onScroll);
 		};
-	}, [reportScrollTop]);
+	}, [reportScrollTop, reportScroll]);
 
 	function toggleSort(key: SortKey) {
 		setSort((current) => {
@@ -397,25 +397,25 @@ export default function IndividualPerformanceTable({ users = [], isAllScope = fa
 					<ColumnWidths widths={COLUMN_WIDTHS} />
 					<thead>
 						<tr>
-							<th>
+							<th className="ui-label">
 								<SelectAllCheckbox users={sortedUsers} selectedUserIds={selectedUserIds} onChange={setSelectedUserIds} />
 							</th>
-							<th aria-sort={ariaSortFor("name")}>
+							<th className="ui-label" aria-sort={ariaSortFor("name")}>
 								<SortableHeader label={currentSemesterCode ? `Names (${currentSemesterCode})` : "Names"} sortKey="name" sort={sort} onSort={toggleSort} />
 							</th>
-							<th aria-sort={ariaSortFor("presentations")}>
+							<th className="ui-label" aria-sort={ariaSortFor("presentations")}>
 								<SortableHeader label="Presentations" sortKey="presentations" sort={sort} onSort={toggleSort} />
 							</th>
-							<th aria-sort={ariaSortFor("productions")}>
+							<th className="ui-label" aria-sort={ariaSortFor("productions")}>
 								<SortableHeader label="Productions" sortKey="productions" sort={sort} onSort={toggleSort} />
 							</th>
-							<th>Grades</th>
+							<th className="ui-label">Grades</th>
 						</tr>
 					</thead>
 				</table>
 				</div>
 			</div>
-			<div ref={scrollRef} className={styles.tableScroll}>
+			<div ref={scrollRef} className={styles.tableScroll} onWheel={onWheel} onTouchStart={onTouchStart} onTouchMove={onTouchMove} onTouchEnd={onTouchEnd} onTouchCancel={onTouchCancel}>
 				<div className={styles.tableInset}>
 				<table className={styles.table}>
 					<ColumnWidths widths={COLUMN_WIDTHS} />
@@ -459,7 +459,7 @@ export default function IndividualPerformanceTable({ users = [], isAllScope = fa
 										/>
 									</td>
 									<td>
-										<PersonLink userId={user.id} className={clsx(styles.nameLink, "inline-flex max-w-full items-center gap-3")}>
+										<PersonLink userId={user.id} className={styles.nameLink}>
 											<span className="relative h-10 w-10 flex-none overflow-hidden rounded-full">
 												<FaceImage
 													imagePath={user.image}
@@ -468,7 +468,7 @@ export default function IndividualPerformanceTable({ users = [], isAllScope = fa
 													style={{ objectFit: "cover" }}
 												/>
 											</span>
-											<span className="min-w-0 truncate print:overflow-visible print:text-clip print:whitespace-normal">{user.name}</span>
+											<span className={clsx(styles.personName, "min-w-0 truncate print:overflow-visible print:text-clip print:whitespace-normal")}>{user.name}</span>
 										</PersonLink>
 									</td>
 									<td>
@@ -538,8 +538,8 @@ export default function IndividualPerformanceTable({ users = [], isAllScope = fa
 											{selectedGrades.length > 0 ? (
 												<div className={styles.gradeList}>
 													{selectedGrades.map(({ semester, grade }) => (
-														<span key={semester.id} className={styles.gradeValue}>
-															<strong>{grade}</strong>
+														<span key={semester.id} className={clsx("ui-small", styles.gradeValue)}>
+															<strong className="ui-grade">{grade}</strong>
 															{isAllScope && <span className={styles.gradeSemester}>{formatSemesterCode(semester.name)}</span>}
 														</span>
 													))}

@@ -1,21 +1,12 @@
-/* Header and body are separate tables: the body owns scrolling, and the
-   header mirrors body scrollLeft so the visible labels stay aligned. Matching
-   table-layout: fixed + <colgroup> keeps both tables' columns identical. */
+/* Separate header/body tables share column widths and synchronized horizontal scrolling. */
 .tableScroll {
 	flex: 1 1 auto;
 	min-height: 0;
 	overflow-x: auto;
 	overflow-y: auto;
-	-webkit-overflow-scrolling: touch;
 	overscroll-behavior: contain;
 	touch-action: pan-x pan-y;
-	/* Always reserve the vertical scrollbar's width, even before the content
-	   actually overflows - .headerScroll below reserves the same gutter, so
-	   both tables (fixed layout, matching colgroup) end up with the exact
-	   same available width and their columns stay aligned. Without this,
-	   .tableScroll's real scrollbar quietly narrows it relative to
-	   .headerScroll (which never scrolls), and every column drifts left of
-	   its header, worse the further right the column is. */
+	/* Match the header's scrollbar gutter to keep columns aligned. */
 	scrollbar-gutter: stable;
 }
 
@@ -25,14 +16,7 @@
 	scrollbar-gutter: stable;
 }
 
-/* Wraps each <table> (both header and body) - not .tableScroll/.headerScroll
-   themselves, since .tableScroll's own overflow-y: auto means padding there
-   would push its scrollbar in from the true edge instead of leaving it
-   flush; and not .table itself either - padding on a <table> element has no
-   effect at all once border-collapse: collapse is set (a real CSS rule, not
-   a quirk), so it wouldn't do anything there. A plain div isn't subject to
-   either restriction, and gives both tables the same inset either way, so
-   their columns stay aligned. */
+/* Inset both tables equally without moving the body scrollbar inward. */
 .tableInset {
 	padding-inline: 1.5rem;
 }
@@ -48,28 +32,16 @@
 .table thead > tr > th {
 	padding: 0.85rem 0.5rem;
 	color: var(--label-text);
-	font-family: var(--font-sans);
-	font-size: 0.8rem;
-	font-weight: 500;
-	letter-spacing: 0.04em;
-	line-height: 1.2;
-	text-transform: uppercase;
 	text-align: left;
 	border-bottom: 1px solid var(--table-row-border);
 }
 
 .table tbody > tr > td {
-	/* padding-top lives here rather than on <tr> - tr padding is a no-op
-	   under border-collapse: collapse (only td/th respect it). */
 	padding: 1rem 0.5rem;
 	border-bottom: 1px solid var(--table-row-border);
 	color: var(--app-text);
 	vertical-align: middle;
-	/* Containing block for .gradeEditOverlay - a <td> reliably has the row's
-	   real computed height, unlike a percentage-height div nested inside it
-	   (min-height/height: 100% on a flex child of a table cell doesn't
-	   resolve consistently across browsers), so anchoring the overlay here
-	   instead lets a plain inset: 0 just fill the cell correctly every time. */
+	/* Anchor the grade editor overlay to the full cell. */
 	position: relative;
 }
 
@@ -78,9 +50,7 @@
 	padding-right: 1.5rem;
 }
 
-/* Selected rows (checkbox on) get a persistent tint of their own, via a
-   dedicated token distinct from :hover's - listed first so :hover (below)
-   still wins when a selected row is also currently under the pointer. */
+/* Hover takes precedence over the persistent selection tint. */
 .table tbody > tr[data-selected="true"] > td {
 	background: var(--app-ind-progress-surface-selected);
 	border-bottom-color: var(--table-row-border-hover);
@@ -91,10 +61,7 @@
 	border-bottom-color: var(--table-row-border-hover);
 }
 
-/* The "top border" of a hovered/selected row is really the previous row's
-   own border-bottom (border-collapse: collapse merges the seam) - recolor
-   that row's bottom border directly instead of the hovered row's top, which
-   would just lose the merge conflict to the un-hovered row above it. */
+/* With collapsed borders, the preceding row owns the shared top edge. */
 .table tbody > tr:has(+ tr:hover) > td,
 .table tbody > tr:has(+ tr[data-selected="true"]) > td {
 	border-bottom-color: var(--table-row-border-hover);
@@ -122,7 +89,6 @@
 	flex: none;
 	width: 1rem;
 	height: 1rem;
-	/* Muted at rest (not currentColor, which matched the header's own full-bright text) - only the active sort column's chevron should stand out, via .sortIconActive below. */
 	background: var(--content-muted);
 	mask-image: url("../../../../theme/assets/arrow/down.svg");
 	mask-position: center;
@@ -160,6 +126,10 @@
 }
 
 .nameLink {
+	display: inline-flex;
+	max-width: 100%;
+	align-items: center;
+	gap: 0.75rem;
 	color: var(--app-text);
 	text-decoration: none;
 }
@@ -174,22 +144,35 @@
 .progressItem {
 	position: relative;
 	display: flex;
-	/* flex-1, not none - fills whatever's left beside .moreArea's own fixed
-	   width, so the card is the same width whether or not that area actually
-	   has a "N more" to show (see ProgressItemList in the .tsx). */
 	flex: 1 1 0%;
 	flex-direction: column;
 	justify-content: center;
 	gap: 0.3rem;
-	/* min-height, not height - a fixed height can't grow for the
-	   .progressItemTruncated:hover / expanded-list cases below, where the
-	   title/tags are allowed to wrap past one line. */
+	/* Allow wrapped titles and expanded entries to grow. */
 	min-height: 4.25rem;
 	box-sizing: border-box;
 	min-width: 0;
 	background: var(--elevated-surface-2);
 	padding: 0.65rem 0.85rem;
 	color: var(--app-text);
+}
+
+.itemList {
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
+}
+
+.listFooter {
+	display: flex;
+	align-items: baseline;
+	gap: 0.375rem;
+	margin-top: 0.5rem;
+	padding-left: 0.85rem;
+}
+
+.listFooter > button {
+	line-height: inherit;
 }
 
 .progressItemIcon {
@@ -222,7 +205,6 @@
 	max-width: 100%;
 	flex-wrap: wrap;
 	row-gap: 0.375rem;
-	line-height: 1.5;
 	padding-left: 0.1rem;
 }
 
@@ -231,26 +213,11 @@
 	white-space: nowrap;
 }
 
-.progressMetaLabel {
-	border-bottom: 1px solid currentColor;
-	padding: 0 0 0.125rem;
-	background: transparent;
-	font-family: var(--font-sans);
-	font-size: 0.75rem;
-	font-weight: 600;
-	letter-spacing: 0.04em;
-	line-height: 1;
-	text-transform: uppercase;
-	white-space: nowrap;
-}
-
 .progressSemesterLabel {
 	color: var(--label-text);
 }
 
-/* Collapsed single-card view only (ProgressItem's truncate=true, the
-   default) - one line each for the title and tag row, clipped if they
-   overflow. */
+/* Collapsed entries truncate titles and tags; hovered titles can wrap. */
 .progressItemTruncated .itemName {
 	overflow: hidden;
 	text-overflow: ellipsis;
@@ -276,8 +243,6 @@
 	color: var(--content-muted);
 }
 
-/* Pill, same convention as SemesterBadge - date sits above the name instead
-   of inline beside it. */
 .gradeCell {
 	display: flex;
 	align-items: center;
@@ -301,14 +266,7 @@
 	background: var(--elevated-surface-2);
 	padding: 0.5rem 0.65rem;
 	color: var(--app-text);
-	font-size: 0.875rem;
 	white-space: nowrap;
-}
-
-.gradeValue strong {
-	font-family: var(--font-sans);
-	font-size: 1rem;
-	font-weight: 600;
 }
 
 .gradeSemester {
@@ -317,7 +275,6 @@
 	gap: 0.5rem;
 	color: var(--label-text);
 	font: inherit;
-	text-transform: uppercase;
 	white-space: nowrap;
 }
 
@@ -328,10 +285,6 @@
 
 .gradeEditOverlay {
 	position: absolute;
-	/* Anchored to the td (see .table tbody > tr > td's position: relative),
-	   not the .gradeCell div inside it - inset: 0 against the td's own
-	   padding box just fills the whole cell correctly, no matching its
-	   padding values by hand and no percentage-height guessing. */
 	inset: 0;
 	display: flex;
 	align-items: center;
@@ -357,10 +310,7 @@
 		display: none !important;
 	}
 
-	/* .tableScroll is the only actually-clipping container (overflow-y:
-	   auto inside a flex-1 box) - overflow: visible + flex: none lets its
-	   real content flow onto as many printed
-	   pages as it needs instead of cutting off at the on-screen viewport. */
+	/* Let table content flow across printed pages. */
 	.tableScroll {
 		flex: none;
 		overflow: visible;
@@ -376,11 +326,7 @@
 		background: white !important;
 	}
 
-	/* .progressItem's card look (rounded box + padding + reserved
-	   min-height) is a screen-only affordance - its background never prints
-	   anyway (browsers skip background-color by default), but the padding/
-	   min-height still applied, visually indenting every Presentations/
-	   Productions entry away from the column's true left edge for no reason. */
+	/* Remove screen-only card spacing for print. */
 	.progressItem {
 		min-height: 0 !important;
 		padding: 0.15rem 0 !important;
@@ -391,10 +337,6 @@
 		display: none !important;
 	}
 
-	/* Same pill-box pattern (and same screen-only reasoning) as .progressItem
-	   above - the "-" placeholder and any filled grade pill each carry their
-	   own left padding independent of the cell's own, so fixing the td alone
-	   didn't flush these all the way. */
 	.emptyCell {
 		padding: 0 !important;
 	}
@@ -404,12 +346,7 @@
 		border-radius: 0 !important;
 	}
 
-	/* Blanket, "no exceptions" override - .table * beats every descendant's
-	   own explicit color (progressItem/itemName/countText/emptyCell/etc. all
-	   set their own var(--...) color, which a td-level override alone can't
-	   reach since inheritance only applies when nothing more specific does).
-	   .table.table doubles the class's specificity so this still wins over
-	   single-class Tailwind utilities like text-[var(--subtle-text)]!. */
+	/* Extra specificity overrides descendant color utilities when printing. */
 	.table.table,
 	.table.table * {
 		color: #000 !important;
@@ -430,7 +367,36 @@
 }
 
 @media (max-width: 768px) {
+	.headerScroll {
+		/* WebKit only reserves the matching vertical gutter with scroll overflow. */
+		overflow-y: scroll;
+	}
+
+	.tableInset {
+		padding-inline: 0;
+	}
+
+	.table tbody > tr > td:nth-child(2) {
+		padding-left: 1rem;
+	}
+
+	.nameLink {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 0.5rem;
+	}
+
+	.personName {
+		white-space: normal;
+		overflow-wrap: anywhere;
+	}
+
+	.progressItemTruncated .tagRow {
+		mask-image: linear-gradient(to right, black calc(100% - 0.5rem), transparent);
+	}
+
 	.table {
+		--progress-checkbox-column-width: 3.5rem;
 		margin-inline: 0;
 	}
 

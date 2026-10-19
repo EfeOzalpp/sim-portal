@@ -16,6 +16,10 @@ export default function EditGradesButton() {
 			type="button"
 			variant="action"
 			tone="cta"
+			aria-label="Edit grades"
+			title="Edit grades"
+			data-action-mode-button={ACTION_MODES.editGrades}
+			className={isActive ? "relative z-[260]" : undefined}
 			aria-pressed={isActive}
 			onClick={() => setActiveMode(isActive ? null : ACTION_MODES.editGrades)}
 		>

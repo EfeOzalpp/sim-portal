@@ -24,7 +24,7 @@ const scopeOptions = [
 	{
 		value: ALL_SEMESTERS_VALUE,
 		label: "Full history",
-		description: "Shows all semesters' presentations, productions, and grades of current semester students.",
+		description: <>Shows <span className="underline underline-offset-2">all</span> semesters' presentations, productions, and grades of current semester students.</>,
 	},
 	{
 		value: "current",

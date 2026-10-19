@@ -9,7 +9,7 @@ import { useModalCloseGuard } from "@/components/modal/CloseGuard";
 import { Alert } from "@/components/alert";
 import { Button } from "@/components/button";
 import { useToast } from "@/components/toast";
-import { getStringColors } from "@/constants/stringColors";
+import { MaskIcon } from "@/theme/MaskIcon";
 import styles from "@/app/individual/composition/forms/GradeEditorModal.module.css";
 
 export type GradeValue = "P" | "NC" | "INC" | "W";
@@ -44,16 +44,14 @@ function GradeOptionButton({
 	selected: boolean;
 	onClick: () => void;
 }) {
-	const selectedColors = selected ? getStringColors(`grade:${grade}`) : undefined;
-
 	return (
 		<button
 			type="button"
-			className="inline-flex min-h-9 min-w-[3.25rem] cursor-pointer items-center justify-center rounded-md border-0 bg-[var(--modal-surface-3)] px-2 [font:inherit] hover:bg-[var(--modal-surface-3-hover)] data-[selected=true]:font-semibold"
-			data-selected={selected ? "true" : undefined}
-			style={selectedColors ? { backgroundColor: selectedColors.bg, color: "var(--selected-checkbox-text)" } : undefined}
+			className={`ui-control ui-grade-option ${styles.gradeOption}`}
+			aria-pressed={selected}
 			onClick={onClick}
 		>
+			{selected && <MaskIcon icon="check/check.svg" className={styles.gradeOptionCheck} />}
 			<span>{grade}</span>
 		</button>
 	);
@@ -125,6 +123,7 @@ function GradeEditorForm({ user, value, onChange, onClose }: GradeEditorFormProp
 						<div
 							key={semester.id}
 							className={styles.row}
+							data-modal-surface-depth="2"
 						>
 							<h3 className="m-0">
 								{semester.name}

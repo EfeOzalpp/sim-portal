@@ -88,7 +88,7 @@ export default async function IndividualPage({ searchParams }: IndividualPagePro
 							printLabel="PDF Selected"
 							csvLabel="CSV Selected"
 							utilities={[
-								{ label: "PDF All", icon: "download/download.svg" },
+								{ label: "PDF All", icon: "print/print.svg" },
 								{ label: "CSV All", icon: "download/download.svg" },
 							]}
 						/>
