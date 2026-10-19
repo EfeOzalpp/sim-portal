@@ -1,11 +1,10 @@
+import StringLabel from "@/components/primitives/StringLabel";
+
 interface SemesterTimelineProps {
 	items: string[];
 }
 
-const badgeClassName =
-	"self-start border-0 border-b border-solid border-b-[var(--elevated-2-label-bg)] bg-transparent px-0 pb-0.5 font-sans text-xs leading-tight font-semibold text-[var(--elevated-2-label-text)] uppercase";
-
-const lineClassName = "absolute left-1/2 w-px -translate-x-1/2 bg-[var(--lines-color)]";
+const lineClassName = "absolute left-1/2 w-0 border-0 border-l border-solid border-[var(--lines-color)]";
 
 export default function SemesterTimeline({ items }: SemesterTimelineProps) {
 	if (items.length === 0) return null;
@@ -21,14 +20,11 @@ export default function SemesterTimeline({ items }: SemesterTimelineProps) {
 						<div className="relative">
 							<span
 								className={lineClassName}
-								style={isFirst ? { top: "-1rem", height: "calc(50% + 1rem)" } : { top: 0, height: "50%" }}
+								style={{ top: isFirst ? "-1rem" : 0, bottom: isLast ? "50%" : 0 }}
 								aria-hidden="true"
 							/>
-							{!isLast && (
-								<span className={lineClassName} style={{ bottom: 0, height: "50%" }} aria-hidden="true" />
-							)}
 							<span
-								className="absolute top-1/2 left-1/2 h-px w-2 -translate-y-1/2 bg-[var(--lines-color)]"
+								className="absolute top-1/2 left-1/2 w-2 border-0 border-t border-solid border-[var(--lines-color)]"
 								aria-hidden="true"
 							/>
 						</div>
@@ -36,7 +32,7 @@ export default function SemesterTimeline({ items }: SemesterTimelineProps) {
 							{item.startsWith("Break") ? (
 								<span className="ui-note text-[var(--subtle-text)]">{item}</span>
 							) : (
-								<div className={badgeClassName}>{item}</div>
+								<StringLabel colorKey={item} className="self-start">{item}</StringLabel>
 							)}
 						</div>
 					</div>

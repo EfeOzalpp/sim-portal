@@ -4,12 +4,14 @@ import ProductionSummaryCard from "@/components/domain/productions/ProductionSum
 import FaceImage from "@/components/primitives/FaceImage";
 import AboutText from "@/components/domain/profile/AboutText";
 import SemesterTimeline from "@/components/domain/profile/SemesterTimeline";
+import ProfileEmail from "@/components/domain/profile/ProfileEmail";
 import TruncatedHoverLink from "@/components/domain/profile/TruncatedHoverLink";
 import { logOut } from "@/actions/auth";
 import { getDisplayUserLinks, getUserLinkHref } from "@/actions/user-links";
 import { groupSemesterRanges } from "@/components/domain/filters/semester-filter";
 import { Button } from "@/components/button";
 import { getStringColors } from "@/constants/stringColors";
+import StringLabel from "@/components/primitives/StringLabel";
 import styles from "@/components/domain/profile/UserProfileView.module.css";
 
 function getEmailLabel(email: string) {
@@ -36,7 +38,7 @@ export default function UserProfileView({
 	editHref,
 }: UserProfileViewProps) {
 	const roleLabel = user.role.charAt(0) + user.role.slice(1).toLowerCase();
-	const roleColors = getStringColors(`role:${user.role}`);
+	const nameColors = getStringColors(`person:${user.id}`);
 	const semesterRanges = groupSemesterRanges((user.semesters || []).map((semester: any) => semester.name));
 	const links = getDisplayUserLinks(user.link);
 	const pronouns = user.pronouns?.trim();
@@ -44,74 +46,67 @@ export default function UserProfileView({
 	const canEdit = isCurrentUser || isAdmin;
 	const hasProductions = (user.productions?.length ?? 0) > 0;
 	const hasPresentations = (user.presentations?.length ?? 0) > 0;
+	const profileLinks = links.length > 0 ? (
+		<div className="flex min-w-0 flex-col gap-2">
+			<span className="ui-label block">Links</span>
+			<div className="is-body flex min-w-0 flex-col gap-1 text-[var(--app-text)]">
+				{links.map((link, index) => {
+					const href = getUserLinkHref(link);
+					const linkKey = `${link}-${index}`;
+					return href ? (
+						<TruncatedHoverLink
+							key={linkKey}
+							href={href}
+							text={link}
+							external
+							className="break-words text-[var(--app-text)] no-underline decoration-current underline-offset-[0.14em] hover:text-[var(--inline-link-hover)]"
+						/>
+					) : (
+						<span key={linkKey} className="break-words text-[var(--app-text)]">{link}</span>
+					);
+				})}
+			</div>
+		</div>
+	) : null;
 
 	return (
 		<div className={styles.root}>
 			<div className={styles.layout}>
-				<aside className="flex min-w-0 flex-col gap-4">
-					<div className="relative aspect-[3/4] w-full overflow-hidden rounded-lg border-solid border-[var(--modal-border)] border">
+				<aside className={styles.sidebar}>
+					<div className="relative aspect-[5/6] w-full max-[768px]:aspect-auto max-[768px]:self-stretch overflow-hidden rounded-lg border-solid border-[var(--modal-border)] border">
 						<FaceImage
 							imagePath={user.image}
 							alt={`${user.name}'s image`}
-							sizes="(max-width: 767px) calc(100vw - 2rem), 13rem"
+							sizes="(max-width: 768px) 9rem, 14rem"
 							className="object-cover object-top"
 						/>
 					</div>
-					<div
-						className="ml-2 self-start border-0 border-b border-solid bg-transparent px-0 pb-0.5 font-sans text-xs leading-tight font-semibold uppercase"
-						style={{ borderBottomColor: roleColors.bg, color: roleColors.text }}
-					>
+					<div className="flex min-w-0 flex-col gap-4 max-[768px]:pt-[0.6rem]">
+					<StringLabel colorKey={`role:${user.role}`} className="ml-2 self-start">
 						{roleLabel}
-					</div>
+					</StringLabel>
 					<SemesterTimeline items={semesterRanges} />
-					<div className="ml-2 flex min-w-0 flex-col gap-2">
+					<div className="ml-2 flex min-w-0 flex-col gap-2 max-[768px]:gap-1">
 						<span className="ui-label block">{getEmailLabel(user.email)}</span>
-						<TruncatedHoverLink
-							href={`mailto:${user.email}`}
-							text={user.email}
-							className="break-words text-[var(--app-text)] no-underline decoration-current underline-offset-[0.14em] hover:text-[var(--inline-link-hover)]"
-						/>
+						<ProfileEmail email={user.email} />
 					</div>
-					{links.length > 0 && (
-						<div className="ml-2 flex min-w-0 flex-col gap-2">
-							<span className="ui-label block">Links</span>
-							<div className="flex min-w-0 flex-col gap-1 leading-normal text-[var(--app-text)]">
-								{links.map((link, index) => {
-									const href = getUserLinkHref(link);
-									const linkKey = `${link}-${index}`;
-
-									return href ? (
-										<TruncatedHoverLink
-											key={linkKey}
-											href={href}
-											text={link}
-											external
-											className="break-words text-[var(--app-text)] no-underline decoration-current underline-offset-[0.14em] hover:text-[var(--inline-link-hover)]"
-										/>
-									) : (
-										<span key={linkKey} className="break-words text-[var(--app-text)]">
-											{link}
-										</span>
-									);
-								})}
-							</div>
-						</div>
-					)}
+					{profileLinks && <div className="ml-2 min-w-0 max-[768px]:hidden">{profileLinks}</div>}
+					</div>
 				</aside>
 				<section className="flex min-w-0 flex-col gap-4">
 					<div className="flex flex-col gap-1 [&_h2]:m-0">
 						<div className={styles.header}>
-							<h2 className="min-w-0 pt-2 italic tracking-[0.05em]">{user.name}</h2>
+							<h2 className="min-w-0 pt-2" style={{ color: nameColors.text }}>{user.name}</h2>
 						</div>
 						{pronouns && (
-							<div className="text-xl leading-normal text-[var(--subtle-text)]">
+							<div className="is-body text-[var(--subtle-text)]">
 								{pronouns}
 							</div>
 						)}
 					</div>
 					<div className="flex min-w-0 flex-col gap-2 pb-2">
 						<span className={clsx("ui-label block", !about && "text-[var(--content-muted)]")}>About</span>
-						<div className="flex min-w-0 flex-col gap-1 leading-normal break-words text-[var(--app-text)]">
+						<div className="ui-reading flex min-w-0 flex-col gap-1 break-words text-[var(--app-text)]">
 							{about ? (
 								<AboutText text={about} />
 							) : (
@@ -123,6 +118,7 @@ export default function UserProfileView({
 							)}
 						</div>
 					</div>
+					{profileLinks && <div className="min-w-0 pb-2 min-[769px]:hidden">{profileLinks}</div>}
 					<div className="flex min-w-0 flex-col gap-2 pb-4">
 						<span className={clsx("ui-label block", !hasProductions && "text-[var(--content-muted)]")}>Productions</span>
 						<div className="flex flex-col gap-2 [&>*]:m-0">
@@ -165,7 +161,7 @@ export default function UserProfileView({
 				</section>
 			</div>
 			{canEdit && (
-				<div className="pointer-events-none sticky -bottom-8 mt-auto -mx-4 -mb-8 flex flex-row items-center gap-2 bg-[linear-gradient(to_bottom,transparent,var(--modal-surface)_35%)] px-4 pt-3 pb-8 [&_form]:m-0 [&>*]:pointer-events-auto">
+				<div className="pointer-events-none sticky -bottom-8 mt-auto -mx-4 -mb-8 flex flex-row items-center gap-2 bg-transparent px-4 pt-3 pb-8 [&_form]:m-0 [&>*]:pointer-events-auto">
 					{editHref && (
 						<Button surface="modal" href={editHref} variant="action" className="ml-auto">
 							Edit profile
@@ -173,7 +169,7 @@ export default function UserProfileView({
 					)}
 					{isCurrentUser && (
 						<form action={logOut}>
-							<Button surface="modal" type="submit" tone="danger">
+							<Button surface="modal" type="submit" tone="danger" icon="logout/logout.svg">
 								Log out
 							</Button>
 						</form>

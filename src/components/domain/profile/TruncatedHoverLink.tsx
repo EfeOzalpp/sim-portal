@@ -39,13 +39,13 @@ export default function TruncatedHoverLink({ href, text, external = false, class
 					href={href}
 					{...externalProps}
 					onMouseEnter={openIfTruncated}
-					className={clsx(className, "block min-w-0 truncate")}
+					className={clsx(className, "block min-w-0 truncate hover:underline")}
 				>
 					{text}
 				</a>
 			}
 		>
-			<span className="text-sm break-all text-[var(--contrast-surface-text)]">{text}</span>
+			<span className="ui-small break-all text-[var(--contrast-surface-text)]">{text}</span>
 		</Popover>
 	);
 }
