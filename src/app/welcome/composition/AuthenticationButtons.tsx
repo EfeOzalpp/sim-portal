@@ -10,7 +10,7 @@ import { logIn, logOut } from "@/actions/auth";
 import { Button } from "@/components/button";
 
 export function LoginButton() {
-	return <Button surface="page" onClick={() => logIn()}>Log in</Button>;
+	return <Button surface="page" icon="login/login.svg" onClick={() => logIn()}>Log in</Button>;
 }
 
 export function LogoutButton() {
