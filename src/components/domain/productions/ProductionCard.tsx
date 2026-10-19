@@ -48,7 +48,7 @@ export default async function ProductionCard({
 		<div className="flex items-center justify-between gap-2 px-5">
 			<h3 className="m-0 flex min-w-0 items-baseline gap-2">
 				<span className={clsx("min-w-0 truncate", isPlaceholderDisplay && "text-[var(--content-muted)]")}>
-					{isPlaceholderDisplay ? "Untitled" : production.name}
+					{isPlaceholderDisplay ? "Untitled Production" : production.name}
 				</span>
 			</h3>
 			{(surface === "modal" || (isAdmin && showEditButton)) && (
@@ -105,7 +105,7 @@ export default async function ProductionCard({
 				</div>
 				<div className={styles.presentationsColumn}>
 					<span className={production.presentations.length > 0 ? sectionLabelClassName : inactiveSectionLabelClassName}>Presentations</span>
-					<div className={styles.presentationList}>
+					<div className={styles.presentationList} data-surface={surface}>
 						{production.presentations.length > 0 ? (
 							production.presentations.map((presentation: any) => {
 								const presenters = presentation.presenters || [];
@@ -121,7 +121,7 @@ export default async function ProductionCard({
 												))}
 											</div>
 										)}
-										<h6 className="m-0">{presentation.name}</h6>
+										<h6 className={clsx("m-0", surface === "modal" && "modal-presentation-title")}>{presentation.name}</h6>
 										{presenters.length > 0 ? (
 											<div className={peopleListClassName}>
 												{presenters.map((presenter: any) => (

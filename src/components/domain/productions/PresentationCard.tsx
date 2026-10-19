@@ -66,7 +66,7 @@ export default function PresentationCard({
     return (
       <div className={styles.container}>
       <div className={styles.row}>
-        <div className="flex min-w-0 flex-col gap-1 leading-[1.4]">
+        <div className="is-body flex min-w-0 flex-col gap-1">
           <div>{presentation.name}</div>
         </div>
         <div className="flex min-w-0 flex-col gap-[0.35rem]">
