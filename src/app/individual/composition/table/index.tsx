@@ -24,7 +24,7 @@ import clsx from "clsx";
 import { ACTION_MODES } from "@/constants/action-modes";
 import { Prisma } from "@prisma/client";
 import { formatSemesterCode } from "@/components/domain/filters/semester-filter";
-import { getLabelColors } from "@/constants/labelColors";
+import { getStringColors } from "@/constants/stringColors";
 import { formatShortMonthDay } from "@/constants/date-format";
 
 type ProductionWithThursday = Prisma.ProductionGetPayload<{ include: { thursday: { select: { id: true, date: true, semester: { select: { name: true } } } } } }>;
@@ -80,7 +80,7 @@ function ProgressItem({ name, thursdayId, groupLabel, tags, semesterCode, meta, 
 	// --elevated-2-label-* in styling-theme.css), then groupLabel/tags as
 	// plain text.
 	const chips = [groupLabel, ...(tags || [])].filter((chip): chip is string => !!chip);
-	const metaColors = meta ? getLabelColors(meta) : undefined;
+	const metaColors = meta ? getStringColors(meta) : undefined;
 	const leadCount = (meta ? 1 : 0) + (semesterCode ? 1 : 0);
 	const content = (
 		<>

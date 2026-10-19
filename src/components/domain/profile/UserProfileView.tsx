@@ -9,7 +9,7 @@ import { logOut } from "@/actions/auth";
 import { getDisplayUserLinks, getUserLinkHref } from "@/actions/user-links";
 import { groupSemesterRanges } from "@/components/domain/filters/semester-filter";
 import { Button } from "@/components/button";
-import { getLabelColors } from "@/constants/labelColors";
+import { getStringColors } from "@/constants/stringColors";
 import styles from "@/components/domain/profile/UserProfileView.module.css";
 
 function getEmailLabel(email: string) {
@@ -36,7 +36,7 @@ export default function UserProfileView({
 	editHref,
 }: UserProfileViewProps) {
 	const roleLabel = user.role.charAt(0) + user.role.slice(1).toLowerCase();
-	const roleColors = getLabelColors(`role:${user.role}`);
+	const roleColors = getStringColors(`role:${user.role}`);
 	const semesterRanges = groupSemesterRanges((user.semesters || []).map((semester: any) => semester.name));
 	const links = getDisplayUserLinks(user.link);
 	const pronouns = user.pronouns?.trim();

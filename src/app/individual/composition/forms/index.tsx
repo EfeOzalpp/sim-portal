@@ -9,7 +9,7 @@ import { useModalCloseGuard } from "@/components/modal/CloseGuard";
 import { Alert } from "@/components/alert";
 import { Button } from "@/components/button";
 import { useToast } from "@/components/toast";
-import { getLabelColors } from "@/constants/labelColors";
+import { getStringColors } from "@/constants/stringColors";
 import styles from "@/app/individual/composition/forms/GradeEditorModal.module.css";
 
 export type GradeValue = "P" | "NC" | "INC" | "W";
@@ -44,7 +44,7 @@ function GradeOptionButton({
 	selected: boolean;
 	onClick: () => void;
 }) {
-	const selectedColors = selected ? getLabelColors(`grade:${grade}`) : undefined;
+	const selectedColors = selected ? getStringColors(`grade:${grade}`) : undefined;
 
 	return (
 		<button

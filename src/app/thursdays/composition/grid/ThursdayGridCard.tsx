@@ -9,7 +9,7 @@ import ThursdayProducerAvatarStack, { type ThursdayProducerPreview } from "@/app
 import { MaskIcon } from "@/theme/MaskIcon";
 import { ACTION_MODES } from "@/constants/action-modes";
 import { THURSDAY_MODAL_PARAMS, type ThursdayModalParam } from "@/constants/modal-params";
-import { getLabelColors } from "@/constants/labelColors";
+import { getStringColors } from "@/constants/stringColors";
 import ThursdayDateIndicator from "@/app/thursdays/composition/ThursdayDateIndicator";
 
 interface ThursdayGridCardProps {
@@ -27,7 +27,7 @@ interface ThursdayGridCardProps {
 }
 
 function DateLabel({ date }: { date: string }) {
-	const colors = getLabelColors(date);
+	const colors = getStringColors(date);
 
 	return (
 		<span

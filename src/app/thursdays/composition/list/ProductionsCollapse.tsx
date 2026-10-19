@@ -17,7 +17,7 @@ import { MaskIcon } from "@/theme/MaskIcon";
 // Helpers
 import { ACTION_MODES } from "@/constants/action-modes";
 import { THURSDAY_MODAL_PARAMS, type ThursdayModalParam } from "@/constants/modal-params";
-import { getLabelColors } from "@/constants/labelColors";
+import { getStringColors } from "@/constants/stringColors";
 import ThursdayDateIndicator from "@/app/thursdays/composition/ThursdayDateIndicator";
 
 const chevronClassName =
@@ -46,7 +46,7 @@ interface ProductionsCollapseProps {
 }
 
 function DateLabel({ date, className }: { date: string; className?: string }) {
-  const colors = getLabelColors(date);
+  const colors = getStringColors(date);
 
   return (
     <span

@@ -1,6 +1,6 @@
-const HUE_STEPS = 8;
+const HUE_STEPS = 10;
 const HUE_STEP_DEGREES = 360 / HUE_STEPS;
-const BASE_HUE = 170;
+const BASE_HUE = 210;
 
 const THEME_COLORS = {
 	light: {
@@ -8,18 +8,21 @@ const THEME_COLORS = {
 		bgLightness: 50,
 		textSaturation: 66,
 		textLightness: 20,
+		titleLightness: 20,
 	},
 	dark: {
 		bgSaturation: 66,
 		bgLightness: 75,
-		textSaturation: 10,
-		textLightness: 90,
+		textSaturation: 35,
+		textLightness: 94,
+		titleLightness: 94,
 	},
 };
 
-export interface LabelColors {
+export interface StringColors {
 	bg: string;
 	text: string;
+	title: string;
 }
 
 // FNV-1a: mixes every character into the result, so similar strings
@@ -76,19 +79,22 @@ function balancedLightness(saturation: number, baseLightness: number): number[] 
 const LIGHTNESS = {
 	lightBg: balancedLightness(THEME_COLORS.light.bgSaturation, THEME_COLORS.light.bgLightness),
 	darkBg: balancedLightness(THEME_COLORS.dark.bgSaturation, THEME_COLORS.dark.bgLightness),
-	lightText: balancedLightness(THEME_COLORS.light.textSaturation, THEME_COLORS.light.textLightness),
+	lightText: balancedLightness(THEME_COLORS.light.textSaturation, THEME_COLORS.light.textLightness).map((lightness) => Math.max(24, lightness)),
 	darkText: balancedLightness(THEME_COLORS.dark.textSaturation, THEME_COLORS.dark.textLightness),
+	lightTitle: balancedLightness(THEME_COLORS.light.textSaturation, THEME_COLORS.light.titleLightness).map((lightness) => Math.max(24, lightness)),
+	darkTitle: balancedLightness(THEME_COLORS.dark.textSaturation, THEME_COLORS.dark.titleLightness),
 };
 
 // Keep this deterministic during SSR/hydration: React sees one identical
 // style string, while CSS resolves the active side through color-scheme.
-// Precompute all eight options once, rather than balancing every label render.
-const PALETTE: LabelColors[] = PALETTE_HUES.map((hue, index) => ({
+// Precompute the palette once, rather than balancing every label render.
+const PALETTE: StringColors[] = PALETTE_HUES.map((hue, index) => ({
 	bg: `light-dark(hsl(${hue} ${THEME_COLORS.light.bgSaturation}% ${LIGHTNESS.lightBg[index]}%), hsl(${hue} ${THEME_COLORS.dark.bgSaturation}% ${LIGHTNESS.darkBg[index]}%))`,
 	text: `light-dark(hsl(${hue} ${THEME_COLORS.light.textSaturation}% ${LIGHTNESS.lightText[index]}%), hsl(${hue} ${THEME_COLORS.dark.textSaturation}% ${LIGHTNESS.darkText[index]}%))`,
+	title: `light-dark(hsl(${hue} ${THEME_COLORS.light.textSaturation}% ${LIGHTNESS.lightTitle[index]}%), hsl(${hue} ${THEME_COLORS.dark.textSaturation}% ${LIGHTNESS.darkTitle[index]}%))`,
 }));
 
-export function getLabelColors(value: string): LabelColors {
+export function getStringColors(value: string): StringColors {
 	const colors = PALETTE[hashString(value) % HUE_STEPS];
 	return {
 		...colors,
