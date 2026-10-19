@@ -20,7 +20,7 @@ html[data-color-theme="default"][data-theme="light"] {
 	/* page content area */
 		/* specific to lightmode only because it derives modal hue from page slightly */
 		--page-surface-base: hsl(var(--hue-page) 78% 98.5%);
-		
+
 	--page-bg: hsl(var(--hue-page) 78% 98.5% / 0.4);
 	--page-bg-border: hsl(var(--hue-chrome) 80% 20% / 0.3);
 

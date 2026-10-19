@@ -535,7 +535,7 @@ html[data-theme="dark"] {
 
   --page-button-border: hsl(var(--hue-accent) 15% 90% / 0.2);
   --page-button-border-hover: hsl(var(--hue-accent) 26% 72% / 0.35);
-  
+
   --page-button-text: #e9e9e9;
   --page-button-text-hover: #ffffff;
   --page-select-text: #e9e9e9;
