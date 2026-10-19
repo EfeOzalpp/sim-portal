@@ -11,8 +11,8 @@
 	background: var(--scrim);
 	border: 0;
 	cursor: default;
-	/* auto, not none - without this a dimmed card underneath could still show its own :hover state through the scrim. */
-	pointer-events: auto;
+	/* Native touch, trackpad, wheel, and scrollbar scrolling pass through the visual scrim. */
+	pointer-events: none;
 }
 
 .surface[data-action-mode="edit-users"] :global([data-action-mode-target="user-card"]),
@@ -122,7 +122,7 @@
 	inset: -0.65rem;
 	z-index: 0;
 	border-radius: 9999px;
-	background: var(--elevated-surface);
+	background: var(--action-mode-icon-bg);
 	filter: var(--action-mode-icon-ds);
 	opacity: 1;
 }
@@ -151,6 +151,12 @@
 .surface[data-action-mode="delete-users"] :global([data-user-action-overlay] > span)::after {
 	mask-image: var(--user-card-action-icon);
 	-webkit-mask-image: var(--user-card-action-icon);
+}
+
+.surface[data-action-mode="delete-users"] :global([data-user-action-overlay] > span)::after,
+.surface[data-action-mode="delete-thursdays"] :global([data-thursday-action-overlay] > span)::after,
+.surface[data-action-mode="delete-semesters"] :global([data-semester-action-overlay] > span)::after {
+	background: var(--action-delete-text);
 }
 
 .surface[data-action-mode="edit-thursdays"] :global([data-thursday-action-overlay] > span)::after,

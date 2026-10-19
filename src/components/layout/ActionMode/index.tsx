@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, ReactNode, useContext, useMemo, useRef, useState } from "react";
+import { createContext, ReactNode, useContext, useEffect, useMemo, useState } from "react";
 import styles from "@/components/layout/ActionMode/ActionMode.module.css";
 import { ACTION_MODES, type ActionMode } from "@/constants/action-modes";
 
@@ -32,23 +32,6 @@ export function useOptionalActionMode() {
 	};
 }
 
-// Finds whichever element under this screen position actually scrolls.
-// ActionModeSurface's own wrapper is display: contents (no box of its own),
-// so the backdrop and the real page content end up as siblings, not
-// ancestor/descendant - walking up from the backdrop itself can never reach
-// the real scroll container.
-function findScrollableAncestor(x: number, y: number): HTMLElement | null {
-	const stack = document.elementsFromPoint(x, y);
-	let node = stack.find((el) => !el.hasAttribute("data-action-mode-backdrop")) as HTMLElement | null;
-	while (node) {
-		if (/(auto|scroll)/.test(getComputedStyle(node).overflowY) && node.scrollHeight > node.clientHeight) {
-			return node;
-		}
-		node = node.parentElement;
-	}
-	return null;
-}
-
 interface ActionModeSurfaceProps {
 	children: ReactNode;
 }
@@ -66,7 +49,67 @@ export function ActionModeProvider({ children }: ActionModeSurfaceProps) {
 
 export function ActionModePageContent({ children }: ActionModeSurfaceProps) {
 	const { activeMode, setActiveMode } = useActionMode();
-	const touchStartY = useRef<number | null>(null);
+
+	useEffect(() => {
+		if (!activeMode) return;
+
+		let pointerStart: { x: number; y: number } | null = null;
+		let dragged = false;
+		const onPointerDown = (event: PointerEvent) => {
+			pointerStart = { x: event.clientX, y: event.clientY };
+			dragged = false;
+		};
+		const onPointerMove = (event: PointerEvent) => {
+			if (pointerStart && Math.hypot(event.clientX - pointerStart.x, event.clientY - pointerStart.y) > 8) {
+				dragged = true;
+			}
+		};
+		const markDragged = () => {
+			dragged = true;
+		};
+		const onClick = (event: MouseEvent) => {
+			// Modals own dismissal and may portal their dropdowns outside the dialog.
+			if (!(event.target instanceof Element) || document.querySelector("[data-modal-popup]")) return;
+			// A swipe or scrollbar drag must neither dismiss action mode nor activate an item.
+			if (dragged && event.detail > 0) {
+				event.preventDefault();
+				event.stopPropagation();
+				return;
+			}
+
+			const clickedActiveButton = event.target.closest(`[data-action-mode-button="${activeMode}"]`);
+			const clickedModeTarget =
+				((activeMode === ACTION_MODES.editUsers || activeMode === ACTION_MODES.deleteUsers) &&
+					event.target.closest('[data-action-mode-target="user-card"]')) ||
+				((activeMode === ACTION_MODES.editThursdays || activeMode === ACTION_MODES.deleteThursdays) &&
+					event.target.closest('[data-action-mode-target="thursday-card"]')) ||
+				((activeMode === ACTION_MODES.editSemesters || activeMode === ACTION_MODES.deleteSemesters) &&
+					event.target.closest('[data-action-mode-target="semester-card"]')) ||
+				(activeMode === ACTION_MODES.editGrades &&
+					event.target.closest('[data-action-mode-target="grade-cell"]'));
+
+			if (clickedModeTarget) {
+				event.preventDefault();
+			} else if (!clickedActiveButton) {
+				setActiveMode(null);
+				event.preventDefault();
+				event.stopPropagation();
+			}
+		};
+
+		document.addEventListener("pointerdown", onPointerDown, true);
+		document.addEventListener("pointermove", onPointerMove, true);
+		document.addEventListener("pointercancel", markDragged, true);
+		document.addEventListener("scroll", markDragged, true);
+		document.addEventListener("click", onClick, true);
+		return () => {
+			document.removeEventListener("pointerdown", onPointerDown, true);
+			document.removeEventListener("pointermove", onPointerMove, true);
+			document.removeEventListener("pointercancel", markDragged, true);
+			document.removeEventListener("scroll", markDragged, true);
+			document.removeEventListener("click", onClick, true);
+		};
+	}, [activeMode, setActiveMode]);
 
 	return (
 		<div
@@ -74,64 +117,12 @@ export function ActionModePageContent({ children }: ActionModeSurfaceProps) {
 			data-page-content
 			data-action-mode={activeMode || undefined}
 			data-action-mode-active={activeMode ? "true" : undefined}
-			onClickCapture={(event) => {
-				if (!activeMode || !(event.target instanceof Element)) {
-					return;
-				}
-
-				if (event.target.closest("[data-modal-popup]")) {
-					return;
-				}
-
-				const clickedActiveButton = event.target.closest(`[data-action-mode-button="${activeMode}"]`);
-				const clickedModeTarget =
-					((activeMode === ACTION_MODES.editUsers || activeMode === ACTION_MODES.deleteUsers) &&
-						event.target.closest('[data-action-mode-target="user-card"]')) ||
-					((activeMode === ACTION_MODES.editThursdays || activeMode === ACTION_MODES.deleteThursdays) &&
-						event.target.closest('[data-action-mode-target="thursday-card"]')) ||
-					((activeMode === ACTION_MODES.editSemesters || activeMode === ACTION_MODES.deleteSemesters) &&
-						event.target.closest('[data-action-mode-target="semester-card"]')) ||
-					(activeMode === ACTION_MODES.editGrades &&
-						event.target.closest('[data-action-mode-target="grade-cell"]'));
-
-				if (clickedModeTarget) {
-					event.preventDefault();
-					return;
-				}
-
-				if (!clickedActiveButton) {
-					setActiveMode(null);
-					event.preventDefault();
-					event.stopPropagation();
-				}
-			}}
 		>
 			{activeMode && (
 				<div
 					className={styles.backdrop}
 					data-action-mode-backdrop
 					aria-hidden="true"
-					// pointer-events: auto makes this hit-tested over the real scroll container, so every way of
-					// scrolling needs forwarding by hand - wheel (mouse/trackpad) and touch both find whichever
-					// element is really at that screen position and scroll that.
-					onWheel={(event) => {
-						findScrollableAncestor(event.clientX, event.clientY)?.scrollBy(0, event.deltaY);
-					}}
-					onTouchStart={(event) => {
-						touchStartY.current = event.touches[0]?.clientY ?? null;
-					}}
-					onTouchMove={(event) => {
-						const startY = touchStartY.current;
-						const touch = event.touches[0];
-						if (startY === null || !touch) return;
-
-						const target = findScrollableAncestor(touch.clientX, touch.clientY);
-						if (target) {
-							target.scrollBy(0, startY - touch.clientY);
-							event.preventDefault();
-						}
-						touchStartY.current = touch.clientY;
-					}}
 				/>
 			)}
 			{children}
