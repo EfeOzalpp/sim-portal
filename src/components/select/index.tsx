@@ -1,7 +1,8 @@
 "use client";
 
-import { useMemo, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
+import { useMemo, useRef, useState, type CSSProperties, type KeyboardEvent, type ReactElement, type ReactNode } from "react";
 import * as Popover from "@radix-ui/react-popover";
+import { PopoverRoot } from "@/components/popover/PopoverRoot";
 import { LoadingOutlined } from "@ant-design/icons";
 import clsx from "clsx";
 import { Input } from "@/components/input";
@@ -63,7 +64,12 @@ interface SharedSelectProps {
 	scrollToValueOnOpen?: string;
 }
 
-export interface SingleSelectProps extends SharedSelectProps {
+export interface SingleSelectProps extends Omit<SharedSelectProps, "variant"> {
+	/** Replace the closed trigger without changing the dropdown or selection behavior. */
+	trigger?: ReactElement;
+	dropdownWidth?: CSSProperties["width"];
+	/** Button changes only the trigger; dropdown appearance stays unchanged. */
+	variant?: "default" | "title" | "button";
 	mode?: "single";
 	value?: string | null;
 	onChange?: (value: string | undefined) => void;
@@ -152,6 +158,8 @@ function SearchBox({
 }
 
 function SingleSelectImpl({
+	trigger,
+	dropdownWidth,
 	options,
 	value,
 	onChange,
@@ -181,7 +189,7 @@ function SingleSelectImpl({
 	}
 
 	return (
-		<Popover.Root
+		<PopoverRoot
 			open={open}
 			onOpenChange={(next) => {
 				setOpen(next);
@@ -197,8 +205,8 @@ function SingleSelectImpl({
 				});
 			}}
 		>
-			<Popover.Trigger asChild>
-				<button
+			<Popover.Trigger asChild disabled={disabled}>
+				{trigger ?? <button
 					type="button"
 					disabled={disabled}
 					className={clsx(selectTriggerVariants({ error, variant }), "group", className)}
@@ -233,7 +241,7 @@ function SingleSelectImpl({
 							</>
 						)}
 					</span>
-				</button>
+				</button>}
 			</Popover.Trigger>
 			<Popover.Portal>
 				<Popover.Content
@@ -244,7 +252,7 @@ function SingleSelectImpl({
 					)}
 					sideOffset={4}
 					align="start"
-					style={{ width: "var(--radix-popover-trigger-width)" }}
+					style={{ width: dropdownWidth ?? "var(--radix-popover-trigger-width)" }}
 					onCloseAutoFocus={(event) => event.preventDefault()}
 				>
 					{searchable && (
@@ -265,7 +273,7 @@ function SingleSelectImpl({
 										data-selected={isSelected ? "true" : undefined}
 										data-value={option.value}
 										tabIndex={option.disabled ? -1 : 0}
-										className={selectItemVariants({ selected: isSelected, disabled: option.disabled, variant })}
+										className={selectItemVariants({ selected: isSelected, disabled: option.disabled, variant: variant === "button" ? "default" : variant })}
 										onClick={() => !option.disabled && select(option.value)}
 										onKeyDown={(event) => {
 											if ((event.key === "Enter" || event.key === " ") && !option.disabled) {
@@ -282,7 +290,7 @@ function SingleSelectImpl({
 					</div>
 				</Popover.Content>
 			</Popover.Portal>
-		</Popover.Root>
+		</PopoverRoot>
 	);
 }
 
@@ -319,7 +327,7 @@ function MultiSelectImpl({
 	}
 
 	return (
-		<Popover.Root
+		<PopoverRoot
 			onOpenChange={(open) => {
 				if (!open) {
 					setSearch("");
@@ -440,7 +448,7 @@ function MultiSelectImpl({
 					</div>
 				</Popover.Content>
 			</Popover.Portal>
-		</Popover.Root>
+		</PopoverRoot>
 	);
 }
 
@@ -482,7 +490,7 @@ function TagsSelectImpl({
 	}
 
 	return (
-		<Popover.Root open={hasSuggestions ? open : false} onOpenChange={setOpen}>
+		<PopoverRoot open={hasSuggestions ? open : false} onOpenChange={setOpen}>
 			<Popover.Anchor asChild>
 				<div
 					className={clsx(
@@ -605,7 +613,7 @@ function TagsSelectImpl({
 					</Popover.Content>
 				</Popover.Portal>
 			)}
-		</Popover.Root>
+		</PopoverRoot>
 	);
 }
 

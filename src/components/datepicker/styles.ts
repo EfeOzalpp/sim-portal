@@ -23,7 +23,7 @@ type DatePickerThemeValues = {
 };
 
 // Corner radius for the picker's trigger/panel, in px - antd's token API takes a number, not a rem/Tailwind class.
-const RADIUS = 12;
+const RADIUS = 0;
 
 // The semantic values behind this app's calendar theme, mapped below to the
 // antd ConfigProvider token names DatePicker/RangePicker actually consume.
@@ -100,9 +100,7 @@ function createDatePickerTheme(values: DatePickerThemeValues): ThemeConfig {
 		errorActiveShadow: "none",
 		colorPrimary: values.primary,
 		colorTextLightSolid: values.primarySolidText,
-		// Plain day hover only had a border highlight in the original CSS, so
-		// prevent antd's default gray hover fill.
-		cellHoverBg: "transparent",
+		cellHoverBg: values.rangeBackground,
 		cellActiveWithRangeBg: values.rangeBackground,
 		cellHoverWithRangeBg: values.rangeBackground,
 	};

@@ -1,10 +1,10 @@
 import { cva, type VariantProps } from "class-variance-authority";
 
 const filledClassName =
-	"border-transparent [background-clip:padding-box] [box-shadow:inset_0_0_0_1px_var(--button-ring,var(--button-border,transparent))] bg-[var(--button-bg)] text-[var(--button-text)] hover:[box-shadow:inset_0_0_0_1px_var(--button-ring-hover,var(--button-border-hover,transparent))] hover:bg-[var(--button-bg-hover)] hover:text-[var(--button-text-hover)]";
+	"border-transparent [background-clip:padding-box] [box-shadow:inset_0_0_0_1px_var(--button-ring,var(--button-border,transparent))] bg-[var(--button-bg)] text-[var(--button-text)] hover:[box-shadow:inset_0_0_0_1px_var(--button-ring-hover,var(--button-border-hover,transparent))] hover:bg-[var(--button-bg-hover)] hover:text-[var(--button-text-hover)] active:bg-[var(--button-bg-active,var(--button-bg-hover))] aria-expanded:bg-[var(--button-bg-active,var(--button-bg-hover))] aria-pressed:bg-[var(--button-bg-active,var(--button-bg-hover))] data-[state=open]:bg-[var(--button-bg-active,var(--button-bg-hover))] active:text-[var(--button-text-active,var(--button-text-hover))] aria-expanded:text-[var(--button-text-active,var(--button-text-hover))] aria-pressed:text-[var(--button-text-active,var(--button-text-hover))] data-[state=open]:text-[var(--button-text-active,var(--button-text-hover))]";
 
 const iconOnlyClassName = [
-	"inline-grid! h-10 w-10 flex-none place-items-center! gap-0! rounded-full! border border-solid p-0!",
+	"btn-icon inline-grid! h-10 w-10 flex-none place-items-center! gap-0! rounded-full! border border-solid p-0!",
 	"border-transparent bg-[var(--button-icon-bg,transparent)] shadow-[var(--button-icon-shadow,none)] text-[var(--button-icon-text,var(--button-text))] hover:bg-[var(--button-icon-bg-hover,var(--button-bg-hover))] hover:text-[var(--button-text-hover)]",
 	"active:bg-[var(--button-icon-bg-active,var(--button-bg-hover))] aria-expanded:bg-[var(--button-icon-bg-active,var(--button-bg-hover))] aria-pressed:bg-[var(--button-icon-bg-active,var(--button-bg-hover))] data-[state=open]:bg-[var(--button-icon-bg-active,var(--button-bg-hover))]",
 	"aria-expanded:text-[var(--button-icon-text-active,var(--button-text-hover))] aria-pressed:text-[var(--button-icon-text-active,var(--button-text-hover))] data-[state=open]:text-[var(--button-icon-text-active,var(--button-text-hover))]",
@@ -16,8 +16,8 @@ export const buttonVariants = cva(
 		"btn inline-flex min-h-9 cursor-pointer items-center justify-center gap-1.5",
 		"rounded-full border border-solid",
 		"px-3 py-2.5",
-		"font-sans no-underline",
-		// Icon-only while keeping the variant's own fill/outline - turned on by any ancestor with data-button-compact (e.g. a minimized PageBar).
+		"no-underline",
+		// Icon-only while keeping the variant's fill/outline inside compact action groups.
 		"in-data-[button-compact]:w-[var(--button-height,2.375rem)] in-data-[button-compact]:gap-0! in-data-[button-compact]:px-0! in-data-[button-compact]:[&_.btn-label]:hidden",
 		// Washed out/lighter in light mode, dimmer/darker in dark mode.
 		"disabled:cursor-not-allowed disabled:brightness-110 dark:disabled:brightness-75",
@@ -25,14 +25,15 @@ export const buttonVariants = cva(
 	],
 	{
 		variants: {
+			size: { default: "", small: "" },
 			variant: {
 				default: filledClassName,
 				nav: [
-					"btn-nav min-h-6! justify-start border-transparent bg-transparent pr-0! pl-[var(--nav-item-inset,0px)]! py-0! font-normal",
+					"btn-nav min-h-6! justify-start border-transparent bg-transparent pr-0! pl-[var(--nav-item-inset,0px)]! py-0!",
 					// --nav-hover-bg/--nav-active-bg: the green nav-area theme, not the shared gray --nav-button-bg-hover/-active.
-					"text-[var(--app-icon)] hover:bg-[var(--nav-item-hover-bg,var(--nav-hover-bg))]",
+					"text-[var(--app-icon)] hover:bg-[var(--nav-item-hover-bg,var(--nav-hover-bg))] active:bg-[var(--nav-item-hover-bg,var(--nav-hover-bg))]",
 					// !important: hover: and aria-[current=page]: are equal specificity, or hovering the current page would lose its active color.
-					"aria-[current=page]:bg-[var(--nav-item-active-bg,var(--nav-active-bg))]! aria-[current=page]:font-semibold aria-[current=page]:text-[var(--nav-active-text)]",
+					"aria-[current=page]:bg-[var(--nav-item-active-bg,var(--nav-active-bg))]! aria-[current=page]:text-[var(--nav-active-text)]",
 					"[--focus-ring:var(--app-theme)]",
 					// Negative offset - NavBar.module.css's .root has overflow:hidden, which clips a ring rendered outside the button.
 					"focus-visible:outline-offset-[-2px]!",
@@ -42,8 +43,8 @@ export const buttonVariants = cva(
 				link: ["btn-link rounded-full!", filledClassName],
 				// Plain inline text link, no box - for a small call-to-action sitting inline with surrounding content.
 				text: [
-					"btn-text min-h-0! justify-start border-transparent bg-transparent p-0! font-normal",
-					"text-inherit hover:text-[var(--app-title)] hover:underline hover:underline-offset-[0.14em]",
+					"btn-text min-h-0! justify-start border-transparent bg-transparent p-0!",
+					"text-inherit hover:text-[var(--app-title)] hover:underline hover:underline-offset-[0.14em] active:text-[var(--app-title)] active:underline",
 				],
 				// Square, icon-only trigger (filter/theme popovers, card hover actions,
 				// a lone print/add button) - a fixed h-9 w-9 grid cell, not a text row,
@@ -66,12 +67,12 @@ export const buttonVariants = cva(
 			tone: {
 				default: "",
 				neutral:
-					"tone-neutral border-transparent [--button-ring:transparent] [--button-ring-hover:transparent] bg-[var(--tone-neutral-bg)] text-[var(--tone-neutral-text)] hover:border-transparent hover:bg-[var(--tone-neutral-bg-hover)]",
+					"tone-neutral border-transparent [--button-ring:transparent] [--button-ring-hover:transparent] [--button-bg-active:var(--tone-neutral-bg-hover)] [--button-text-active:var(--tone-neutral-text)] bg-[var(--tone-neutral-bg)] text-[var(--tone-neutral-text)] hover:border-transparent hover:bg-[var(--tone-neutral-bg-hover)]",
 				success:
-					"tone-success border-transparent [--button-ring:transparent] [--button-ring-hover:transparent] bg-[var(--tone-success-bg)] text-[var(--tone-success-button-text,var(--tone-success-text))] hover:border-transparent hover:bg-[var(--tone-success-bg-hover)]",
+					"tone-success border-transparent [--button-ring:transparent] [--button-ring-hover:transparent] [--button-bg-active:var(--tone-success-bg-hover)] [--button-text-active:var(--tone-success-button-text,var(--tone-success-text))] bg-[var(--tone-success-bg)] text-[var(--tone-success-button-text,var(--tone-success-text))] hover:border-transparent hover:bg-[var(--tone-success-bg-hover)]",
 				danger:
-					"tone-danger border-transparent [--button-ring:transparent] [--button-ring-hover:transparent] bg-[var(--tone-danger-bg)] text-[var(--tone-danger-button-text,var(--tone-danger-text))] hover:border-transparent hover:bg-[var(--tone-danger-bg-hover)]",
-				cta: "tone-cta font-semibold [--button-ring:transparent]! [--button-ring-hover:transparent]! [box-shadow:var(--button-cta-shadow,none)]! hover:[box-shadow:var(--button-cta-shadow,none)]! border-transparent! bg-[var(--button-cta)]! text-[var(--button-cta-text)]! hover:border-transparent! hover:bg-[var(--button-cta-hover)]! hover:text-[var(--button-cta-text)]!",
+					"tone-danger border-transparent [--button-ring:transparent] [--button-ring-hover:transparent] [--button-bg-active:var(--tone-danger-bg-hover)] [--button-text-active:var(--tone-danger-button-text,var(--tone-danger-text))] bg-[var(--tone-danger-bg)] text-[var(--tone-danger-button-text,var(--tone-danger-text))] hover:border-transparent hover:bg-[var(--tone-danger-bg-hover)]",
+				cta: "tone-cta [--button-ring:transparent]! [--button-ring-hover:transparent]! [box-shadow:var(--button-cta-shadow,none)]! hover:[box-shadow:var(--button-cta-shadow,none)]! border-transparent! bg-[var(--button-cta)]! text-[var(--button-cta-text)]! hover:border-transparent! hover:bg-[var(--button-cta-hover)]! hover:text-[var(--button-cta-text)]! active:bg-[var(--button-cta-hover)]! aria-expanded:bg-[var(--button-cta-hover)]! aria-pressed:bg-[var(--button-cta-hover)]! data-[state=open]:bg-[var(--button-cta-hover)]! active:text-[var(--button-cta-text)]! aria-expanded:text-[var(--button-cta-text)]! aria-pressed:text-[var(--button-cta-text)]! data-[state=open]:text-[var(--button-cta-text)]!",
 			},
 			fullWidth: {
 				true: "w-full",
@@ -81,13 +82,23 @@ export const buttonVariants = cva(
 		// for page action icons
 		compoundVariants: [
 			{
+				variant: ["icon", "tool"],
+				size: "small",
+				class: "h-9! w-9!",
+			},
+			{
+				variant: ["icon", "tool"],
+				surface: "modal",
+				class: "[--button-icon-bg-hover:var(--modal-icon-bg-hover,var(--button-bg-hover))] [--button-icon-bg-active:var(--modal-icon-bg-hover,var(--button-bg-hover))] [--button-text-hover:var(--button-text)] [--action-delete-text-hover:var(--action-delete-text)]",
+			},
+			{
 				variant: ["default", "action", "link"],
 				class: "h-[var(--button-height,2.375rem)]! min-h-0! py-0!",
 			},
 			{
 				variant: "text",
 				surface: "page",
-				class: "text-sm [--button-icon-size:1.25rem]!",
+				class: "[--button-icon-size:1.25rem]!",
 			},
 			{
 				variant: "action",
@@ -102,10 +113,11 @@ export const buttonVariants = cva(
 			{
 				variant: ["icon", "tool"],
 				tone: "danger",
-				class: "border-transparent! bg-[var(--button-icon-bg,transparent)]! text-[var(--button-danger-icon-text,var(--action-delete-text))]! hover:border-transparent! hover:bg-[var(--button-icon-bg-hover,var(--button-bg-hover))]! hover:text-[var(--action-delete-text-hover)]! active:bg-[var(--button-icon-bg-active,var(--button-bg-hover))]!",
+				class: "border-transparent! bg-[var(--button-icon-bg,transparent)]! text-[var(--button-danger-icon-text,var(--action-delete-text))]! hover:border-transparent! hover:bg-[var(--button-icon-bg-hover,var(--button-bg-hover))]! hover:text-[var(--action-delete-text-hover)]! active:bg-[var(--button-icon-bg-active,var(--button-bg-hover))]! aria-pressed:bg-[var(--action-delete-bg-hover)]!",
 			},
 		],
 		defaultVariants: {
+			size: "default",
 			variant: "default",
 			surface: "modal",
 			tone: "default",
@@ -122,7 +134,7 @@ export type ButtonTone = NonNullable<VariantProps<typeof buttonVariants>["tone"]
 const iconSizeByVariant: Record<ButtonVariant, string> = {
 	default: "h-5 w-5",
 	nav: "h-[1.375rem] w-[1.375rem]",
-	action: "h-5 w-5",
+	action: "h-[var(--button-icon-size,1.25rem)] w-[var(--button-icon-size,1.25rem)]",
 	link: "h-5 w-5",
 	text: "h-4 w-4",
 	icon: "h-6 w-6",

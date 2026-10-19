@@ -6,10 +6,10 @@ const fieldBase = [
 	"border border-[var(--input-border,transparent)]",
 	// min-h, not a fixed height - Select's own trigger has no explicit
 	// height either (purely padding/line-height driven, same px-3/py-2.5/
-	// text-base this has), so this is just a floor matching what that
+	// control typography), so this is just a floor matching what that
 	// naturally renders at - a <textarea> can still grow taller than it.
 	"min-h-12 px-3 py-2.5",
-	"font-sans text-base",
+	"ui-control",
 	"placeholder:text-[var(--input-placeholder)]",
 	"transition",
 	"hover:bg-[var(--input-bg-hover)]",
@@ -29,10 +29,10 @@ const pageTokens = [
 	"[--input-icon:var(--page-input-search)]",
 ];
 
-// dropdown is an underlined field: square corners, bottom border only.
-const underlinedBase = [
-	"rounded-none! border-b-[var(--contrast-surface-border)] focus-visible:outline-none! has-[:focus-visible]:outline-none!",
-	"[--input-border:transparent] [--input-border-hover:transparent]",
+// Dropdown fields use square corners and no border, including while focused.
+const dropdownBase = [
+	"rounded-none! border-0! focus-visible:outline-none! has-[:focus-visible]:outline-none!",
+	"[--input-border:transparent] [--input-border-hover:transparent] [--input-hover-shadow:none]",
 ];
 
 const dropdownTokens = [
@@ -40,7 +40,7 @@ const dropdownTokens = [
 	"[--input-bg-hover:var(--contrast-surface-field-bg-hover)]",
 	"[--input-text:var(--contrast-surface-field-text)]",
 	"[--input-placeholder:var(--contrast-surface-field-placeholder)]",
-	"[--input-icon:var(--contrast-surface-field-text)]",
+	"[--input-icon:var(--contrast-surface-field-icon,var(--contrast-surface-field-text))]",
 ];
 
 export type InputVariant = "page" | "dropdown" | "modal";
@@ -55,7 +55,7 @@ export const inputFieldVariants = cva(fieldBase, {
 		},
 		variant: {
 			page: [...pageTokens, "px-4! rounded-md!"],
-			dropdown: [...underlinedBase, "focus:border-b-[var(--contrast-surface-field-text)]", ...dropdownTokens],
+			dropdown: [...dropdownBase, ...dropdownTokens],
 			modal: "",
 		},
 	},
@@ -65,7 +65,7 @@ export const inputFieldVariants = cva(fieldBase, {
 // The wrapper around an input that has a prefix/suffix (e.g. a search icon), styled to read as one field; `status` swaps in the danger/warning-tone border.
 export const inputWrapperVariants = cva(
 	[
-		"input-affix-wrapper inline-flex w-full min-w-0 items-center gap-2",
+		"ui-control input-affix-wrapper inline-flex w-full min-w-0 items-center gap-2",
 		"rounded-full bg-[var(--input-bg)] text-[var(--input-text)]",
 		"border border-[var(--input-border,transparent)]",
 		"px-3 py-3",
@@ -76,6 +76,7 @@ export const inputWrapperVariants = cva(
 	],
 	{
 		variants: {
+			hasPrefix: { true: "", false: "" },
 			status: {
 				error: "border-[var(--input-error-border)]",
 				warning: "border-[var(--tone-warning-border)]",
@@ -84,8 +85,7 @@ export const inputWrapperVariants = cva(
 			variant: {
 				page: [...pageTokens, "px-4! rounded-md!"],
 				dropdown: [
-					...underlinedBase,
-					"focus-within:border-b-[var(--contrast-surface-field-text)]",
+					...dropdownBase,
 					...dropdownTokens,
 					"[--page-input-search:var(--input-icon)]",
 					"[--page-input-search-hover:var(--input-text)]",
@@ -94,13 +94,17 @@ export const inputWrapperVariants = cva(
 				modal: "",
 			},
 		},
-		defaultVariants: { status: "none", variant: "modal" },
+		compoundVariants: [
+			{ hasPrefix: true, variant: "page", class: "pl-3!" },
+			{ hasPrefix: true, variant: ["modal", "dropdown"], class: "pl-2!" },
+		],
+		defaultVariants: { status: "none", variant: "modal", hasPrefix: false },
 	},
 );
 
 // The actual <input> nested inside inputWrapperVariants - no border/background of its own, since the wrapper already provides those.
 export const inputBareClassName = [
-	"w-full min-w-0 flex-1 self-stretch border-none bg-transparent p-0 leading-none [font:inherit]",
+	"w-full min-w-0 flex-1 self-stretch border-none bg-transparent p-0 [font:inherit]",
 	"text-[var(--input-text)] outline-none placeholder:text-[var(--input-placeholder)]",
 	"disabled:cursor-not-allowed disabled:opacity-60",
 ].join(" ");

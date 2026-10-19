@@ -10,6 +10,8 @@ export type { ButtonSurface, ButtonTone, ButtonVariant } from "@/components/butt
 interface SharedButtonProps {
 	/** Controls the button's structure and visual treatment. */
 	variant?: ButtonVariant;
+	/** Compact icon controls retain the same glyph size in a smaller hit area. */
+	size?: "default" | "small";
 	/** Whether --button-* resolves to the page tokens or the modal-scoped ones. */
 	surface?: ButtonSurface;
 	/** Changes only the semantic color palette. */
@@ -52,6 +54,7 @@ function ButtonIcon({ icon, variant, iconPosition }: { icon: IconName; variant: 
 export function Button(props: ButtonProps) {
 	const {
 		variant = "default",
+		size = "default",
 		surface = "modal",
 		tone = "default",
 		fullWidth = false,
@@ -64,7 +67,7 @@ export function Button(props: ButtonProps) {
 		children,
 		...elementProps
 	} = props;
-	const finalClassName = clsx(buttonVariants({ variant, surface, tone, fullWidth }), className);
+	const finalClassName = clsx(buttonVariants({ variant, size, surface, tone, fullWidth }), className);
 	const iconElement = icon && <ButtonIcon icon={icon} variant={variant} iconPosition={iconPosition} />;
 	// Only iconPosition="start" pins the icon absolutely (see
 	// buttonIconClassName) - the text needs a matching shift to clear it.

@@ -97,7 +97,7 @@ export function Input({
 	}
 
 	return (
-		<span className={inputWrapperVariants({ status: cvaStatus, variant })}>
+		<span className={inputWrapperVariants({ status: cvaStatus, variant, hasPrefix: !!prefix })}>
 			{prefix}
 			<input
 				{...props}

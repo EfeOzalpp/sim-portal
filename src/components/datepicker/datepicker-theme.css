@@ -17,7 +17,16 @@ html[data-theme] .input-theme-surface .ant-picker {
 html[data-theme] .ant-picker {
 	width: 100%;
 	min-height: 3rem;
+	border-radius: 0;
 	padding-block: 0.625rem;
+}
+
+html[data-theme] .modal-surface .input-theme-surface .ant-picker {
+	min-height: 2.5rem;
+	border-width: 0 0 1px;
+	border-radius: 0;
+	padding-block: 0.375rem;
+	padding-inline: 0.25rem;
 }
 
 html[data-theme] .input-theme-surface .ant-picker .ant-picker-input > input {
@@ -86,8 +95,9 @@ html[data-theme] .input-theme-surface .ant-picker.ant-picker-range .ant-picker-s
    tokens aren't defined (light theme). */
 html[data-theme] .ant-picker-panel-container {
 	background: var(--input-modal-dropdown-bg, var(--contrast-surface-bg));
-	border: 1px solid var(--modal-select-border, var(--select-border, var(--input-border)));
-	border-radius: 12px;
+	border: 0;
+	border-radius: 0;
+	box-shadow: var(--shadow-lg);
 }
 
 html[data-theme] .ant-picker-panel,
@@ -130,17 +140,14 @@ html[data-theme] .ant-picker-super-next-icon::after {
 	border-inline-start-width: 2px;
 }
 
-html[data-theme] .ant-picker-cell-in-view .ant-picker-cell-inner:hover {
-	border-color: var(--modal-select-border-hover, var(--select-border-hover, var(--input-border-hover)));
+html[data-theme] .ant-picker-cell:not(.ant-picker-cell-disabled):not(.ant-picker-cell-selected):not(.ant-picker-cell-range-start):not(.ant-picker-cell-range-end):hover .ant-picker-cell-inner {
+	background: var(--input-modal-dropdown-selected-bg);
+	color: var(--app-text);
 }
 
 html[data-theme] .ant-picker-cell-in-view.ant-picker-cell-today .ant-picker-cell-inner::before {
 	border-color: transparent;
 	background-color: var(--nav-button-bg-hover);
-}
-
-html[data-theme] .ant-picker-now-btn {
-	font-weight: 600;
 }
 
 html[data-theme] .ant-picker-now-btn:hover {
@@ -165,4 +172,16 @@ html[data-theme] .ant-picker-ok .ant-btn-primary:not(:disabled):hover {
 
 html[data-theme="dark"] .ant-picker-ok .ant-btn-primary:not(:disabled):hover {
 	filter: brightness(1.15);
+}
+
+@media (max-width: 600px) {
+	html[data-theme] .ant-picker-dropdown .ant-picker-panels {
+		flex-direction: column;
+	}
+
+	html[data-theme] .ant-picker-dropdown .ant-picker-panel-container {
+		max-width: calc(100vw - 2rem);
+		max-height: min(24rem, calc(50dvh - 1rem));
+		overflow: auto;
+	}
 }

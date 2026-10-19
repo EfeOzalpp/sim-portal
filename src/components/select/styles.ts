@@ -1,6 +1,7 @@
 import { cva } from "class-variance-authority";
+import { buttonVariants } from "@/components/button/styles";
 
-// The select's closed trigger button; `error` swaps in the danger-tone border, `variant` picks "default" (plain, blue) or "title" (page-title bar, green surface).
+// Trigger variants do not change the dropdown's palette.
 export const selectTriggerVariants = cva(
 	[
 		"select-trigger inline-flex min-w-0 items-center justify-between gap-2",
@@ -9,7 +10,7 @@ export const selectTriggerVariants = cva(
 		// min-h-12 (tuned for its h-8 tag pills) so a plain single-select next
 		// to one doesn't sit visibly shorter.
 		"min-h-12 px-3 py-2.5",
-		"font-sans text-base text-left",
+		"ui-control text-left",
 		"cursor-pointer transition",
 		"disabled:cursor-not-allowed disabled:opacity-60",
 	],
@@ -20,18 +21,20 @@ export const selectTriggerVariants = cva(
 				false: "",
 			},
 			variant: {
+				button: [buttonVariants({ surface: "modal" }), "justify-between!"],
 				default: [
 					"w-full text-[var(--input-text)]",
 					"border-[var(--select-border,var(--input-border))] bg-[var(--select-bg)]",
 					"hover:border-[var(--select-border-hover,var(--input-border-hover))] hover:bg-[var(--select-bg-hover)]",
+					"active:bg-[var(--select-bg-hover)] data-[state=open]:bg-[var(--select-bg-hover)] data-[state=open]:border-[var(--select-border-hover,var(--input-border-hover))]",
 					"focus-visible:border-[var(--select-border-hover,var(--input-border-hover))] focus-visible:shadow-[var(--input-hover-shadow)]",
 					"data-[state=open]:border-[var(--select-border-hover,var(--input-border-hover))] data-[state=open]:shadow-[var(--input-hover-shadow)]",
 				],
 				// Title keeps its color/surface treatment, but uses the same typography as the other Select triggers.
 				title: [
 					"w-[var(--select-title-width)] flex-none rounded-md! border-transparent bg-[var(--title-select-bg)] pl-4! pr-3!",
-					"font-sans text-base leading-normal font-normal text-[var(--page-select-text)] [-webkit-text-fill-color:var(--page-select-text)]",
-					"h-full min-h-full py-0 max-[768px]:h-[3rem] max-[768px]:min-h-[3rem]",
+					"text-[var(--page-select-text)] [-webkit-text-fill-color:var(--page-select-text)]",
+					"h-full min-h-full py-0",
 					"[&:not([data-state=open])]:hover:bg-[var(--title-select-bg-hover)] [&:not([data-state=open])]:hover:text-[var(--page-select-text-hover)] [&:not([data-state=open])]:hover:[-webkit-text-fill-color:var(--page-select-text-hover)]",
 					"[--focus-ring:var(--app-theme)]",
 					"data-[state=open]:bg-[var(--title-select-bg-open)] data-[state=open]:text-[var(--title-select-text-open)] data-[state=open]:[-webkit-text-fill-color:var(--title-select-text-open)]",
@@ -67,6 +70,7 @@ export const selectChevronVariants = cva(
 				// unaffected) - dark theme sets them, dimming the chevron at rest
 				// and brightening it once the dropdown's actually open.
 				default: "h-5 w-5 bg-[var(--modal-chevron-color,var(--input-icon))] group-data-[state=open]:bg-[var(--modal-chevron-active-color,var(--input-icon))]",
+				button: "h-5 w-5 bg-current",
 				title: "h-5 w-5 bg-[var(--page-select-text)] group-hover:bg-[var(--page-select-text-hover)] group-data-[state=open]:bg-[var(--title-select-text-open)]",
 			},
 		},
@@ -80,6 +84,7 @@ export const selectSpinnerVariants = cva(["flex h-5 w-5 flex-none items-center j
 	variants: {
 		variant: {
 			default: "text-[var(--input-icon)]",
+			button: "text-current",
 			title: "text-[var(--page-select-text)] group-hover:text-[var(--page-select-text-hover)] group-data-[state=open]:text-[var(--title-select-text-open)]",
 		},
 	},
@@ -104,13 +109,13 @@ export const selectContentClassName = [
 	// Compact triggers still need room for option padding, the selection mark, and a semester code.
 	"min-w-32",
 	// z-[150]: below the nav rail (z-[200]) but above page content; a select inside a modal needs selectContentInModalClassName instead.
-	"select-content z-[150] overflow-hidden rounded-none border-0 outline-none bg-[var(--contrast-surface-bg)] text-[var(--input-text)]",
+	"select-content z-[150] overflow-hidden rounded-none border-0 outline-none bg-[var(--contrast-surface-bg)] text-[var(--contrast-surface-text)]",
 	"shadow-lg",
-	"[--input-text:var(--contrast-surface-text,var(--input-text))] [--label-text:var(--contrast-surface-label,var(--label-text))]",
+	"[--input-text:var(--contrast-surface-text)] [--label-text:var(--contrast-surface-label)]",
 ].join(" ");
 
 // Title selects live in the mobile topbar/nav layer, so their dropdown has to clear that layer too.
-export const selectContentTitleClassName = "z-[220]! rounded-none!";
+export const selectContentTitleClassName = "z-[220]! rounded-none! [--contrast-surface-field-bg:var(--contrast-surface-field-bg-hover)]";
 
 // Clears ModalPopup's z-[300] when a Select is used inside one - !important since it layers on top of selectContentClassName's own z-index, not replacing it.
 // Also re-points the dropdown's own tokens (bg/text/search-box/hover-row/scrollbar) at
@@ -119,16 +124,17 @@ export const selectContentTitleClassName = "z-[220]! rounded-none!";
 // pulls from tokens that are dark-aware globally, so only these need the inModal override.
 export const selectContentInModalClassName = [
 	"select-content-in-modal z-[310]!",
-	"[--contrast-surface-bg:var(--input-modal-dropdown-bg,var(--contrast-surface-bg))]",
-	"[--contrast-surface-text:var(--input-modal-dropdown-text,var(--contrast-surface-text))]",
+	"[--contrast-surface-bg:var(--input-modal-dropdown-bg)]",
+	"[--contrast-surface-text:var(--input-modal-dropdown-text)]",
 	"[--contrast-surface-label:var(--input-modal-dropdown-label,var(--input-modal-dropdown-text))]",
-	"[--contrast-surface-hovered-item-bg:var(--input-modal-area-hovered-item-bg,var(--contrast-surface-hovered-item-bg))]",
+	"[--contrast-surface-hovered-item-bg:var(--input-modal-area-hovered-item-bg)]",
 	"[--contrast-surface-field-bg:var(--input-modal-area-input-bg)]",
 	"[--contrast-surface-field-bg-hover:var(--input-modal-area-input-bg-hover)]",
 	"[--contrast-surface-field-placeholder:var(--input-modal-area-input-placeholder)]",
 	"[--contrast-surface-field-text:var(--input-modal-area-input-text)]",
-	"[--input-dropdown-scrollbar:var(--input-modal-dropdown-scrollbar,var(--input-dropdown-scrollbar))]",
-	"[--input-dropdown-scrollbar-hover:var(--input-modal-dropdown-scrollbar-hover,var(--input-dropdown-scrollbar-hover))]",
+	"[--contrast-surface-field-icon:var(--input-modal-area-input-icon,var(--input-modal-area-input-text))]",
+	"[--input-dropdown-scrollbar:var(--input-modal-dropdown-scrollbar)]",
+	"[--input-dropdown-scrollbar-hover:var(--input-modal-dropdown-scrollbar-hover)]",
 ].join(" ");
 
 // Padding around the optional search box at the top of the dropdown. The Input
@@ -143,14 +149,14 @@ export const selectViewportClassName = "select-viewport max-h-60 overflow-y-auto
 export const selectItemVariants = cva(
 	[
 		"select-item relative flex w-full min-w-0 cursor-pointer items-center gap-2.5 rounded-none select-none",
-		"px-4 py-[0.3rem] text-base",
+		"ui-control px-4 py-[0.3rem]",
 		"hover:bg-[var(--contrast-surface-hovered-item-bg)]",
 		"focus-visible:bg-[var(--contrast-surface-hovered-item-bg)] focus-visible:outline-offset-[-2px]",
 	],
 	{
 		variants: {
 			selected: {
-				true: "font-semibold",
+				true: "ui-emphasis",
 				false: "",
 			},
 			disabled: {
@@ -183,23 +189,21 @@ export const selectItemVariants = cva(
 );
 
 // Shown in place of the option list when a search filters every option out.
-export const selectEmptyClassName = "px-4 py-4 text-center text-sm text-[var(--label-text)] italic";
+export const selectEmptyClassName = "ui-note px-4 py-4 text-center text-[var(--label-text)]";
 
 export const selectOptionGroupLabelClassName =
 	"ui-label px-4 pb-1 pt-1";
 
 // A single chip in the multi-select trigger, one per selected option (up to
 // maxTagCount) - same compact pill shape as UserProfileView's role-label tag
-// (uppercase, semibold), own blue coloring kept. text-sm, not the role-pill's
-// text-[0.6875rem] - the bigger h-4 w-4 "x" (selectTagRemoveClassName) made
-// that read too small next to it. No border (removed) - bg alone carries it.
+// Chip typography lives in font-theme.css; the fill carries its surface treatment.
 // -hover-color/-bg-hover fall back
 // to their own rest-state value, so a theme that hasn't defined the hover
 // tokens yet just doesn't react on hover instead of going blank.
 export const selectTagClassName = [
 	"inline-flex max-w-full items-center gap-1 rounded-md px-2 py-1",
 	"bg-[var(--select-tag-bg)] hover:bg-[var(--select-tag-bg-hover,var(--select-tag-bg))]",
-	"text-sm leading-tight font-semibold uppercase",
+	"ui-chip",
 	"text-[var(--select-tag-color)] hover:text-[var(--select-tag-hover-color,var(--select-tag-color))]",
 ].join(" ");
 
@@ -212,7 +216,7 @@ export const selectTagRemoveClassName = "inline-grid h-4 w-4 flex-none place-ite
 // as a minimal text control inside the tags box; Enter in the draft input
 // still commits the same value.
 export const selectTagCommitButtonClassName =
-	"-my-1.5 -mr-3 min-h-0! self-stretch [--button-height:auto] rounded-none! border-0! px-3! py-0! text-sm font-semibold hover:text-[var(--input-text)] hover:no-underline disabled:opacity-40";
+	"ui-small ui-emphasis -my-1.5 -mr-3 min-h-0! self-stretch [--button-height:auto] rounded-none! border-0! px-3! py-0! hover:text-[var(--input-text)] hover:no-underline disabled:opacity-40";
 
 // mode="tags"' own boxed container - reuses selectTriggerVariants({error})
 // for the same border/bg/text coloring as every other Select, plus
@@ -224,7 +228,7 @@ export const selectTagsBoxClassName =
 
 // The freeform draft input inside mode="tags" - transparent, borderless, grows to fill leftover row width next to existing pills.
 export const selectTagDraftInputClassName =
-	"min-w-[6rem] flex-1 border-none bg-transparent p-0 text-base text-[var(--input-text)] outline-none placeholder:text-[var(--input-placeholder)]";
+	"ui-control min-w-[6rem] flex-1 border-none bg-transparent p-0 text-[var(--input-text)] outline-none placeholder:text-[var(--input-placeholder)]";
 
 // The checkbox indicating selection in a multi-select row - appearance-none,
 // not accent-color, so the unchecked border/checked bg are both fully ours to
@@ -238,7 +242,7 @@ export const selectOptionCheckboxWrapperClassName = "relative inline-flex h-4 w-
 export const selectOptionCheckmarkClassName =
 	"pointer-events-none absolute inset-0 h-4 w-4 bg-[var(--selected-checkbox-text)] [mask-position:center] [mask-repeat:no-repeat] [mask-size:85%]";
 
-export const selectOptionLabelClassName = "min-w-0 flex-1 truncate font-semibold";
+export const selectOptionLabelClassName = "ui-emphasis min-w-0 flex-1 truncate";
 
 // mode="filterableMultiselect" only - the label + headerFilter + Select
 // all/Unselect all row above the trigger. Was hand-rolled separately in
@@ -246,4 +250,4 @@ export const selectOptionLabelClassName = "min-w-0 flex-1 truncate font-semibold
 // value, which had drifted) - owned here now so every instance matches.
 export const selectFilterableHeaderClassName = "mb-3 flex flex-wrap items-end justify-between gap-x-4 gap-y-3";
 export const selectFilterableLabelClassName = "ui-label m-0 block pl-1";
-export const selectFilterableActionsClassName = "flex flex-wrap items-center gap-2";
+export const selectFilterableActionsClassName = "flex flex-wrap items-center gap-0.5";

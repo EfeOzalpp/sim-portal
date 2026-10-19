@@ -5,6 +5,7 @@ import type { ReactNode } from "react";
 import * as RadixPopover from "@radix-ui/react-popover";
 import clsx from "clsx";
 import { popoverContentClassName } from "@/components/popover/styles";
+import { PopoverRoot } from "./PopoverRoot";
 
 export interface PopoverProps {
 	/** The element that opens the popover on click - wrapped in Radix's asChild, so pass a real <button>. */
@@ -71,7 +72,7 @@ export function Popover({
 	}, [toggle, open, onOpenChange]);
 
 	return (
-		<RadixPopover.Root open={open} onOpenChange={onOpenChange}>
+		<PopoverRoot open={open} onOpenChange={onOpenChange}>
 			<RadixPopover.Trigger ref={triggerRef} asChild>
 				{trigger}
 			</RadixPopover.Trigger>
@@ -95,7 +96,7 @@ export function Popover({
 					{children}
 				</RadixPopover.Content>
 			</RadixPopover.Portal>
-		</RadixPopover.Root>
+		</PopoverRoot>
 	);
 }
 
