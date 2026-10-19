@@ -20,6 +20,25 @@ function isColorTheme(value: string | undefined | null): value is "default" | "p
 export default function ThemeStorageSync() {
 	useEffect(() => {
 		const root = document.documentElement;
+		const colorProbe = document.createElement("span");
+		colorProbe.hidden = true;
+		document.body.append(colorProbe);
+
+		function syncBrowserColor() {
+			const modal = Array.from(document.querySelectorAll<HTMLElement>("[data-modal-popup] > [role=dialog]")).at(-1);
+			// Resolve nested CSS variables to an actual color for browser metadata.
+			colorProbe.style.background = "var(--app-bg)";
+			let color = modal ? getComputedStyle(modal).backgroundColor : getComputedStyle(colorProbe).backgroundColor;
+			// The alternate palette uses a gradient; browser chrome needs a solid color.
+			if (color === "rgba(0, 0, 0, 0)") {
+				colorProbe.style.background = "var(--app-theme)";
+				color = getComputedStyle(colorProbe).backgroundColor;
+			}
+			if (modal) root.style.setProperty("--browser-chrome-bg", color);
+			else root.style.removeProperty("--browser-chrome-bg");
+			const meta = document.querySelector('meta[name="theme-color"]');
+			if (meta?.getAttribute("content") !== color) meta?.setAttribute("content", color);
+		}
 
 		function persistCurrentTheme() {
 			const currentTheme = root.dataset.theme;
@@ -58,16 +77,23 @@ export default function ThemeStorageSync() {
 
 			persistCurrentColorTheme();
 		} catch {
-			return;
+			// Browser chrome still follows the theme when storage is unavailable.
 		}
+		syncBrowserColor();
 
 		const observer = new MutationObserver((mutations) => {
-			for (const mutation of mutations) {
-				if (mutation.attributeName === "data-theme") {
-					persistCurrentTheme();
-				} else if (mutation.attributeName === "data-color-theme") {
-					persistCurrentColorTheme();
+			try {
+				for (const mutation of mutations) {
+					if (mutation.attributeName === "data-theme") {
+						persistCurrentTheme();
+					} else if (mutation.attributeName === "data-color-theme") {
+						persistCurrentColorTheme();
+					}
 				}
+			} catch {
+				// Storage access is optional; visual theme changes must still work.
+			} finally {
+				syncBrowserColor();
 			}
 		});
 
@@ -76,7 +102,33 @@ export default function ThemeStorageSync() {
 			attributeFilter: ["data-theme", "data-color-theme"],
 		});
 
-		return () => observer.disconnect();
+		const modalObserver = new MutationObserver((mutations) => {
+			const modalChanged = mutations.some((mutation) =>
+				[...mutation.addedNodes, ...mutation.removedNodes].some((node) =>
+					node instanceof Element && (node.matches("[data-modal-popup]") || node.querySelector("[data-modal-popup]")),
+				),
+			);
+			if (modalChanged) syncBrowserColor();
+		});
+		modalObserver.observe(document.body, { childList: true, subtree: true });
+
+		// Route metadata can replace the theme-color tag after a modal closes.
+		const metadataObserver = new MutationObserver((mutations) => {
+			if (mutations.some((mutation) =>
+				(mutation.target instanceof Element && mutation.target.matches('meta[name="theme-color"]')) ||
+				[...mutation.addedNodes].some((node) => node instanceof Element &&
+					(node.matches('meta[name="theme-color"]') || node.querySelector('meta[name="theme-color"]'))),
+			)) syncBrowserColor();
+		});
+		metadataObserver.observe(document.head, { childList: true, subtree: true, attributes: true, attributeFilter: ["content"] });
+
+		return () => {
+			observer.disconnect();
+			modalObserver.disconnect();
+			metadataObserver.disconnect();
+			root.style.removeProperty("--browser-chrome-bg");
+			colorProbe.remove();
+		};
 	}, []);
 
 	return null;

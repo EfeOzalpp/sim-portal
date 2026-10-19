@@ -52,7 +52,8 @@ const bodyDividerClassName =
 
 // Global metadata for the application
 export const viewport: Viewport = {
-	themeColor: "#ff7900",
+	// Default light chrome until ThemeStorageSync resolves the active CSS palette.
+	themeColor: "#f2e4f6",
 };
 
 export const metadata: Metadata = {
@@ -112,14 +113,14 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 	const session = await auth();
 
 	return (
-		<html lang="en" data-theme="light" data-color-theme="default" className="h-full overflow-hidden print:h-auto print:overflow-visible" suppressHydrationWarning>
+		<html lang="en" data-theme="light" data-color-theme="default" className="h-full overflow-hidden [background:var(--browser-chrome-bg,var(--app-bg))] print:h-auto print:overflow-visible" suppressHydrationWarning>
 			{/* Explicit <head> so this runs before first paint, not just hydration - avoids the light-mode flash. */}
 			<head>
 				<script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
 				<script dangerouslySetInnerHTML={{ __html: colorThemeInitScript }} />
 				<script dangerouslySetInnerHTML={{ __html: peopleGridInitScript }} />
 			</head>
-			<body className="m-0 h-full overflow-hidden print:h-auto print:overflow-visible">
+			<body className="m-0 h-full overflow-hidden [background:var(--browser-chrome-bg,var(--app-bg))] print:h-auto print:overflow-visible">
 				<ToastProvider>
 					<ThemeStorageSync />
 					<div className={appShellClassName}>
