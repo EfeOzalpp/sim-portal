@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import type { Session } from "next-auth";
 import Button from "@/components/button";
 import { DesktopOnly } from "@/components/layout/breakpoints";
+import { PageChromeSlot } from "@/components/layout/PageChrome/slots";
 import ThemeSwitch from "@/app/layout-composition/NavBar/theme/ThemeSwitch";
 import ColorThemePopover from "@/app/layout-composition/NavBar/theme/ColorThemePopover";
 import UserAccountLink from "@/app/layout-composition/NavBar/links/UserAccountLink";
@@ -51,10 +52,10 @@ export default function AppTopBar({ user }: AppTopBarProps) {
 					</div>
 					<div className={`${styles.brand} brand-text`}>SIM</div>
 				</div>
-				<div id="page-chrome-title-slot" className={`${styles.titleSlot} brand-text`} />
+				<PageChromeSlot id="page-chrome-title-slot" className={`${styles.titleSlot} brand-text`} />
 			</div>
-			<div id="page-chrome-scope-slot" className={styles.scopeSlot} />
-			<div id="page-chrome-controls-slot" className={styles.controlsSlot} />
+			<PageChromeSlot id="page-chrome-scope-slot" className={styles.scopeSlot} />
+			<PageChromeSlot id="page-chrome-controls-slot" className={styles.controlsSlot} />
 			<div className={styles.tools}>
 				<DesktopOnly>
 					<ThemeSwitch iconOnly />

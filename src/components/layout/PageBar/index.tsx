@@ -1,28 +1,31 @@
 "use client";
 
-import { useEffect, useState, type CSSProperties } from "react";
+import { useEffect, useState } from "react";
 import clsx from "clsx";
 import { Button } from "@/components/button";
 import { actionButtonIconClassName } from "@/components/button/styles";
 import { usePageChrome } from "@/components/layout/PageChrome";
+import { PageChromeSlot } from "@/components/layout/PageChrome/slots";
 import { useIsMobile } from "@/components/layout/breakpoints";
 import { MaskIcon } from "@/theme/MaskIcon";
+import { dismissPopovers } from "@/components/popover/dismiss";
 import styles from "@/components/layout/PageBar/PageBar.module.css";
+import chromeStyles from "@/components/layout/PageChrome/PageChrome.module.css";
 
 const PAGE_BAR_STORAGE_KEY = "sim-page-bar";
 
 export default function PageBar() {
-	const { collapseProgress, isCollapsed, hasScrolled } = usePageChrome();
+	const { hasScrolled } = usePageChrome();
 	const [isMinimized, setIsMinimized] = useState(false);
 	const isMobile = useIsMobile();
 	const isCompact = isMinimized && !isMobile;
-	const style = { "--mobile-chrome-collapse": collapseProgress } as CSSProperties;
 
 	useEffect(() => {
 		setIsMinimized(window.localStorage.getItem(PAGE_BAR_STORAGE_KEY) === "minimized");
 	}, []);
 
 	function toggleMinimized() {
+		dismissPopovers();
 		setIsMinimized((current) => {
 			const next = !current;
 			window.localStorage.setItem(PAGE_BAR_STORAGE_KEY, next ? "minimized" : "open");
@@ -30,24 +33,21 @@ export default function PageBar() {
 		});
 	}
 
+	if (isMobile) return null;
+
 	return (
 		<div
 			className={styles.root}
-			style={style}
 			data-page-scrolled={hasScrolled || undefined}
-			data-mobile-chrome-collapsed={isCollapsed || undefined}
 			data-minimized={isCompact || undefined}
 			data-button-compact={isCompact || undefined}
 		>
 			<div className={styles.actionsRow}>
-				<div id="page-bar-status" className={styles.status} />
-				<div id="page-bar-actions" className={styles.actions} />
+				<PageChromeSlot id="page-bar-tools" className={styles.tools} />
+				<PageChromeSlot id="page-bar-status" className={styles.status} />
+				<PageChromeSlot id="page-bar-actions" className={clsx(styles.actions, isCompact && chromeStyles.compactActions)} data-button-compact={isCompact || undefined} />
 			</div>
-			<div className={styles.collapsible}>
-				<div id="page-bar-search" className={styles.search} />
-				<div id="page-bar-tools" className={styles.tools} />
-			</div>
-			<div id="page-bar-tabs" className={styles.tabs} />
+			<PageChromeSlot id="page-bar-tabs" className={styles.tabs} />
 			<div className={styles.spacer} />
 			<Button
 				surface="page"

@@ -1,4 +1,4 @@
-/* These rules place route-owned children relative to one another - clearer here than as multi-level :has()/:not() Tailwind arbitrary variants. */
+/* Position route-owned content within the app shell. */
 
 .contentDivider > * {
 	grid-column: 1 / -1;
@@ -10,6 +10,10 @@
 }
 
 @media (max-width: 768px) {
+	.mobileNav:has([data-action-mode-button][aria-pressed="true"]) {
+		z-index: 260;
+	}
+
 	.desktopNav {
 		display: none;
 	}
@@ -68,7 +72,7 @@
 	min-height: 0;
 	overflow: visible;
 	overscroll-behavior: contain;
-	/* align-self: start sizes this box to its real content height, so padding-bottom lands where content actually ends, not the row's own (often shorter) height. */
+	/* Keep bottom padding after the content rather than the grid row. */
 	align-self: start;
 }
 
@@ -91,13 +95,13 @@
 	overflow: auto;
 }
 
-/* Fills the viewport with one flexible row at every breakpoint, for centered route content (e.g. Welcome/login). */
+/* Centered routes fill the available height. */
 .contentDivider:has(> [data-center-content]) {
 	grid-template-rows: minmax(0, 1fr);
 }
 
 @media (min-width: 769px) {
-	/* Scrolls on its own (not with <main>) so its scrollbar sits at the route content edge. */
+	/* Scroll route content independently of main. */
 	.contentDivider > [data-page-content] > :not([data-action-mode-backdrop]),
 	.contentDivider > [data-page-frame] > [data-page-content] > :not([data-action-mode-backdrop]) {
 		height: 100%;

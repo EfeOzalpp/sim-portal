@@ -12,6 +12,16 @@
 	padding: 1rem;
 }
 
+@media (max-width: 768px) {
+	.root {
+		--page-content-padding-inline: 1.25rem;
+	}
+
+	.padded {
+		padding-inline: var(--page-content-padding-inline);
+	}
+}
+
 @media (min-width: 769px) {
 	.root {
 		position: relative;

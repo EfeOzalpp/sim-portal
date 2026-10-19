@@ -1,7 +1,6 @@
 .root {
 	--app-topbar-gap: 0.75rem;
 	--app-topbar-field-gap: 0.5rem;
-	--page-icon-bg-hover: var(--page-button-bg-hover);
 	--page-icon-bg-active: var(--page-button-bg-active, var(--page-button-bg-hover));
 
 	position: relative;
@@ -32,8 +31,10 @@
 .leadGroup {
 	display: flex;
 	align-items: stretch;
-	column-gap: var(--app-topbar-gap);
-	min-width: calc(var(--nav-rail-expanded-width) + var(--page-gutter) - var(--app-topbar-gap));
+	column-gap: 1.25rem;
+	margin-inline-end: 0.5rem;
+	min-width: 0;
+	transition: column-gap 160ms ease;
 }
 
 .leading {
@@ -43,6 +44,10 @@
 
 :global(html[data-desktop-nav="expanded"]) .leading {
 	min-width: calc(var(--nav-rail-expanded-width) + var(--page-gutter) - var(--app-topbar-gap));
+}
+
+:global(html[data-desktop-nav="expanded"]) .leadGroup {
+	column-gap: var(--app-topbar-gap);
 }
 
 .menuCell {
@@ -65,29 +70,8 @@
 	white-space: nowrap;
 }
 
-.titleSlot::before {
-	content: "/";
-	display: inline-block;
-	overflow: hidden;
-	max-width: 1ch;
-	margin-inline-end: 0.625rem;
-	color: var(--app-icon);
-	font-weight: 400;
-	transition:
-		max-width 160ms ease,
-		margin-inline-end 160ms ease,
-		opacity 160ms ease;
-}
-
-:global(html[data-desktop-nav="expanded"]) .titleSlot::before {
-	max-width: 0;
-	margin-inline-end: 0;
-	opacity: 0;
-}
-
 .titleSlot > * {
-	font: inherit;
-	letter-spacing: inherit;
+	color: var(--page-title-hash-color, inherit);
 }
 
 .titleSlot:empty,

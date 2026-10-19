@@ -10,7 +10,7 @@
 	gap: 1.1rem;
 	width: 100%;
 	min-height: 100%;
-	/* The rail doesn't scroll as one unit - navButtonList stays its natural size, external links below fills the rest and scrolls internally once needed. */
+	/* Only the external links area scrolls; primary navigation stays visible. */
 	overflow-x: hidden;
 	overflow-y: hidden;
 	padding: 0.5rem;
@@ -73,7 +73,7 @@
 	border-radius: 0.375rem;
 }
 
-/* Fills whatever vertical room is left after navButtonList, shrinking instead of growing the rail past the viewport; navButtonList itself never scrolls. */
+/* Use the remaining rail height for scrollable links. */
 .navScrollArea {
 	display: flex;
 	flex-direction: column;
@@ -91,7 +91,7 @@
 	overscroll-behavior: contain;
 }
 
-/* Firefox thin scrollbar - the rail is narrow, a default-width one would eat into it. */
+/* Use a thin scrollbar in browsers without WebKit scrollbar selectors. */
 @supports not selector(::-webkit-scrollbar) {
 	.navScrollAreaInner {
 		scrollbar-width: thin;

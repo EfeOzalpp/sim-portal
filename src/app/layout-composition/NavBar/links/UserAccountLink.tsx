@@ -49,7 +49,7 @@ export default function UserAccountLink({ user, iconOnly = false }: UserAccountL
 	const href = getAccountProfileHref(pathname, searchParams);
 	const avatar = (
 		<span
-			className="is-body grid h-[var(--nav-account-avatar-size)] w-[var(--nav-account-avatar-size)] place-items-center justify-self-center rounded-full bg-[var(--profile-indicator)] leading-none font-semibold text-[var(--profile-indicator-text)]"
+			className="ui-avatar grid h-[var(--nav-account-avatar-size)] w-[var(--nav-account-avatar-size)] place-items-center justify-self-center rounded-full bg-[var(--profile-indicator)] text-[var(--profile-indicator-text)]"
 			aria-hidden="true"
 		>
 			{getInitial(displayName)}
@@ -64,7 +64,7 @@ export default function UserAccountLink({ user, iconOnly = false }: UserAccountL
 				aria-label={`Open profile for ${displayName}`}
 			>
 				<span
-					className="grid h-8 w-8 place-items-center rounded-full bg-[var(--profile-indicator)] text-base leading-none font-semibold text-[var(--profile-indicator-text)]"
+					className="ui-avatar grid h-8 w-8 place-items-center rounded-full bg-[var(--profile-indicator)] text-[var(--profile-indicator-text)]"
 					aria-hidden="true"
 				>
 					{getInitial(displayName)}

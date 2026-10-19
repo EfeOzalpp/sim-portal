@@ -1,5 +1,4 @@
-/* Nav item styles shared by the desktop rail and the mobile panel. A container
-   can shrink them by setting the --nav-item-* tokens (the collapsed rail does). */
+/* Shared desktop/mobile items; --nav-item-* tokens control compact sizing. */
 
 .navButtonList {
 	display: flex;
@@ -118,7 +117,6 @@
 	max-width: var(--nav-item-label-max-width, 12rem);
 	opacity: var(--nav-item-label-opacity, 1);
 	padding-block: 0.125em;
-	line-height: 1.5;
 	text-align: start;
 	text-overflow: ellipsis;
 	white-space: nowrap;
@@ -188,6 +186,10 @@
 .externalGroupLabel {
 	padding-block: 0.5rem 0.125rem;
 	color: var(--nav-label, var(--app-icon));
+}
+
+.externalGroupLabel:first-child {
+	padding-block-start: 0;
 }
 
 .externalGroupLabel:not(:first-child) {

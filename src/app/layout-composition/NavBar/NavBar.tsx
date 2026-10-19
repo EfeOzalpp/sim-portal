@@ -35,7 +35,7 @@ export default async function NavBar({ session: initialSession }: NavBarProps) {
 			   Owns app-level route navigation; theme controls and account entry live in AppTopBar on desktop.
 			   It should stay independent from the upcoming page command header,
 			   except for shared shell tokens such as --nav-rail-collapsed-width. */}
-			<nav className={styles.root} aria-label="Primary navigation">
+			<nav className={`${styles.root} ui-sidebar`} aria-label="Primary navigation">
 				<div className="w-full min-w-0 shrink-0">
 					<div className={itemStyles.navButtonList}>
 						<NavButtonLink href="/users" label="People" iconClassName={itemStyles.peopleIcon} />

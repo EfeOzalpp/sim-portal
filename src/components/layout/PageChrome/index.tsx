@@ -11,11 +11,14 @@ import {
 	useRef,
 	useState,
 } from "react";
+import { PageChromeSlotsProvider } from "./slots";
+import { dismissPopovers } from "@/components/popover/dismiss";
 
 const COLLAPSE_DISTANCE = 72;
-const COLLAPSED_THRESHOLD = 0.92;
+export const COLLAPSED_THRESHOLD = 0.92;
 
 interface PageChromeReportOptions {
+	requireTopPull?: boolean;
 	preserveCollapsedUntilTop?: boolean;
 	reopenDistance?: number;
 }
@@ -40,6 +43,8 @@ function getCollapseProgress(
 	options: PageChromeReportOptions,
 	currentProgress: number,
 ) {
+	if (options.requireTopPull && currentProgress >= COLLAPSED_THRESHOLD) return 1;
+
 	if (options.preserveCollapsedUntilTop && currentProgress >= COLLAPSED_THRESHOLD) {
 		const reopenDistance = options.reopenDistance ?? 48;
 		return Math.min(1, Math.max(0, scrollTop / reopenDistance));
@@ -56,6 +61,14 @@ export function PageChromeProvider({ children }: { children: ReactNode }) {
 	const latestOptionsRef = useRef<PageChromeReportOptions>({});
 	const collapseProgressRef = useRef(0);
 	const frameRef = useRef<number | null>(null);
+	const isCollapsed = collapseProgress >= COLLAPSED_THRESHOLD;
+	const previousCollapsedRef = useRef(isCollapsed);
+
+	useEffect(() => {
+		if (previousCollapsedRef.current === isCollapsed) return;
+		previousCollapsedRef.current = isCollapsed;
+		if (window.matchMedia("(max-width: 768px)").matches) dismissPopovers();
+	}, [isCollapsed]);
 
 	const reportScrollTop = useCallback((scrollTop: number, options: PageChromeReportOptions = {}) => {
 		latestScrollTopRef.current = scrollTop;
@@ -106,17 +119,17 @@ export function PageChromeProvider({ children }: { children: ReactNode }) {
 	const value = useMemo(
 		() => ({
 			collapseProgress,
-			isCollapsed: collapseProgress >= COLLAPSED_THRESHOLD,
+			isCollapsed,
 			hasScrolled,
 			reportScrollTop,
 			resetPageChrome,
 		}),
-		[collapseProgress, hasScrolled, reportScrollTop, resetPageChrome],
+		[collapseProgress, isCollapsed, hasScrolled, reportScrollTop, resetPageChrome],
 	);
 
 	return (
 		<PageChromeContext.Provider value={value}>
-			{children}
+			<PageChromeSlotsProvider>{children}</PageChromeSlotsProvider>
 		</PageChromeContext.Provider>
 	);
 }
