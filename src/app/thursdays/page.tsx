@@ -23,8 +23,8 @@ import { confirmDeleteDialogClassName } from "@/components/confirm-delete/styles
 import { MaskIcon } from "@/theme/MaskIcon";
 
 // Composition
-import ThursdayCard from "@/app/thursdays/composition/list/ThursdayCard";
-import ThursdayGridCard from "@/app/thursdays/composition/grid/ThursdayGridCard";
+import ThursdaysListView from "@/app/thursdays/composition/list";
+import ThursdaysGridView from "@/app/thursdays/composition/grid";
 import { ThursdayDateProvider } from "@/app/thursdays/composition/ThursdayDateIndicator";
 import AddThursdayFormContent from "@/app/thursdays/add/AddThursdayFormContent";
 import EditThursdayFormContent from "@/app/thursdays/[id]/edit/EditThursdayFormContent";
@@ -41,9 +41,7 @@ import styles from "@/app/thursdays/ThursdaysPage.module.css";
 import { getSelectedSemesterId } from "@/components/domain/filters/semester-filter";
 import { THURSDAY_MODAL_PARAMS, USER_MODAL_PARAMS, type ThursdayModalParam } from "@/constants/modal-params";
 import { isAdminRole } from "@/constants/roles";
-import { formatShortMonthDay } from "@/constants/date-format";
 import { auth } from "@/authentication";
-import { normalizeThursdayName } from "@/helpers";
 
 interface ThursdaysProps {
 	searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -131,7 +129,13 @@ async function ThursdaysView({
   }
 
   if (view === "grid") {
-    return <ThursdaysGridView thursdays={thursdays} filters={filters} isAdmin={isAdmin} />;
+    return (
+      <ThursdaysGridView
+        thursdays={thursdays}
+        isAdmin={isAdmin}
+        getViewHref={(id) => getThursdaysModalHref({ ...filters, view: "grid" }, THURSDAY_MODAL_PARAMS.view, id)}
+      />
+    );
   }
 
   return <ThursdaysListView thursdays={thursdays} isAdmin={isAdmin} />;
@@ -154,9 +158,7 @@ async function ThursdaysPageContent({
 
   return (
     <>
-      <div className={styles.contentControls}>
-        <ThursdayViewTabs thursdayIds={thursdayIds} activeView={view} />
-      </div>
+      <ThursdayViewTabs thursdayIds={thursdayIds} activeView={view} />
       <ThursdayDateProvider>
         <ThursdaysView
           thursdays={thursdays}
@@ -167,66 +169,6 @@ async function ThursdaysPageContent({
         />
       </ThursdayDateProvider>
     </>
-  );
-}
-
-function ThursdaysListView({ thursdays, isAdmin }: { thursdays: any[]; isAdmin: boolean }) {
-  return (
-    <div className="grid gap-2">
-      {thursdays.map((thursday: any, index: number) => (
-        <ThursdayCard key={thursday.id} thursday={thursday} isAdmin={isAdmin} isFirst={index === 0} isLast={index === thursdays.length - 1} />
-      ))}
-    </div>
-  );
-}
-
-function ThursdaysGridView({ thursdays, filters, isAdmin }: { thursdays: any[]; filters: any; isAdmin: boolean }) {
-  return (
-    <div className="grid grid-cols-2 gap-x-3 gap-y-6 pb-6 min-[769px]:grid-cols-[repeat(auto-fill,minmax(min(100%,18rem),1fr))]">
-      {thursdays.map((thursday: any) => {
-        const hasOnlyPlaceholderProduction =
-          thursday.productions.length === 1 &&
-          thursday.productions[0].name === "Big Production" &&
-          thursday.productions[0].location === "Pozen Center" &&
-          thursday.productions[0].presentations.length === 0 &&
-          thursday.productions[0].producers.length === 0;
-        const isEmpty = thursday.productions.length === 0 || hasOnlyPlaceholderProduction;
-        const presentationCount = thursday.productions.reduce((total: number, production: any) => total + production.presentations.length, 0);
-        const producerIds = new Set<string>();
-        const producerPreviews: { id: string; name: string | null; image?: string | null }[] = [];
-        thursday.productions.forEach((production: any) => {
-          production.producers.forEach((producer: any) => {
-            if (producerIds.has(producer.id)) return;
-
-            producerIds.add(producer.id);
-            if (producerPreviews.length < 3) {
-              producerPreviews.push({
-                id: producer.id,
-                name: producer.name,
-                image: producer.image,
-              });
-            }
-          });
-        });
-
-        return (
-          <ThursdayGridCard
-            key={thursday.id}
-            id={thursday.id}
-            name={normalizeThursdayName(thursday.name)}
-            href={getThursdaysModalHref({ ...filters, view: "grid" }, THURSDAY_MODAL_PARAMS.view, thursday.id)}
-            date={formatShortMonthDay(thursday.date) || ""}
-            calendarDate={thursday.date.toISOString().slice(0, 10)}
-            productionCount={isEmpty ? 0 : thursday.productions.length}
-            presentationCount={presentationCount}
-            producerCount={producerIds.size}
-            producerPreviews={producerPreviews}
-            isEmpty={isEmpty}
-            isAdmin={isAdmin}
-          />
-        );
-      })}
-    </div>
   );
 }
 
@@ -256,7 +198,7 @@ export default async function Thursdays({ searchParams }: ThursdaysProps) {
           search={<FilterInput variant="page" query="thursdays" placeholder="Search" />}
           actions={isAdmin ? (
             <>
-              <Button surface="page" href={getThursdaysModalHref(filters, THURSDAY_MODAL_PARAMS.add, "1")} variant="action" tone="cta">
+              <Button surface="page" href={getThursdaysModalHref(filters, THURSDAY_MODAL_PARAMS.add, "1")} variant="action" tone="cta" aria-label="New thursday" title="New thursday">
                 <MaskIcon icon="add/add.svg" className={actionButtonIconClassName} />
                 New thursday
               </Button>
@@ -268,13 +210,13 @@ export default async function Thursdays({ searchParams }: ThursdaysProps) {
           printLabel="PDF Selected"
           csvLabel="CSV Selected"
           utilities={[
-            { label: "PDF All", icon: "download/download.svg" },
+            { label: "PDF All", icon: "print/print.svg" },
             { label: "CSV All", icon: "download/download.svg" },
           ]}
         />
         <PageCard data-full-bleed-content className="flex h-full min-h-0 flex-col">
           <PageBar />
-          <PageChromeScrollArea data-page-surface className={`${styles.scrollArea} min-h-0 flex-1 overflow-y-auto bg-[var(--page-bg)] px-6 pb-6 print:overflow-visible print:bg-transparent print:px-0 print:pb-0`}>
+          <PageChromeScrollArea requireTopGesture data-page-surface className={`${styles.scrollArea} min-h-0 flex-1 overflow-y-auto bg-[var(--page-bg)] px-6 pb-6 print:overflow-visible print:bg-transparent print:px-0 print:pb-0`}>
             <Suspense
               fallback={<div style={{ opacity: 0.5, padding: "1rem", background: "transparent" }}>Loading days...</div>}
             >
@@ -316,6 +258,7 @@ export default async function Thursdays({ searchParams }: ThursdaysProps) {
             paramName={THURSDAY_MODAL_PARAMS.delete}
             title="Delete Thursday"
             dialogClassName={confirmDeleteDialogClassName}
+            minimalHeader
           >
             <Suspense fallback={<ModalContentFallback />}>
               <ThursdayDeleteConfirmContent

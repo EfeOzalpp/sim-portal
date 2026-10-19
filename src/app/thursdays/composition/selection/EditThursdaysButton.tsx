@@ -18,6 +18,7 @@ export default function EditThursdaysButton() {
 			aria-label="Edit thursdays"
 			title="Edit thursdays"
 			aria-pressed={isActive}
+			data-action-mode-button={ACTION_MODES.editThursdays}
 			onClick={() => setActiveMode(isActive ? null : ACTION_MODES.editThursdays)}
 		/>
 	);

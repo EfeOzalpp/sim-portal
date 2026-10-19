@@ -38,7 +38,7 @@ export default function ThursdayDateIndicator({ date }: { date: string }) {
 	const label = status === "today" ? "Today" : "Upcoming";
 
 	return (
-		<span className="pointer-events-none inline-flex shrink-0 items-center gap-1 whitespace-nowrap text-sm text-[var(--app-text)] group-hover:opacity-0 group-focus-within:opacity-0" role="img" aria-label={label} title={label}>
+		<span className="ui-small pointer-events-none inline-flex shrink-0 items-center gap-1 whitespace-nowrap text-[var(--app-text)] group-hover:opacity-0 group-focus-within:opacity-0" role="img" aria-label={label} title={label}>
 			<MaskIcon icon={status === "today" ? "fiber_today/fiber_today.svg" : "schedule/schedule.svg"} className="h-5 w-5 shrink-0 bg-[var(--select-checkbox-active-bg)] [mask-position:center] [mask-repeat:no-repeat] [mask-size:contain]" />
 			<span>{label}</span>
 		</span>

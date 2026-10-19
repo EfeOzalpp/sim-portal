@@ -1,0 +1,44 @@
+@media (max-width: 768px) {
+	.root {
+		width: 100%;
+	}
+
+	.header {
+		display: grid;
+		grid-template-columns: 2.5rem minmax(0, 1fr);
+	}
+
+	.trigger {
+		grid-column: 2;
+		grid-row: 1;
+		padding: 0.75rem 0 0.5rem 0.25rem;
+	}
+
+	.checkbox {
+		grid-column: 1;
+		grid-row: 1;
+		width: 2.5rem;
+		padding-left: 0;
+	}
+
+	.summary {
+		grid-column: 2;
+		grid-row: 2;
+		min-width: 0;
+		flex-wrap: wrap;
+		justify-content: space-between;
+		gap: 0.5rem;
+		padding: 0 0.5rem 0.75rem 2.25rem;
+	}
+
+	.metaSummary {
+		display: inline-flex;
+		flex: 1 1 auto;
+		justify-content: space-between;
+		gap: 0.5rem;
+	}
+
+	.content {
+		padding-inline: 0;
+	}
+}

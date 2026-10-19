@@ -1,3 +1,8 @@
+.contentControls {
+	margin-bottom: 0.25rem;
+	padding-block: 0.5rem;
+}
+
 .tabs {
 	display: flex;
 	flex: none;
@@ -43,7 +48,7 @@
 }
 
 .tab:hover {
-	background: var(--page-icon-bg-hover);
+	background: var(--page-view-bg-hover);
 }
 
 .tabActive {
@@ -63,4 +68,24 @@
 	-webkit-mask-position: center;
 	-webkit-mask-repeat: no-repeat;
 	-webkit-mask-size: contain;
+}
+
+@media (max-width: 768px) {
+	.contentControls {
+		display: none;
+	}
+
+	.chromeTabs {
+		gap: 0.25rem;
+		padding-inline: 0;
+	}
+
+	.chromeTabs .masterCheckbox {
+		width: 2.5rem;
+		flex: 0 0 2.5rem;
+	}
+
+	.chromeTabs .tabList {
+		flex-wrap: nowrap;
+	}
 }

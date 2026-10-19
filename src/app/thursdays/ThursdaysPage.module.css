@@ -1,12 +1,7 @@
-.contentControls {
-	margin-bottom: 0.25rem;
-	padding-block: 0.5rem;
-}
-
 @media (max-width: 768px) {
 	.scrollArea {
-		padding-top: 0.25rem;
-		padding-inline: 0.75rem;
+		padding-top: var(--page-content-padding-inline);
+		padding-inline: var(--page-content-padding-inline);
 	}
 }
 

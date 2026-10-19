@@ -17,8 +17,9 @@ import { MaskIcon } from "@/theme/MaskIcon";
 // Helpers
 import { ACTION_MODES } from "@/constants/action-modes";
 import { THURSDAY_MODAL_PARAMS, type ThursdayModalParam } from "@/constants/modal-params";
-import { getStringColors } from "@/constants/stringColors";
+import StringLabel from "@/components/primitives/StringLabel";
 import ThursdayDateIndicator from "@/app/thursdays/composition/ThursdayDateIndicator";
+import styles from "./ProductionsCollapse.module.css";
 
 const chevronClassName =
   "h-5 w-5 flex-none bg-[var(--input-icon)] transition-[background,transform] duration-250 [mask-image:url(./assets/arrow/down.svg)] [mask-position:center] [mask-repeat:no-repeat] [mask-size:contain] group-hover:bg-[var(--app-text)] group-focus-within:bg-[var(--app-text)] [[data-state=open]_&]:rotate-180";
@@ -46,23 +47,20 @@ interface ProductionsCollapseProps {
 }
 
 function DateLabel({ date, className }: { date: string; className?: string }) {
-  const colors = getStringColors(date);
-
   return (
-    <span
-      className={clsx("ui-label m-0 block w-fit border-0 border-b border-solid bg-transparent px-0 pb-0.5 font-sans text-xs leading-tight font-semibold uppercase", className)}
-      style={{ borderBottomColor: colors.bg, color: colors.text }}
-    >
+    <StringLabel colorKey={date.split(" ", 1)[0]} className={className}>
       {date}
-    </span>
+    </StringLabel>
   );
 }
 
 function MetaSummary({ productionCount = 0, presentationCount = 0, producerCount = 0, producerPreviews }: Pick<ProductionItem, "productionCount" | "presentationCount" | "producerCount" | "producerPreviews">) {
   return (
-    <span className="hidden min-w-0 flex-shrink flex-wrap items-center justify-end gap-x-3 gap-y-1 text-sm text-[var(--subtle-text)] min-[769px]:inline-flex">
-      <span>{productionCount} prod.</span>
-      <span>{presentationCount} pres.</span>
+    <span className={clsx("ui-small hidden min-w-0 flex-shrink flex-wrap items-center justify-end gap-x-3 gap-y-1 text-[var(--subtle-text)] min-[769px]:inline-flex", styles.metaSummary)}>
+      <span className="inline-flex flex-none items-center gap-3 whitespace-nowrap">
+        <span>{productionCount} prod.</span>
+        <span>{presentationCount} pres.</span>
+      </span>
       <ThursdayProducerAvatarStack producerCount={producerCount} producerPreviews={producerPreviews} />
     </span>
   );
@@ -119,7 +117,7 @@ export default function ProductionsCollapse({ productions, isFirst, isLast }: Pr
 
   return (
     <div
-      className="group relative mx-auto w-[90%] transition-colors duration-150"
+      className={clsx("group relative mx-auto w-[90%] transition-colors duration-150", styles.root)}
       style={{ backgroundColor: hasOpenItem ? "var(--page-card-hover)" : undefined }}
       data-action-mode-target="thursday-card"
       data-thursday-id={productions[0]?.id}
@@ -137,7 +135,7 @@ export default function ProductionsCollapse({ productions, isFirst, isLast }: Pr
         value={openValues}
         onValueChange={setOpenValues}
         className={clsx(
-          "overflow-hidden rounded-none border-0 border-b-[3px] border-solid bg-transparent text-[var(--app-text)] transition-[background,border-color] duration-150",
+          "overflow-hidden rounded-none border-0 border-b border-solid bg-transparent text-[var(--app-text)] transition-[background,border-color] duration-150",
           hasOpenItem
             ? "border-b-[var(--card-border-hover)]"
             : "border-b-[var(--card-border)] hover:border-b-[var(--card-border-hover)] hover:bg-[var(--page-card-hover)]",
@@ -148,28 +146,31 @@ export default function ProductionsCollapse({ productions, isFirst, isLast }: Pr
             pIndex > 0 && "border-t border-t-[var(--card-border)]",
             "transition-colors duration-150",
           ),
-          headerClassName: "group items-center text-[var(--app-text)] transition-[background] duration-150 [[data-state=open]>&]:border-b [[data-state=open]>&]:border-b-[var(--modal-separator)]",
-          triggerClassName: "px-5 py-4",
-          contentClassName: "px-5 pt-3 pb-4 text-[var(--app-text)]",
+          headerClassName: clsx("group items-center text-[var(--app-text)] transition-[background] duration-150 [[data-state=open]>&]:border-b [[data-state=open]>&]:border-b-[var(--modal-separator)]", styles.header),
+          triggerClassName: clsx("px-5 py-4", styles.trigger),
+          contentClassName: clsx("px-5 pt-3 pb-4 text-[var(--app-text)]", styles.content),
           extra: (
             <>
-              <span className="order-first flex w-12 flex-none items-center justify-center self-stretch pl-4">
+              <span className={clsx("order-first flex w-12 flex-none items-center justify-center self-stretch pl-4", styles.checkbox)}>
                 <ThursdayCheckbox
                   checked={selectedThursdayIds.has(p.id)}
                   ariaLabel={`Select ${p.name}`}
                   onChange={() => toggleThursday(p.id)}
                 />
               </span>
-              <span className="flex flex-none items-center gap-3 self-stretch pr-4">
-                {p.calendarDate && <ThursdayDateIndicator date={p.calendarDate} />}
+              <span className={clsx("flex flex-none items-center gap-3 self-stretch pr-4", styles.summary)}>
+                {p.calendarDate && <span className="hidden min-[769px]:contents"><ThursdayDateIndicator date={p.calendarDate} /></span>}
                 {p.isEmpty ? (
                   <>
-                    <span className="ui-note hidden text-[var(--content-muted)] min-[769px]:inline">Empty</span>
+                    <span className="ui-note text-[var(--content-muted)]">Empty</span>
                     {p.canEdit && (
-                      <Button surface="page" href={getEditHref(p.id)} variant="action" className="min-h-9 whitespace-nowrap">
-                        <MaskIcon icon="edit/edit.svg" className={actionButtonIconClassName} />
-                        Edit
-                      </Button>
+                      <>
+                        <Button surface="page" href={getEditHref(p.id)} variant="action" className="min-h-9 whitespace-nowrap max-[768px]:hidden">
+                          <MaskIcon icon="edit/edit.svg" className={actionButtonIconClassName} />
+                          Edit
+                        </Button>
+                        <Button surface="page" href={getEditHref(p.id)} variant="tool" icon="edit/edit.svg" aria-label={`Edit ${p.name}`} className="min-[769px]:hidden" />
+                      </>
                     )}
                   </>
                 ) : (
@@ -188,15 +189,18 @@ export default function ProductionsCollapse({ productions, isFirst, isLast }: Pr
               <span className="flex min-w-0 flex-1 items-center gap-3 min-[769px]:hidden">
                 <span className={chevronClassName} aria-hidden="true" />
                 <span className="flex min-w-0 flex-1 flex-col gap-2">
-                  {p.date && <DateLabel date={p.date} />}
+                  <span className="flex min-w-0 items-center justify-between gap-2">
+                    {p.date && <DateLabel date={p.date} />}
+                    {p.calendarDate && <ThursdayDateIndicator date={p.calendarDate} />}
+                  </span>
                   <h3
-                    className="m-0 w-full truncate text-[var(--app-text)]"
+                    className="m-0 w-full break-words text-[var(--app-text)]"
                     title={p.name}
                   >
                     {p.name}
                   </h3>
                   {p.location && (
-                    <span className="truncate text-[1.05rem] font-bold">{p.location}</span>
+                    <span className="is-body truncate">{p.location}</span>
                   )}
                 </span>
               </span>
@@ -214,7 +218,7 @@ export default function ProductionsCollapse({ productions, isFirst, isLast }: Pr
                 {p.location && (
                   <>
                     <span className="self-stretch border-l border-l-[var(--card-border)]" aria-hidden="true" />
-                    <span className="self-center text-[1.05rem] font-bold">{p.location}</span>
+                    <span className="is-body self-center">{p.location}</span>
                   </>
                 )}
               </span>
