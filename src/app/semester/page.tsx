@@ -146,6 +146,7 @@ export default async function SemesterPage({ searchParams }: SemesterPageProps) 
     <>
       <PageChrome
         title="Semesters"
+        mobileLayout="title-only"
         desktopSearchWidth="var(--select-title-width)"
         search={<FilterInput variant="page" query="semesterSearch" placeholder="Search" mode="filter" filterTrigger={<SemesterSortPopover />} />}
       />
@@ -200,6 +201,7 @@ export default async function SemesterPage({ searchParams }: SemesterPageProps) 
             paramName={SEMESTER_MODAL_PARAMS.delete}
             title="Delete Semester"
             dialogClassName={confirmDeleteDialogClassName}
+            minimalHeader
           >
             <SemesterDeleteConfirmContent
               semesterId={deleteSemesterId}
