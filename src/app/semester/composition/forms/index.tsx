@@ -18,7 +18,7 @@ import { Button } from "@/components/button";
 import Popover from "@/components/popover";
 import InfoPopover from "@/components/popover/InfoPopover";
 import { useModalCloseGuard } from "@/components/modal/CloseGuard";
-import { FieldError, fieldLabelRowClassName } from "@/components/field-error";
+import { Form, FormStack, FormField, FormActions } from "@/components/form";
 import { useToast } from "@/components/toast";
 import { MaskIcon } from "@/theme/MaskIcon";
 
@@ -318,161 +318,153 @@ export default function SemesterForm({
   useModalCloseGuard(isDirty && !isSubmitting, isValid, () => handleSubmit(handleFormSubmit)());
 
   return (
-    <form onSubmit={handleSubmit(handleFormSubmit)} className="flex h-full flex-col">
-        {error && (
-          <Alert
-            description={error}
-            tone="danger"
-            showIcon
-            closable
-            onClose={() => setError(null)}
-          />
-        )}
-        <div className={clsx(styles.body, "flex flex-1 flex-col gap-8")}>
-          <div className={styles.nameRow}>
-            <div className={styles.nameField}>
-              <Controller
-                control={control}
-                name="name"
-                rules={{ required: "Semester name is required" }}
-                render={({ field, fieldState }) => {
-                  const nameOptions = getSemesterNameOptions(field.value, takenSemesterCodes);
-                  const showError = Boolean(fieldState.error) && (fieldState.isTouched || isSubmitted);
-                  return (
-                    <>
-                      <div className={clsx(fieldLabelRowClassName, "pl-1")}>
-                        <span className="ui-label m-0">Academic Term *</span>
-                        {showError && <FieldError>{fieldState.error!.message}</FieldError>}
-                      </div>
-                      <Select
-                        inModal
-                        {...field}
-                        value={field.value || undefined}
-                        searchable
-                        placeholder="E.g. SP24"
-                        status={showError ? "error" : ""}
-                        options={nameOptions}
-                        scrollToValueOnOpen={getClosestOptionValue(nameOptions, getCurrentSemesterCode())}
-                      />
-                    </>
-                  );
-                }}
-              />
-            </div>
-
-            <div className="flex min-w-0 flex-col gap-2">
-              <Controller
-                control={control}
-                name="dates"
-                rules={{
-                  validate: (value) => (value?.[0] && value?.[1] ? true : "Date range is required"),
-                }}
-                render={({ field, fieldState }) => {
-                  const hasRealDates = Boolean(field.value?.[0] && field.value?.[1]);
-                  const showError = Boolean(fieldState.error) && (fieldState.isTouched || isSubmitted);
-
-                  return (
-                    <>
-                      <div className={clsx(fieldLabelRowClassName, "pl-1")}>
-                        <span className="inline-flex items-center gap-2">
-                          <span className="ui-label m-0">Date Range *</span>
-                          {!nameValue && (
-                            <InfoPopover label="Why is date range locked?" inModal>
-                              Select an academic term first to unlock date range.
-                            </InfoPopover>
-                          )}
-                        </span>
-                        {showError && <FieldError>{fieldState.error!.message}</FieldError>}
-                      </div>
-                      <RangePicker
-                        {...field}
-                        key={!hasRealDates && datesTargetYear ? datesTargetYear : "fixed"}
-                        disabled={!nameValue}
-                        placeholder={!nameValue ? ["Pick an academic term first", ""] : undefined}
-                        defaultPickerValue={
-                          !hasRealDates && datesTargetYear
-                            ? [dayjs().year(datesTargetYear), dayjs().year(datesTargetYear)]
-                            : undefined
-                        }
-                        style={{ width: "100%" }}
-                        status={showError ? "error" : ""}
-                      />
-                    </>
-                  );
-                }}
-              />
-            </div>
-          </div>
-
-          <div>
-            <Controller
-              control={control}
-              name="users"
-              render={({ field }) => {
-                const selectedIds = new Set<string>(field.value ?? []);
-                // Only scopes "Select all" - the dropdown itself always
-                // lists every selectableUser (below), so unselecting someone
-                // outside the reference semester flips their row to
-                // "Unselected" instead of yanking it out of the list, which
-                // read as broken (looked like unselecting = removed).
-                const filteredSelectableUsers = selectableUsers.filter(
-                  (u) =>
-                    selectedIds.has(u.id) ||
-                    !semesterFilterId ||
-                    (u.semesterIds ?? []).includes(semesterFilterId),
-                );
-                // Unlike the semester filter above, this one hides already-selected people too when they fall outside the current role.
-                const roleFilteredSelectableUsers = selectableUsers.filter(
-                  (u) => roleFilter === null || u.role === roleFilter,
-                );
-                // Respects the semester filter (same pool "Select all" targets), but never the role filter itself - same rule RoleFilterPopover's own counts follow.
-                const roleCounts = {
-                  all: filteredSelectableUsers.length,
-                  [ROLES.student]: filteredSelectableUsers.filter((u) => u.role === ROLES.student).length,
-                  [ROLES.staff]: filteredSelectableUsers.filter((u) => u.role === ROLES.staff).length,
-                  [ROLES.admin]: filteredSelectableUsers.filter((u) => u.role === ROLES.admin).length,
-                };
-
-                return (
+    <Form onSubmit={handleSubmit(handleFormSubmit)}>
+      {error && (
+        <Alert
+          description={error}
+          tone="danger"
+          showIcon
+          closable
+          onClose={() => setError(null)}
+        />
+      )}
+      <FormStack spacing="relaxed" className={clsx(styles.body, "flex-1")}>
+        <div className={styles.nameRow}>
+          <Controller
+            control={control}
+            name="name"
+            rules={{ required: "Semester name is required" }}
+            render={({ field, fieldState }) => {
+              const nameOptions = getSemesterNameOptions(field.value, takenSemesterCodes);
+              const showError = Boolean(fieldState.error) && (fieldState.isTouched || isSubmitted);
+              return (
+                <FormField label="Academic Term" required className={styles.nameField} error={showError ? fieldState.error?.message : undefined}>
                   <Select
                     inModal
-                    mode="filterableMultiselect"
-                    label="Enrollment"
                     {...field}
+                    value={field.value || undefined}
                     searchable
-                    maxTagCount={12}
-                    placeholder="Select users"
-                    selectAllValues={filteredSelectableUsers.map((u) => u.id)}
-                    headerFilter={
-                      semesters.length > 0 && (
-                        <Select
-                          inModal
-                          className="w-[5.5rem]! min-h-9! py-1.5!"
-                          value={semesterFilterId ?? ALL_SEMESTERS_FILTER_VALUE}
-                          onChange={(value) =>
-                            setSemesterFilterId(value && value !== ALL_SEMESTERS_FILTER_VALUE ? value : null)
-                          }
-                          placeholder="Semester"
-                          options={[
-                            { value: ALL_SEMESTERS_FILTER_VALUE, label: "All" },
-                            ...semesters.map((s) => ({
-                              value: s.id,
-                              label: formatSemesterCode(s.name),
-                            })),
-                          ]}
-                        />
-                      )
-                    }
-                    options={roleFilteredSelectableUsers.map((u) => ({ value: u.id, label: u.name ?? "Unnamed User" }))}
-                    filterExtra={<EnrollmentRoleFilter value={roleFilter} onChange={setRoleFilter} counts={roleCounts} />}
+                    placeholder="E.g. SP24"
+                    status={showError ? "error" : ""}
+                    options={nameOptions}
+                    scrollToValueOnOpen={getClosestOptionValue(nameOptions, getCurrentSemesterCode())}
                   />
-                );
-              }}
-            />
-          </div>
+                </FormField>
+              );
+            }}
+          />
+
+          <Controller
+            control={control}
+            name="dates"
+            rules={{
+              validate: (value) => (value?.[0] && value?.[1] ? true : "Date range is required"),
+            }}
+            render={({ field, fieldState }) => {
+              const hasRealDates = Boolean(field.value?.[0] && field.value?.[1]);
+              const showError = Boolean(fieldState.error) && (fieldState.isTouched || isSubmitted);
+
+              return (
+                <FormField error={showError ? fieldState.error?.message : undefined} label={
+                  <span className="inline-flex items-center gap-2">
+                    <span className="ui-label m-0">Date Range *</span>
+                    {!nameValue && (
+                      <InfoPopover label="Why is date range locked?" inModal>
+                        Select an academic term first to unlock date range.
+                      </InfoPopover>
+                    )}
+                  </span>
+                }>
+                  <RangePicker
+                    {...field}
+                    key={!hasRealDates && datesTargetYear ? datesTargetYear : "fixed"}
+                    disabled={!nameValue}
+                    allowEmpty={[!nameValue, !nameValue]}
+                    placeholder={["Start date", "End date"]}
+                    defaultPickerValue={
+                      !hasRealDates && datesTargetYear
+                        ? [dayjs().year(datesTargetYear), dayjs().year(datesTargetYear)]
+                        : undefined
+                    }
+                    style={{ width: "100%" }}
+                    status={showError ? "error" : ""}
+                  />
+                </FormField>
+              );
+            }}
+          />
         </div>
 
-        <div className="mt-6 flex justify-start">
+        <div>
+          <Controller
+            control={control}
+            name="users"
+            render={({ field }) => {
+              const selectedIds = new Set<string>(field.value ?? []);
+              // Only scopes "Select all" - the dropdown itself always
+              // lists every selectableUser (below), so unselecting someone
+              // outside the reference semester flips their row to
+              // "Unselected" instead of yanking it out of the list, which
+              // read as broken (looked like unselecting = removed).
+              const filteredSelectableUsers = selectableUsers.filter(
+                (u) =>
+                  selectedIds.has(u.id) ||
+                  !semesterFilterId ||
+                  (u.semesterIds ?? []).includes(semesterFilterId),
+              );
+              // Unlike the semester filter above, this one hides already-selected people too when they fall outside the current role.
+              const roleFilteredSelectableUsers = selectableUsers.filter(
+                (u) => roleFilter === null || u.role === roleFilter,
+              );
+              // Respects the semester filter (same pool "Select all" targets), but never the role filter itself - same rule RoleFilterPopover's own counts follow.
+              const roleCounts = {
+                all: filteredSelectableUsers.length,
+                [ROLES.student]: filteredSelectableUsers.filter((u) => u.role === ROLES.student).length,
+                [ROLES.staff]: filteredSelectableUsers.filter((u) => u.role === ROLES.staff).length,
+                [ROLES.admin]: filteredSelectableUsers.filter((u) => u.role === ROLES.admin).length,
+              };
+
+              return (
+                <Select
+                  inModal
+                  mode="filterableMultiselect"
+                  label="Enrollment"
+                  {...field}
+                  searchable
+                  maxTagCount={12}
+                  placeholder="Select users"
+                  selectAllValues={filteredSelectableUsers.map((u) => u.id)}
+                  headerFilter={
+                    semesters.length > 0 && (
+                      <Select
+                        inModal
+                        variant="button"
+                        className="w-[6rem]!"
+                        value={semesterFilterId ?? ALL_SEMESTERS_FILTER_VALUE}
+                        onChange={(value) =>
+                          setSemesterFilterId(value && value !== ALL_SEMESTERS_FILTER_VALUE ? value : null)
+                        }
+                        placeholder="Semester"
+                        options={[
+                          { value: ALL_SEMESTERS_FILTER_VALUE, label: "All" },
+                          ...semesters.map((s) => ({
+                            value: s.id,
+                            label: formatSemesterCode(s.name),
+                          })),
+                        ]}
+                      />
+                    )
+                  }
+                  options={roleFilteredSelectableUsers.map((u) => ({ value: u.id, label: u.name ?? "Unnamed User" }))}
+                  filterExtra={<EnrollmentRoleFilter value={roleFilter} onChange={setRoleFilter} counts={roleCounts} />}
+                />
+              );
+            }}
+          />
+        </div>
+      </FormStack>
+
+      <FormActions>
         <Button surface="modal" type="submit" disabled={isSubmitting} tone="cta" className="px-6!">
           {isSubmitting
             ? "Saving..."
@@ -480,7 +472,7 @@ export default function SemesterForm({
               ? "Save changes"
               : "Create semester"}
         </Button>
-        </div>
-    </form>
+      </FormActions>
+    </Form>
   );
 }

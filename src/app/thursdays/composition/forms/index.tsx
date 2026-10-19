@@ -14,6 +14,7 @@ import { ActionResult } from "@/actions/utilities";
 // Components
 import { Alert } from "@/components/alert";
 import { Button } from "@/components/button";
+import { Form, FormStack, FormActions } from "@/components/form";
 import { useModalCloseGuard } from "@/components/modal/CloseGuard";
 import { useToast } from "@/components/toast";
 
@@ -106,8 +107,8 @@ export default function ThursdayForm({
   useModalCloseGuard(isDirty && !isSubmitting, isValid, () => handleSubmit(handleFormSubmit)());
 
   return (
-    <form onSubmit={handleSubmit(handleFormSubmit)} className="flex h-full flex-col">
-      <div className="flex flex-1 flex-col gap-6">
+    <Form onSubmit={handleSubmit(handleFormSubmit)}>
+      <FormStack className="flex-1">
         {error && (
           <Alert
             description={error}
@@ -120,9 +121,9 @@ export default function ThursdayForm({
 
         <ThursdaySection control={control} semesters={semesters} />
         <ProductionsSection control={control} users={users} semesters={semesters} suggestedTags={suggestedTags} />
-      </div>
+      </FormStack>
 
-      <div className="mt-6 flex justify-start">
+      <FormActions>
         <Button surface="modal" type="submit" disabled={isSubmitting} tone="cta" className="px-6!">
           {isSubmitting
             ? "Saving..."
@@ -130,7 +131,7 @@ export default function ThursdayForm({
               ? "Save changes"
               : "Create day"}
         </Button>
-      </div>
-    </form>
+      </FormActions>
+    </Form>
   );
 }

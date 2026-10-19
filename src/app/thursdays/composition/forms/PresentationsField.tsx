@@ -10,27 +10,15 @@ import { BasicUser } from "@/actions/schemas";
 import { Input } from "@/components/input";
 import { Select } from "@/components/select";
 import { Collapse } from "@/components/collapse";
+import { Button } from "@/components/button";
 import ConfirmDelete from "@/components/confirm-delete";
 import ModalPopup from "@/components/modal";
-import { FieldError, fieldLabelRowClassName } from "@/components/field-error";
+import { FormField, FormStack } from "@/components/form";
 import { confirmDeleteDialogClassName } from "@/components/confirm-delete/styles";
-import { MaskIcon } from "@/theme/MaskIcon";
 
 // Composition
 import {
-  addIconButtonClassName,
-  addIconClassName,
-  collapseIconClassName,
-  collapseLabelClassName,
-  collapseTriggerPaddingClassName,
-  deleteIconButtonClassName,
-  deleteIconClassName,
   fieldLabelClassName,
-  fieldStackClassName,
-  presentationBodyClassName,
-  presentationHeaderClassName,
-  presentationItemClassName,
-  presentationTitleTextClassName,
   sectionHeaderClassName,
 } from "@/app/thursdays/composition/forms/thursdayFormClasses";
 
@@ -59,7 +47,7 @@ export default function PresentationsField({
   semesters = [],
   suggestedTags = [],
 }: PresentationsFieldProps) {
-  const { fields, append, remove } = useFieldArray({
+  const { fields, prepend, remove } = useFieldArray({
     control,
     name: `productions.${productionIndex}.presentations`,
   });
@@ -80,7 +68,7 @@ export default function PresentationsField({
 
   useEffect(() => {
     if (fields.length > previousFieldCount.current) {
-      const addedField = fields[fields.length - 1];
+      const addedField = fields[0];
       if (addedField) {
         setOpenPresentationIds((current) =>
           current.includes(addedField.id) ? current : [...current, addedField.id],
@@ -112,20 +100,21 @@ export default function PresentationsField({
     <div>
       <div className={sectionHeaderClassName}>
         <span className={fieldLabelClassName}>Presentations</span>
-        <button
+        <Button
+          surface="modal"
+          variant="tool"
+          size="small"
+          icon="add/add.svg"
           type="button"
-          className={addIconButtonClassName}
           aria-label="Add presentation"
           onClick={() =>
-            append({
+            prepend({
               name: "",
               presenters: [],
               tags: [],
             })
           }
-        >
-          <MaskIcon icon="add/add.svg" className={addIconClassName} />
-        </button>
+        />
       </div>
 
       {fields.length === 0 ? (
@@ -134,45 +123,38 @@ export default function PresentationsField({
         </p>
       ) : (
         <Collapse
+          variant="modal"
+          depth={3}
           value={openPresentationIds}
           onValueChange={setOpenPresentationIds}
           items={fields.map((field: any, pIndex) => {
             const name = watchPresentations?.[pIndex]?.name?.trim();
             const trigger = (
-              <span className={collapseLabelClassName}>
-                {/* Rotation reads the trigger's own data-state — Radix sets
-                    data-state="open"/"closed" on it directly, no isActive
-                    render-prop needed. */}
-                <span className={collapseIconClassName} aria-hidden="true" />
-                <span className={presentationTitleTextClassName} style={!name ? { color: "var(--content-muted)" } : undefined}>
-                  {name || "Unnamed Presentation"}
-                </span>
+              <span style={!name ? { color: "var(--content-muted)" } : undefined}>
+                {name || "Unnamed Presentation"}
               </span>
             );
 
             return {
               value: field.id,
-              itemClassName: `${presentationItemClassName}${pIndex > 0 ? " mt-2" : ""}`,
-              headerClassName: presentationHeaderClassName,
-              triggerClassName: collapseTriggerPaddingClassName,
-              contentClassName: presentationBodyClassName,
               trigger,
               extra: (
-                <button
+                <Button
+                  surface="modal"
+                  variant="tool"
+                  size="small"
+                  tone="danger"
+                  icon="delete/delete.svg"
                   type="button"
-                  className={`${deleteIconButtonClassName} self-center mr-4`}
                   aria-label="Remove presentation"
                   onClick={(e) => {
                     e.stopPropagation();
                     setPendingRemoveIndex(pIndex);
                   }}
-                >
-                  <MaskIcon icon="delete/delete.svg" className={deleteIconClassName} />
-                </button>
+                />
               ),
               content: (
-                <div className="flex w-full flex-col gap-4">
-                  <div className={fieldStackClassName}>
+                <FormStack spacing="compact" className="w-full">
                     <Controller
                       control={control}
                       name={`productions.${productionIndex}.presentations.${pIndex}.name`}
@@ -180,22 +162,18 @@ export default function PresentationsField({
                       render={({ field, fieldState }) => {
                         const showError = Boolean(fieldState.error) && (fieldState.isTouched || isSubmitted);
                         return (
-                          <>
-                            <div className={fieldLabelRowClassName}>
-                              <span className={fieldLabelClassName}>Name *</span>
-                              {showError && <FieldError>{fieldState.error!.message}</FieldError>}
-                            </div>
+                          <FormField label="Name" required htmlFor={field.name} error={showError ? fieldState.error?.message : undefined}>
                             <Input
+                              id={field.name}
                               variant="modal"
                               {...field}
                               placeholder="Enter presentation name"
                               status={showError ? "error" : ""}
                             />
-                          </>
+                          </FormField>
                         );
                       }}
                     />
-                  </div>
 
                   <div>
                     <Controller
@@ -230,7 +208,8 @@ export default function PresentationsField({
                               semesters.length > 0 && (
                                 <Select
                                   inModal
-                                  className="w-[5.5rem]! min-h-9! py-1.5!"
+                                  variant="button"
+                                  className="w-[6rem]!"
                                   value={semesterFilterId ?? ALL_SEMESTERS_FILTER_VALUE}
                                   onChange={(value) =>
                                     setSemesterFilterId(value && value !== ALL_SEMESTERS_FILTER_VALUE ? value : null)
@@ -260,8 +239,7 @@ export default function PresentationsField({
                     />
                   </div>
 
-                  <div className={fieldStackClassName}>
-                    <span className={fieldLabelClassName}>Tags</span>
+                  <FormField label="Tags">
                     <Controller
                       control={control}
                       name={`productions.${productionIndex}.presentations.${pIndex}.tags`}
@@ -277,14 +255,13 @@ export default function PresentationsField({
                         />
                       )}
                     />
-                  </div>
-                </div>
+                  </FormField>
+                </FormStack>
               ),
             };
           })}
         />
       )}
-
       <ModalPopup
         open={pendingRemoveIndex !== null}
         onOpenChange={(open) => {
@@ -292,6 +269,7 @@ export default function PresentationsField({
         }}
         title="Remove presentation"
         dialogClassName={confirmDeleteDialogClassName}
+        minimalHeader
       >
         <ConfirmDelete
           deferred

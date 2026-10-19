@@ -78,7 +78,7 @@ export default function ImageUpload({ onChange, currentImagePath = "/face.jpg", 
 						<svg viewBox="0 0 24 24" fill="none" aria-hidden="true" className="h-[1.375rem] w-[1.375rem]">
 							<path d="M12 5V19M5 12H19" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
 						</svg>
-						<span className="text-sm">Upload photo</span>
+						<span className="ui-small">Upload photo</span>
 					</span>
 				)}
 			</div>

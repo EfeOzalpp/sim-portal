@@ -9,14 +9,10 @@ import { BasicUser } from "@/actions/schemas";
 // Components
 import { Input } from "@/components/input";
 import { Select } from "@/components/select";
-import { FieldError, fieldLabelRowClassName } from "@/components/field-error";
+import { FormField, FormStack } from "@/components/form";
 
 // Composition
 import PresentationsField from "@/app/thursdays/composition/forms/PresentationsField";
-import {
-  fieldLabelClassName,
-  fieldStackClassName,
-} from "@/app/thursdays/composition/forms/thursdayFormClasses";
 
 // Helpers
 import { Controller, useFormState } from "react-hook-form";
@@ -70,9 +66,8 @@ export default function ProductionForm({
   const { isSubmitted } = useFormState({ control });
 
   return (
-    <div className="flex w-full flex-col gap-6">
-      <div className="grid grid-cols-1 gap-4 min-[601px]:grid-cols-2">
-        <div className={fieldStackClassName}>
+    <FormStack className="w-full">
+      <div className="grid grid-cols-1 gap-x-4 gap-y-8 min-[601px]:grid-cols-2">
           <Controller
             control={control}
             name={`productions.${productionIndex}.name`}
@@ -80,24 +75,18 @@ export default function ProductionForm({
             render={({ field, fieldState }) => {
               const showError = Boolean(fieldState.error) && (fieldState.isTouched || isSubmitted);
               return (
-                <>
-                  <div className={fieldLabelRowClassName}>
-                    <span className={fieldLabelClassName}>Name *</span>
-                    {showError && <FieldError>{fieldState.error!.message}</FieldError>}
-                  </div>
+                <FormField label="Name" required htmlFor={field.name} error={showError ? fieldState.error?.message : undefined}>
                   <Input
+                    id={field.name}
                     variant="modal"
                     {...field}
                     placeholder="Enter production name"
                     status={showError ? "error" : ""}
                   />
-                </>
+                </FormField>
               );
             }}
           />
-        </div>
-
-        <div className={fieldStackClassName}>
           <Controller
             control={control}
             name={`productions.${productionIndex}.location`}
@@ -105,11 +94,7 @@ export default function ProductionForm({
             render={({ field, fieldState }) => {
               const showError = Boolean(fieldState.error) && (fieldState.isTouched || isSubmitted);
               return (
-                <>
-                  <div className={fieldLabelRowClassName}>
-                    <span className={fieldLabelClassName}>Location *</span>
-                    {showError && <FieldError>{fieldState.error!.message}</FieldError>}
-                  </div>
+                <FormField label="Location" required error={showError ? fieldState.error?.message : undefined}>
                   <Select
                     inModal
                     {...field}
@@ -117,11 +102,10 @@ export default function ProductionForm({
                     options={LOCATIONS}
                     status={showError ? "error" : ""}
                   />
-                </>
+                </FormField>
               );
             }}
           />
-        </div>
       </div>
 
       <div>
@@ -156,7 +140,8 @@ export default function ProductionForm({
                   semesters.length > 0 && (
                     <Select
                       inModal
-                      className="w-[5.5rem]! min-h-9! py-1.5!"
+                      variant="button"
+                      className="w-[6rem]!"
                       value={semesterFilterId ?? ALL_SEMESTERS_FILTER_VALUE}
                       onChange={(value) =>
                         setSemesterFilterId(value && value !== ALL_SEMESTERS_FILTER_VALUE ? value : null)
@@ -193,6 +178,6 @@ export default function ProductionForm({
         semesters={semesters}
         suggestedTags={suggestedTags}
       />
-    </div>
+    </FormStack>
   );
 }

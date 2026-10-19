@@ -13,7 +13,7 @@ import { Select } from "@/components/select";
 import { Button } from "@/components/button";
 import ModalPopup from "@/components/modal";
 import { useModalCloseGuard } from "@/components/modal/CloseGuard";
-import { FieldError, fieldLabelRowClassName } from "@/components/field-error";
+import { Form, FormStack, FormField, FormActions } from "@/components/form";
 import ConfirmDelete from "@/components/confirm-delete";
 import { confirmDeleteDialogClassName } from "@/components/confirm-delete/styles";
 import { useToast } from "@/components/toast";
@@ -29,12 +29,7 @@ import { useForm, useWatch, Controller } from "react-hook-form";
 import { handleFormAction } from "@/helpers";
 import { formatSemesterCode, getCurrentSemesterCode, normalizeSemesterCode } from "@/components/domain/filters/semester-filter";
 import { ROLES } from "@/constants/roles";
-import clsx from "clsx";
 import styles from "@/app/users/composition/forms/UserForm.module.css";
-
-const fieldStackClassName = "flex min-w-0 flex-col gap-2";
-const fieldLabelClassName = "ui-label m-0 block min-h-5 pl-1";
-const userFieldLabelRowClassName = `${fieldLabelRowClassName} pl-1`;
 
 function getSemesterNameOptions(currentValues: string[] = []) {
   const options = Array.from({ length: 100 }, (_, year) => {
@@ -135,8 +130,8 @@ export default function UserForm({
   useModalCloseGuard(isDirty && !isSubmitting, isValid, () => handleSubmit(handleFormSubmit)());
 
   return (
-    <form onSubmit={handleSubmit(handleFormSubmit)}>
-      <div className={styles.form}>
+    <Form onSubmit={handleSubmit(handleFormSubmit)}>
+      <FormStack spacing="relaxed" className={styles.form}>
         {error && (
           <Alert
             description={error}
@@ -148,15 +143,16 @@ export default function UserForm({
         )}
 
         <div className={styles.fields}>
-          <div className={clsx(fieldStackClassName, styles.fullRow)}>
-            <div className="flex h-5 items-center gap-1.5 pl-1">
-              <span className="ui-label m-0 [text-box:trim-both_cap_alphabetic]">Photo</span>
+          <FormField className={styles.fullRow} label={
+            <span className="inline-flex items-center gap-1.5">
+              Photo
               <InfoPopover label="Photo upload info" inModal>
                 {isCurrentUserAdmin
                   ? "You can upload high resolution photos up to 8MB. They will be automatically downsized."
                   : "Contact SIM faculty to change your photo."}
               </InfoPopover>
-            </div>
+            </span>
+          }>
             <Controller
               control={control}
               name="image"
@@ -168,50 +164,41 @@ export default function UserForm({
                 />
               )}
             />
-          </div>
+          </FormField>
 
-          <div className={fieldStackClassName}>
-            <Controller
-              control={control}
-              name="name"
-              rules={{ required: "Name is required" }}
-              render={({ field, fieldState }) => {
-                const showError = Boolean(fieldState.error) && (fieldState.isTouched || isSubmitted);
-                return (
-                  <>
-                    <div className={userFieldLabelRowClassName}>
-                      <span className="ui-label m-0">Full Name *</span>
-                      {showError && <FieldError>{fieldState.error!.message}</FieldError>}
-                    </div>
-                    <Input
-                      variant="modal"
-                      {...field}
-                      placeholder="First and last"
-                      status={showError ? "error" : ""}
-                    />
-                  </>
-                );
-              }}
-            />
-          </div>
+          <Controller
+            control={control}
+            name="name"
+            rules={{ required: "Name is required" }}
+            render={({ field, fieldState }) => {
+              const showError = Boolean(fieldState.error) && (fieldState.isTouched || isSubmitted);
+              return (
+                <FormField label="Full Name" required htmlFor="user-name" error={showError ? fieldState.error?.message : undefined}>
+                  <Input
+                    variant="modal"
+                    {...field}
+                    id="user-name"
+                    placeholder="First and last"
+                    status={showError ? "error" : ""}
+                  />
+                </FormField>
+              );
+            }}
+          />
 
-          <div className={fieldStackClassName}>
-            <span className={fieldLabelClassName}>
-              Pronouns
-            </span>
+          <FormField label="Pronouns" htmlFor="user-pronouns">
             <Controller
               control={control}
               name="pronouns"
               render={({ field }) => (
-                <Input {...field} variant="modal" placeholder="Add pronouns" />
+                <Input {...field} id="user-pronouns" variant="modal" placeholder="Add pronouns" />
               )}
             />
-          </div>
+          </FormField>
 
           {isCurrentUserAdmin && (
             <>
-              <div className={fieldStackClassName}>
-                <span className={fieldLabelClassName}>Role</span>
+              <FormField label="Role">
                 <Controller
                   control={control}
                   name="role"
@@ -227,12 +214,9 @@ export default function UserForm({
                     />
                   )}
                 />
-              </div>
+              </FormField>
 
-              <div className={fieldStackClassName}>
-                <span className={fieldLabelClassName}>
-                  Semesters Enrolled
-                </span>
+              <FormField label="Semesters Enrolled">
                 <Controller
                   control={control}
                   name="semesterCodes"
@@ -253,36 +237,34 @@ export default function UserForm({
                     />
                   )}
                 />
-              </div>
+              </FormField>
             </>
           )}
 
-          <div className={fieldStackClassName}>
-            <Controller
-              control={control}
-              name="email"
-              rules={{
-                required: "Email is required",
-                pattern: {
-                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                  message: "Invalid email address",
-                },
-              }}
-              render={({ field, fieldState }) => {
-                const showError = Boolean(fieldState.error) && (fieldState.isTouched || isSubmitted);
-                return (
-                <>
-                  <div className={userFieldLabelRowClassName}>
-                    <span className="ui-label m-0">Email Address *</span>
-                    {showError && (
-                      <FieldError tone={fieldState.error!.type === "pattern" ? "warning" : "error"}>
-                        {fieldState.error!.message}
-                      </FieldError>
-                    )}
-                  </div>
+          <Controller
+            control={control}
+            name="email"
+            rules={{
+              required: "Email is required",
+              pattern: {
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                message: "Invalid email address",
+              },
+            }}
+            render={({ field, fieldState }) => {
+              const showError = Boolean(fieldState.error) && (fieldState.isTouched || isSubmitted);
+              return (
+                <FormField
+                  label="Email Address"
+                  required
+                  htmlFor="user-email"
+                  error={showError ? fieldState.error?.message : undefined}
+                  errorTone={fieldState.error?.type === "pattern" ? "warning" : "error"}
+                >
                   <Input
                     variant="modal"
                     {...field}
+                    id="user-email"
                     placeholder="name@massart.edu"
                     disabled={!isCurrentUserAdmin && user}
                     status={showError ? (fieldState.error!.type === "pattern" ? "warning" : "error") : ""}
@@ -292,16 +274,12 @@ export default function UserForm({
                       Contact SIM faculty to change your email.
                     </span>
                   )}
-                </>
-                );
-              }}
-            />
-          </div>
+                </FormField>
+              );
+            }}
+          />
 
-          <div className={fieldStackClassName}>
-            <span className={fieldLabelClassName}>
-              Contact & Links
-            </span>
+          <FormField label="Contact & Links">
             <Controller
               control={control}
               name="links"
@@ -315,12 +293,9 @@ export default function UserForm({
                 />
               )}
             />
-          </div>
+          </FormField>
 
-          <div className={clsx(fieldStackClassName, styles.fullRow)}>
-            <span className={fieldLabelClassName}>
-              About
-            </span>
+          <FormField label="About" htmlFor="user-about" className={styles.fullRow}>
             <Controller
               control={control}
               name="about"
@@ -328,22 +303,23 @@ export default function UserForm({
                 <TextArea
                   variant="modal"
                   {...field}
+                  id="user-about"
                   rows={3}
                   style={{ width: "100%" }}
                   placeholder="Short bio"
                 />
               )}
             />
-          </div>
+          </FormField>
         </div>
 
-        <div className="flex justify-start">
+        <FormActions separated={false}>
           <Button surface="modal" type="submit" disabled={isSubmitting} tone="cta" className="px-6!">
             {isSubmitting
               ? (hasNewImage ? "Loading image..." : "Saving...")
               : user ? "Save changes" : "Create user"}
           </Button>
-        </div>
+        </FormActions>
 
         {user && isCurrentUserAdmin && onRemove && (
           <div
@@ -370,6 +346,7 @@ export default function UserForm({
                 onOpenChange={setIsDeleteModalOpen}
                 title={`Remove ${user.name}?`}
                 dialogClassName={confirmDeleteDialogClassName}
+                minimalHeader
               >
                 <ConfirmDelete
                   itemName={user.name}
@@ -381,7 +358,7 @@ export default function UserForm({
             </div>
           </div>
         )}
-      </div>
-    </form>
+      </FormStack>
+    </Form>
   );
 }

@@ -4,10 +4,7 @@
 import { Input } from "@/components/input";
 import { DatePicker } from "@/components/datepicker";
 import { Select } from "@/components/select";
-import { FieldError, fieldLabelRowClassName } from "@/components/field-error";
-
-// Composition
-import { fieldLabelClassName, fieldStackClassName } from "@/app/thursdays/composition/forms/thursdayFormClasses";
+import { FormField, FormStack } from "@/components/form";
 
 // Helpers
 import { Controller, useFormState, useWatch } from "react-hook-form";
@@ -37,9 +34,8 @@ export default function ThursdaySection({
   const { isSubmitted } = useFormState({ control });
 
   return (
-    <div className="flex flex-1 flex-col gap-6">
-      <div className={semesters ? "grid grid-cols-1 gap-4 min-[601px]:grid-cols-2" : undefined}>
-        <div className={fieldStackClassName}>
+    <FormStack className="flex-1">
+      <div className={semesters ? "grid grid-cols-1 gap-x-4 gap-y-8 min-[601px]:grid-cols-2" : undefined}>
           <Controller
             control={control}
             name="name"
@@ -47,25 +43,20 @@ export default function ThursdaySection({
             render={({ field, fieldState }) => {
               const showError = Boolean(fieldState.error) && (fieldState.isTouched || isSubmitted);
               return (
-                <>
-                  <div className={fieldLabelRowClassName}>
-                    <span className={fieldLabelClassName}>Day Name *</span>
-                    {showError && <FieldError>{fieldState.error!.message}</FieldError>}
-                  </div>
+                <FormField label="Day Name" required htmlFor={field.name} error={showError ? fieldState.error?.message : undefined}>
                   <Input
+                    id={field.name}
                     variant="modal"
                     {...field}
                     placeholder="Enter day name"
                     status={showError ? "error" : ""}
                   />
-                </>
+                </FormField>
               );
             }}
           />
-        </div>
         {semesters && (
-          <div className={fieldStackClassName}>
-            <span className={fieldLabelClassName}>Semester</span>
+          <FormField label="Semester">
             <Controller
               control={control}
               name="semesterId"
@@ -77,11 +68,10 @@ export default function ThursdaySection({
                 />
               )}
             />
-          </div>
+          </FormField>
         )}
       </div>
 
-      <div className={fieldStackClassName}>
         <Controller
           control={control}
           name="date"
@@ -89,13 +79,10 @@ export default function ThursdaySection({
           render={({ field, fieldState }) => {
             const showError = Boolean(fieldState.error) && (fieldState.isTouched || isSubmitted);
             return (
-              <>
-                <div className={fieldLabelRowClassName}>
-                  <span className={fieldLabelClassName}>Date *</span>
-                  {showError && <FieldError>{fieldState.error!.message}</FieldError>}
-                </div>
+              <FormField label="Date" required htmlFor={field.name} error={showError ? fieldState.error?.message : undefined}>
                 <DatePicker
                   {...field}
+                  id={field.name}
                   key={!field.value && dateTargetYear ? dateTargetYear : "fixed"}
                   value={field.value ? dayjs(field.value) : null}
                   defaultPickerValue={
@@ -109,11 +96,10 @@ export default function ThursdaySection({
                   format="MMM D, YYYY"
                   status={showError ? "error" : ""}
                 />
-              </>
+              </FormField>
             );
           }}
         />
-      </div>
-    </div>
+    </FormStack>
   );
 }
