@@ -2,7 +2,13 @@
 
 import { useState, type ReactNode } from "react";
 import clsx from "clsx";
-import { collapseHeaderRowClassName, collapseTriggerClassName } from "@/components/collapse/styles";
+import {
+	collapseHeaderRowClassName, collapseTriggerClassName, modalCollapseItemVariants,
+	modalCollapseHeaderClassName, modalCollapseTriggerClassName, modalCollapseLabelClassName,
+	modalCollapseTitleClassName, modalCollapseIconClassName, modalCollapseExtraClassName,
+	modalCollapseContentClassName,
+} from "@/components/collapse/styles";
+import { MaskIcon } from "@/theme/MaskIcon";
 
 export interface CollapseItem {
 	value: string;
@@ -30,6 +36,8 @@ export interface CollapseItem {
 
 interface CollapseProps {
 	items: CollapseItem[];
+	variant?: "default" | "modal";
+	depth?: 2 | 3;
 	/** Item `value`s open by default. Every item can be open independently —
 	 * this always behaves like antd's Collapse did without `accordion` mode. */
 	defaultValue?: string[];
@@ -39,7 +47,8 @@ interface CollapseProps {
 	className?: string;
 }
 
-export function Collapse({ items, defaultValue, value, onValueChange, className }: CollapseProps) {
+export function Collapse({ items, variant = "default", depth = 2, defaultValue, value, onValueChange, className }: CollapseProps) {
+	const isModal = variant === "modal";
 	const [internalOpenValues, setInternalOpenValues] = useState<Set<string>>(() => new Set(defaultValue));
 	const isControlled = value !== undefined;
 	const openValues = isControlled ? new Set(value) : internalOpenValues;
@@ -60,7 +69,7 @@ export function Collapse({ items, defaultValue, value, onValueChange, className 
 	}
 
 	return (
-		<div className={className}>
+		<div className={clsx(isModal && "space-y-2", className)} data-modal-surface-depth={isModal ? depth : undefined}>
 			{items.map((item) => {
 				const isOpen = openValues.has(item.value);
 				const triggerId = `collapse-trigger-${item.value}`;
@@ -69,29 +78,34 @@ export function Collapse({ items, defaultValue, value, onValueChange, className 
 				return (
 					<div
 						key={item.value}
-						className={item.itemClassName}
+						className={clsx(isModal && modalCollapseItemVariants({ depth }), item.itemClassName)}
 						data-state={isOpen ? "open" : "closed"}
 					>
-						<div className={clsx(collapseHeaderRowClassName, item.headerClassName)}>
+						<div className={clsx(collapseHeaderRowClassName, isModal && modalCollapseHeaderClassName, item.headerClassName)}>
 							<button
 								type="button"
 								id={triggerId}
-								className={clsx(collapseTriggerClassName, item.triggerClassName)}
+								className={clsx(collapseTriggerClassName, isModal && modalCollapseTriggerClassName, item.triggerClassName)}
 								aria-expanded={isOpen}
 								aria-controls={contentId}
 								data-state={isOpen ? "open" : "closed"}
 								onClick={() => toggle(item.value)}
 							>
-								{item.trigger}
+								{isModal ? (
+									<span className={modalCollapseLabelClassName}>
+										<MaskIcon icon="arrow/down.svg" className={modalCollapseIconClassName} />
+										<span className={modalCollapseTitleClassName}>{item.trigger}</span>
+									</span>
+								) : item.trigger}
 							</button>
-							{item.extra}
+							{isModal && item.extra ? <div className={modalCollapseExtraClassName}>{item.extra}</div> : item.extra}
 						</div>
 						{isOpen && (
 							<div
 								id={contentId}
 								role="region"
 								aria-labelledby={triggerId}
-								className={item.contentClassName}
+								className={clsx(isModal && modalCollapseContentClassName, item.contentClassName)}
 							>
 								{item.content}
 							</div>

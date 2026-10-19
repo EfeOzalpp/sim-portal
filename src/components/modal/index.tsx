@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode, useCallback, useEffect, useId, useState } from "react";
+import { ReactNode, createContext, useContext, useCallback, useEffect, useId, useState } from "react";
 import clsx from "clsx";
 import { Button } from "@/components/button";
 import { createPortal } from "react-dom";
@@ -19,6 +19,8 @@ import {
 	modalHeaderMinimalClassName,
 	modalTitleClassName,
 } from "@/components/modal/styles";
+
+const ModalNestingContext = createContext(false);
 
 interface ModalPopupProps {
 	triggerLabel?: ReactNode;
@@ -43,10 +45,12 @@ export default function ModalPopup({
 	defaultOpen = false,
 	onOpenChange,
 }: ModalPopupProps) {
+	const isNested = useContext(ModalNestingContext);
 	const [internalOpen, setInternalOpen] = useState(defaultOpen);
 	const [isMounted, setIsMounted] = useState(false);
 	const [guardState, setGuardState] = useState<ModalCloseGuardState | null>(null);
 	const [showCloseGuard, setShowCloseGuard] = useState(false);
+	const [hasScrolled, setHasScrolled] = useState(false);
 	const titleId = useId();
 	const isControlled = open !== undefined;
 	const isOpen = isControlled ? open : internalOpen;
@@ -80,6 +84,7 @@ export default function ModalPopup({
 	useEffect(() => {
 		if (!isOpen) {
 			setShowCloseGuard(false);
+			setHasScrolled(false);
 		}
 	}, [isOpen]);
 
@@ -132,12 +137,13 @@ export default function ModalPopup({
 		>
 			<section
 				className={clsx(modalDialogClassName, dialogClassName ?? modalDialogDefaultWidthClassName)}
+				data-nested={isNested || undefined}
 				role="dialog"
 				aria-modal="true"
 				aria-labelledby={titleId}
 			>
-				<div className={minimalHeader ? modalHeaderMinimalClassName : modalHeaderClassName}>
-					<h3 id={titleId} className={modalTitleClassName}>
+				<div className={minimalHeader ? modalHeaderMinimalClassName : modalHeaderClassName} data-scrolled={hasScrolled}>
+					<h3 id={titleId} className={minimalHeader ? "sr-only" : modalTitleClassName}>
 						{title}
 					</h3>
 					<button
@@ -156,7 +162,14 @@ export default function ModalPopup({
 						/>
 					</button>
 				</div>
-				<div className={modalBodyClassName}>
+				<div
+					className={modalBodyClassName}
+					onScroll={(event) => {
+						if (event.target === event.currentTarget) {
+							setHasScrolled(event.currentTarget.scrollTop > 0);
+						}
+					}}
+				>
 					<ModalCloseGuardProvider value={setGuardState}>
 						{children}
 					</ModalCloseGuardProvider>
@@ -209,7 +222,10 @@ export default function ModalPopup({
 					{triggerLabel}
 				</Button>
 			)}
-			{isOpen && isMounted ? createPortal(modal, document.body) : null}
+			{isOpen && isMounted ? createPortal(
+				<ModalNestingContext.Provider value={true}>{modal}</ModalNestingContext.Provider>,
+				document.body,
+			) : null}
 		</>
 	);
 }

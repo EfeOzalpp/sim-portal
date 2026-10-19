@@ -82,20 +82,18 @@ export default function ConfirmDelete({
 	}
 
 	return (
-		<form className="flex flex-col gap-4 [&_p]:m-0" onSubmit={handleSubmit}>
-			<p>
-				<strong>
-					Are you sure you want to {deferred ? "remove" : "delete"} {itemName || `this ${itemType}`}?
-				</strong>
+		<form className="flex flex-col gap-4 pt-8 [&_p]:m-0" onSubmit={handleSubmit}>
+			<p className="confirmation-title">
+				Are you sure you want to {deferred ? "remove" : "delete"} {itemName || `this ${itemType}`}?
 			</p>
 			{warningText && <p>{warningText}</p>}
-			<p className="ui-note">{deferred ? "This removal takes effect when you save changes." : "This action cannot be undone."}</p>
+			<p className="is-body">{deferred ? "This removal takes effect when you save changes." : "This action cannot be undone."}</p>
 			{error && <p className="text-[var(--tone-danger-text)]">{error}</p>}
 			<div className="flex justify-start">
 				<Button
 					surface="modal"
 					type="submit"
-					tone={deferred ? "default" : "danger"}
+					tone="danger"
 					disabled={isSubmitting}
 					className="px-6!"
 				>

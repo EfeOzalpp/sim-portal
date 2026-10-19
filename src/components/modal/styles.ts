@@ -1,12 +1,14 @@
 // z-[300]: above ActionMode (<= 270) and the nav rail (z-[200]) - an open modal always wins. A Select inside needs selectContentInModalClassName's even-higher tier.
+// Only the topmost modal supplies the scrim, so nested dialogs don't compound it.
 export const modalBackdropClassName =
-	"fixed inset-0 z-[300] grid box-border place-items-center overflow-auto bg-[var(--scrim)] p-6 overscroll-contain max-[768px]:items-end max-[768px]:p-0";
+	"fixed inset-0 z-[300] grid box-border place-items-center overflow-auto bg-[var(--scrim)] [&:has(~_[data-modal-popup])]:bg-transparent p-6 overscroll-contain max-[768px]:items-end max-[768px]:p-0";
 
 // The dialog box, centered by modalBackdropClassName's grid. bg-[var(--modal-surface)], not --app-surface - modals get their own neutral gray.
 export const modalDialogClassName = [
 	"modal-surface relative box-border flex max-h-[calc(100dvh-3rem)] flex-col overflow-hidden rounded-[0.375rem]",
-	"border border-solid border-[var(--modal-border)] bg-[var(--modal-surface)] text-[var(--app-text)] shadow-[var(--modal-shadow,none)]",
-	"max-[768px]:max-h-dvh max-[768px]:w-full max-[768px]:animate-[modal-slide-up_300ms_cubic-bezier(0.32,0.72,0,1)] max-[768px]:rounded-none max-[768px]:border-x-0 max-[768px]:border-b-0",
+	"border-0 bg-[var(--modal-surface)] text-[var(--app-text)] shadow-[var(--modal-shadow,none)]",
+	"max-[768px]:max-h-dvh max-[768px]:w-full max-[768px]:animate-[modal-slide-up_300ms_cubic-bezier(0.32,0.72,0,1)] max-[768px]:rounded-none",
+	"max-[768px]:data-[nested=true]:animate-none",
 ].join(" ");
 
 // Default dialog width when a call site doesn't supply its own dialogClassName width.
@@ -15,7 +17,7 @@ export const modalDialogDefaultWidthClassName = "w-[min(48rem,100%)]";
 // The title bar - a plain row now, not a button; only modalCloseButtonClassName actually closes the modal.
 export const modalHeaderClassName = [
 	"m-0 flex w-full items-center justify-between gap-4 rounded-t-[0.375rem]",
-	"relative z-[1] border-b border-b-[var(--modal-border)] bg-transparent py-5 pr-6 pl-8 max-[768px]:pr-4 max-[768px]:pl-5",
+	"relative z-[1] border-b border-b-transparent data-[scrolled=true]:border-b-[var(--modal-border)] bg-transparent py-5 pr-6 pl-8 max-[768px]:pr-4 max-[768px]:pl-5",
 	"text-left text-[var(--app-text)] max-[768px]:rounded-none",
 ].join(" ");
 
@@ -38,7 +40,7 @@ export const modalCloseIconClassName =
 // dialogClassName usages with an explicit h-*) instead of leaving dead space
 // below shorter content - a no-op for the common auto-height dialogs, since
 // flex-basis:0 still respects a flex item's own min-content floor.
-export const modalBodyClassName = "input-theme-surface min-h-0 flex-1 overflow-auto px-8 pt-4 pb-8 max-[768px]:px-5";
+export const modalBodyClassName = "input-theme-surface min-h-0 flex-1 overflow-auto px-8 pt-4 pb-8 max-[768px]:px-5 max-[768px]:pb-[calc(2rem+env(safe-area-inset-bottom))]";
 
 // Dims the dialog (not just the backdrop behind it) once a backdrop click is caught with unsaved changes pending -
 // a gradient rather than a flat scrim, so it reads as the action row's own footer fading up into the content
