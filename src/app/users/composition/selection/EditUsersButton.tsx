@@ -18,6 +18,7 @@ export default function EditUsersButton() {
 			aria-label="Edit users"
 			title="Edit users"
 			aria-pressed={isActive}
+			data-action-mode-button={ACTION_MODES.editUsers}
 			onClick={() => setActiveMode(isActive ? null : ACTION_MODES.editUsers)}
 		/>
 	);

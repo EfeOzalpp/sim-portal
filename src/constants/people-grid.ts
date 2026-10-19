@@ -1,8 +1,6 @@
-import { DEFAULT_CARDS_PER_ROW, MAX_CARDS_PER_ROW, MIN_CARDS_PER_ROW } from "@/constants/filters";
-
 export const PEOPLE_GRID_PREFERENCES = {
-	desktop: { key: "sim-people-cards-per-row-desktop", property: "--people-grid-columns-desktop", min: MIN_CARDS_PER_ROW, max: MAX_CARDS_PER_ROW, defaultValue: DEFAULT_CARDS_PER_ROW },
-	mobile: { key: "sim-people-cards-per-row-mobile", property: "--people-grid-columns-mobile", min: 1, max: 3, defaultValue: 2 },
+	desktop: { key: "sim-people-cards-per-row-desktop", property: "--people-grid-columns-desktop", min: 3, max: 12, defaultValue: 5 },
+	mobile: { key: "sim-people-cards-per-row-mobile", property: "--people-grid-columns-mobile", min: 1, max: 5, defaultValue: 3 },
 };
 
 export function peopleGridColumns(value: string | null, device: keyof typeof PEOPLE_GRID_PREFERENCES) {

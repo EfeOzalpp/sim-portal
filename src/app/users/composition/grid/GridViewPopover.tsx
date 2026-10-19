@@ -42,17 +42,16 @@ export default function GridViewPopover() {
 			trigger={
 				<Button
 					surface="page"
-					variant="tool"
-					icon="grid_view/grid_view.svg"
-					aria-label="Grid view"
-				/>
+					variant="action"
+					icon="grid-adjust/grid-adjust.svg"
+					iconPosition="end"
+					className="[--button-icon-size:1rem]"
+				>
+					{`${cardsPerRow} ${cardsPerRow === 1 ? "column" : "columns"}`}
+				</Button>
 			}
 		>
 			<div className="flex min-w-[12rem] flex-col gap-2 px-4 py-2">
-				<div className="flex items-center justify-between gap-2">
-					<span className="ui-label">Cards per row</span>
-					<span className="text-[var(--label-text)]">{cardsPerRow}</span>
-				</div>
 				<input
 					type="range"
 					min={minCardsPerRow}
@@ -61,7 +60,7 @@ export default function GridViewPopover() {
 					value={sliderValue}
 					onChange={(event) => handleSliderChange(event.target.value)}
 					className={rangeInputClassName}
-					aria-label="Cards per row"
+					aria-label="Number of columns"
 				/>
 			</div>
 		</Popover>

@@ -27,7 +27,7 @@ export default function UserCard({ user, onClick, onEdit, onDelete }: UserCardPr
       data-action-mode-target="user-card"
     >
       <div className="relative flex h-full w-full flex-col">
-        <div className="relative aspect-square w-full flex-none overflow-hidden rounded-md bg-[var(--elevated-surface)] transition-[filter] group-hover:brightness-110 group-focus-visible:brightness-110 print:h-auto print:rounded-none">
+        <div className="relative aspect-square max-[768px]:aspect-[5/6] w-full flex-none overflow-hidden rounded-none bg-[var(--elevated-surface)] transition-[filter] group-hover:brightness-110 group-focus-visible:brightness-110 print:h-auto print:rounded-none">
           <FaceImage
             imagePath={user.image}
             alt={`${user.name}'s face`}
@@ -36,9 +36,9 @@ export default function UserCard({ user, onClick, onEdit, onDelete }: UserCardPr
             loading="eager"
           />
         </div>
-        <div className="flex h-[3.375rem] min-w-0 flex-none flex-col items-start justify-start gap-0 pt-1.5 pr-1 text-left print:h-auto print:min-h-[0.3in] print:px-[0.08in] print:py-[0.06in]">
+        <div className="flex h-[3.375rem] max-[768px]:h-[2.875rem] min-w-0 flex-none flex-col items-start justify-start gap-0 pt-1.5 pr-1 text-left print:h-auto print:min-h-[0.3in] print:px-[0.08in] print:py-[0.06in]">
           <p
-            className="is-body m-0 w-full truncate font-medium text-[var(--app-text)] print:text-[6.5pt] print:leading-[1.1] print:text-[#111]!"
+            className="is-body ui-person-name m-0 w-full truncate text-[var(--app-text)] print:text-[6.5pt] print:leading-[1.1] print:text-[#111]!"
             title={user.name}
           >
             {user.name}

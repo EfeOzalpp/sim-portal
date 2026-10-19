@@ -27,7 +27,7 @@ interface UserCardGridProps {
 const BATCH_SIZE = 30;
 
 const gridClassName = [
-	"grid justify-center gap-x-5 gap-y-7",
+	"grid justify-center gap-x-5 gap-y-7 max-[768px]:gap-y-4",
 	"[&>*]:min-w-0 [&>*]:w-full",
 	"print:grid-cols-[repeat(6,minmax(0,1fr))]! print:justify-stretch print:gap-[0.1in] print:bg-white print:text-black",
 	"print:[&>*]:break-inside-avoid print:[&>*]:border print:[&>*]:border-[#ccc]! print:[&>*]:bg-white! print:[&>*]:[page-break-inside:avoid]",

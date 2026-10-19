@@ -1,6 +1,5 @@
 "use client";
 
-import clsx from "clsx";
 import { Button } from "@/components/button";
 import { useActionMode } from "@/components/layout/ActionMode";
 import { ACTION_MODES } from "@/constants/action-modes";
@@ -16,10 +15,11 @@ export default function DeleteUsersButton() {
 			variant="tool"
 			tone="danger"
 			icon="delete/delete.svg"
-			className={clsx(isActive && "relative z-[260] bg-[var(--action-delete-bg-hover)]!")}
+			className={isActive ? "relative z-[260]" : undefined}
 			aria-label="Delete users"
 			title="Delete users"
 			aria-pressed={isActive}
+			data-action-mode-button={ACTION_MODES.deleteUsers}
 			onClick={() => setActiveMode(isActive ? null : ACTION_MODES.deleteUsers)}
 		/>
 	);

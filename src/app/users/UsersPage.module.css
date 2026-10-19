@@ -1,7 +1,7 @@
 @media (max-width: 768px) {
 	.scrollArea {
-		padding-top: 0.75rem;
-		padding-inline: 0.75rem;
+		padding-top: var(--page-content-padding-inline);
+		padding-inline: var(--page-content-padding-inline);
 	}
 }
 

@@ -33,7 +33,7 @@ import styles from "@/app/users/UsersPage.module.css";
 import { getSelectedSemesterId } from "@/components/domain/filters/semester-filter";
 import { USER_MODAL_PARAMS, type UserModalParam } from "@/constants/modal-params";
 import { ROLE_FILTER_KEY } from "@/constants/filters";
-import { isAdminRole } from "@/constants/roles";
+import { isAdminRole, ROLES } from "@/constants/roles";
 import { auth } from "@/authentication";
 
 // Loaded with a conditional `await import()` inside the page body, not a static top-level import - these define inline "use server" actions, so next/dynamic (Client Components only) isn't usable here.
@@ -116,6 +116,10 @@ export default async function UsersPage({ searchParams }: UsersProps) {
 	// popover can show every role's count at once) - the viewing count has to
 	// pick the right slice of it back out here instead.
 	const viewingCount = roleCounts ? (roleFilter ? roleCounts[roleFilter] : roleCounts.all) : undefined;
+	const viewingLabel = roleFilter === ROLES.student ? (viewingCount === 1 ? "student" : "students")
+		: roleFilter === ROLES.staff ? "staff"
+		: roleFilter === ROLES.admin ? (viewingCount === 1 ? "admin" : "admins")
+		: (viewingCount === 1 ? "person" : "names & faces");
 	const editUserId = getSingleParam(filters[USER_MODAL_PARAMS.edit]);
 	const profileUserId = getSingleParam(filters[USER_MODAL_PARAMS.profile]);
 	const deleteUserId = getSingleParam(filters[USER_MODAL_PARAMS.delete]);
@@ -151,7 +155,7 @@ export default async function UsersPage({ searchParams }: UsersProps) {
 						search={<FilterInput variant="page" query="user" placeholder="Search" />}
 						trailingActions={isAdmin ? (
 							<>
-								<Button surface="page" href={getUsersModalHref(filters, USER_MODAL_PARAMS.add, "1")} variant="action" tone="cta">
+								<Button surface="page" href={getUsersModalHref(filters, USER_MODAL_PARAMS.add, "1")} variant="action" tone="cta" aria-label="New user" title="New user">
 									<MaskIcon icon="add/add.svg" className={actionButtonIconClassName} />
 									New user
 								</Button>
@@ -159,14 +163,10 @@ export default async function UsersPage({ searchParams }: UsersProps) {
 								<DeleteUsersButton />
 							</>
 						) : undefined}
-						tools={
-							<>
-								<GridViewPopover />
-								<RoleFilterPopover counts={roleCounts} />
-							</>
-						}
+						tools={<RoleFilterPopover counts={roleCounts} />}
+						viewControls={<GridViewPopover />}
 						status={viewingCount !== undefined ? (
-							<span className="whitespace-nowrap text-sm font-semibold text-[var(--page-bar-label,var(--app-text))]">{viewingCount} people</span>
+							<span className="whitespace-nowrap">{viewingCount} {viewingLabel}</span>
 						) : undefined}
 						printLabel="Export PDF"
 						csvLabel="Export CSV"
@@ -175,7 +175,7 @@ export default async function UsersPage({ searchParams }: UsersProps) {
 					<ActionModePageContent>
 						<PageCard data-full-bleed-content className="flex h-full min-h-0 flex-col">
 							<PageBar />
-							<PageChromeScrollArea data-page-surface className={`${styles.scrollArea} min-h-0 flex-1 overflow-y-auto bg-[var(--page-bg)] p-6 print:overflow-visible print:bg-transparent print:px-0 print:pb-0`}>
+							<PageChromeScrollArea requireTopGesture data-page-surface className={`${styles.scrollArea} min-h-0 flex-1 overflow-y-auto bg-[var(--page-bg)] p-6 print:overflow-visible print:bg-transparent print:px-0 print:pb-0`}>
 								<Suspense fallback={<div style={{ opacity: 0.5, padding: "1rem", background: "transparent" }}>Loading users...</div>}>
 									<UsersList
 										filters={filters}
@@ -209,6 +209,7 @@ export default async function UsersPage({ searchParams }: UsersProps) {
 							paramName={USER_MODAL_PARAMS.delete}
 							title="Delete User"
 							dialogClassName={confirmDeleteDialogClassName}
+							minimalHeader
 						>
 							<UserDeleteConfirmContent
 								userId={deleteUserId!}

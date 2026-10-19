@@ -9,11 +9,6 @@ export function isAllSemestersValue(value?: string | null) {
 // URL param key for the /users role-filter popover (a multi-value ?role=...&role=... list, no "all" sentinel needed - an empty list already means unfiltered).
 export const ROLE_FILTER_KEY = "role";
 
-// Desktop bounds for the People grid's locally saved display preference.
-export const MIN_CARDS_PER_ROW = 3;
-export const MAX_CARDS_PER_ROW = 12;
-export const DEFAULT_CARDS_PER_ROW = 6;
-
 // URL param key for the /semester sort popover.
 export const SEMESTER_SORT_KEY = "semesterSort";
 export const SEMESTER_SORT_VALUES = ["recent", "oldest", "enrollmentHigh", "enrollmentLow"] as const;
