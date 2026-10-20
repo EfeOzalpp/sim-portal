@@ -81,7 +81,7 @@ export default function MobileNavBar({ isAdmin, user }: MobileNavBarProps) {
 							<PageChromeSlot id="mobile-page-collapsed-status-slot" className={styles.pageStatusSlot} />
 						</div>
 					</div>
-					<div className={styles.menuControls}>
+					<div className={styles.menuControls} data-chrome-region="tools">
 						<PageChromeSlot id="mobile-page-filter-slot" className={styles.pageFilterSlot} />
 						<PageChromeSlot id="mobile-page-search-slot" className={styles.searchSlot} />
 					</div>

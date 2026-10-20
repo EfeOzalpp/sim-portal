@@ -1,16 +1,13 @@
 "use client";
 
 import { useEffect } from "react";
+import { isColorTheme } from "@/constants/color-themes";
 
 const THEME_STORAGE_KEY = "sim-theme";
 const COLOR_THEME_STORAGE_KEY = "sim-color-theme";
 
 function isTheme(value: string | undefined | null): value is "light" | "dark" {
 	return value === "light" || value === "dark";
-}
-
-function isColorTheme(value: string | undefined | null): value is "default" | "purple-green" {
-	return value === "default" || value === "purple-green";
 }
 
 // Keeps both [data-theme] (light/dark) and the independent [data-color-theme]
@@ -29,7 +26,7 @@ export default function ThemeStorageSync() {
 			// Resolve nested CSS variables to an actual color for browser metadata.
 			colorProbe.style.background = "var(--app-bg)";
 			let color = modal ? getComputedStyle(modal).backgroundColor : getComputedStyle(colorProbe).backgroundColor;
-			// The alternate palette uses a gradient; browser chrome needs a solid color.
+			// Browser chrome needs a solid fallback if a theme uses a transparent background.
 			if (color === "rgba(0, 0, 0, 0)") {
 				colorProbe.style.background = "var(--app-theme)";
 				color = getComputedStyle(colorProbe).backgroundColor;

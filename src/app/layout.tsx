@@ -7,7 +7,9 @@ import "@/theme/fonts/figtree/figtree.css";
 import "@/theme/antd-reset.css";
 import "@/theme/app-theme/styling-theme.css";
 import "@/theme/mainframe-theme/default.css";
-import "@/theme/mainframe-theme/purple-green.css";
+import "@/theme/mainframe-theme/safety-orange.css";
+import "@/theme/mainframe-theme/fruit-smoothie.css";
+import "@/theme/mainframe-theme/rainbow.css";
 import "@/theme/app-theme/font-theme.css";
 import "@/theme/tailwind.css";
 
@@ -32,6 +34,7 @@ import styles from "@/app/layout.module.css";
 import { auth } from "@/authentication";
 import { isAdminRole } from "@/constants/roles";
 import { peopleGridInitScript } from "@/constants/people-grid";
+import { COLOR_THEMES } from "@/constants/color-themes";
 
 const appShellClassName =
 	"flex h-dvh min-h-0 flex-col overflow-hidden [background:var(--app-bg)] text-[var(--app-text)] print:block! print:h-auto! print:overflow-visible!";
@@ -96,7 +99,7 @@ const colorThemeInitScript = `
   try {
     const key = "sim-color-theme";
     const storedColorTheme = localStorage.getItem(key);
-    const isValidColorTheme = storedColorTheme === "default" || storedColorTheme === "purple-green";
+    const isValidColorTheme = ${JSON.stringify(COLOR_THEMES.map((theme) => theme.id))}.includes(storedColorTheme);
 
     if (isValidColorTheme) {
       document.documentElement.dataset.colorTheme = storedColorTheme;

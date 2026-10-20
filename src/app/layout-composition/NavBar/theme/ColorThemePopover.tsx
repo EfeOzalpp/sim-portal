@@ -5,18 +5,11 @@ import clsx from "clsx";
 import Popover from "@/components/popover";
 import Button from "@/components/button";
 import { selectItemVariants } from "@/components/select/styles";
-
-type ColorTheme = "default" | "purple-green";
-
-// Order here is the order shown in the popover - Default listed first, matching
-// it being the actual fallback (layout.tsx's <html> default + colorThemeInitScript).
-const colorThemeOptions: { id: ColorTheme; label: string }[] = [
-	{ id: "default", label: "Default" },
-	{ id: "purple-green", label: "Purple & Green" },
-];
+import { COLOR_THEMES, isColorTheme, type ColorTheme } from "@/constants/color-themes";
 
 function readColorTheme(): ColorTheme {
-	return document.documentElement.dataset.colorTheme === "purple-green" ? "purple-green" : "default";
+	const value = document.documentElement.dataset.colorTheme;
+	return isColorTheme(value) ? value : "default";
 }
 
 const optionButtonClassName = "w-full border-0 bg-transparent text-left hover:bg-[var(--contrast-surface-hovered-item-bg)]!";
@@ -78,7 +71,7 @@ export default function ColorThemePopover({ side = "top", align = "start" }: Col
 			<div className="flex min-w-[10rem] flex-col gap-0.5">
 				<span className="ui-label block px-4 pt-0.5 pb-1">Color</span>
 				<div className="flex flex-col gap-0.5" role="listbox">
-					{colorThemeOptions.map((option) => (
+					{COLOR_THEMES.map((option) => (
 						<button
 							key={option.id}
 							type="button"

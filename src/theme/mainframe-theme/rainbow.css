@@ -1,0 +1,180 @@
+/* Color theme: Rainbow - a Pride-inspired, inclusive chrome palette. */
+html[data-color-theme="rainbow"][data-theme="light"] {
+	/* Warm navigation, golden fields, violet tools; page actions stay system blue. */
+	--hue-page: 214;
+	--hue-chrome: 0;
+	--hue-fields: 50;
+	--hue-tools: 275;
+
+	/* Solid fallback for browser chrome, which cannot display a gradient. */
+	--app-theme: hsl(var(--hue-chrome) 78% 88%);
+
+	/* Master tokens */
+	--app-bg: linear-gradient(to right, hsl(var(--hue-chrome) 78% 88%) 0%, hsl(30 92% 86%) 20%, hsl(55 95% 85%) 40%, hsl(135 55% 85%) 60%, hsl(220 80% 88%) 80%, hsl(var(--hue-tools) 75% 88%) 100%);
+	--page-bg: hsl(var(--hue-page) 35% 98.5% / 0.98);
+	--page-bg-border: hsl(var(--hue-chrome) 30% 25% / 0.25);
+	--nav-active-bg: hsl(var(--hue-chrome) 65% 45% / 0.18);
+	--page-input-bg: hsl(var(--hue-fields) 78% 76%);
+	--page-bar-border: hsl(var(--hue-chrome) 30% 25% / 0.25);
+
+	/* secondary buttons when the page bar is minimized and floats over content */
+	--page-bar-floating-button-bg: #ffffff;
+	--page-bar-floating-button-bg-hover: hsl(var(--hue-page) 30% 96%);
+
+	/* page content area */
+	--page-surface-base: hsl(var(--hue-page) 35% 98.5%);
+
+	/* optional */
+	--page-bg-hover: hsl(var(--hue-page) 35% 95%);
+	--page-bar-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+	--content-shadow: none;
+
+	/* main scrollbar */
+	--main-scrollbar-thumb: hsl(var(--hue-tools) 30% 55%);
+	--main-scrollbar-thumb-hover: hsl(var(--hue-tools) 30% 45%);
+
+	/* page borders */
+	--table-row-border: hsl(var(--hue-page) 24% 87%);
+	--table-row-border-hover: hsl(var(--hue-page) 28% 72%);
+	--card-border: hsl(var(--hue-page) 16% 80%);
+	--card-border-hover: hsl(var(--hue-page) 20% 65%);
+
+	/* nav rail */
+	--nav-hover-bg: hsl(var(--hue-chrome) 50% 40% / 0.09);
+	--nav-active-text: hsl(var(--hue-chrome) 60% 22%);
+	--nav-hover-opened-bg: var(--app-theme);
+	--app-icon: hsl(var(--hue-chrome) 50% 28%);
+	--nav-label: var(--app-icon);
+
+	/* titles */
+	--app-title: hsl(var(--hue-chrome) 60% 30%);
+	--app-brand: var(--app-title);
+	--app-page-title: var(--app-brand);
+
+	/* avatar */
+	--hue-profile: var(--hue-tools);
+	--profile-indicator: hsl(var(--hue-profile) 45% 38%);
+	--profile-indicator-text: #ffffff;
+
+	/* text inside the page canvas */
+	--page-based-text: var(--app-text);
+	--page-based-text-subtle: var(--subtle-text);
+
+	/* icon-only controls outside the page bar */
+	--page-icon-bg-hover: hsl(var(--hue-chrome) 40% 50% / 0.14);
+	--page-icon-bg-active: hsl(var(--hue-page) 30% 86%);
+
+	/* card overlay buttons */
+	--button-overlay-bg: hsl(var(--hue-page) 30% 100%);
+	--button-overlay-bg-hover: hsl(var(--hue-page) 30% 86%);
+	--button-overlay-shadow: 0 1px 3px rgba(15, 23, 42, 0.2), 0 0 0 1px rgba(15, 23, 42, 0.06);
+
+	/* page search + title select */
+	--page-input-bg-hover: hsl(var(--hue-fields) 78% 71%);
+	--page-input-text: hsl(var(--hue-fields) 45% 18%);
+	--page-input-search: hsl(var(--hue-fields) 45% 28%);
+	--page-input-search-hover: hsl(var(--hue-fields) 50% 15%);
+	--page-input-search-hover-bg: hsl(var(--hue-fields) 78% 66%);
+	--title-select-bg: var(--page-input-bg);
+	--title-select-bg-hover: var(--page-input-bg-hover);
+	--title-select-text-open: #ffffff;
+	--page-select-text: var(--page-input-text);
+	--page-select-text-hover: hsl(var(--hue-fields) 50% 12%);
+}
+
+html[data-color-theme="rainbow"][data-theme="dark"] {
+	--hue-page: 220;
+	--hue-chrome: 0;
+	--hue-fields: 50;
+	--hue-tools: 275;
+
+	--app-theme: hsl(var(--hue-chrome) 45% 12%);
+
+	/* Master tokens */
+	--app-bg: linear-gradient(to right, hsl(var(--hue-chrome) 45% 12%) 0%, hsl(30 45% 12%) 20%, hsl(55 40% 12%) 40%, hsl(135 40% 11%) 60%, hsl(220 45% 13%) 80%, hsl(var(--hue-tools) 45% 13%) 100%);
+	--page-bg: hsl(var(--hue-page) 12% 9% / 0.96);
+	--page-bg-border: hsl(var(--hue-chrome) 30% 85% / 0.18);
+	--nav-active-bg: hsl(var(--hue-chrome) 65% 65% / 0.22);
+	--page-input-bg: hsl(var(--hue-fields) 40% 19%);
+	--page-bar-border: hsl(var(--hue-chrome) 35% 78% / 0.35);
+
+	/* secondary buttons when the page bar is minimized and floats over content */
+	--page-bar-floating-button-bg: hsl(var(--hue-page) 20% 13%);
+	--page-bar-floating-button-bg-hover: hsl(var(--hue-page) 24% 19%);
+
+	/* optional */
+	--page-bg-hover: hsl(var(--hue-page) 16% 15%);
+	--page-bar-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+	--content-shadow: none;
+
+	/* main scrollbar */
+	--main-scrollbar-thumb: hsl(var(--hue-tools) 30% 55%);
+	--main-scrollbar-thumb-hover: hsl(var(--hue-tools) 30% 65%);
+
+	/* page borders */
+	--table-row-border: hsl(var(--hue-page) 12% 24%);
+	--table-row-border-hover: hsl(var(--hue-page) 16% 34%);
+	--card-border: hsl(var(--hue-page) 16% 29%);
+	--card-border-hover: hsl(var(--hue-page) 18% 40%);
+
+	/* nav rail */
+	--nav-hover-bg: hsl(var(--hue-chrome) 45% 60% / 0.12);
+	--nav-active-text: hsl(var(--hue-chrome) 70% 90%);
+	--nav-hover-opened-bg: var(--app-theme);
+	--app-icon: hsl(var(--hue-chrome) 50% 86%);
+	--nav-label: hsl(var(--hue-chrome) 30% 80%);
+
+	/* titles */
+	--app-title: hsl(var(--hue-chrome) 70% 82%);
+	--app-brand: var(--app-title);
+	--app-page-title: var(--app-brand);
+
+	/* avatar */
+	--hue-profile: var(--hue-tools);
+	--profile-indicator: hsl(var(--hue-profile) 55% 76%);
+	--profile-indicator-text: hsl(var(--hue-profile) 40% 14%);
+
+	/* text inside the page canvas */
+	--page-based-text: hsl(0 0% 92%);
+	--page-based-text-subtle: hsl(0 0% 79%);
+
+	/* icon-only controls outside the page bar */
+	--page-icon-bg-hover: hsl(var(--hue-chrome) 20% 28% / 0.6);
+	--page-icon-bg-active: hsl(var(--hue-page) 20% 26%);
+
+	/* card overlay buttons */
+	--button-overlay-bg: hsl(from var(--page-bg) h s 20% / 1);
+	--button-overlay-bg-hover: hsl(from var(--page-bg) h s 26% / 0.95);
+	--button-overlay-shadow: none;
+
+	/* page search + title select */
+	--page-input-bg-hover: hsl(var(--hue-fields) 42% 24%);
+	--page-input-text: hsl(var(--hue-fields) 60% 88%);
+	--page-input-search: hsl(var(--hue-fields) 45% 70%);
+	--page-input-search-hover: hsl(var(--hue-fields) 70% 93%);
+	--page-input-search-hover-bg: hsl(var(--hue-fields) 45% 29%);
+	--title-select-bg: var(--page-input-bg);
+	--title-select-bg-hover: var(--page-input-bg-hover);
+	--title-select-text-open: hsl(var(--hue-fields) 35% 10%);
+	--page-select-text: var(--page-input-text);
+	--page-select-text-hover: hsl(var(--hue-fields) 70% 93%);
+}
+
+/* Reuse the existing tools region; no theme-specific component styling. */
+html[data-color-theme="rainbow"][data-theme="light"] [data-chrome-region="tools"] {
+	--page-icon-text: hsl(var(--hue-tools) 40% 30%);
+	--page-icon-text-active: hsl(var(--hue-tools) 45% 22%);
+	--page-icon-bg-hover: hsl(var(--hue-tools) 50% 50% / 0.14);
+	--page-icon-bg-active: hsl(var(--hue-tools) 50% 45% / 0.22);
+	--page-button-text-hover: hsl(var(--hue-tools) 45% 20%);
+	--page-button-bg-hover: var(--page-icon-bg-hover);
+}
+
+html[data-color-theme="rainbow"][data-theme="dark"] [data-chrome-region="tools"] {
+	--page-icon-text: hsl(var(--hue-tools) 50% 84%);
+	--page-icon-text-active: hsl(var(--hue-tools) 65% 94%);
+	--page-icon-bg-hover: hsl(var(--hue-tools) 40% 65% / 0.16);
+	--page-icon-bg-active: hsl(var(--hue-tools) 40% 65% / 0.24);
+	--page-button-text-hover: hsl(var(--hue-tools) 65% 94%);
+	--page-button-bg-hover: var(--page-icon-bg-hover);
+}

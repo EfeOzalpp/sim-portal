@@ -56,7 +56,7 @@ export default function AppTopBar({ user }: AppTopBarProps) {
 			</div>
 			<PageChromeSlot id="page-chrome-scope-slot" className={styles.scopeSlot} />
 			<PageChromeSlot id="page-chrome-controls-slot" className={styles.controlsSlot} />
-			<div className={styles.tools}>
+			<div className={styles.tools} data-chrome-region="tools">
 				<DesktopOnly>
 					<ThemeSwitch iconOnly />
 					<ColorThemePopover side="bottom" align="end" />
