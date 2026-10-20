@@ -10,8 +10,13 @@ html[data-color-theme="default"][data-theme="light"] {
 
 	--app-theme: hsl(var(--hue-chrome) 60% 94%);
 
-	/* chrome - top bar + rail */
+	/* Master tokens */
 	--app-bg: hsl(var(--hue-chrome) 70% 97%);
+	--page-bg: hsl(var(--hue-page) 78% 98.5% / 0.4);
+	--page-bg-border: hsl(var(--hue-chrome) 80% 20% / 0.3);
+	--nav-active-bg: hsl(var(--hue-chrome) 60% 50% / 0.18);
+	--page-input-bg: hsl(var(--hue-chrome) 45% 45% / 0.14);
+	--page-bar-border: hsl(var(--hue-chrome) 80% 20% / 0.2);
 
 			/* secondary buttons when the page bar is minimized and floats over content */
 			--page-bar-floating-button-bg: #ffffff;
@@ -21,13 +26,10 @@ html[data-color-theme="default"][data-theme="light"] {
 		/* specific to lightmode only because it derives modal hue from page slightly */
 		--page-surface-base: hsl(var(--hue-page) 78% 98.5%);
 
-	--page-bg: hsl(var(--hue-page) 78% 98.5% / 0.4);
-	--page-bg-border: hsl(var(--hue-chrome) 80% 20% / 0.3);
 
 	/* optional */
 	--page-bg-hover: hsl(var(--hue-page) 78% 94.6%);
 	--page-bar-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
-	--page-bar-border: hsl(var(--hue-chrome) 80% 20% / 0.2);
 	--content-shadow: none;
 
 	/* page borders */
@@ -37,7 +39,6 @@ html[data-color-theme="default"][data-theme="light"] {
 	--card-border-hover: hsl(var(--hue-page) 16% 69%);
 
 	/* nav rail */
-	--nav-active-bg: hsl(var(--hue-chrome) 60% 50% / 0.18);
 	--nav-hover-bg: hsl(var(--hue-chrome) 40% 40% / 0.08);
 	--nav-active-text: hsl(var(--hue-chrome) 50% 22%);
 	--nav-hover-opened-bg: var(--app-bg);
@@ -68,7 +69,6 @@ html[data-color-theme="default"][data-theme="light"] {
 	--button-overlay-shadow: 0 1px 3px rgba(15, 23, 42, 0.2), 0 0 0 1px rgba(15, 23, 42, 0.06);
 
 	/* page search + title select */
-	--page-input-bg: hsl(var(--hue-chrome) 45% 45% / 0.14);
 	--page-input-bg-hover: hsl(var(--hue-chrome) 45% 45% / 0.2);
 	--page-input-text: var(--subtle-text);
 	--page-input-search: #64748b;
@@ -92,21 +92,21 @@ html[data-color-theme="default"][data-theme="dark"] {
 
 	--app-theme: hsl(var(--hue-chrome) 32% 20%);
 
-	/* chrome - top bar + rail */
+	/* Master tokens */
 	--app-bg: hsl(var(--hue-chrome) 60% 7%);
+	--page-bg: hsl(var(--hue-page) 12% 8% / 0.65);
+	--page-bg-border: hsl(var(--hue-chrome) 80% 90% / 0.15);
+	--nav-active-bg: hsl(var(--hue-chrome) 26% 85% / 0.5);
+	--page-input-bg: hsl(var(--hue-chrome) 20% 85% / 0.12);
+	--page-bar-border: hsl(var(--hue-chrome) 80% 95% / 0.45);
 
 			/* secondary buttons when the page bar is minimized and floats over content */
 			--page-bar-floating-button-bg: hsl(var(--hue-page) 25% 12%);
 			--page-bar-floating-button-bg-hover: hsl(var(--hue-page) 28% 18%);
 
-	/* page content area */
-	--page-bg: hsl(var(--hue-page) 12% 8% / 0.65);
-	--page-bg-border: hsl(var(--hue-chrome) 80% 90% / 0.15);
-
 	/* optional */
 	--page-bg-hover: hsl(var(--hue-page) 16% 15%);
 	--page-bar-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
-	--page-bar-border: hsl(var(--hue-chrome) 80% 95% / 0.45);
 
 	--content-shadow: 0 0 24px rgba(255, 255, 255, 0);
 	/* page borders */
@@ -116,7 +116,6 @@ html[data-color-theme="default"][data-theme="dark"] {
 	--card-border-hover: hsl(var(--hue-page) 16% 38%);
 
 	/* nav rail */
-	--nav-active-bg: hsl(var(--hue-chrome) 26% 85% / 0.5);
 	--nav-hover-bg: hsl(var(--hue-chrome) 13% 50% / 0.22);
 	--nav-active-text: white;
 
@@ -148,7 +147,6 @@ html[data-color-theme="default"][data-theme="dark"] {
 	--button-overlay-shadow: none;
 
 	/* page search + title select (a visual pair) */
-	--page-input-bg: hsl(var(--hue-chrome) 20% 85% / 0.12);
 	--page-input-bg-hover: hsl(var(--hue-chrome) 30% 96% / 0.18);
 	--page-input-text: var(--subtle-text);
 	--page-input-search: #e4e4e4;
