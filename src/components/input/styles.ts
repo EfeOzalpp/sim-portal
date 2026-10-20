@@ -26,7 +26,7 @@ const pageTokens = [
 	"[--input-border:var(--page-input-border,transparent)]",
 	"[--input-border-hover:var(--page-input-border-hover,transparent)]",
 	"[--input-placeholder:var(--page-input-text)]",
-	"[--input-icon:var(--page-input-search)]",
+	"[--input-icon:var(--app-icon)]",
 ];
 
 // Dropdown fields use square corners and no border, including while focused.

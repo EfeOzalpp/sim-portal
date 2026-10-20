@@ -13,7 +13,6 @@ html[data-color-theme="fruit-smoothie"][data-theme="light"] {
 	--app-bg: linear-gradient(to left, hsl(var(--hue-chrome) 85% 92%) 0%, hsl(var(--hue-fields) 94% 86%) 50%, hsl(var(--hue-tools) 52% 84%) 100%);
 	--page-bg: hsl(var(--hue-page) 35% 98.5% / 0.8);
 	--page-bg-border: hsl(var(--hue-chrome) 30% 25% / 0.25);
-	--nav-active-bg: hsl(var(--hue-tools) 70% 45% / 0.18);
 	--page-input-bg: hsl(var(--hue-fields) 80% 76%);
 	--page-bar-border: hsl(var(--hue-chrome) 35% 25% / 0.25);
 
@@ -36,15 +35,17 @@ html[data-color-theme="fruit-smoothie"][data-theme="light"] {
 	--card-border-hover: hsl(var(--hue-page) 20% 65%);
 
 	/* nav rail: solid crimson surface when expanded over content */
+	--nav-active-bg: hsl(var(--hue-tools) 70% 45% / 0.18);
 	--nav-hover-bg: hsl(var(--hue-tools) 55% 40% / 0.09);
 	--nav-active-text: hsl(var(--hue-tools) 65% 22%);
 	--nav-hover-opened-bg: var(--app-theme);
 	--app-icon: hsl(var(--hue-tools) 55% 28%);
+	--nav-item-text: var(--app-icon);
 	--nav-label: var(--app-icon);
 
 	/* titles */
 	--app-title: hsl(var(--hue-tools) 65% 30%);
-	--app-brand: var(--app-title);
+	--app-brand: var(--nav-item-text);
 	--app-page-title: var(--app-brand);
 
 	/* avatar */
@@ -90,7 +91,6 @@ html[data-color-theme="fruit-smoothie"][data-theme="dark"] {
 	--app-bg: linear-gradient(to right, hsl(var(--hue-chrome) 45% 12%) 0%, hsl(var(--hue-fields) 40% 12%) 50%, hsl(var(--hue-tools) 40% 11%) 100%);
 	--page-bg: hsl(var(--hue-page) 12% 9% / 0.96);
 	--page-bg-border: hsl(var(--hue-chrome) 30% 85% / 0.18);
-	--nav-active-bg: hsl(var(--hue-chrome) 70% 65% / 0.22);
 	--page-input-bg: hsl(var(--hue-fields) 40% 19%);
 	--page-bar-border: hsl(var(--hue-chrome) 40% 78% / 0.35);
 
@@ -110,15 +110,17 @@ html[data-color-theme="fruit-smoothie"][data-theme="dark"] {
 	--card-border-hover: hsl(var(--hue-page) 18% 40%);
 
 	/* nav rail */
+	--nav-active-bg: hsl(var(--hue-chrome) 70% 65% / 0.22);
 	--nav-hover-bg: hsl(var(--hue-chrome) 50% 60% / 0.12);
 	--nav-active-text: hsl(var(--hue-chrome) 75% 90%);
 	--nav-hover-opened-bg: var(--app-theme);
 	--app-icon: hsl(var(--hue-chrome) 55% 86%);
+	--nav-item-text: var(--app-icon);
 	--nav-label: hsl(var(--hue-chrome) 35% 80%);
 
 	/* titles */
 	--app-title: hsl(var(--hue-chrome) 75% 82%);
-	--app-brand: var(--app-title);
+	--app-brand: var(--nav-item-text);
 	--app-page-title: var(--app-brand);
 
 	/* avatar */

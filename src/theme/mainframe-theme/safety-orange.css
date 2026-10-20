@@ -1,52 +1,60 @@
 /* Color theme: Safety Orange */
 html[data-color-theme="safety-orange"][data-theme="light"] {
-	/* Mainframe hues only; system-blue controls stay in app-theme. */
+	/*
+	 * Mainframe hue knobs. System-blue page controls live in app-theme/styling-theme.css.
+	 *   --hue-page   (60) page content area: bg, cards, borders, scrollbar
+	 *   --hue-chrome (30) top bar + nav rail: bg, nav states, icons, search, avatar
+	 */
 	--hue-page: 214;
 	--hue-chrome: 28.47;
 
-	--app-theme: hsl(var(--hue-chrome) 60% 94%);
+	--app-theme: hsl(var(--hue-chrome) 60% 95%);
 
 	/* Master tokens */
-	--app-bg: hsl(var(--hue-chrome) 100% 88%);
-	--page-bg: hsl(var(--hue-page) 45% 98.5% / 0.6);
-	--page-bg-border: hsl(var(--hue-chrome) 35% 18% / 0.25);
-	--nav-active-bg: hsl(var(--hue-chrome) 100% 50% / 0.22);
-	--page-input-bg: hsl(var(--hue-chrome) 100% 97% / 0.65);
-	--page-bar-border: hsl(var(--hue-chrome) 40% 18% / 0.3);
+	--app-bg: hsl(var(--hue-chrome) 100% 72%);
+	--page-bg: hsl(var(--hue-page) 78% 98.5% / 0.75);
+	--page-bg-border: hsl(var(--hue-chrome) 80% 20% / 0.3);
+	--page-input-bg: hsl(var(--hue-chrome) 45% 45% / 0.2);
+	--page-bar-border: hsl(var(--hue-chrome) 80% 20% / 0.2);
+	--page-bar-bg: hsl(0 0% 100% / 0.2);
 
-	/* secondary buttons when the page bar is minimized and floats over content */
-	--page-bar-floating-button-bg: #ffffff;
-	--page-bar-floating-button-bg-hover: hsl(var(--hue-page) 30% 96%);
+			/* secondary buttons when the page bar is minimized and floats over content */
+			--page-bar-floating-button-bg: #ffffff;
+			--page-bar-floating-button-bg-hover: hsl(var(--hue-page) 30% 96%);
 
 	/* page content area */
-	--page-surface-base: hsl(var(--hue-page) 45% 98.5%);
+		/* specific to lightmode only because it derives modal hue from page slightly */
+		--page-surface-base: hsl(var(--hue-page) 78% 98.5%);
+
 
 	/* optional */
-	--page-bg-hover: hsl(var(--hue-page) 40% 95%);
-	--page-bar-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+	--page-bg-hover: hsl(var(--hue-page) 78% 94.6%);
+	--page-bar-shadow: 0 4px 12px rgba(15, 23, 42, 1);
 	--content-shadow: none;
 
 	/* page borders */
-	--table-row-border: hsl(var(--hue-page) 24% 87%);
-	--table-row-border-hover: hsl(var(--hue-page) 28% 72%);
-	--card-border: hsl(var(--hue-page) 16% 80%);
-	--card-border-hover: hsl(var(--hue-page) 20% 65%);
+	--table-row-border: hsl(var(--hue-page) 62% 91.6%);
+	--table-row-border-hover: hsl(var(--hue-page) 31% 73%);
+	--card-border: hsl(var(--hue-page) 16% 81%);
+	--card-border-hover: hsl(var(--hue-page) 16% 69%);
 
 	/* nav rail */
-	--nav-hover-bg: hsl(var(--hue-chrome) 40% 15% / 0.08);
-	--nav-active-text: hsl(var(--hue-chrome) 30% 10%);
+	--nav-active-bg: hsl(var(--hue-chrome) 60% 90% / 0.6);
+	--nav-hover-bg: hsl(var(--hue-chrome) 40% 10% / 0.08);
+	--nav-active-text: hsl(var(--hue-chrome) 80% 22%);
 	--nav-hover-opened-bg: var(--app-bg);
-	--app-icon: hsl(var(--hue-chrome) 25% 14%);
+	--app-icon: hsl(var(--hue-chrome) 40% 37.6%);
+	--nav-item-text: hsl(var(--hue-chrome) 70% 22%);
 	--nav-label: var(--app-icon);
 
 	/* titles */
-	--app-title: hsl(var(--hue-chrome) 100% 30%);
-	--app-brand: var(--app-title);
+	--app-title: hsl(var(--hue-chrome) 70% 47%);
+	--app-brand: var(--nav-item-text);
 	--app-page-title: var(--app-brand);
 
 	/* avatar */
 	--hue-profile: 165;
-	--profile-indicator: hsl(var(--hue-profile) 45% 25%);
+	--profile-indicator: hsl(var(--hue-profile) 45% 36%);
 	--profile-indicator-text: #ffffff;
 
 	/* text inside the page canvas */
@@ -54,7 +62,7 @@ html[data-color-theme="safety-orange"][data-theme="light"] {
 	--page-based-text-subtle: var(--subtle-text);
 
 	/* icon-only buttons on the page content (outside the page bar) */
-	--page-icon-bg-hover: hsl(var(--hue-chrome) 40% 20% / 0.14);
+	--page-icon-bg-hover: hsl(var(--hue-chrome) 40% 86% / 0.7);
 	--page-icon-bg-active: hsl(var(--hue-page) 30% 86%);
 
 	/* card overlay buttons */
@@ -63,69 +71,77 @@ html[data-color-theme="safety-orange"][data-theme="light"] {
 	--button-overlay-shadow: 0 1px 3px rgba(15, 23, 42, 0.2), 0 0 0 1px rgba(15, 23, 42, 0.06);
 
 	/* page search + title select */
-	--page-input-bg-hover: hsl(var(--hue-chrome) 100% 97% / 0.8);
-	--page-input-text: var(--app-icon);
-	--page-input-search: hsl(var(--hue-chrome) 20% 28%);
-	--page-input-search-hover: hsl(var(--hue-chrome) 25% 10%);
-	--page-input-search-hover-bg: hsl(var(--hue-chrome) 100% 98% / 0.9);
+	--page-input-bg-hover: hsl(var(--hue-chrome) 45% 45% / 0.3);
+	--page-input-text: var(--subtle-text);
+	--page-input-search: #64748b;
+	--page-input-search-hover: #0f172a;
+	--page-input-search-hover-bg: hsl(var(--hue-chrome) 45% 45% / 0.26);
 	--title-select-bg: var(--page-input-bg);
 	--title-select-bg-hover: var(--page-input-bg-hover);
 	--title-select-text-open: #ffffff;
+
 }
 
+
 html[data-color-theme="safety-orange"][data-theme="dark"] {
-	/* Mainframe hues only; system-blue controls stay in app-theme. */
+	/*
+	 * Mainframe hue knobs. System-blue page controls live in app-theme/styling-theme.css.
+	 *   --hue-page   (60) page content area: bg, cards, borders, scrollbar
+	 *   --hue-chrome (30) top bar + nav rail: bg, nav states, icons, search, avatar
+	 */
 	--hue-page: 220;
 	--hue-chrome: 28.47;
 
-	--app-theme: hsl(var(--hue-chrome) 32% 20%);
+	--app-theme: hsl(var(--hue-chrome) 92% 20%);
 
 	/* Master tokens */
-	--app-bg: hsl(var(--hue-chrome) 40% 10%);
-	--page-bg: hsl(var(--hue-page) 12% 9% / 0.6);
-	--page-bg-border: hsl(var(--hue-chrome) 30% 85% / 0.18);
-	--nav-active-bg: hsl(var(--hue-chrome) 100% 60% / 0.2);
-	--page-input-bg: hsl(var(--hue-chrome) 25% 85% / 0.12);
-	--page-bar-border: hsl(var(--hue-chrome) 60% 65% / 0.4);
+	--app-bg: hsl(var(--hue-chrome) 100% 24%);
+	--page-bg: hsl(var(--hue-page) 12% 6% / 0.8);
+	--page-bg-border: hsl(var(--hue-chrome) 80% 90% / 0.2);
+	--page-input-bg: hsl(var(--hue-chrome) 20% 85% / 0.12);
+	--page-bar-border: hsl(var(--hue-chrome) 80% 95% / 0.2);
+	--page-bar-bg: hsla(0, 0%, 0%, 0.15);
 
-	/* secondary buttons when the page bar is minimized and floats over content */
-	--page-bar-floating-button-bg: hsl(var(--hue-page) 20% 13%);
-	--page-bar-floating-button-bg-hover: hsl(var(--hue-page) 24% 19%);
+			/* secondary buttons when the page bar is minimized and floats over content */
+			--page-bar-floating-button-bg: hsl(var(--hue-page) 25% 12%);
+			--page-bar-floating-button-bg-hover: hsl(var(--hue-page) 28% 18%);
 
 	/* optional */
 	--page-bg-hover: hsl(var(--hue-page) 16% 15%);
 	--page-bar-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
-	--content-shadow: none;
+	--content-shadow: 0 0 24px rgba(255, 255, 255, 0);
 
 	/* page borders */
-	--table-row-border: hsl(var(--hue-page) 12% 24%);
-	--table-row-border-hover: hsl(var(--hue-page) 16% 34%);
-	--card-border: hsl(var(--hue-page) 16% 29%);
-	--card-border-hover: hsl(var(--hue-page) 18% 40%);
+	--table-row-border: hsl(var(--hue-page) 12% 23%);
+	--table-row-border-hover: hsl(var(--hue-page) 12% 32%);
+	--card-border: hsl(var(--hue-page) 16% 28%);
+	--card-border-hover: hsl(var(--hue-page) 16% 38%);
 
 	/* nav rail */
-	--nav-hover-bg: hsl(var(--hue-chrome) 30% 60% / 0.12);
-	--nav-active-text: hsl(var(--hue-chrome) 100% 80%);
+	--nav-active-bg: hsl(var(--hue-chrome) 26% 85% / 0.5);
+	--nav-hover-bg: hsl(var(--hue-chrome) 13% 50% / 0.22);
+	--nav-active-text: hsl(var(--hue-chrome) 80% 96%);
 	--nav-hover-opened-bg: var(--app-bg);
-	--app-icon: hsl(var(--hue-chrome) 18% 92%);
-	--nav-label: hsl(var(--hue-chrome) 16% 83%);
+	--app-icon: hsl(var(--hue-chrome) 20% 95%);
+	--nav-item-text: hsl(var(--hue-chrome) 55% 95%);
+	--nav-label: hsl(var(--hue-chrome) 10% 90%);
 
 	/* titles */
-	--app-title: hsl(var(--hue-chrome) 65% 64%);
-	--app-brand: var(--app-title);
+	--app-title: hsl(0 0% 100%);
+	--app-brand: var(--nav-item-text);
 	--app-page-title: var(--app-brand);
 
 	/* avatar */
 	--hue-profile: 165;
-	--profile-indicator: hsl(var(--hue-profile) 40% 65%);
-	--profile-indicator-text: hsl(var(--hue-profile) 35% 12%);
+	--profile-indicator: hsl(var(--hue-profile) 45% 62%);
+	--profile-indicator-text: #10261a;
 
 	/* text inside the page canvas */
-	--page-based-text: hsl(0 0% 92%);
-	--page-based-text-subtle: hsl(0 0% 79%);
+	--page-based-text: hsl(0 0% 90%);
+	--page-based-text-subtle: hsl(0 0% 78%);
 
 	/* icon-only buttons on the page content (outside the page bar) */
-	--page-icon-bg-hover: hsl(var(--hue-chrome) 18% 24% / 0.7);
+	--page-icon-bg-hover: hsl(var(--hue-chrome) 22% 18% / 0.7);
 	--page-icon-bg-active: hsl(var(--hue-page) 20% 26%);
 
 	/* card overlay buttons */
@@ -133,13 +149,14 @@ html[data-color-theme="safety-orange"][data-theme="dark"] {
 	--button-overlay-bg-hover: hsl(from var(--page-bg) h s 26% / 0.95);
 	--button-overlay-shadow: none;
 
-	/* page search + title select */
-	--page-input-bg-hover: hsl(var(--hue-chrome) 35% 92% / 0.18);
+	/* page search + title select (a visual pair) */
+	--page-input-bg-hover: hsl(var(--hue-chrome) 30% 96% / 0.18);
 	--page-input-text: var(--subtle-text);
-	--page-input-search: hsl(var(--hue-chrome) 25% 82%);
+	--page-input-search: #e4e4e4;
 	--page-input-search-hover: #ffffff;
-	--page-input-search-hover-bg: hsl(var(--hue-chrome) 35% 92% / 0.26);
+	--page-input-search-hover-bg: hsl(var(--hue-chrome) 30% 96% / 0.28);
 	--title-select-bg: var(--page-input-bg);
 	--title-select-bg-hover: var(--page-input-bg-hover);
 	--title-select-text-open: hsl(var(--hue-chrome) 32% 8%);
+
 }

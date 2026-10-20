@@ -8,26 +8,23 @@ const THEME_COLORS = {
 		bgLightness: 50,
 		textSaturation: 66,
 		textLightness: 20,
-		titleLightness: 20,
 	},
 	dark: {
 		bgSaturation: 66,
 		bgLightness: 75,
 		textSaturation: 35,
 		textLightness: 94,
-		titleLightness: 80,
 	},
 };
 
 export interface StringColors {
 	bg: string;
 	text: string;
-	title: string;
 }
 
 // FNV-1a: mixes every character into the result, so similar strings
 // like "Sept 24" and "Nov 4" do not collapse onto the same hue.
-function hashString(value: string): number {
+export function hashString(value: string): number {
 	let hash = 0x811c9dc5;
 
 	for (let index = 0; index < value.length; index++) {
@@ -81,8 +78,6 @@ const LIGHTNESS = {
 	darkBg: balancedLightness(THEME_COLORS.dark.bgSaturation, THEME_COLORS.dark.bgLightness),
 	lightText: balancedLightness(THEME_COLORS.light.textSaturation, THEME_COLORS.light.textLightness).map((lightness) => Math.max(24, lightness)),
 	darkText: balancedLightness(THEME_COLORS.dark.textSaturation, THEME_COLORS.dark.textLightness),
-	lightTitle: balancedLightness(THEME_COLORS.light.textSaturation, THEME_COLORS.light.titleLightness).map((lightness) => Math.max(24, lightness)),
-	darkTitle: balancedLightness(THEME_COLORS.dark.textSaturation, THEME_COLORS.dark.titleLightness),
 };
 
 // Keep this deterministic during SSR/hydration: React sees one identical
@@ -91,7 +86,6 @@ const LIGHTNESS = {
 const PALETTE: StringColors[] = PALETTE_HUES.map((hue, index) => ({
 	bg: `light-dark(hsl(${hue} ${THEME_COLORS.light.bgSaturation}% ${LIGHTNESS.lightBg[index]}%), hsl(${hue} ${THEME_COLORS.dark.bgSaturation}% ${LIGHTNESS.darkBg[index]}%))`,
 	text: `light-dark(hsl(${hue} ${THEME_COLORS.light.textSaturation}% ${LIGHTNESS.lightText[index]}%), hsl(${hue} ${THEME_COLORS.dark.textSaturation}% ${LIGHTNESS.darkText[index]}%))`,
-	title: `light-dark(hsl(${hue} ${THEME_COLORS.light.textSaturation}% ${LIGHTNESS.lightTitle[index]}%), hsl(${hue} ${THEME_COLORS.dark.textSaturation}% ${LIGHTNESS.darkTitle[index]}%))`,
 }));
 
 export function getStringColors(value: string): StringColors {

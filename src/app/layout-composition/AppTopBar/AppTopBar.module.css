@@ -1,7 +1,8 @@
 .root {
 	--app-topbar-gap: 0.75rem;
 	--app-topbar-field-gap: 0.5rem;
-	--page-icon-bg-active: var(--page-button-bg-active, var(--page-button-bg-hover));
+	--page-icon-bg-hover: var(--page-button-bg-hover);
+	--page-icon-bg-active: var(--page-button-bg-hover);
 
 	position: relative;
 	z-index: 40;
@@ -31,26 +32,20 @@
 .leadGroup {
 	display: flex;
 	align-items: stretch;
-	column-gap: 1.25rem;
+	column-gap: var(--app-topbar-gap);
 	margin-inline-end: 0.5rem;
 	min-width: 0;
-	transition: column-gap 160ms ease;
 }
 
 .leading {
-	min-width: calc(var(--nav-rail-collapsed-width) + var(--page-gutter) - var(--app-topbar-gap));
-	transition: min-width 160ms ease;
-}
-
-:global(html[data-desktop-nav="expanded"]) .leading {
 	min-width: calc(var(--nav-rail-expanded-width) + var(--page-gutter) - var(--app-topbar-gap));
 }
 
-:global(html[data-desktop-nav="expanded"]) .leadGroup {
-	column-gap: var(--app-topbar-gap);
-}
-
 .menuCell {
+	--page-icon-text: var(--nav-item-text);
+	--page-icon-text-active: var(--nav-item-text);
+	--page-button-text-hover: var(--nav-item-text);
+
 	display: flex;
 	flex: none;
 	width: var(--nav-rail-collapsed-width);
@@ -60,7 +55,7 @@
 
 .brand {
 	justify-content: center;
-	padding-inline: 0.25rem 0;
+	margin-inline-start: calc(var(--nav-rail-content-width) + 0.5rem - var(--nav-rail-collapsed-width));
 	color: var(--app-brand, var(--app-title));
 	white-space: nowrap;
 }

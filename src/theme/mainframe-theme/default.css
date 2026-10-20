@@ -14,7 +14,6 @@ html[data-color-theme="default"][data-theme="light"] {
 	--app-bg: hsl(var(--hue-chrome) 70% 97%);
 	--page-bg: hsl(var(--hue-page) 78% 98.5% / 0.4);
 	--page-bg-border: hsl(var(--hue-chrome) 80% 20% / 0.3);
-	--nav-active-bg: hsl(var(--hue-chrome) 60% 50% / 0.18);
 	--page-input-bg: hsl(var(--hue-chrome) 45% 45% / 0.14);
 	--page-bar-border: hsl(var(--hue-chrome) 80% 20% / 0.2);
 
@@ -39,15 +38,17 @@ html[data-color-theme="default"][data-theme="light"] {
 	--card-border-hover: hsl(var(--hue-page) 16% 69%);
 
 	/* nav rail */
+	--nav-active-bg: hsl(var(--hue-chrome) 60% 50% / 0.18);
 	--nav-hover-bg: hsl(var(--hue-chrome) 40% 40% / 0.08);
 	--nav-active-text: hsl(var(--hue-chrome) 50% 22%);
 	--nav-hover-opened-bg: var(--app-bg);
 	--app-icon: hsl(var(--hue-chrome) 40% 37.6%);
+	--nav-item-text: hsl(var(--hue-chrome) 70% 37.6%);
 	--nav-label: var(--app-icon);
 
 	/* titles */
 	--app-title: hsl(var(--hue-chrome) 70% 47%);
-	--app-brand: var(--app-title);
+	--app-brand: var(--nav-item-text);
 	--app-page-title: var(--app-brand);
 
 	/* avatar */
@@ -95,8 +96,7 @@ html[data-color-theme="default"][data-theme="dark"] {
 	/* Master tokens */
 	--app-bg: hsl(var(--hue-chrome) 60% 7%);
 	--page-bg: hsl(var(--hue-page) 12% 8% / 0.65);
-	--page-bg-border: hsl(var(--hue-chrome) 80% 90% / 0.15);
-	--nav-active-bg: hsl(var(--hue-chrome) 26% 85% / 0.5);
+	--page-bg-border: hsl(var(--hue-chrome) 80% 90% / 0.2);
 	--page-input-bg: hsl(var(--hue-chrome) 20% 85% / 0.12);
 	--page-bar-border: hsl(var(--hue-chrome) 80% 95% / 0.45);
 
@@ -116,16 +116,18 @@ html[data-color-theme="default"][data-theme="dark"] {
 	--card-border-hover: hsl(var(--hue-page) 16% 38%);
 
 	/* nav rail */
+	--nav-active-bg: hsl(var(--hue-chrome) 26% 85% / 0.5);
 	--nav-hover-bg: hsl(var(--hue-chrome) 13% 50% / 0.22);
 	--nav-active-text: white;
 
 	--nav-hover-opened-bg: var(--app-bg);
 	--app-icon: hsl(var(--hue-chrome) 20% 95%);
+	--nav-item-text: hsl(var(--hue-chrome) 55% 95%);
 	--nav-label: hsl(var(--hue-chrome) 10% 90%);
 
 	/* titles */
 	--app-title: hsl(0 0% 100%);
-	--app-brand: hsl(0 0% 100%);
+	--app-brand: var(--nav-item-text);
 	--app-page-title: var(--app-brand);
 
 	/* avatar */

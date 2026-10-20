@@ -39,6 +39,10 @@ html[data-theme="light"] {
     --label-border: #cbd5e1;
     --label-text: var(--subtle-text);
 
+  /* chrome-derived titles (brand + page title) */
+  --title-lightness: 0.42;
+  --title-chroma: 0.12;
+
   /* scrollbar */
   --scrollbar-thumb: rgba(15, 23, 42, 0.15);
   --scrollbar-thumb-hover: rgba(15, 23, 42, 0.35);
@@ -176,7 +180,7 @@ html[data-theme="light"] {
   --button-delete-overlay-text: var(--action-delete-text);
 
 /* modal's first depth background color, also is master for the primitives in that layer */
-  --modal-surface: hsl(from var(--page-surface-base) h calc(s * 0.2) calc(l * 1));
+  --modal-surface: hsl(var(--hue-chrome, 0) 30% 99%);
     /* (optional= that it has an hover state */
     --modal-surface-hover: hsl(from var(--modal-surface) h s calc(l * 0.95));
     /* modal's border */
@@ -206,7 +210,7 @@ html[data-theme="light"] {
         --input-modal-area-input-bg-hover: hsl(from var(--modal-surface-2) h s calc(l * 0.94) / 0.7);
         --input-modal-area-input-placeholder: var(--content-muted);
         --input-modal-area-input-text: var(--app-text);
-        --input-modal-area-hovered-item-bg: hsl(from var(--page-surface-base) h calc(s * 0.2) calc(l * 0.94));
+        --input-modal-area-hovered-item-bg: hsl(from var(--modal-surface) h s calc(l * 0.95));
         --input-modal-dropdown-scrollbar: var(--scrollbar-thumb);
         --input-modal-dropdown-scrollbar-hover: var(--scrollbar-thumb-hover);
 
@@ -428,6 +432,10 @@ html[data-theme="dark"] {
     --label-border: #343434;
     --label-text: #efefef;
 
+  /* chrome-derived titles (brand + page title) */
+  --title-lightness: 0.84;
+  --title-chroma: 0.12;
+
   /* scrollbar */
   --scrollbar-thumb: rgba(255, 255, 255, 0.35);
   --scrollbar-thumb-hover: rgba(255, 255, 255, 0.55);
@@ -552,15 +560,15 @@ html[data-theme="dark"] {
 
 /* modal based */
   --modal-master: hsl(0, 0%, 11%);
-  --modal-surface: hsl(from var(--page-bg) h s calc(l * 1.1) / 1);
+  --modal-surface: hsl(from var(--page-bg) var(--hue-chrome, 0) 18% calc(l * 0.85) / 1);
     /* (optional= that it has an hover state */
     --modal-surface-hover: hsl(from var(--modal-surface) h s calc(l * 1.5));
     /* modal's border */
     --modal-border: hsl(from var(--modal-surface) h s calc(l * 1.45));
     --modal-shadow: 0 16px 48px rgba(228, 228, 228, 0.05);
     /* modal's scrollbar */
-    --modal-scrollbar-thumb: hsl(from var(--modal-surface) h s calc(l * 5));
-    --modal-scrollbar-thumb-hover: hsl(from var(--modal-surface) h s calc(l * 6.4));
+    --modal-scrollbar-thumb: hsl(from var(--modal-surface) h calc(s * 0.4) calc(l * 3.6));
+    --modal-scrollbar-thumb-hover: hsl(from var(--modal-surface) h calc(s * 0.4) calc(l * 4.8));
     --modal-separator: hsl(from var(--modal-surface) h s calc(l * 2.4));
 
         /* shared across depths */
@@ -622,7 +630,7 @@ html[data-theme="dark"] {
           
       
           /* third surface in a modal-is bg based (use with caution only for small surfaces) (used in grade modal) */
-          --modal-surface-3: hsl(from var(--modal-surface-2) h s calc(l * 1.15));
+          --modal-surface-3: hsl(from var(--modal-surface-2) h s calc(l * 1.25));
             /* optional if that surface has hover */
             --modal-surface-3-hover: hsl(from var(--modal-surface-3) h s calc(l * 1.12));
             /* if has active color: uses --select-active-bg from blue selectors */

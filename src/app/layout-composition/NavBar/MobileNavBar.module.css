@@ -36,14 +36,14 @@
 	.brand {
 		flex: 0 0 auto;
 		min-width: 0;
-		color: var(--app-title);
+		color: var(--app-brand);
 		white-space: nowrap;
 	}
 
 	.menuControls {
 		display: flex;
 		align-items: center;
-		gap: 0.5rem;
+		gap: 0.25rem;
 		flex: none;
 		margin-left: auto;
 	}
@@ -207,7 +207,7 @@
 		border-radius: 50%;
 		background: transparent;
 		cursor: pointer;
-		color: var(--app-icon);
+		color: var(--nav-item-text);
 	}
 
 	.menuButton:hover {
@@ -316,7 +316,7 @@
 	.panelBrand {
 		grid-column-start: 2;
 		text-align: center;
-		color: var(--app-title);
+		color: var(--app-brand);
 	}
 
 	/* Close button: sits in the third column of the header row, same size as menu button */

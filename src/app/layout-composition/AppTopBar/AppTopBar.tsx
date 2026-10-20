@@ -45,7 +45,7 @@ export default function AppTopBar({ user }: AppTopBarProps) {
 							variant="icon"
 							aria-label={isNavExpanded ? "Collapse navigation menu" : "Expand navigation menu"}
 							aria-pressed={isNavExpanded}
-							className="aria-pressed:bg-transparent! aria-pressed:hover:bg-[var(--button-bg-hover)]!"
+							className="aria-pressed:bg-transparent! aria-pressed:hover:bg-[var(--button-icon-bg-hover)]!"
 							onClick={toggleDesktopNav}
 							icon="menu/menu.svg"
 						/>

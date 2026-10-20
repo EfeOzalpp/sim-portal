@@ -3,7 +3,7 @@
 import type { CSSProperties, ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { useIsMobile } from "@/components/layout/breakpoints";
-import { getStringColors } from "@/constants/stringColors";
+import { getChromeComplementTitleColor } from "@/constants/chromeColors";
 import PageMoreMenu, { type PageMoreMenuItem } from "@/components/layout/PageChrome/PageMoreMenu";
 import MobilePageSearch from "@/components/layout/PageChrome/MobilePageSearch";
 import { usePageChrome } from "./index";
@@ -50,7 +50,7 @@ export default function PageChrome({ title, mobileLayout = "expandable", scope, 
 	const moreSlot = status || isMobile ? statusSlot : slotIds.barTools;
 	const hasMenu = Boolean(utilities?.length || printLabel || csvLabel);
 	const actionsSlot = isMobile ? (isCollapsed ? slotIds.mobileBarActions : slotIds.mobileActions) : slotIds.barActions;
-	const titleStyle = { "--page-title-hash-color": getStringColors(title).title } as CSSProperties;
+	const titleStyle = { "--page-title-hash-color": getChromeComplementTitleColor(title) } as CSSProperties;
 
 	return (
 		<>
