@@ -12,6 +12,7 @@ import downloadIcon from "@/theme/assets/download/download.svg";
 import editIcon from "@/theme/assets/edit/edit.svg";
 import errorIcon from "@/theme/assets/error/error.svg";
 import filterIcon from "@/theme/assets/filter/filter.svg";
+import filterSortIcon from "@/theme/assets/filter_sort/filter_list.svg";
 import fiberTodayIcon from "@/theme/assets/fiber_today/fiber_today.svg";
 import gridViewIcon from "@/theme/assets/grid_view/grid_view.svg";
 import gridOffIcon from "@/theme/assets/grid/grid_off.svg";
@@ -31,6 +32,9 @@ import removeIcon from "@/theme/assets/remove/remove.svg";
 import searchIcon from "@/theme/assets/search/search.svg";
 import scheduleIcon from "@/theme/assets/schedule/schedule.svg";
 import successIcon from "@/theme/assets/success/success.svg";
+import starIcon from "@/theme/assets/star/star.svg";
+import starBorderIcon from "@/theme/assets/star/star_border.svg";
+import starHalfIcon from "@/theme/assets/star/star_half.svg";
 import textIcon from "@/theme/assets/text/text.svg";
 import darkModeIcon from "@/theme/assets/theme-switch/dark_mode.svg";
 import lightModeIcon from "@/theme/assets/theme-switch/light_mode.svg";
@@ -53,6 +57,7 @@ export const iconAssets = {
 	"edit/edit.svg": editIcon,
 	"error/error.svg": errorIcon,
 	"filter/filter.svg": filterIcon,
+	"filter_sort/filter_list.svg": filterSortIcon,
 	"fiber_today/fiber_today.svg": fiberTodayIcon,
 	"grid_view/grid_view.svg": gridViewIcon,
 	"grid/grid_off.svg": gridOffIcon,
@@ -72,6 +77,9 @@ export const iconAssets = {
 	"search/search.svg": searchIcon,
 	"schedule/schedule.svg": scheduleIcon,
 	"success/success.svg": successIcon,
+	"star/star.svg": starIcon,
+	"star/star_border.svg": starBorderIcon,
+	"star/star_half.svg": starHalfIcon,
 	"text/text.svg": textIcon,
 	"theme-switch/dark_mode.svg": darkModeIcon,
 	"theme-switch/light_mode.svg": lightModeIcon,

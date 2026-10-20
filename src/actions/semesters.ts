@@ -121,6 +121,7 @@ export async function getIndividualSemesterData(
 	workSemesterId: string = semesterId,
 ) {
 	return await action(async () => {
+		await ensureAdmin();
 		noStore();
 
 		const validation = FilterSchema.safeParse(rawFilters);
@@ -211,6 +212,7 @@ export async function getIndividualSemesterData(
 				id: true,
 				name: true,
 				image: true,
+				email: true,
 				semesters: {
 					orderBy: { name: "asc" },
 					select: { id: true, name: true },
@@ -248,6 +250,7 @@ export async function getIndividualSemesterData(
 				id: user.id,
 				name: user.name,
 				image: user.image,
+				email: user.email,
 				semesters: user.semesters.map((semester) => ({
 					...semester,
 					grade: gradesBySemester.get(semester.id) || null,

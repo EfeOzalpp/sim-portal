@@ -85,6 +85,32 @@
 	text-transform: inherit;
 }
 
+.selectionHeader {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.25rem;
+}
+
+.selectionControls {
+	display: contents;
+}
+
+.selectionTools {
+	--page-icon-text: var(--app-text);
+	--page-icon-text-active: var(--page-button-text-hover);
+	--page-icon-bg-hover: var(--page-view-bg-hover);
+	--page-icon-bg-active: var(--page-button-bg-active);
+	display: flex;
+	flex: none;
+	align-items: center;
+	gap: 0.25rem;
+}
+
+.selectionControls .sortableHeader {
+	margin-left: 0.85rem;
+}
+
 .sortIcon {
 	flex: none;
 	width: 1rem;
@@ -200,6 +226,16 @@
 	padding: 0.3rem 0.1rem 0.2rem;
 }
 
+.itemNameText {
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 3;
+	line-clamp: 3;
+	overflow: hidden;
+	overflow-wrap: anywhere;
+	white-space: normal;
+}
+
 .tagRow {
 	min-width: 0;
 	max-width: 100%;
@@ -217,23 +253,11 @@
 	color: var(--label-text);
 }
 
-/* Collapsed entries truncate titles and tags; hovered titles can wrap. */
-.progressItemTruncated .itemName {
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-}
-
+/* Collapsed entries keep metadata to one line; titles always allow three. */
 .progressItemTruncated .tagRow {
 	flex-wrap: nowrap;
 	overflow: hidden;
 	mask-image: linear-gradient(to right, black calc(100% - 1.5rem), transparent);
-}
-
-.progressItemTruncated:hover .itemName {
-	overflow: visible;
-	text-overflow: clip;
-	white-space: normal;
 }
 
 .emptyCell {
@@ -363,6 +387,27 @@
 }
 
 @media (max-width: 768px) {
+	.selectionHeader {
+		flex-wrap: nowrap;
+		align-items: center;
+		gap: 1.5rem;
+	}
+
+	.selectionControls {
+		display: flex;
+		min-width: 0;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 0.25rem;
+	}
+
+	.selectionHeader .sortableHeader {
+		min-height: 2.5rem;
+		min-width: 0;
+		margin-left: 0;
+		gap: 0.25rem;
+	}
+
 	.headerScroll {
 		/* WebKit only reserves the matching vertical gutter with scroll overflow. */
 		overflow-y: scroll;

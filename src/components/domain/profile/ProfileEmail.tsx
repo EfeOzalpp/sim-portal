@@ -3,34 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import clsx from "clsx";
 import { Button } from "@/components/button";
-
-function copyWithSelection(text: string) {
-	const previousFocus = document.activeElement;
-	const selection = window.getSelection();
-	const ranges = selection ? Array.from({ length: selection.rangeCount }, (_, index) => selection.getRangeAt(index).cloneRange()) : [];
-	const field = document.createElement("textarea");
-	field.value = text;
-	field.readOnly = true;
-	field.tabIndex = -1;
-	field.setAttribute("aria-hidden", "true");
-	Object.assign(field.style, { position: "fixed", top: "0", left: "0", width: "1px", height: "1px", opacity: "0", fontSize: "16px" });
-	document.body.append(field);
-
-	try {
-		field.focus({ preventScroll: true });
-		field.select();
-		field.setSelectionRange(0, text.length);
-		// Compatibility only: the modern Clipboard API is unavailable on HTTP LAN previews.
-		if (!document.execCommand("copy")) throw new Error("Copy was not allowed.");
-	} finally {
-		field.remove();
-		if (previousFocus instanceof HTMLElement) previousFocus.focus({ preventScroll: true });
-		if (selection) {
-			selection.removeAllRanges();
-			ranges.forEach((range) => selection.addRange(range));
-		}
-	}
-}
+import { copyText } from "@/helpers";
 
 export default function ProfileEmail({ email }: { email: string }) {
 	const [copied, setCopied] = useState(false);
@@ -44,15 +17,7 @@ export default function ProfileEmail({ email }: { email: string }) {
 	async function copyEmail() {
 		setError(false);
 		try {
-			if (navigator.clipboard?.writeText) {
-				try {
-					await navigator.clipboard.writeText(email);
-				} catch {
-					copyWithSelection(email);
-				}
-			} else {
-				copyWithSelection(email);
-			}
+			await copyText(email);
 			if (resetTimer.current !== null) clearTimeout(resetTimer.current);
 			setCopied(true);
 			resetTimer.current = setTimeout(() => setCopied(false), 2000);

@@ -1,6 +1,43 @@
 import React, { ReactNode } from "react";
 import type { ActionResult } from "@/actions/utilities";
 
+function copyWithSelection(text: string) {
+	const previousFocus = document.activeElement;
+	const selection = window.getSelection();
+	const ranges = selection ? Array.from({ length: selection.rangeCount }, (_, index) => selection.getRangeAt(index).cloneRange()) : [];
+	const field = document.createElement("textarea");
+	field.value = text;
+	field.readOnly = true;
+	field.tabIndex = -1;
+	field.setAttribute("aria-hidden", "true");
+	Object.assign(field.style, { position: "fixed", top: "0", left: "0", width: "1px", height: "1px", opacity: "0", fontSize: "16px" });
+	document.body.append(field);
+	try {
+		field.focus({ preventScroll: true });
+		field.select();
+		field.setSelectionRange(0, text.length);
+		// Compatibility for HTTP LAN previews and browsers that reject Clipboard API writes.
+		if (!document.execCommand("copy")) throw new Error("Copy was not allowed.");
+	} finally {
+		field.remove();
+		if (previousFocus instanceof HTMLElement) previousFocus.focus({ preventScroll: true });
+		if (selection) {
+			selection.removeAllRanges();
+			ranges.forEach((range) => selection.addRange(range));
+		}
+	}
+}
+
+export async function copyText(text: string) {
+	if (navigator.clipboard?.writeText) {
+		try {
+			await navigator.clipboard.writeText(text);
+			return;
+		} catch {}
+	}
+	copyWithSelection(text);
+}
+
 // Retrieve items from an array based on a list of selected keys
 export function getArrayfromSelectedKeys<T extends { key: string | number }>(array: T[] = [], selectedKeys: (string | number)[] = []): T[] {
 	const map = new Map((array || []).map((obj) => [obj.key, obj]));

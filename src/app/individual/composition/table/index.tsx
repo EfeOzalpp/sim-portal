@@ -18,6 +18,7 @@ import FaceImage from "@/components/primitives/FaceImage";
 import ThursdayLink from "@/app/individual/composition/table/ThursdayLink";
 import GradeEditorModal, { GradeMap } from "@/app/individual/composition/forms";
 import { useSelectedUsers } from "@/app/individual/composition/selection/SelectedUsersProvider";
+import ProgressSelectionTools from "@/app/individual/composition/selection/ProgressSelectionTools";
 import styles from "@/app/individual/composition/table/IndividualPerformanceTable.module.css";
 
 // Helpers
@@ -34,6 +35,7 @@ type PresentationWithProduction = Prisma.PresentationGetPayload<{ include: { pro
 interface UserStat {
 	id: string;
 	name: string | null;
+	email?: string | null;
 	image?: string | null;
 	semesters?: { id: string; name: string; grade?: GradeMap[string] }[];
 	productions: (ProductionWithThursday & { date: Date | undefined })[];
@@ -69,11 +71,8 @@ function getProgressSemesterCode(isAllScope: boolean, semesterName: string | und
 	return isAllScope && semesterName ? formatSemesterCode(semesterName) : undefined;
 }
 
-// truncate: the collapsed single-card view only - one line each for the tag
-// row and the title, clipped if they overflow, revealed (wrapping instead)
-// on hover via .progressItemTruncated in the CSS module. The expanded
-// "Show more" list passes truncate={false} - the user already asked to see
-// everything there, so those items just wrap normally with no hover needed.
+// Collapsed cards keep metadata to one line; expanded lists let it wrap.
+// Production and presentation titles always show up to three lines.
 function ProgressItem({ name, thursdayId, groupLabel, tags, semesterCode, meta, truncate = true }: { name: string; thursdayId?: string; groupLabel?: string; tags?: string[]; semesterCode?: string; meta?: string; truncate?: boolean }) {
 	// meta (the date, colored deterministically by its own text so matching
 	// dates partition into the same color across the app) leads the row,
@@ -106,7 +105,7 @@ function ProgressItem({ name, thursdayId, groupLabel, tags, semesterCode, meta, 
 				</span>
 			)}
 			<span className={styles.itemName} title={name}>
-				{name}
+				<span className={styles.itemNameText}>{name}</span>
 			</span>
 			<span className={styles.progressItemIcon} aria-hidden="true">
 				<MaskIcon icon="view/forward.svg" className={progressItemIconClassName} />
@@ -178,9 +177,6 @@ function ProgressItemList({ items, groupLabel }: { items: ProgressListItem[]; gr
 // honor these widths precisely instead of letting content nudge them apart.
 const COLUMN_WIDTHS = ["var(--progress-checkbox-column-width, 4%)", "20%", "29%", "29%", "18%"];
 
-// Not wired to anything yet - just the row-selection UI ahead of a later
-// "export only the checked people" feature.
-//
 // appearance-none, not accent-color - accent-color only recolors the native
 // widget, which still paints its own default fill/box underneath regardless
 // of background-color, so the "no default bg" ask can't be met that way.
@@ -397,11 +393,16 @@ export default function IndividualPerformanceTable({ users = [], isAllScope = fa
 					<ColumnWidths widths={COLUMN_WIDTHS} />
 					<thead>
 						<tr>
-							<th className="ui-label">
-								<SelectAllCheckbox users={sortedUsers} selectedUserIds={selectedUserIds} onChange={setSelectedUserIds} />
-							</th>
-							<th className="ui-label" aria-sort={ariaSortFor("name")}>
-								<SortableHeader label={currentSemesterCode ? `Names (${currentSemesterCode})` : "Names"} sortKey="name" sort={sort} onSort={toggleSort} />
+							<th colSpan={2} className="ui-label" aria-sort={ariaSortFor("name")}>
+								<div className={styles.selectionHeader}>
+									<SelectAllCheckbox users={sortedUsers} selectedUserIds={selectedUserIds} onChange={setSelectedUserIds} />
+									<div className={styles.selectionControls}>
+										<div className={styles.selectionTools}>
+											<ProgressSelectionTools users={sortedUsers} />
+										</div>
+										<SortableHeader label={currentSemesterCode ? `Names (${currentSemesterCode})` : "Names"} sortKey="name" sort={sort} onSort={toggleSort} />
+									</div>
+								</div>
 							</th>
 							<th className="ui-label" aria-sort={ariaSortFor("presentations")}>
 								<SortableHeader label="Presentations" sortKey="presentations" sort={sort} onSort={toggleSort} />
