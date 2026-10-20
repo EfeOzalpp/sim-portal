@@ -38,6 +38,7 @@ interface PresentationsFieldProps {
   users: BasicUser[];
   semesters?: Array<{ id: string; name: string }>;
   suggestedTags?: string[];
+  onRemoveTagSuggestion?: (kind: "production" | "presentation", tag: string) => Promise<void>;
 }
 
 export default function PresentationsField({
@@ -46,6 +47,7 @@ export default function PresentationsField({
   users,
   semesters = [],
   suggestedTags = [],
+  onRemoveTagSuggestion,
 }: PresentationsFieldProps) {
   const { fields, prepend, remove } = useFieldArray({
     control,
@@ -251,6 +253,7 @@ export default function PresentationsField({
                           onChange={field.onChange}
                           suggestedOptions={suggestedTagOptions}
                           suggestedLabel="Suggested"
+                          onRemoveSuggestion={onRemoveTagSuggestion ? (tag) => onRemoveTagSuggestion("presentation", tag) : undefined}
                           placeholder="Type a tag and press Enter..."
                         />
                       )}

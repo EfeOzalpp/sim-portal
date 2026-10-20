@@ -15,6 +15,7 @@ function isPlaceholderProduction(production: any) {
   return (
     production.name === "Big Production" &&
     production.location === "Pozen Center" &&
+    (production.tags?.length ?? 0) === 0 &&
     (production.producers?.length ?? 0) === 0 &&
     (production.presentations?.length ?? 0) === 0
   );

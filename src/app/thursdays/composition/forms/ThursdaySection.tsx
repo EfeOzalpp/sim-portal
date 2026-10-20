@@ -39,16 +39,16 @@ export default function ThursdaySection({
           <Controller
             control={control}
             name="name"
-            rules={{ required: "Day name is required" }}
+            rules={{ required: "Day title is required" }}
             render={({ field, fieldState }) => {
               const showError = Boolean(fieldState.error) && (fieldState.isTouched || isSubmitted);
               return (
-                <FormField label="Day Name" required htmlFor={field.name} error={showError ? fieldState.error?.message : undefined}>
+                <FormField label="Day Title" required htmlFor={field.name} error={showError ? fieldState.error?.message : undefined}>
                   <Input
                     id={field.name}
                     variant="modal"
                     {...field}
-                    placeholder="Enter day name"
+                    placeholder="Enter day title"
                     status={showError ? "error" : ""}
                   />
                 </FormField>

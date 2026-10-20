@@ -30,6 +30,8 @@ import {
 	selectPlaceholderClassName,
 	selectSearchWrapperClassName,
 	selectSpinnerVariants,
+	selectSuggestionRemoveClassName,
+	selectSuggestionRowClassName,
 	selectTagClassName,
 	selectTagCommitButtonClassName,
 	selectTagDraftInputClassName,
@@ -95,6 +97,7 @@ export interface TagsSelectProps {
 	placeholder?: string;
 	suggestedOptions?: SelectOption[];
 	suggestedLabel?: string;
+	onRemoveSuggestion?: (value: string) => Promise<void>;
 	disabled?: boolean;
 	status?: "error" | "";
 	className?: string;
@@ -458,6 +461,7 @@ function TagsSelectImpl({
 	placeholder,
 	suggestedOptions = [],
 	suggestedLabel = "Suggested",
+	onRemoveSuggestion,
 	disabled,
 	status,
 	className,
@@ -466,6 +470,8 @@ function TagsSelectImpl({
 }: TagsSelectProps) {
 	const [draft, setDraft] = useState("");
 	const [open, setOpen] = useState(false);
+	const [removingSuggestion, setRemovingSuggestion] = useState<string | null>(null);
+	const [removeError, setRemoveError] = useState(false);
 	const error = status === "error";
 	const visibleTags = maxTagCount ? value.slice(0, maxTagCount) : value;
 	const overflowCount = value.length - visibleTags.length;
@@ -489,6 +495,19 @@ function TagsSelectImpl({
 		);
 	}
 
+	async function removeSuggestion(tag: string) {
+		if (!onRemoveSuggestion || removingSuggestion !== null) return;
+		setRemovingSuggestion(tag);
+		setRemoveError(false);
+		try {
+			await onRemoveSuggestion(tag);
+		} catch {
+			setRemoveError(true);
+		} finally {
+			setRemovingSuggestion(null);
+		}
+	}
+
 	return (
 		<PopoverRoot open={hasSuggestions ? open : false} onOpenChange={setOpen}>
 			<Popover.Anchor asChild>
@@ -501,7 +520,7 @@ function TagsSelectImpl({
 						disabled && "cursor-not-allowed! opacity-60",
 						className,
 					)}
-					data-state={open ? "open" : "closed"}
+					data-state={hasSuggestions && open ? "open" : "closed"}
 					onClick={() => hasSuggestions && !disabled && setOpen(true)}
 					onFocusCapture={() => hasSuggestions && !disabled && setOpen(true)}
 				>
@@ -573,42 +592,41 @@ function TagsSelectImpl({
 						onOpenAutoFocus={(event) => event.preventDefault()}
 						onCloseAutoFocus={(event) => event.preventDefault()}
 					>
-						<div className={selectViewportClassName} role="listbox" aria-multiselectable="true">
+						<div className={selectViewportClassName} role="group" aria-label={suggestedLabel}>
 							<div className={selectOptionGroupLabelClassName}>{suggestedLabel}</div>
 							{suggestedOptions.map((option) => {
 								const isSelected = value.includes(option.value);
 								return (
-									<div
-										key={option.value}
-										role="option"
-										aria-selected={isSelected}
-										aria-disabled={option.disabled}
-										data-value={option.value}
-										tabIndex={option.disabled ? -1 : 0}
-										className={selectItemVariants({ selected: isSelected, disabled: option.disabled, highlightSelected: false })}
-										onClick={() => !option.disabled && toggleSuggestion(option.value)}
-										onKeyDown={(event) => {
-											if ((event.key === "Enter" || event.key === " ") && !option.disabled) {
-												event.preventDefault();
-												toggleSuggestion(option.value);
-											}
-										}}
-									>
+									<div key={option.value} className={selectSuggestionRowClassName} data-value={option.value}>
+										<label className={selectItemVariants({ selected: isSelected, disabled: disabled || option.disabled, highlightSelected: false })}>
 										<span className={selectOptionCheckboxWrapperClassName}>
 											<input
 												type="checkbox"
 												checked={isSelected}
-												disabled={option.disabled}
-												readOnly
-												tabIndex={-1}
+												disabled={disabled || option.disabled}
+												onChange={() => toggleSuggestion(option.value)}
 												className={selectOptionCheckboxClassName}
 											/>
 											{isSelected && <MaskIcon icon="check/check.svg" className={selectOptionCheckmarkClassName} />}
 										</span>
 										<span className={selectOptionLabelClassName}>{option.label}</span>
+										</label>
+										{onRemoveSuggestion && (
+											<button
+												type="button"
+												className={selectSuggestionRemoveClassName}
+												aria-label={`Remove ${option.label} from suggestions`}
+												aria-busy={removingSuggestion === option.value}
+												disabled={disabled || removingSuggestion !== null}
+												onClick={() => removeSuggestion(option.value)}
+											>
+												Remove
+											</button>
+										)}
 									</div>
 								);
 							})}
+							{removeError && <p className="ui-note px-4 text-[var(--tone-danger-text)]" role="alert">Could not remove suggestion. Try again.</p>}
 						</div>
 					</Popover.Content>
 				</Popover.Portal>

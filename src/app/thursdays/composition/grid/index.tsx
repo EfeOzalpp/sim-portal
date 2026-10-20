@@ -10,12 +10,13 @@ interface ThursdaysGridViewProps {
 
 export default function ThursdaysGridView({ thursdays, isAdmin, getViewHref }: ThursdaysGridViewProps) {
   return (
-    <div className="grid grid-cols-2 gap-x-3 gap-y-6 pb-6 min-[769px]:grid-cols-[repeat(auto-fill,minmax(min(100%,18rem),1fr))]">
+    <div className="grid grid-cols-2 gap-x-3 gap-y-6 pb-6 min-[769px]:pt-4 min-[769px]:grid-cols-[repeat(auto-fill,minmax(min(100%,18rem),1fr))]">
       {thursdays.map((thursday: any) => {
         const hasOnlyPlaceholderProduction =
           thursday.productions.length === 1 &&
           thursday.productions[0].name === "Big Production" &&
           thursday.productions[0].location === "Pozen Center" &&
+          (thursday.productions[0].tags?.length ?? 0) === 0 &&
           thursday.productions[0].presentations.length === 0 &&
           thursday.productions[0].producers.length === 0;
         const isEmpty = thursday.productions.length === 0 || hasOnlyPlaceholderProduction;

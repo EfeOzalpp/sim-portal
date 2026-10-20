@@ -34,6 +34,7 @@ export async function getThursday(id: string) {
 						id: true,
 						name: true,
 						location: true,
+						tags: true,
 						thursday_id: true,
 						producers: { select: { id: true, name: true, image: true, role: true } },
 						presentations: {
@@ -88,6 +89,24 @@ export async function getAdjacentThursdays(id: string) {
 	});
 }
 
+export async function getProductionTagSuggestions() {
+	return await action(async () => {
+		noStore();
+
+		const productions = await prisma.production.findMany({ select: { tags: true } });
+		const hidden = await prisma.hiddenTagSuggestion.findMany({ where: { kind: "production" }, select: { tag: true } });
+		const hiddenTags = new Set(hidden.map(({ tag }) => tag));
+		const tags = new Set<string>();
+		for (const production of productions) {
+			for (const tag of production.tags) {
+				const normalized = tag.trim();
+				if (normalized && !hiddenTags.has(normalized)) tags.add(normalized);
+			}
+		}
+		return Array.from(tags).sort((a, b) => a.localeCompare(b));
+	});
+}
+
 export async function getPresentationTagSuggestions() {
 	return await action(async () => {
 		noStore();
@@ -95,17 +114,43 @@ export async function getPresentationTagSuggestions() {
 		const presentations = await prisma.presentation.findMany({
 			select: { tags: true },
 		});
+		const hidden = await prisma.hiddenTagSuggestion.findMany({ where: { kind: "presentation" }, select: { tag: true } });
+		const hiddenTags = new Set(hidden.map(({ tag }) => tag));
 		const tags = new Set<string>();
 
 		for (const presentation of presentations) {
 			for (const tag of presentation.tags) {
 				const normalized = tag.trim();
-				if (normalized) tags.add(normalized);
+				if (normalized && !hiddenTags.has(normalized)) tags.add(normalized);
 			}
 		}
 
 		return Array.from(tags).sort((a, b) => a.localeCompare(b));
 	});
+}
+
+export async function hideTagSuggestion(kind: TagSuggestionKind, tag: string) {
+	return await action(async () => {
+		await ensureAdmin();
+		const input = z.object({ kind: z.enum(["production", "presentation"]), tag: z.string().trim().min(1) }).parse({ kind, tag });
+		await prisma.hiddenTagSuggestion.upsert({
+			where: { kind_tag: input },
+			create: input,
+			update: {},
+		});
+	});
+}
+
+type TagSuggestionKind = "production" | "presentation";
+
+function addedTags(next: string[] | undefined, previous: string[] = []) {
+	const existing = new Set(previous.map((tag) => tag.trim()));
+	return (next || []).map((tag) => tag.trim()).filter((tag) => tag && !existing.has(tag));
+}
+
+async function unhideTagSuggestions(tx: Prisma.TransactionClient, kind: TagSuggestionKind, tags: string[]) {
+	if (tags.length === 0) return;
+	await tx.hiddenTagSuggestion.deleteMany({ where: { kind, tag: { in: Array.from(new Set(tags)) } } });
 }
 
 export async function getFilteredThursdays(rawFilters: { semester?: string | string[]; semesterId?: string | string[]; thursdays?: string | string[] }) {
@@ -167,6 +212,7 @@ export async function getFilteredThursdays(rawFilters: { semester?: string | str
 						id: true,
 						name: true,
 						location: true,
+						tags: true,
 						thursday_id: true,
 						producers: { select: { id: true, name: true, image: true, role: true } },
 						presentations: {
@@ -240,9 +286,13 @@ export async function updateThursdayWithProductions(data: ThursdayInput & { seme
 
 			const existingProductions = await tx.production.findMany({
 				where: { thursday_id: validatedFields.id! },
-				select: { id: true },
+				select: { id: true, tags: true, presentations: { select: { id: true, tags: true } } },
 			});
 			const existingProductionIds = existingProductions.map((p) => p.id);
+			const previousProductionTags = new Map(existingProductions.map((p) => [p.id, p.tags]));
+			const previousPresentationTags = new Map(existingProductions.flatMap((p) => p.presentations.map((pres) => [pres.id, pres.tags] as const)));
+			const addedProductionTags: string[] = [];
+			const addedPresentationTags: string[] = [];
 
 			const currentProductionIds = validatedProductions.map((p) => p.id).filter((id): id is string => !!id);
 
@@ -260,6 +310,10 @@ export async function updateThursdayWithProductions(data: ThursdayInput & { seme
 				// handling below - only the plain scalars (name, location, and any
 				// future field added to ProductionSchema) ride along via the spread.
 				const { id: _pId, thursday_id: _tId, producers, presentations, ...productionScalars } = p;
+				addedProductionTags.push(...addedTags(p.tags, p.id ? previousProductionTags.get(p.id) : undefined));
+				for (const pres of presentations || []) {
+					addedPresentationTags.push(...addedTags(pres.tags, pres.id ? previousPresentationTags.get(pres.id) : undefined));
+				}
 
 				if (!p.id) {
 					await tx.production.create({
@@ -324,6 +378,9 @@ export async function updateThursdayWithProductions(data: ThursdayInput & { seme
 					}
 				}
 			}
+
+			await unhideTagSuggestions(tx, "production", addedProductionTags);
+			await unhideTagSuggestions(tx, "presentation", addedPresentationTags);
 
 			revalidatePath("/thursdays");
 			revalidatePath(`/thursdays/${validatedFields.id}`);
@@ -393,6 +450,9 @@ export async function createThursdayWithProductions(data: ThursdayInput & { seme
 					},
 				});
 			}
+
+			await unhideTagSuggestions(tx, "production", validatedProductions.flatMap((p) => addedTags(p.tags)));
+			await unhideTagSuggestions(tx, "presentation", validatedProductions.flatMap((p) => (p.presentations || []).flatMap((pres) => addedTags(pres.tags))));
 
 			revalidatePath("/thursdays");
 			return thursday;

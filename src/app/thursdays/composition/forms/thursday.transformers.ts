@@ -14,6 +14,7 @@ export function transformThursdayPayload(formData: any) {
       id: production.id,
       name: production.name,
       location: production.location,
+      tags: production.tags || [],
       producers: production.producers || [],
       presentations: (production.presentations || []).map((p: any) => ({
         id: p.id,
@@ -47,6 +48,7 @@ export function transformThursdayFromAPI(apiData: any) {
       id: p.id,
       name: p.name,
       location: p.location,
+      tags: p.tags || [],
       producers: (p.producers || []).map((prod: any) => prod.id),
       presentations: (p.presentations || []).map((pres: any) => ({
         id: pres.id,

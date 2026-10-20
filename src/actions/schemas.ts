@@ -40,7 +40,7 @@ export type SemesterInput = z.infer<typeof SemesterSchema>;
 
 export const ThursdaySchema = z.object({
 	id: z.string().optional(),
-	name: z.string().min(1, "Day name is required"),
+	name: z.string().min(1, "Day title is required"),
 	date: z.date().or(z.string()),
 	semester_id: z.string().optional(),
 });
@@ -62,6 +62,7 @@ export const ProductionSchema = z.object({
 	id: z.string().optional(),
 	name: z.string().min(1, "Production name is required"),
 	location: z.string().min(1, "Location is required"),
+	tags: z.array(z.string()).optional(),
 	thursday_id: z.string().optional(),
 	producers: z.array(z.string()).optional(),
 	presentations: z.array(PresentationSchema).optional(),

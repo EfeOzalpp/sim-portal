@@ -10,6 +10,7 @@ import {
   ThursdayInput,
 } from "@/actions/schemas";
 import { ActionResult } from "@/actions/utilities";
+import { hideTagSuggestion } from "@/actions/thursdays";
 
 // Components
 import { Alert } from "@/components/alert";
@@ -48,6 +49,7 @@ interface ThursdayFormProps {
   users: BasicUser[];
   semesters: Array<{ id: string; name: string }>;
   suggestedTags?: string[];
+  suggestedProductionTags?: string[];
   thursdayId?: string;
   onSubmit: (data: any) => Promise<ActionResult<any> | any>;
 }
@@ -57,6 +59,7 @@ export default function ThursdayForm({
   users,
   semesters,
   suggestedTags = [],
+  suggestedProductionTags = [],
   thursdayId,
   onSubmit,
 }: ThursdayFormProps) {
@@ -92,7 +95,14 @@ export default function ThursdayForm({
   }, [trigger]);
 
   const [error, setError] = useState<string | null>(null);
+  const [hiddenSuggestions, setHiddenSuggestions] = useState<{ production: string[]; presentation: string[] }>({ production: [], presentation: [] });
   const toast = useToast();
+
+  async function removeTagSuggestion(kind: "production" | "presentation", tag: string) {
+    const result = await hideTagSuggestion(kind, tag);
+    if (!result.success) throw new Error(result.error);
+    setHiddenSuggestions((current) => ({ ...current, [kind]: [...current[kind], tag] }));
+  }
 
   const handleFormSubmit = async (data: ThursdayFormValues) => {
     const payload = transformThursdayPayload(data);
@@ -120,7 +130,14 @@ export default function ThursdayForm({
         )}
 
         <ThursdaySection control={control} semesters={semesters} />
-        <ProductionsSection control={control} users={users} semesters={semesters} suggestedTags={suggestedTags} />
+        <ProductionsSection
+          control={control}
+          users={users}
+          semesters={semesters}
+          suggestedTags={suggestedTags.filter((tag) => !hiddenSuggestions.presentation.includes(tag))}
+          suggestedProductionTags={suggestedProductionTags.filter((tag) => !hiddenSuggestions.production.includes(tag))}
+          onRemoveTagSuggestion={removeTagSuggestion}
+        />
       </FormStack>
 
       <FormActions>

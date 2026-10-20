@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { auth } from "@/authentication";
 import { getAllUsers } from "@/actions/users";
 import { getAllSemesters } from "@/actions/semesters";
-import { createThursdayWithProductions, getPresentationTagSuggestions } from "@/actions/thursdays";
+import { createThursdayWithProductions, getPresentationTagSuggestions, getProductionTagSuggestions } from "@/actions/thursdays";
 import ThursdayForm from "@/app/thursdays/composition/forms";
 import { isAdminRole } from "@/constants/roles";
 import { THURSDAY_MODAL_PARAMS } from "@/constants/modal-params";
@@ -15,14 +15,16 @@ export default async function AddThursdayFormContent() {
 		redirect("/thursdays");
 	}
 
-	const [usersResult, semestersResult, tagSuggestionsResult] = await Promise.all([
+	const [usersResult, semestersResult, tagSuggestionsResult, productionTagSuggestionsResult] = await Promise.all([
 		getAllUsers(),
 		getAllSemesters(),
 		getPresentationTagSuggestions(),
+		getProductionTagSuggestions(),
 	]);
 	const users = usersResult.success ? usersResult.data : [];
 	const semesters = semestersResult.success ? semestersResult.data : [];
 	const suggestedTags = tagSuggestionsResult.success ? tagSuggestionsResult.data : [];
+	const suggestedProductionTags = productionTagSuggestionsResult.success ? productionTagSuggestionsResult.data : [];
 
 	async function onSubmitAddThursday(data: any) {
 		"use server";
@@ -39,6 +41,7 @@ export default async function AddThursdayFormContent() {
 			users={users}
 			semesters={semesters}
 			suggestedTags={suggestedTags}
+			suggestedProductionTags={suggestedProductionTags}
 			onSubmit={onSubmitAddThursday}
 		/>
 	);

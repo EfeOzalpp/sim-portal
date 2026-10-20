@@ -194,6 +194,12 @@ export const selectEmptyClassName = "ui-note px-4 py-4 text-center text-[var(--l
 export const selectOptionGroupLabelClassName =
 	"ui-label px-4 pb-1 pt-1";
 
+export const selectSuggestionRowClassName =
+	"flex items-stretch has-[label:hover]:bg-[var(--contrast-surface-hovered-item-bg)] has-[input:focus-visible]:bg-[var(--contrast-surface-hovered-item-bg)]";
+
+export const selectSuggestionRemoveClassName =
+	"ui-small flex-none cursor-pointer border-0 bg-transparent px-4 text-inherit hover:underline focus-visible:underline focus-visible:outline-offset-[-2px] disabled:cursor-not-allowed disabled:opacity-50";
+
 // A single chip in the multi-select trigger, one per selected option (up to
 // maxTagCount) - same compact pill shape as UserProfileView's role-label tag
 // Chip typography lives in font-theme.css; the fill carries its surface treatment.

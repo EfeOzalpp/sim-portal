@@ -28,6 +28,8 @@ interface ProductionsSectionProps {
   users: BasicUser[];
   semesters?: Array<{ id: string; name: string }>;
   suggestedTags?: string[];
+  suggestedProductionTags?: string[];
+  onRemoveTagSuggestion?: (kind: "production" | "presentation", tag: string) => Promise<void>;
 }
 
 export default function ProductionsSection({
@@ -35,6 +37,8 @@ export default function ProductionsSection({
   users,
   semesters,
   suggestedTags = [],
+  suggestedProductionTags = [],
+  onRemoveTagSuggestion,
 }: ProductionsSectionProps) {
   const { fields, prepend, remove } = useFieldArray({
     control,
@@ -61,7 +65,7 @@ export default function ProductionsSection({
   useEffect(() => {
     if (!hasSeededProduction.current && fields.length === 0) {
       hasSeededProduction.current = true;
-      prepend({ name: "", location: "Pozen Center", producers: [], presentations: [] });
+      prepend({ name: "", location: "Pozen Center", tags: [], producers: [], presentations: [] });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -81,6 +85,7 @@ export default function ProductionsSection({
             prepend({
               name: "",
               location: "Pozen Center",
+              tags: [],
               producers: [],
               presentations: [],
             })
@@ -130,6 +135,8 @@ export default function ProductionsSection({
                   users={users}
                   semesters={semesters}
                   suggestedTags={suggestedTags}
+                  suggestedProductionTags={suggestedProductionTags}
+                  onRemoveTagSuggestion={onRemoveTagSuggestion}
                 />
               ),
             };

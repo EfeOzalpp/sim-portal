@@ -12,7 +12,7 @@ import styles from "@/components/domain/productions/ProductionCard.module.css";
 const peopleListClassName = "grid grid-cols-[repeat(2,max-content)] gap-x-6 gap-y-1";
 const personLinkClassName =
 	"text-inherit! no-underline underline-offset-[0.14em] hover:text-[var(--inline-link-hover)]! hover:underline";
-const presentationTagClassName = "ui-label m-0 text-[var(--label-text)]";
+const tagClassName = "ui-label m-0 text-[var(--label-text)]";
 const emptyStateClassName = "ui-note text-[var(--content-muted)]";
 const sectionLabelClassName = "ui-label m-0 block";
 const inactiveSectionLabelClassName = "ui-label m-0 block text-[var(--content-muted)]";
@@ -46,11 +46,18 @@ export default async function ProductionCard({
 
 	const titleRow = (
 		<div className="flex items-center justify-between gap-2 px-5">
-			<h3 className="m-0 flex min-w-0 items-baseline gap-2">
-				<span className={clsx("min-w-0 truncate", isPlaceholderDisplay && "text-[var(--content-muted)]")}>
-					{isPlaceholderDisplay ? "Untitled Production" : production.name}
-				</span>
-			</h3>
+			<div className="flex min-w-0 flex-col gap-1.5">
+				{(production.tags || []).length > 0 && (
+					<div className="flex flex-wrap items-center gap-1">
+						{production.tags.map((tag: string) => <span key={tag} className={tagClassName}>{tag}</span>)}
+					</div>
+				)}
+				<h3 className="m-0 flex min-w-0 items-baseline gap-2">
+					<span className={clsx("min-w-0 truncate", isPlaceholderDisplay && "text-[var(--content-muted)]")}>
+						{isPlaceholderDisplay ? "Untitled Production" : production.name}
+					</span>
+				</h3>
+			</div>
 			{(surface === "modal" || (isAdmin && showEditButton)) && (
 				<div className="flex shrink-0 items-center gap-2">
 					{surface === "modal" && <Button surface="modal" variant="tool" type="button" icon="download/download.svg" aria-label="Print production" title="Print production" />}
@@ -115,7 +122,7 @@ export default async function ProductionCard({
 										{(presentation.tags || []).length > 0 && (
 											<div className="flex flex-wrap items-center gap-1">
 												{presentation.tags.map((tag: string) => (
-													<span key={tag} className={presentationTagClassName}>
+													<span key={tag} className={tagClassName}>
 														{tag}
 													</span>
 												))}

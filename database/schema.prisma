@@ -50,11 +50,20 @@ model Presentation {
   tags String[] @default([])
 }
 
+// Hides suggestions without changing tags already assigned to items.
+model HiddenTagSuggestion {
+  kind String
+  tag  String
+
+  @@id([kind, tag])
+}
+
 // Production model representing a collection of presentations
 model Production {
   id            String         @id @default(cuid())
   name          String
   location      String
+  tags          String[]       @default([])
   producers     User[]
   presentations Presentation[]
   thursday_id   String

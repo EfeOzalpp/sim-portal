@@ -24,6 +24,12 @@ const LOCATIONS = [
   { label: "Studio A", value: "Studio A" },
   { label: "Studio B", value: "Studio B" },
   { label: "Main Hall", value: "Main Hall" },
+  { label: "N181", value: "N181" },
+  { label: "North Sound", value: "North Sound" },
+  { label: "DMC Sound", value: "DMC Sound" },
+  { label: "Green Room", value: "Green Room" },
+  { label: "Godine Gallery", value: "Godine Gallery" },
+  { label: "Other", value: "Other" },
 ];
 
 // Sentinel for the semester filter's own "show everyone" option - distinct
@@ -37,6 +43,8 @@ interface ProductionFormProps {
   users: BasicUser[];
   semesters?: Array<{ id: string; name: string }>;
   suggestedTags?: string[];
+  suggestedProductionTags?: string[];
+  onRemoveTagSuggestion?: (kind: "production" | "presentation", tag: string) => Promise<void>;
 }
 
 export default function ProductionForm({
@@ -45,6 +53,8 @@ export default function ProductionForm({
   users,
   semesters = [],
   suggestedTags = [],
+  suggestedProductionTags = [],
+  onRemoveTagSuggestion,
 }: ProductionFormProps) {
   const producerUsers = users.filter((u) => !isStaffRole((u as any).role));
 
@@ -171,12 +181,32 @@ export default function ProductionForm({
         />
       </div>
 
+      <FormField label="Tags">
+        <Controller
+          control={control}
+          name={`productions.${productionIndex}.tags`}
+          render={({ field }) => (
+            <Select
+              inModal
+              mode="tags"
+              value={field.value ?? []}
+              onChange={field.onChange}
+              suggestedOptions={suggestedProductionTags.map((tag) => ({ value: tag, label: tag }))}
+              suggestedLabel="Suggested"
+              onRemoveSuggestion={onRemoveTagSuggestion ? (tag) => onRemoveTagSuggestion("production", tag) : undefined}
+              placeholder="Type a tag and press Enter..."
+            />
+          )}
+        />
+      </FormField>
+
       <PresentationsField
         productionIndex={productionIndex}
         control={control}
         users={users}
         semesters={semesters}
         suggestedTags={suggestedTags}
+        onRemoveTagSuggestion={onRemoveTagSuggestion}
       />
     </FormStack>
   );

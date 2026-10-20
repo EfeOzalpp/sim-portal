@@ -39,6 +39,7 @@ export async function getAllProductions() {
 				id: true,
 				name: true,
 				location: true,
+				tags: true,
 				producers: { select: { id: true, name: true } },
 			},
 			orderBy: { name: "asc" }
@@ -67,6 +68,7 @@ export async function addProduction(data: ProductionInput & { producers?: string
 				data: {
 					name: validatedFields.name,
 					location: validatedFields.location,
+					tags: validatedFields.tags,
 					producers: {
 						connect: (data.producers || validatedFields.producers || []).map((id) => ({ id })),
 					},
@@ -113,6 +115,7 @@ export async function editProduction(data: ProductionInput & { producers?: strin
 				data: {
 					name: validatedFields.name,
 					location: validatedFields.location,
+					tags: validatedFields.tags,
 					producers: { set: (data.producers || validatedFields.producers || []).map((id) => ({ id })) },
 					thursday: { connect: { id: data.thursday || validatedFields.thursday_id! } },
 				},
@@ -180,6 +183,7 @@ export async function updateProductionPresentations(productionData: ProductionIn
 				data: {
 					name: validatedFields.name,
 					location: validatedFields.location,
+					tags: validatedFields.tags,
 					producers: { set: (productionData.producers || validatedFields.producers || []).map((id) => ({ id })) },
 				},
 			});
