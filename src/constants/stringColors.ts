@@ -15,7 +15,7 @@ const THEME_COLORS = {
 		bgLightness: 75,
 		textSaturation: 35,
 		textLightness: 94,
-		titleLightness: 94,
+		titleLightness: 80,
 	},
 };
 
