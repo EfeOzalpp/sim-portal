@@ -64,6 +64,7 @@ html[data-color-theme="safety-orange"][data-theme="light"] {
 	/* icon-only buttons on the page content (outside the page bar) */
 	--page-icon-bg-hover: hsl(var(--hue-chrome) 40% 86% / 0.7);
 	--page-icon-bg-active: hsl(var(--hue-page) 30% 86%);
+	--page-button-bg-hover: hsl(var(--hue-chrome) 70% 30% / 0.16);
 
 	/* card overlay buttons */
 	--button-overlay-bg: hsl(var(--hue-page) 30% 100%);
@@ -100,7 +101,7 @@ html[data-color-theme="safety-orange"][data-theme="dark"] {
 	--page-bg-border: hsl(var(--hue-chrome) 80% 90% / 0.2);
 	--page-input-bg: hsl(var(--hue-chrome) 20% 85% / 0.12);
 	--page-bar-border: hsl(var(--hue-chrome) 80% 95% / 0.2);
-	--page-bar-bg: hsla(0, 0%, 0%, 0.15);
+	--page-bar-bg: hsla(0, 0%, 0%, 0.1);
 
 			/* secondary buttons when the page bar is minimized and floats over content */
 			--page-bar-floating-button-bg: hsl(var(--hue-page) 25% 12%);
@@ -143,6 +144,7 @@ html[data-color-theme="safety-orange"][data-theme="dark"] {
 	/* icon-only buttons on the page content (outside the page bar) */
 	--page-icon-bg-hover: hsl(var(--hue-chrome) 22% 18% / 0.7);
 	--page-icon-bg-active: hsl(var(--hue-page) 20% 26%);
+	--page-button-bg-hover: hsl(var(--hue-chrome) 45% 80% / 0.14);
 
 	/* card overlay buttons */
 	--button-overlay-bg: hsl(from var(--page-bg) h s 20% / 1);

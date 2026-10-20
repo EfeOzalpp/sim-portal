@@ -156,7 +156,6 @@ html[data-theme="light"] {
   --page-button-cta-hover: hsl(var(--hue-accent) 18% 26%);
   --page-button-cta-text: #ffffff;
   --page-button-bg: transparent;
-  --page-button-bg-hover: hsl(var(--hue-chrome) 25% 80% / 0.1);
   --page-view-bg-hover: hsl(var(--hue-accent) 40% 30% / 0.1);
   --page-button-bg-active: hsl(var(--hue-accent) 40% 30% / 0.16);
   --page-button-border: hsl(var(--hue-accent) 30% 25% / 0.2);
@@ -537,7 +536,6 @@ html[data-theme="dark"] {
   --page-button-cta-hover: hsl(var(--hue-accent) 26% 80%);
   --page-button-cta-text: hsl(var(--hue-accent) 40% 10%);
   --page-button-bg: transparent;
-  --page-button-bg-hover: hsl(var(--hue-chrome) 25% 80% / 0.1);
   --page-view-bg-hover: hsl(var(--hue-accent) 20% 70% / 0.12);
   --page-button-bg-active: hsl(var(--hue-accent) 20% 70% / 0.2);
 

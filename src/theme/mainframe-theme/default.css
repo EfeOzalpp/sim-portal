@@ -63,6 +63,7 @@ html[data-color-theme="default"][data-theme="light"] {
 	/* icon-only buttons on the page content (outside the page bar) */
 	--page-icon-bg-hover: hsl(var(--hue-chrome) 40% 86% / 0.7);
 	--page-icon-bg-active: hsl(var(--hue-page) 30% 86%);
+	--page-button-bg-hover: hsl(var(--hue-chrome) 45% 45% / 0.12);
 
 	/* card overlay buttons */
 	--button-overlay-bg: hsl(var(--hue-page) 30% 100%);
@@ -142,6 +143,7 @@ html[data-color-theme="default"][data-theme="dark"] {
 	/* icon-only buttons on the page content (outside the page bar) */
 	--page-icon-bg-hover: hsl(var(--hue-chrome) 22% 18% / 0.7);
 	--page-icon-bg-active: hsl(var(--hue-page) 20% 26%);
+	--page-button-bg-hover: hsl(var(--hue-chrome) 45% 80% / 0.14);
 
 	/* card overlay buttons */
 	--button-overlay-bg: hsl(from var(--page-bg) h s 20% / 1);
