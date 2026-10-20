@@ -70,6 +70,22 @@
 	-webkit-mask-size: contain;
 }
 
+.barTabs {
+	gap: 0.25rem;
+	padding-inline: 0;
+}
+
+.barTabs .masterCheckbox {
+	width: auto;
+	min-width: 0;
+	flex: none;
+	padding-inline-end: 0.5rem;
+}
+
+.barTabs .tabList {
+	flex-wrap: nowrap;
+}
+
 @media (max-width: 768px) {
 	.contentControls {
 		display: none;

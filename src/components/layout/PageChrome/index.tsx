@@ -27,6 +27,8 @@ interface PageChromeContextValue {
 	collapseProgress: number;
 	isCollapsed: boolean;
 	hasScrolled: boolean;
+	isBarMinimized: boolean;
+	setBarMinimized: (minimized: boolean) => void;
 	reportScrollTop: (scrollTop: number, options?: PageChromeReportOptions) => void;
 	resetPageChrome: () => void;
 }
@@ -56,6 +58,7 @@ function getCollapseProgress(
 export function PageChromeProvider({ children }: { children: ReactNode }) {
 	const [collapseProgress, setCollapseProgress] = useState(0);
 	const [hasScrolled, setHasScrolled] = useState(false);
+	const [isBarMinimized, setBarMinimized] = useState(false);
 	const latestScrollTopRef = useRef(0);
 	const hasScrolledRef = useRef(false);
 	const latestOptionsRef = useRef<PageChromeReportOptions>({});
@@ -121,10 +124,12 @@ export function PageChromeProvider({ children }: { children: ReactNode }) {
 			collapseProgress,
 			isCollapsed,
 			hasScrolled,
+			isBarMinimized,
+			setBarMinimized,
 			reportScrollTop,
 			resetPageChrome,
 		}),
-		[collapseProgress, isCollapsed, hasScrolled, reportScrollTop, resetPageChrome],
+		[collapseProgress, isCollapsed, hasScrolled, isBarMinimized, reportScrollTop, resetPageChrome],
 	);
 
 	return (

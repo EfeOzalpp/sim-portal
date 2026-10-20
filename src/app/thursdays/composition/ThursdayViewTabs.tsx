@@ -5,6 +5,7 @@ import { createPortal } from "react-dom";
 import { usePathname, useSearchParams } from "next/navigation";
 import clsx from "clsx";
 import { useIsMobile } from "@/components/layout/breakpoints";
+import { usePageChrome } from "@/components/layout/PageChrome";
 import { pageChromeSlotIds, usePageChromeSlotTarget } from "@/components/layout/PageChrome/slots";
 import { MaskIcon } from "@/theme/MaskIcon";
 import type { IconName } from "@/theme/icons";
@@ -22,7 +23,10 @@ export default function ThursdayViewTabs({ thursdayIds, activeView }: { thursday
 	const pathname = usePathname();
 	const searchParams = useSearchParams();
 	const isMobile = useIsMobile();
+	const { isBarMinimized } = usePageChrome();
 	const mobileToolsTarget = usePageChromeSlotTarget(pageChromeSlotIds.mobileBarTools);
+	const barToolsTarget = usePageChromeSlotTarget(pageChromeSlotIds.barTools);
+	const inBar = !isMobile && !isBarMinimized && Boolean(barToolsTarget);
 	const { selectedThursdayIds, setSelectedThursdayIds } = useSelectedThursdays();
 	const selectedCount = thursdayIds.filter((id) => selectedThursdayIds.has(id)).length;
 	const allSelected = thursdayIds.length > 0 && selectedCount === thursdayIds.length;
@@ -35,7 +39,7 @@ export default function ThursdayViewTabs({ thursdayIds, activeView }: { thursday
 	}
 
 	const controls = (
-		<div className={clsx(styles.tabs, isMobile && styles.chromeTabs, "group print:hidden")}>
+		<div className={clsx(styles.tabs, isMobile && styles.chromeTabs, inBar && styles.barTabs, "group print:hidden")}>
 			<div className={styles.masterCheckbox}>
 				<ThursdayCheckbox
 					checked={allSelected}
@@ -67,6 +71,7 @@ export default function ThursdayViewTabs({ thursdayIds, activeView }: { thursday
 	);
 
 	if (isMobile) return mobileToolsTarget ? createPortal(controls, mobileToolsTarget) : null;
+	if (inBar && barToolsTarget) return createPortal(controls, barToolsTarget);
 
 	return <div className={styles.contentControls}>{controls}</div>;
 }

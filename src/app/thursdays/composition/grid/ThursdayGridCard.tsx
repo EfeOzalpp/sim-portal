@@ -124,16 +124,16 @@ export default function ThursdayGridCard({
 					</span>
 					<DateLabel date={date} />
 				</div>
-				<h3 className="m-0 min-w-0 max-[768px]:break-words text-[var(--app-text)]" title={name}>
+				<h3 className="m-0 min-w-0 max-[768px]:break-words max-[768px]:pl-3 text-[var(--app-text)]" title={name}>
 					{name}
 				</h3>
-				<span className="empty:hidden min-[769px]:hidden">
+				<span className="empty:hidden min-[769px]:hidden max-[768px]:pl-3">
 					<ThursdayDateIndicator date={calendarDate} />
 				</span>
 				{isEmpty ? (
-					<div className="ui-note mt-auto max-[768px]:mt-0 pb-4 text-[var(--content-muted)]">Empty</div>
+					<div className="ui-note mt-auto max-[768px]:mt-0 max-[768px]:pl-3 pb-4 text-[var(--content-muted)]">Empty</div>
 				) : (
-					<div className="ui-small mt-auto max-[768px]:mt-0 flex flex-wrap items-center gap-x-3 gap-y-1 pb-4 text-[var(--subtle-text)]">
+					<div className="ui-small mt-auto max-[768px]:mt-0 max-[768px]:pl-3 flex flex-wrap items-center gap-x-3 gap-y-1 pb-4 text-[var(--subtle-text)]">
 						<span>{productionCount} prod.</span>
 						<span>{presentationCount} pres.</span>
 						<ThursdayProducerAvatarStack producerCount={producerCount} producerPreviews={producerPreviews} />

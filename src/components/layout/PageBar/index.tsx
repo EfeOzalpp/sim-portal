@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import clsx from "clsx";
 import { Button } from "@/components/button";
 import { actionButtonIconClassName } from "@/components/button/styles";
@@ -15,22 +15,19 @@ import chromeStyles from "@/components/layout/PageChrome/PageChrome.module.css";
 const PAGE_BAR_STORAGE_KEY = "sim-page-bar";
 
 export default function PageBar() {
-	const { hasScrolled } = usePageChrome();
-	const [isMinimized, setIsMinimized] = useState(false);
+	const { hasScrolled, isBarMinimized: isMinimized, setBarMinimized } = usePageChrome();
 	const isMobile = useIsMobile();
 	const isCompact = isMinimized && !isMobile;
 
 	useEffect(() => {
-		setIsMinimized(window.localStorage.getItem(PAGE_BAR_STORAGE_KEY) === "minimized");
-	}, []);
+		setBarMinimized(window.localStorage.getItem(PAGE_BAR_STORAGE_KEY) === "minimized");
+	}, [setBarMinimized]);
 
 	function toggleMinimized() {
 		dismissPopovers();
-		setIsMinimized((current) => {
-			const next = !current;
-			window.localStorage.setItem(PAGE_BAR_STORAGE_KEY, next ? "minimized" : "open");
-			return next;
-		});
+		const next = !isMinimized;
+		window.localStorage.setItem(PAGE_BAR_STORAGE_KEY, next ? "minimized" : "open");
+		setBarMinimized(next);
 	}
 
 	if (isMobile) return null;
