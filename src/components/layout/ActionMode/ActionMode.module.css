@@ -15,6 +15,12 @@
 	pointer-events: none;
 }
 
+@media print {
+	.backdrop {
+		display: none !important;
+	}
+}
+
 .surface[data-action-mode="edit-users"] :global([data-action-mode-target="user-card"]),
 .surface[data-action-mode="delete-users"] :global([data-action-mode-target="user-card"]),
 .surface[data-action-mode="edit-thursdays"] :global([data-action-mode-target="thursday-card"]),

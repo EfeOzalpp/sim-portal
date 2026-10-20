@@ -306,10 +306,6 @@
 		margin: 0.25in 0.3in 0;
 	}
 
-	:global([data-action-mode-backdrop]) {
-		display: none !important;
-	}
-
 	/* Let table content flow across printed pages. */
 	.tableScroll {
 		flex: none;
