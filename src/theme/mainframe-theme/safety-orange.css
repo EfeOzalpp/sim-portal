@@ -12,11 +12,11 @@ html[data-color-theme="safety-orange"][data-theme="light"] {
 
 	/* Master tokens */
 	--app-bg: hsl(var(--hue-chrome) 100% 72%);
-	--page-bg: hsl(var(--hue-page) 78% 98.5% / 0.75);
+	--page-bg: hsl(var(--hue-page) 78% 98.5% / 0.85);
 	--page-bg-border: hsl(var(--hue-chrome) 80% 20% / 0.3);
 	--page-input-bg: hsl(var(--hue-chrome) 45% 45% / 0.2);
 	--page-bar-border: hsl(var(--hue-chrome) 80% 20% / 0.2);
-	--page-bar-bg: hsl(0 0% 100% / 0.2);
+	--page-bar-bg: hsl(0 0% 100% / 0.25);
 
 			/* secondary buttons when the page bar is minimized and floats over content */
 			--page-bar-floating-button-bg: #ffffff;

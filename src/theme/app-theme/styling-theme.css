@@ -41,7 +41,7 @@ html[data-theme="light"] {
 
   /* chrome-derived titles (brand + page title) */
   --title-lightness: 0.42;
-  --title-chroma: 0.12;
+  --title-chroma: 0.09;
 
   /* scrollbar */
   --scrollbar-thumb: rgba(15, 23, 42, 0.15);
@@ -434,7 +434,7 @@ html[data-theme="dark"] {
 
   /* chrome-derived titles (brand + page title) */
   --title-lightness: 0.84;
-  --title-chroma: 0.12;
+  --title-chroma: 0.09;
 
   /* scrollbar */
   --scrollbar-thumb: rgba(255, 255, 255, 0.35);
